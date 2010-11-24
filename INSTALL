@@ -1,0 +1,13 @@
+=== NOTE: THESE INSTRUCTIONS ARE NOT COMPLETE. I DO NOT YET CONSIDER KIKI TO
+=== BE INSTALLABLE, DOCUMENTATION IS INCOMPLETE AT THIS STAGE
+
+1) Make Kiki htdocs available as /kiki/
+
+Edit config/htaccess and adjust to match your Kiki install path.
+
+Then place directly the contents in your VirtualHost directive.
+
+2) Directly under your document root, create debug.txt writeable to Apache.
+
+cd /www/example.com
+touch debug.txt && chgrp www-data debug.txt && chmod 660 debug.txt

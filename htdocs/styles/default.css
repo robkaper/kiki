@@ -1,0 +1,478 @@
+body {
+	font-family: sans-serif;
+	font-size: 100%;
+	/* line-height: 1.125em; / * 1.125*16=18 */
+
+	margin: 0px;
+	padding: 0px 0px 10px 0px;
+}
+
+header, footer, aside, nav, article {  
+	display: block;  
+}  
+
+/* / FIXME: rjkcust */
+@font-face {
+  font-family: "Forgotten Futurist";
+  src: url( /fonts/Forgotte.eot ); /* IE */  
+  src: local("Forgotten Futurist"), url( /fonts/Forgotte.ttf ) format("truetype"); /* non-IE */
+}
+
+#sw, #cw, #fw {
+	margin: 0 auto;
+	-moz-margin: 0 auto;
+	max-width: 850px;
+}
+
+#content {
+	font-size: 0.875em; /* 0.875*16=14 */
+        max-width: 800px;
+        margin: 0.5em 0 0.5em 160px;
+}
+
+#sidebar {
+	font-size: 0.75em; /* 0.75*16=12 */
+}
+
+#sidebar > .box
+{
+	margin: 0 0 0.5em 0;
+	-moz-border-radius: 4px / 6px;
+	background: #deb;
+	text-align: center;
+	font-size: 0.875em;
+	xheight: 50px;
+}
+
+#sidebar p {
+	margin: 0;
+	padding: 0.25em;
+}
+
+
+h1, h2, h3, h4 {
+/* / FIXME: rjkcust */
+	font-family: "Forgotten Futurist", sans-serif;
+	color: #463;
+}
+
+h1 {
+	margin: 0;
+}
+
+h1 a {
+	text-decoration: none;
+}
+
+a {
+	color: #463;
+}
+
+img {
+	border: 0;
+}
+
+q {
+	color: #575;
+}
+
+blockquote {
+	color: #353;
+}
+
+.spacer {
+	clear: both; height: 1px;
+}
+
+.footer {
+        clear: both;
+        max-width: 800px;
+        margin: 0.5em 0 0.5em 160px;
+        -moz-border-radius: 4px / 6px;
+        background: #deb;
+        text-align: center;
+	font-size: 0.75em;
+}
+
+#fbLogin > img, #twLogin > img
+{
+	width: 150px;
+	height: 22px;
+	margin: 0.25em 0;
+}
+
+.jsonload {
+	float: right;
+	color: #666;
+}
+
+.jsonload img {
+	width: 16px;
+	height: 16px;
+}
+div.comment {
+	min-height: 50px;
+	margin-bottom: 1px;
+	background: #deb;
+}
+
+div.comment:first-child {
+	-moz-border-radius: 4px 4px 0 0 / 6px 6px 0 0;
+}
+.comments > .comment:first-child img {
+	-moz-border-radius: 4px 0 0 0 / 6px 0 0 0;
+}
+
+div.comment:last-child {
+	-moz-border-radius: 0 0 4px 4px / 0 0 6px 6px;
+}
+
+div.commentTxt {
+	margin-left: 55px;
+	-moz-margin-left: 50px+0.25em;
+}
+
+.dummy p {
+	margin: 0;
+	padding: 5px;
+}
+form {
+	width: 99%;
+	background: #deb;
+	-moz-border-radius: 4px / 6px;
+	margin: 0 0  0.5em 0;
+}
+
+form p {
+	clear: left;
+}
+
+form label {
+	display: block;
+	font-weight: bold;
+	text-align: right;
+	width: 20%;
+	margin: 5px 5px 0 0;
+	padding: 0 5px;
+	float: left;
+	border: 1px solid #fff;
+	color: #fff;
+	background: #9c6;
+        -moz-border-radius: 4px / 6px;
+	border: 0;
+	-moz-border-radius: 0 4px 4px 0 / 0 6px 6px 0;
+}
+
+form span {
+	display: inline-block;
+	margin: 5px 5px 0 0;
+}
+
+form .small {
+	color: #fff;
+	display: block;
+	font-size: 0.875em;
+	font-weight: normal;
+	text-align: right;
+}
+
+form input, form textarea {
+	border: solid 1px #463;
+	width: 70%;
+	margin: 5px 5px 0 0;
+	float: left;
+}
+
+form textarea {
+	height: 10em;
+}
+div.commentTxt > form {
+	border: 0;
+	-moz-border-radius: 0;
+	margin: 0;
+}
+div.commentTxt > form > textarea {
+margin: 0;
+width: 100%;
+height: 1.5em;
+overflow: auto;
+}
+
+form button {
+float: right;
+margin: 0;
+width: 10em;
+height: 2.5em;
+min-height: 32px;
+color: #fff;
+background: #463; /* url(/img/floppy.png) no-repeat; */
+text-align:center;
+line-height: 2em;
+font-size: 0.75em;
+font-weight:bold;
+}
+
+div.commentTxt > form > button[disabled] {
+	background: #666;
+}
+
+.placeholder {
+	color: #aaa;
+}
+
+article {
+  margin: 0 0 1em 0;
+  xborder: 1px solid pink;
+  padding: 0px 0.25em;
+}
+article .author, article .relTime {
+  margin: 0px;
+  font-size: 0.875em;
+  padding: 0px 5px;
+}
+article h2 {
+  margin: 0;
+  padding: 0;
+  color: #463;
+  background: #9c6;
+  -moz-border-radius: 4px 4px 0 0 / 6px 6px 0 0;
+}
+article h2 span {
+  background: #deb;
+  padding: 0 5px;
+  -moz-border-radius: 4px 4px 0 0 / 6px 6px 0 0;
+
+}
+article header, article footer {
+  margin: 0px;
+  background: #deb;
+  -moz-border-radius: 4px / 6px;
+}
+article footer {
+  padding: 0px 0.25em;
+  font-size: 0.875em;
+}
+article footer li {
+  margin: 0 0.25em;
+  display: inline;
+  background: #fff;
+  -moz-border-radius: 4px / 6px;
+}
+article .relTime {
+  float: right;
+}
+
+.youtube-player {
+	width: 640px;
+	height: 385px;
+}
+
+.ui-datepicker {
+	font-size: 0.75em;
+	border: 1px solid #9c6;
+	-moz-border-radius: 4px / 6px;
+	background: #deb;
+}
+.ui-datepicker-header {
+	border: 1px solid #9c6;
+	-moz-border-radius: 4px / 6px;
+	background: #dfb;
+}
+.ui-datepicker .ui-state-default {
+	border: 1px solid #9c6;
+	background: #dfb;
+}
+.ui-datepicker .ui-state-active {
+	border: 1px solid #9c6;
+	background: white;
+}
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td { font-size: 90%; }
+
+img.social {
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin: 0 5px 0 0;
+	-moz-margin: 0 0.5em 0 0;
+	padding: 33px 1px 1px 33px; /* / FIXME: twitter icons are 48px and 33+16+1 assumes 50px */
+}
+
+#sidebar img.social {
+	float:right;
+	margin-left: 0.25em;
+	margin-right: 0;
+}
+
+.relTime {
+	color: #666;
+	font-size: 0.875em;
+}
+
+.comments {
+	font-size: 0.875em;
+}
+
+@media print {
+	#content a[href^="http"]:after {
+		content: " (" attr(href) ") ";
+   	}
+
+	#content a[href^="/"]:after {
+/* / FIXME: rjkcust */
+		content: " (http://robkaper.nl" attr(href) ") ";
+   	}
+
+	#sidebar .box {
+		display: none;
+	}
+
+	#sidebar {
+		float: left;
+	}
+	#content {
+		margin: 0;
+		-moz-margin: 0;
+	}
+}
+
+/* / TODO: from old dev, port */
+
+#sidebar {
+	margin: 10px auto;
+	-moz-margin: 0 auto;
+	position: relative;
+	top: auto;
+	left: auto;
+	float: right;
+	width: 150px;
+	padding: 0px 0px;
+}
+
+#search {
+	height: 50px;
+	vertical-align: middle;
+}
+
+#search input {
+	width: 148px;
+	border: 1px solid #9c6;
+	margin: 0;
+}
+
+body > header {
+	margin: 0 auto;
+	color: #fff;
+	background: #000;
+	padding: 0.5em;
+}
+
+#title {
+	display: block;
+	max-width: 850px;
+	margin: 0.5em auto;
+}
+
+#title img {
+	margin-right: 25px;
+}
+
+body > nav {
+	display: block;
+	margin: 0 auto;
+	background: #9c6;
+}
+
+body > nav.second {
+	background: #deb;
+	font-size: 0.75em;
+}
+
+body > nav ul {
+	max-width: 850px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+body > nav ul li {
+	display: inline-block;
+	margin: 0 auto;
+	padding: 5px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: bottom;
+}
+
+body > nav ul li.right {
+	float: right;
+}
+
+body > nav a {
+	color: #463;
+	text-decoration: none;
+}
+
+body > nav ul li:hover, body > nav ul li.active {
+	text-decoration: none;
+	background: #deb;
+}
+
+body > nav.second ul li:hover, body > nav.second ul li.active {
+	text-decoration: none;
+	background: white;
+}
+
+#content {
+	max-width: 838px;
+	margin: 10px 0;
+	-moz-margin: 10px 0;
+	border: 1px solid #deb;
+	-moz-border-radius: 10px;
+	padding: 10px;
+	margin-right: 160px;
+}
+
+.footer {
+	max-width: 850px;
+	margin: 0;
+	-moz-margin: 0;
+	padding: 0;
+}
+
+@media only screen and (max-device-width: 480px) {
+
+	#sw, #cw, #fw, #title, body > nav ul, .footer {
+	        max-width: auto;
+		width: auto;
+	}
+
+	#sidebar {
+		display: block;
+	}
+
+	#content {
+        	max-width: auto;
+		width: auto;
+		margin-right: 0;
+		margin: 0;
+		border: 0;
+	}
+
+	body > nav ul li.right {
+		float: none;
+	}
+
+	.youtube-player {
+		width: auto;
+		height: auto;
+	}
+
+}
