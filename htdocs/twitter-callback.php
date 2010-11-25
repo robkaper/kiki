@@ -3,7 +3,7 @@
   session_start();
 
   if ( isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
-    Log::error( "SNH: twitter-auth token mismatch" );
+    Log::error( "SNH: twitter-callback token mismatch" );
 
   // Create TwitteroAuth object with app key/secret and token key/secret from default phase
   $connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret'] );
@@ -21,7 +21,7 @@
   if ( $qId )
   {
     $q = "insert into twitter_users (id,access_token,secret,name,screen_name,picture) values( $qId, '$qAccessToken', '$qSecret', '$qName', '$qScreenName', '$qPicture') on duplicate key update access_token='$qAccessToken', secret='$qSecret', name='$qName', screen_name='$qScreenName', picture='$qPicture'";
-    Log::debug( "twitter-auth q: $q" );
+    Log::debug( "twitter-callback q: $q" );
     $db->query($q);
   }
 
@@ -38,9 +38,9 @@
   if ( $httpCode == 200 || $twUid )
   {
     $ref = array_key_exists( 'HTTP_REFERER', $_SERVER ) ? $_SERVER['HTTP_REFERER'] : "";
-    Log::debug( "twitter-auth redirect: $ref" );
+    Log::debug( "twitter-callback redirect: $ref" );
     header( 'Location: '. ($ref ? $ref : "/") );
   }
   else
-    Log::error( "twitter-auth failed, httpCode=$httpCode" );
+    Log::error( "twitter-callback failed, httpCode=$httpCode" );
 ?>

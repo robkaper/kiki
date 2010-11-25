@@ -47,7 +47,7 @@ class Config
 		self::$copySince = date("Y");
 
 		self::$headerLogo = self::$kikiPrefix. "/img/kiki-logo-50.png";
-		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. '/twitter-auth.php';
+		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
 	}
 
 	private static function load()
