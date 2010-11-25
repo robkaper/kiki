@@ -29,6 +29,7 @@ class Config
 	public static $twitterApp = null;
 	public static $twitterSecret = null;
 	public static $twitterCallback = null;
+	public static $twitterAnywhere = false;
 
 	public static $devUsers = array();
 

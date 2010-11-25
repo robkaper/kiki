@@ -147,11 +147,9 @@ FB.init( {appId: '<?= Config::$facebookApp ?>', status: true, cookie: true, xfbm
 FB.Event.subscribe( 'auth.sessionChange', function(response) { onFbResponse(response); } );
 </script>
 <? } // Config::$facebookApp
-   if ( Config::$twitterApp ) { ?>
+   if ( Config::$twitterApp && Config::$twitterAnywhere ) { ?>
 <script src="http://platform.twitter.com/anywhere.js?id=<?= Config::$twitterApp ?>&v=1" type="text/javascript"></script>
 <script>
-twttr.anywhere.config({ callbackURL: "<?= Config::$twitterCallback ?>" });
-
 twttr.anywhere( function (T) {
   T.bind("authComplete", function (e, user) { onTwLogin(e, user); } );
   T.bind("signOut", function (e) { onTwLogout(e); } );
