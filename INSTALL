@@ -11,3 +11,19 @@ Then place directly the contents in your VirtualHost directive.
 
 cd /www/example.com
 touch debug.txt && chgrp www-data debug.txt && chmod 660 debug.txt
+
+3) Facebook Connect
+
+The canvas root for your Kiki application will be:
+
+http://example.com/kiki/facebook-xd/
+
+Your callback URL is:
+
+http://example.com/kiki/facebook-callback.php
+
+4) Twitter Connect
+
+Your callback URL is:
+
+http://example.com/kiki/twitter-callback.php
