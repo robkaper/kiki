@@ -31,6 +31,7 @@ class Config
 	public static $twitterCallback = null;
 	public static $twitterAnywhere = false;
 
+	public static $singleUser = 0;
 	public static $devUsers = array();
 
 	public static function init()

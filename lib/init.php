@@ -33,7 +33,10 @@
   $db = $GLOBALS['db'] = new Database( Config::$db );
 
   $user = $GLOBALS['user'] = new User();
-  $user->authenticate();
+  if ( Config::$singleUser )
+    $user->load( $singleUser );
+  else
+    $user->authenticate();
 
   $fbUser = $user->fbUser;
   $twUser = $user->twUser;
