@@ -110,13 +110,20 @@ var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
   if ( !$user->fbUser )
   {
     global $fb;
-    $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
-    if ( $fbUrl )
-      echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"return fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+    if ( $fb )
+    {
+      $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
+      if ( $fbUrl )
+        echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"return fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+    }
   }
 
   if ( !$user->twUser )
-    echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
+  {
+    global $tw;
+    if ( $tw )
+      echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
+  }
 
   echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
 
