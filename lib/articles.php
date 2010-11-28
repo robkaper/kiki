@@ -121,7 +121,7 @@ class Articles
     $qTitle = $db->escape( $title = $_POST['title'] );
     $qCname = $db->escape( $cname = Misc::uriSafe($title) );
     $qBody = $db->escape( $_POST['body'] );
-    $qVisible = $_POST['visible']=='on' ? true : false;
+    $qVisible = $_POST['visible']=='on' ? 1 : 0;
     $qFacebookUrl = null;
     $qTwitterUrl = null;
     

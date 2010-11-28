@@ -38,7 +38,7 @@ class TinyUrl
     if ( !$id )
       $id = TinyUrl::insert($url);
 
-    return sprintf( "http://%s/%03s", $_SERVER['SERVER_NAME'], sprintfBase62::encode($id) );
+    return sprintf( "http://%s/%03s", $_SERVER['SERVER_NAME'], Base62::encode($id) );
   }
 }
 
