@@ -34,7 +34,7 @@
 
   $user = $GLOBALS['user'] = new User();
   if ( Config::$singleUser )
-    $user->load( $singleUser );
+    $user->load( Config::$singleUser );
   else
     $user->authenticate();
 
