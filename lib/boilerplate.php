@@ -51,7 +51,7 @@ class Boilerplate
     $content .= Boilerplate::socialImage( $type, $name, $pic, "", "display: none;" );
     $content .= "<div class=\"commentTxt\">\n";
 
-    $content .= Form::open( null, "/json/comment.php" ); // PORT: name="form"
+    $content .= Form::open( null, Config::$kikiPrefix. "/json/comment.php" ); // PORT: name="form"
     $content .= Form::hidden( "objectId", $objectId ); // PORT: id=
     $content .= Form::textarea( "comment", null, null, "Schrijf een reactie..." ); // PORT: id=
     $content .= Form::button( "submit", "submit", "Plaats reactie", "display: none;" );

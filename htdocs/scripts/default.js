@@ -9,7 +9,7 @@ function jsonUpdate()
     return;
 
   var json = { 'content': ids };
-  $.getJSON( '/json/update.php', json, function(data) {
+  $.getJSON( kikiPrefix + '/json/update.php', json, function(data) {
     $('.jsonload').remove();
     $.each(data.content, function(i,item) {
       $('#' + item.id).html(item.html);
@@ -159,7 +159,7 @@ function onReady() {
 
     // console.log($(this).serialize());
 
-    $.post( '/json/article.php', json, function(data) {
+    $.post( kikiPrefix + '/json/article.php', json, function(data) {
 
       if ( data.articleId )
       {
@@ -194,7 +194,7 @@ function onReady() {
       json[this.name] = $(this).val();
     } );
 
-    $.post( '/json/comment.php', json, function(data) {
+    $.post( kikiPrefix + '/json/comment.php', json, function(data) {
       $('.jsonload').remove();
 
       $.each(data.comments, function(i,item) {

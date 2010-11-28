@@ -30,6 +30,7 @@ boilerplates['jsonLoad'] = '<?= Boilerplate::jsonLoad(true); ?>';
 boilerplates['jsonSave'] = '<?= Boilerplate::jsonSave(true); ?>';
 var fbUser = '<?= $user->fbUser ? $user->fbUser->id : 0; ?>';
 var twUser = '<?= $user->twUser ? $user->twUser->id : 0; ?>';
+var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
 </script>
 <!--[if IE]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>

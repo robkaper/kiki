@@ -20,7 +20,7 @@ class Articles
       while( $oSection = $db->fetchObject($rs) )
         $sections[$oSection->id] = $oSection->title;
 
-    $content = Form::open( "articleForm_${articleId}", "/json/article.php", 'POST', $style );
+    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $style );
     $content .= Form::hidden( "articleId", $articleId );
     $content .= Form::select( "sectionId", $sections, "Section", $section );
     $content .= Form::text( "title", $title, "Title" );
