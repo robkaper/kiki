@@ -82,6 +82,7 @@ class Articles
     if ( $o->twitter_url )
       $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_16.png\" /></a> <a href=\"$o->twitter_url\">Bekijk op Twitter</a></li>\n";
 
+    // FIXME: doesn't degrade without js
     if ( $user->id == $o->user_id )
       $content .= "<li><a href=\"javascript:showArticleForm($o->id);\">Wijzigen</a></li>\n";
 

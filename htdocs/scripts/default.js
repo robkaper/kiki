@@ -143,10 +143,13 @@ function onReady() {
   } );
 
   $('[id^=articleForm_]').live( 'submit', function() {
-    $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
-    $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' );
-    $('#' + $(this).attr('id') + ' button').after( boilerplates['jsonSave'] );
-    $('#' + $(this).attr('id') + ' button').hide();
+
+    var $submit = $('#' + $(this).attr('id') + ' button[name=submit]');
+    if ( $submit.hasClass('disabled') )
+      return false;
+
+    $submit.after( boilerplates['jsonSave'] );
+    $submit.addClass('disabled');
 
     var json = { formId: $(this).attr('id'), json: 1 };
     var $inputs = $('#' + $(this).attr('id') + ' :input');
@@ -164,15 +167,16 @@ function onReady() {
       if ( data.articleId )
       {
         $('#article_' + data.articleId).html( data.article );
+        // FIXME: verify this change before committing
+        $('#articleForm_0').attr( 'id', data.articleId );
+        $('#articleForm_' + data.articleId + ' input[name=articleId]').value( data.articleId );
         // return;
       }
 
       $('.jsonload').remove();
-      $('[id^=articleForm_] :input').css( 'color', '#000' )
-      $('[id^=articleForm_] textarea').attr( 'disabled', '' );
-      $('[id^=articleForm_] button').attr( 'disabled', '' );
-      $('[id^=articleForm_] button').show();
 
+      var $submit = $('[id^=articleForm_] button[name=submit]');
+      $submit.removeClass('disabled');
     } );
 
     return false;
