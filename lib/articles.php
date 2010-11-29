@@ -46,7 +46,7 @@ class Articles
   public static function title( &$db, &$user, $articleId )
   {
     $qId = $db->escape( $articleId );
-    return $db->getSingleValue( "select title from articles where id=$qId" );
+    return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
   public static function showMulti( &$db, &$user, $sectionId )
