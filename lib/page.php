@@ -110,7 +110,7 @@ var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
   if ( !$user->fbUser )
   {
     global $fb;
-    if ( $fb )
+    if ( Config::$facebookApp && $fb )
     {
       $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
       if ( $fbUrl )
@@ -118,12 +118,8 @@ var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
     }
   }
 
-  if ( !$user->twUser )
-  {
-    global $tw;
-    if ( $tw )
+  if ( !$user->twUser && Config::$twitterApp )
       echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
-  }
 
   echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
 
