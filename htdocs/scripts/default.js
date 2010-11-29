@@ -167,9 +167,8 @@ function onReady() {
       if ( data.articleId )
       {
         $('#article_' + data.articleId).html( data.article );
-        // FIXME: verify this change before committing
-        $('#articleForm_0').attr( 'id', data.articleId );
-        $('#articleForm_' + data.articleId + ' input[name=articleId]').value( data.articleId );
+        $('#articleForm_0').attr( 'id', 'articleForm_' + data.articleId );
+        $('#articleForm_' + data.articleId + ' input[name=articleId]').attr( 'value', data.articleId );
         // return;
       }
 
