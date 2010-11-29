@@ -43,6 +43,12 @@ class Articles
     return $o ? Articles::showArticle( $user, $o, $json ) : null;
   }
 
+  public static function title( &$db, &$user, $articleId )
+  {
+    $qId = $db->escape( $articleId );
+    return $db->getSingleValue( "select title from articles where id=$qId" );
+  }
+
   public static function showMulti( &$db, &$user, $sectionId )
   {
     $qSection = $db->escape( $sectionId );
