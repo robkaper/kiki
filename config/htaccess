@@ -1,3 +1,5 @@
 RewriteEngine On
 
+RewriteRule ^/[0-9a-zA-Z]{3}$ /www/git/kiki/htdocs/tinyurl-redirect.php [E=id:$1,L]
+
 RewriteRule ^/kiki/(.*)$ /www/git/kiki/htdocs/$1
