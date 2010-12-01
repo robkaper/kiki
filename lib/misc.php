@@ -68,7 +68,7 @@ class Misc
         // TODO: Use (.*?) maybe? (First match with as few repeats as possible.)
 
         // Replace [img]img[/img]
-        $text = preg_replace( '(\[img\]([^\[\]]+)\[/img\])', "<div class=\"center\"><img src=\"\\1\" alt=\"\\1\" /></div>", $text );
+        $text = preg_replace( '(\[img\]([^\[\]]+)\[/img\])', "<div class=\"center\"><img src=\"\\1\" alt=\"\\1\" style=\"width: 99%\" /></div>", $text );
         // Replace [blockquote]text[/blockquote]
         $text = preg_replace( '((<p>)?(\n)*\[blockquote\](<br />)?([^\[\]]+)\[/blockquote\](<br />)?(\n)*(</p>)?)', "<blockquote><p>\\4</p></blockquote>", $text );
         // Replace [(/)ul|li]
@@ -93,9 +93,9 @@ class Misc
 
   public static function uriSafe( $uri )
   {
+      $uri = iconv("utf-8", "ascii//TRANSLIT", $uri); // TRANSLIT does the whole job
       $uri = preg_replace('~[^\\pL0-9_]+~u', '-', $uri); // substitutes anything but letters, numbers and '_' with separator
       $uri = trim($uri, "-");
-      $uri = iconv("utf-8", "us-ascii//TRANSLIT", $uri); // TRANSLIT does the whole job
       $uri = strtolower($uri);
       $uri = preg_replace('~[^-a-z0-9_]+~', '', $uri); // keep only letters, numbers, '_' and separator
       return $uri;

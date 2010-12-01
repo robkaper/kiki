@@ -162,7 +162,7 @@ class Articles
     if ( isset($_POST['twPublish']) && $_POST['twPublish'] == 'on' )
     {
       global $tw;
-      $msg = null. " $tinyUrl";
+      $msg = "$title $tinyUrl";
       Log::debug( "Social::twPublish( $msg );" );
       $twRs = Social::twPublish( $tw, $msg );
       $qTwitterUrl = $twRs->url;

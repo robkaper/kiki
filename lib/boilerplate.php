@@ -96,7 +96,7 @@ class Boilerplate
 
     // Level 1
 
-    // $level1[] = array( 'title' => 'Lowlands<br />(blog)', 'url' => '/lowlands/' );
+    $level1[] = array( 'title' => 'Lowlands<br />(blog)', 'url' => '/lowlands/' );
 
     $level1[] = array( 'title' => 'Web<br />development', 'url' => '/webdev/' );
     $level1[] = array( 'title' => 'Contact<br />en adres', 'url' => '/contact/', 'class' => 'right' );

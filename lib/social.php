@@ -15,7 +15,7 @@ class Social
       'name' => $name,
       'caption' => $caption,
       'description' => $description,
-      'picture' => $picture
+      'picture' => $picture ? $picture : ( 'http://'. $_SERVER['SERVER_NAME']. self::$headerLogo );
     );
 
     Log::debug( "fbPublish: ", print_r( $attachment, true ) );
