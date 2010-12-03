@@ -7,7 +7,7 @@ class MVC
   }
 
   // Simple includer, tries document root first and falls back to Kiki root
-  public function include( $section )
+  public function load( $section )
   {
     $local = $GLOBALS['root']. "/mvc/". strtolower( $section ). ".php";
     if ( file_exists($local) )
@@ -23,7 +23,7 @@ class MVC
     }
   }
 
-  // TODO: render HTML templates by subsitution of variables (will deprecate include method)
+  // TODO: render HTML templates by subsitution of variables (will deprecate load method)
   // And of course implement if/else, loops, etc... might as well stick with good old include and not write our own language
   public function render()
   {

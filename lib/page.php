@@ -54,9 +54,9 @@ var requestUri = '<? $_SERVER['REQUEST_URI']; ?>';
 </head>
 <body>
 <?
-  $mvc->include( "header" );
-  $mvc->include( "nav" );
-  $mvc->include( "aside" );
+  $mvc->load( "header" );
+  $mvc->load( "nav" );
+  $mvc->load( "aside" );
 ?>
 <div id="cw">
 <div id="content">
