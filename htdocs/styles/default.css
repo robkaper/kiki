@@ -30,11 +30,11 @@ header, footer, aside, nav, article {
         margin: 0.5em 0 0.5em 160px;
 }
 
-#sidebar {
+aside {
 	font-size: 0.75em; /* 0.75*16=12 */
 }
 
-#sidebar > .box
+aside > .box
 {
 	margin: 0 0 0.5em 0;
 	-moz-border-radius: 4px / 6px;
@@ -44,7 +44,7 @@ header, footer, aside, nav, article {
 	xheight: 50px;
 }
 
-#sidebar p {
+aside p {
 	margin: 0;
 	padding: 0.25em;
 }
@@ -308,7 +308,7 @@ img.social {
 	padding: 33px 1px 1px 33px; /* / FIXME: twitter icons are 48px and 33+16+1 assumes 50px */
 }
 
-#sidebar img.social {
+aside img.social {
 	float:right;
 	margin-left: 0.25em;
 	margin-right: 0;
@@ -333,11 +333,11 @@ img.social {
 		content: " (http://robkaper.nl" attr(href) ") ";
    	}
 
-	#sidebar .box {
+	aside .box {
 		display: none;
 	}
 
-	#sidebar {
+	aside {
 		float: left;
 	}
 	#content {
@@ -348,7 +348,7 @@ img.social {
 
 /* / TODO: from old dev, port */
 
-#sidebar {
+aside {
 	margin: 10px auto;
 	-moz-margin: 0 auto;
 	position: relative;
@@ -456,7 +456,7 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 		width: auto;
 	}
 
-	#sidebar {
+	aside {
 		display: block;
 	}
 

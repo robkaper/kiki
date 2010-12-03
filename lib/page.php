@@ -3,6 +3,7 @@
 class Page
 {
   private $title;
+  public $tagLine;
 
   public function __construct( $title = null, $tagLine = null )
   {
@@ -52,86 +53,10 @@ var requestUri = '<? $_SERVER['REQUEST_URI']; ?>';
 </head>
 <body>
 <?
-  echo "<header>\n";
-  echo "<section id=\"title\">\n";
-  // FIXME: make logo size configurable
-  echo "<a href=\"/\"><img src=\"". Config::$headerLogo. "\" alt=\"". Config::$siteName. "\" style=\"width: 50px; height: 50px; float: left;\"/></a>\n";
-//  echo "<div id=\"search\" style=\"float: right;\"><input type=\"text\"/></div>\n";
-  echo "<h1><a href=\"/\">". Config::$siteName. "</a></h1>\n";
-  echo $this->tagLine. "\n";
-  echo "<br class=\"spacer\">\n";
-  echo "</section>\n";
-  echo "</header>\n";
-
-  echo "<nav>\n";
-  echo Boilerplate::navMenu( $user );
-  echo "</nav>\n";
-  echo "<nav class=\"second\">\n";
-  echo Boilerplate::navMenu( $user, 2 );
-  echo "</nav>\n";
+  $mvc->include( "header" );
+  $mvc->include( "nav" );
+  $mvc->include( "aside" );
 ?>
-
-<div id="sw">
-<div id="sidebar">
-<?
-  global $user, $anyUser, $allUsers;
-
-  $me = new User(1);
-  if ( $me->id )
-  {
-    list( $type, $name, $pic ) = $me->socialData();
-    echo "<div class=\"box\">\n";
-    echo Boilerplate::socialImage( $type, $name, $pic );
-    echo "<p>Ik ben <b>$name</b>.</p><br class=\"spacer\"/>\n";
-    echo "</div>\n";
-  }
-
-  $fbStyle = $user->fbUser ? "" : "display: none;";
-  $twStyle = $user->twUser ? "" : "display: none;";
-  $whoStyleOr = $anyUser ? "display: none;" : "";
-  $whoStyleAnd = $allUsers ? "display: none;" : "";
-
-  list( $type, $name, $pic ) = $user->socialData( 'facebook' );
-  echo "<div class=\"box\" id=\"fbYouAre\" style=\"$fbStyle\">\n";
-  echo Boilerplate::socialImage( 'facebook', $name, $pic, "fbImg" );
-  echo "<p>Jij bent <b><span class=\"fbName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
-  echo "</div>\n";
-
-  list( $type, $name, $pic ) = $user->socialData( 'twitter' );
-  echo "<div class=\"box\" id=\"twYouAre\" style=\"$twStyle\">\n";
-  echo Boilerplate::socialImage( 'twitter', $name, $pic, "twImg" );
-  echo "<p>Jij bent <b><span class=\"twName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
-  echo "</div>\n";
-
-  echo "<div class=\"box\" id=\"whoAreYou\" style=\"$whoStyleAnd\">\n";
-  echo "<a name=\"login\"></a>\n";
-  echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
-
-  // FIXME: boilerplate this?
-  if ( !$user->fbUser )
-  {
-    global $fb;
-    if ( Config::$facebookApp && $fb )
-    {
-      $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
-      if ( $fbUrl )
-        echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"return fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
-    }
-  }
-
-  if ( !$user->twUser && Config::$twitterApp )
-      echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
-
-  echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
-
-  if ( 0 && $user->isAdmin() )
-    echo Google::adSense( "4246395131" );
-
-  echo "</div>\n";
-?>
-</div>
-</div>
-
 <div id="cw">
 <div id="content">
 <?
