@@ -255,7 +255,7 @@ class User
       return array( 'facebook', $this->fbUser->name, "http://graph.facebook.com/". $this->fbUser->id. "/picture" );
     else if ( (!$type || $type=='twitter') && $this->twUser )
       return array( 'twitter', $this->twUser->name, $this->twUser->picture );
-    else if ( preg_match( "/^Googlebot/", $_SERVER['HTTP_USER_AGENT'] ) )
+    else if ( isset($_SERVER['HTTP_USER_AGENT']) && preg_match( "/^Googlebot/", $_SERVER['HTTP_USER_AGENT'] ) )
       return array( null, "Googlebot", null );
     else
       return array( null, null, null );
