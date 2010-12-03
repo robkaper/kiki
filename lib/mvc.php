@@ -16,11 +16,14 @@ class MVC
       return;
     }
 
-    $kiki = $GLOBALS['root']. "/mvc/". strtolower( $section ). ".php";
+    $kiki = $GLOBALS['kiki']. "/mvc/". strtolower( $section ). ".php";
     if ( file_exists($kiki) )
     {
       include "$kiki";
+      return;
     }
+
+    echo "<div style=\"border: 1px solid black;\">Missing template: [$section]</div>\n";
   }
 
   // TODO: render HTML templates by subsitution of variables (will deprecate load method)
