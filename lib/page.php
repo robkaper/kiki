@@ -31,6 +31,7 @@ boilerplates['jsonSave'] = '<?= Boilerplate::jsonSave(true); ?>';
 var fbUser = '<?= $user->fbUser ? $user->fbUser->id : 0; ?>';
 var twUser = '<?= $user->twUser ? $user->twUser->id : 0; ?>';
 var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
+var requestUri = '<? $_SERVER['REQUEST_URI']; ?>';
 </script>
 <!--[if IE]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>

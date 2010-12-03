@@ -71,16 +71,16 @@ class Boilerplate
   }
 
   // FIXME: menu should be truly dynamic and managable and configurable outside of base classes, rjkcust
-  // FIXME: based on REQUEST_URI, /json/update won't get the right menus hence disabled (xjsonupdate)
   public static function navMenu( &$user, $level = 1 )
   {
     $content = "";
     $context = null;
 
-    $content .= "<ul id=\"navMenu-${level}\" class=\"xjsonupdate\">\n";    
+    $content .= "<ul id=\"navMenu-${level}\" class=\"jsonupdate\">\n";    
 
     $matches = array();
-    preg_match( '#(/(.*))/((.*)(\.php)?)#', $_SERVER['REQUEST_URI'], $matches );
+    $requestUri = isset($_GET['uri']) ? $_GET['uri'] : $_SERVER['REQUEST_URI'];
+    preg_match( '#(/(.*))/((.*)(\.php)?)#', $requestUri, $matches );
     if ( count($matches) )
     {
       $context = $matches[2];

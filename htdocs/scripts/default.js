@@ -8,7 +8,7 @@ function jsonUpdate()
   if ( ids.length==0 )
     return;
 
-  var json = { 'content': ids };
+  var json = { 'uri': requestUri, 'content': ids };
   $.getJSON( kikiPrefix + '/json/update.php', json, function(data) {
     $('.jsonload').remove();
     $.each(data.content, function(i,item) {
