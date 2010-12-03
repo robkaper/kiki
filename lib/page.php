@@ -14,6 +14,7 @@ class Page
   public function header()
   {
     $user = $GLOBALS['user'];
+    $mvc = $GLOBALS['mvc'];
 
     echo "<!DOCTYPE html>\n";
     echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";

@@ -31,6 +31,7 @@
   }
 
   $db = $GLOBALS['db'] = new Database( Config::$db );
+  $mvc = $GLOBALS['mvc'] = new MVC();
 
   $user = $GLOBALS['user'] = new User();
   if ( Config::$singleUser )
