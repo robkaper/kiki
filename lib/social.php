@@ -9,16 +9,18 @@ class Social
     $result->url = null;
     $result->error = null;
 
+    $pictureUrl = $picture ? $picture : Config::$headerLogo;
+
     $attachment = array(
       'message' => $msg,
       'link' => $link, 
       'name' => $name,
       'caption' => $caption,
       'description' => $description,
-      'picture' => $picture ? $picture : ( 'http://'. $_SERVER['SERVER_NAME']. Config::$headerLogo )
+      'picture' => $pictureUrl
     );
 
-    Log::debug( "fbPublish: ", print_r( $attachment, true ) );
+    Log::debug( "fbPublish: ". print_r( $attachment, true ) );
     $fbRs = $fb->api('/me/feed', 'post', $attachment);
     Log::debug( "fbRs: ". print_r( $fbRs, true ) );
 
