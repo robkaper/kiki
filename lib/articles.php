@@ -10,7 +10,7 @@ class Articles
     $body = $o ? htmlspecialchars( $o->body ) : "";
     $date = date( "d-m-Y H:i", $o ? strtotime($o->ctime) : time() );
     $visible = ($o && $o->visible);
-    $style = $o ? "display: none;" : "";
+    $class = $o ? "hidden" : "";
 
     $sections = array();
     $db = $GLOBALS['db'];
@@ -20,14 +20,16 @@ class Articles
       while( $oSection = $db->fetchObject($rs) )
         $sections[$oSection->id] = $oSection->title;
 
-    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $style );
+    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class );
     $content .= Form::hidden( "articleId", $articleId );
     $content .= Form::select( "sectionId", $sections, "Section", $section );
     $content .= Form::text( "title", $title, "Title" );
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
-    $content .= Form::checkbox( "fbPublish", false, "Facebook", "Publish on Facebook" );
+    $content .= Form::checkbox( "fbP
+    
+    ublish", false, "Facebook", "Publish on Facebook" );
     $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
@@ -153,7 +155,7 @@ class Articles
       $link = $myUrl;
       $caption = '';
       $description = '';
-      $picture = '';
+      $picture = $picture ? $picture : Config::$headerLogo;
       Log::debug( "Social::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
       $fbRs = Social::fbPublish( $fb, $msg, $link, $title, $caption, $description, $picture );
       $qFacebookUrl = $fbRs->url;

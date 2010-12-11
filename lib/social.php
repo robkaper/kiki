@@ -9,15 +9,13 @@ class Social
     $result->url = null;
     $result->error = null;
 
-    $pictureUrl = $picture ? $picture : Config::$headerLogo;
-
     $attachment = array(
       'message' => $msg,
       'link' => $link, 
       'name' => $name,
       'caption' => $caption,
       'description' => $description,
-      'picture' => $pictureUrl
+      'picture' => $picture
     );
 
     Log::debug( "fbPublish: ". print_r( $attachment, true ) );

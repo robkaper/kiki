@@ -22,19 +22,14 @@ var submitTimer = null;
 
 function growCommentForm( id )
 {
-  $('#' + id + ' textarea').css( 'height', '10em' );
-  // TODO: replace all this mojo with a css selector class on form and addClass/removeClass
-  $('#' + id + ' :input').css( 'color', '#000' );
+  $('#' + id + ' [id^=commentForm_]').removeClass( 'shrunk' );
   $('#' + id + ' img.social').show();
-  $('#' + id + ' button').show();
 }
 
 function shrinkCommentForms()
 {
-  $('[id^=comments_] textarea').css( 'height', '1.5em' );
-  $('[id^=comments_] :input').css( 'color', '#666' );
+  $('[id^=comments_] [id^=commentForm_]').addClass( 'shrunk' );
   $('[id^=comments_] [id^=commentForm_] img.social').hide();
-  $('[id^=comments_] button').hide();
 }
 
 function showArticleForm( articleId )

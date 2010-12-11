@@ -2,11 +2,11 @@
 
 class Form
 {
-  public static function open( $id=null, $action=null, $method='POST', $style=null )
+  public static function open( $id=null, $action=null, $method='POST', $class=null )
   {
     $id = $id ? " id=\"$id\"" : "";
-    $style = $style ? " style=\"$style\"" : "";
-    return "<form ${id} action=\"$action\" method=\"$method\"${style}>\n";
+    $class = $class ? " class=\"$class\"" : "";
+    return "<form ${id} action=\"$action\" method=\"$method\"${class}>\n";
   }
 
   public static function close()

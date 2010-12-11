@@ -6,7 +6,7 @@ class Comments
   {
     global $anyUser;
     
-    $content = "<div id=\"commentForm_$objectId\" class=\"jsonupdate\">\n";
+    $content = "<div id=\"commentForm_$objectId\" class=\"jsonupdate shrunk\">\n";
     $content .= $anyUser ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
     $content .= "</div>\n";
     return $content;
