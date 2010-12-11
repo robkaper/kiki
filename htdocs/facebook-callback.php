@@ -1,5 +1,5 @@
 <?
-  include_once $_SERVER['DOCUMENT_ROOT']. "/../lib/init.php";
+  include_once "../lib/init.php";
 
   if ( !$fbUser )
   {
