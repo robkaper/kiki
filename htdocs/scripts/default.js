@@ -22,7 +22,7 @@ var submitTimer = null;
 
 function growCommentForm( id )
 {
-  $('#' + id + ' [id^=commentForm_]').removeClass( 'shrunk' );
+  $('#' + id).removeClass( 'shrunk' );
   $('#' + id + ' img.social').show();
 }
 
