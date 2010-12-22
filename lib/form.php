@@ -21,12 +21,18 @@ class Form
     return "<input type=\"hidden\" name=\"${id}\" value=\"${value}\" />\n";
   }
 
-  public static function text( $id, $value=null, $label=null, $placeholder=null )
+  public static function text( $id, $value=null, $label=null, $placeholder=null, $password=false )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
     $content = "<p><label>${label}</label>\n";
-    $content .= "<input type=\"text\" name=\"${id}\" value=\"${value}\"${placeholder} /></p>\n";
+    $type = $password ? "password" : "text";
+    $content .= "<input type=\"${type}\" name=\"${id}\" value=\"${value}\"${placeholder} /></p>\n";
     return $content;
+  }
+
+  public static function password( $id, $value=null, $label=null, $placeholder=null )
+  {
+    return self::text( $id, $value, $label, $placeholder, true );
   }
 
   public static function textarea( $id, $value=null, $label=null, $placeholder = null )
