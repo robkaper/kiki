@@ -33,6 +33,9 @@ class Articles
     $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
+
+    $content .= Form::attachFile( "Image", "body" );
+          
     return $content;
   }
 

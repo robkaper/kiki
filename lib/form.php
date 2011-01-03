@@ -41,10 +41,10 @@ class Form
     if ( $label )
     {
       $content = "<p><label>${label}</label>\n";
-      $content .= "<textarea name=\"${id}\"${placeholder}>${value}</textarea></p>\n";
+      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea></p>\n";
     }
     else
-      $content = "<textarea name=\"${id}\"${placeholder}>${value}</textarea>\n";
+      $content = "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea>\n";
 
     return $content;
   }
@@ -97,6 +97,25 @@ $( function() {
   {
     $style = $style ? " style=\"$style\"" : "";
     return "<p>\n<button name=\"${id}\" id=\"${id}\" type=\"${type}\"${style}>${label}</button></p>\n";
+  }
+
+  public static function file( $id, $label=null )
+  {
+    $content = "<p><label>${label}</label>\n";
+    $content .= "<input type=\"file\" name=\"${id}\" /></p>\n";
+    return $content;
+  }
+
+  public static function attachFile( $label=null, $target=null )
+  {
+    // TODO: extend Form::open to support target and enctype
+    $content = "<form id=\"attachFile\" method=\"post\" enctype=\"multipart/form-data\" action=\"". Config::$kikiPrefix. "/add-attachment.php\" target=\"attachTarget\">\n";
+    $content .= Form::hidden( "target", $target );
+    $content .= Form::file( "attachment", $label );
+    $content .= Form::button( "submitAttachment", "submit", "Attach file" );
+    $content .= "<iframe id=\"attachTarget\" name=\"attachTarget\" src=\"\" style=\"xwidth: 0; xheight: 0; xdisplay: none;\"></iframe>\n";
+    $content .= Form::close();
+    return $content;
   }
 }
 

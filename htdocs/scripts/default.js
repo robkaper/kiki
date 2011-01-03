@@ -119,6 +119,11 @@ function onTwLogout( user )
       $('.youUnknown').show();
 }
 
+function addAttachment( target, uri )
+{
+  $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
+}
+
 function onReady() {
   $('input[placeholder], textarea[placeholder]').placeholder();
            
