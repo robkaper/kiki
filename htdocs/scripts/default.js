@@ -221,7 +221,7 @@ function onReady() {
   $('#attachFile').live( 'submit', function() {
     $('#attachFile button').after( boilerplates['jsonSave'] );
     return true;
-  }
+  } );
   
 }
 
