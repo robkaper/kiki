@@ -244,6 +244,12 @@ form.hidden {
 	color: #aaa;
 }
 
+#attachTarget {
+	width: 0;
+	height: 0;
+	display: none;
+}
+
 article {
   margin: 0 0 1em 0;
   xborder: 1px solid pink;

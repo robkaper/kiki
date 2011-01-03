@@ -113,7 +113,7 @@ $( function() {
     $content .= Form::hidden( "target", $target );
     $content .= Form::file( "attachment", $label );
     $content .= Form::button( "submitAttachment", "submit", "Attach file" );
-    $content .= "<iframe id=\"attachTarget\" name=\"attachTarget\" src=\"\" style=\"xwidth: 0; xheight: 0; xdisplay: none;\"></iframe>\n";
+    $content .= "<iframe id=\"attachTarget\" name=\"attachTarget\" src=\"\"></iframe>\n";
     $content .= Form::close();
     return $content;
   }

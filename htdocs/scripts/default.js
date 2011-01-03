@@ -121,6 +121,7 @@ function onTwLogout( user )
 
 function addAttachment( target, uri )
 {
+  $('.jsonload').remove();
   $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
 }
 
@@ -216,6 +217,12 @@ function onReady() {
 
     return false;
   } );
+
+  $('#attachFile').live( 'submit', function() {
+    $('#attachFile button').after( boilerplates['jsonSave'] );
+    return true;
+  }
+  
 }
 
 $( function() { onReady(); } );
