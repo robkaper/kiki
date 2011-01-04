@@ -176,7 +176,7 @@ form .small {
 	text-align: right;
 }
 
-form input, form textarea {
+form input, form textarea, form select {
 	border: solid 1px #463;
 	width: 70%;
 	margin: 5px 5px 0 0;
