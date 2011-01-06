@@ -6,8 +6,8 @@ class Articles
   {
     $section = $o ? $o->section_id : 0;
     $articleId = $o ? $o->id : 0;
-    $twitterId = $o ? $o->twitter_id : 0;
-    $facebookId = $o ? $o->facebook_id : 0;
+    $twitterUrl = $o ? $o->twitter_url : 0;
+    $facebookUrl = $o ? $o->facebook_url : 0;
     $title = $o ? $o->title : "";
     $body = $o ? htmlspecialchars( $o->body ) : "";
     $date = date( "d-m-Y H:i", $o ? strtotime($o->ctime) : time() );
@@ -24,21 +24,21 @@ class Articles
 
     $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class );
     $content .= Form::hidden( "articleId", $articleId );
-    $content .= Form::hidden( "twitterId", $twitterId );
-    $content .= Form::hidden( "facebookId", $facebookId );
+    $content .= Form::hidden( "twitterUrl", $twitterUrl );
+    $content .= Form::hidden( "facebookUrl", $facebookUrl );
     $content .= Form::select( "sectionId", $sections, "Section", $section );
     $content .= Form::text( "title", $title, "Title" );
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
-    if ( !$facebookId )
+    if ( !$facebookUrl )
       $content .= Form::checkbox( "fbPublish", false, "Facebook", "Publish on Facebook" );
-    if ( !$twitterId )
+    if ( !$twitterUrl )
       $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
 
-    $content .= Form::attachFile( "Image", "body" );
+    // $content .= Form::attachFile( "Image", "body" );
           
     return $content;
   }
@@ -138,8 +138,8 @@ class Articles
     $qCname = $db->escape( $cname = Misc::uriSafe($title) );
     $qBody = $db->escape( $_POST['body'] );
     $qVisible = $_POST['visible']=='on' ? 1 : 0;
-    $qFacebookUrl = null;
-    $qTwitterUrl = null;
+    $qFacebookUrl = $db->escape( $_POST['facebookUrl'] );
+    $qTwitterUrl = $db->escape( $_POST['twitterUrl'] );
     
     if ( !$qBody )
       $errors[] = "Je kunt geen leeg artikel opslaan!";
