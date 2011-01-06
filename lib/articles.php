@@ -6,6 +6,8 @@ class Articles
   {
     $section = $o ? $o->section_id : 0;
     $articleId = $o ? $o->id : 0;
+    $twitterId = $o ? $o->twitter_id : 0;
+    $facebookId = $o ? $o->facebook_id : 0;
     $title = $o ? $o->title : "";
     $body = $o ? htmlspecialchars( $o->body ) : "";
     $date = date( "d-m-Y H:i", $o ? strtotime($o->ctime) : time() );
@@ -22,15 +24,17 @@ class Articles
 
     $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class );
     $content .= Form::hidden( "articleId", $articleId );
+    $content .= Form::hidden( "twitterId", $twitterId );
+    $content .= Form::hidden( "facebookId", $facebookId );
     $content .= Form::select( "sectionId", $sections, "Section", $section );
     $content .= Form::text( "title", $title, "Title" );
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
-    $content .= Form::checkbox( "fbP
-    
-    ublish", false, "Facebook", "Publish on Facebook" );
-    $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
+    if ( !$facebookId )
+      $content .= Form::checkbox( "fbPublish", false, "Facebook", "Publish on Facebook" );
+    if ( !$twitterId )
+      $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
 
