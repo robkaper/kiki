@@ -96,6 +96,7 @@ class Boilerplate
 
     // Level 1
 
+    $level1[] = array( 'title' => 'Bar Poker<br />(blog)', 'url' => '/barpoker/' );
     $level1[] = array( 'title' => 'Lowlands<br />(blog)', 'url' => '/lowlands/' );
 
     $level1[] = array( 'title' => 'Web<br />development', 'url' => '/webdev/' );
