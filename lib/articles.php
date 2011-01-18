@@ -158,7 +158,7 @@ class Articles
     if ( isset($_POST['fbPublish']) && $_POST['fbPublish'] == 'on' )
     {
       global $fb;
-      $msg = null;
+      $msg = '';
       $link = $myUrl;
       $caption = '';
       $description = '';
