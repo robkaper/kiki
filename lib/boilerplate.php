@@ -63,20 +63,21 @@ class Boilerplate
     return $content;
   }
 
-  public static function navMenuItem( $item )
+  public static function navMenuItem( &$user, $o )
   {
-    $match = preg_match( "#$item[url]#", $_SERVER['REQUEST_URI'] );
-    $class = (isset($item['class']) ? $item['class'] : ""). ($match ? " active" : "");
-    return "<li class=\"$class\"><a href=\"$item[url]\">$item[title]</a></li>\n";
+    if ( $o->admin && !$user->isAdmin() )
+      return null;
+
+    $match = preg_match( "#$o->url#", $_SERVER['REQUEST_URI'] );
+    $class = $o->class. ($match ? " active" : "");
+    return "<li class=\"$class\"><a href=\"$o->url\">$o->title</a></li>\n";
   }
 
-  // FIXME: menu should be truly dynamic and managable and configurable outside of base classes, rjkcust
   public static function navMenu( &$user, $level = 1 )
   {
-    $content = "";
     $context = null;
 
-    $content .= "<ul id=\"navMenu-${level}\" class=\"jsonupdate\">\n";    
+    $content = "<ul id=\"navMenu-${level}\" class=\"jsonupdate\">\n";    
 
     $matches = array();
     $requestUri = isset($_GET['uri']) ? $_GET['uri'] : $_SERVER['REQUEST_URI'];
@@ -88,48 +89,16 @@ class Boilerplate
     }
     $paths = explode( "/", $context );
 
-    // $content .= "<li>[$level][$context]</li>";
+    $db = $GLOBALS['db'];
 
-    $level1 = array();
-    $level2 = array();
-    $level3 = array();
+    $qLevel = $db->escape( $level );
+    $qContext = $db->escape( $context );
 
-    // Level 1
-
-    $level1[] = array( 'title' => 'Lowlands<br />(blog)', 'url' => '/lowlands/' );
-
-    $level1[] = array( 'title' => 'Web<br />development', 'url' => '/webdev/' );
-
-    $level1[] = array( 'title' => 'Contact<br />en adres', 'url' => '/contact/', 'class' => 'right' );
-    $level1[] = array( 'title' => 'Curriculum</br />vitae', 'url' => '/cv/', 'class' => 'right' );
-
-    if ( $user->isAdmin() )
-      $level1[] = array( 'title' => 'Admin<br />spul', 'url' => '/admin/', 'class' => 'right' );
-
-    // Level 2 (context-based)
-    if ( isset($paths[0]) )
-    {
-      switch( $paths[0] )
-      {
-      case 'webdev':
-        $level2[] = array( 'url' => "/webdev/kiki/", 'title' => "Kiki" );
-        break;
-      default:;
-      }
-    }
-
-    // Level 3 (even more so)
-    if ( isset($paths[1]) )
-    {
-      switch( $paths[1] )
-      {
-        // Build level3 (/webdev/kiki/todo.php)
-      }
-    }
-
-    $levelArray = "level$level";
-    foreach( $$levelArray as $menuItem )
-      $content .= Boilerplate::navMenuItem($menuItem);
+    $q = "select title, url, admin, class from menu_items where level=$qLevel and (context='$qContext' or context is null) order by sortorder asc";
+    $rs = $db->query($q);
+    if ( $rs && $db->numRows($rs) )
+      while( $o = $db->fetchObject($rs) )
+        $content .= Boilerplate::navMenuItem( $user, $o );
 
     $content .= "</ul>\n";
     return $content;

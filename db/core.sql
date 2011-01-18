@@ -79,3 +79,16 @@ create table tinyurl (
   url varchar(255) not null,
   unique key(url)
 );
+
+drop table if exists menu_items;
+create table menu_items (
+  id bigint unsigned not null auto_increment,
+  primary key(id),
+  title varchar(255) not null,
+  url varchar(255) not null,
+  level tinyint unsigned not null,
+  context varchar(255) not null,
+  admin boolean default false,
+  class varchar(255) default null,
+  sortorder tinyint unsigned not null
+);
