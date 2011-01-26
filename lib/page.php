@@ -25,7 +25,12 @@ class Page
 ?>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="<?= Config::$kikiPrefix ?>/styles/default.css" title="Kiki Default" />
-<!-- <link rel="alternate stylesheet" type="text/css" href="/styles/sint.css" title="Sint" /> -->
+<?
+    if ( Config::$customCss )
+    {
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. " title=\"". Config::$siteName. "\" />\n";
+    }
+?>
 <script type="text/javascript">
 var boilerplates = new Array();
 boilerplates['jsonLoad'] = '<?= Boilerplate::jsonLoad(true); ?>';

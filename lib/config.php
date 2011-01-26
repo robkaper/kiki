@@ -7,7 +7,6 @@ class Config
 	public static $copySince = null;
 	public static $address = null;
 
-
 	public static $dbHost = "localhost";
 	public static $dbPort = 3306;
 	public static $dbName = null;
@@ -19,6 +18,7 @@ class Config
 	public static $staticPrefix = "/static";
 
 	public static $headerLogo = null;
+	public static $customCss = null;
 
 	public static $googleSiteVerification = null;
 	public static $googleAnalytics = null;
