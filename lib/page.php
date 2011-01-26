@@ -27,9 +27,7 @@ class Page
 <link rel="stylesheet" type="text/css" href="<?= Config::$kikiPrefix ?>/styles/default.css" title="Kiki Default" />
 <?
     if ( Config::$customCss )
-    {
-      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. "\" title=\"". Config::$siteName. "\" />\n";
-    }
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. "\" />\n";
 ?>
 <script type="text/javascript">
 var boilerplates = new Array();
