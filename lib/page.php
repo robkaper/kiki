@@ -28,7 +28,7 @@ class Page
 <?
     if ( Config::$customCss )
     {
-      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. " title=\"". Config::$siteName. "\" />\n";
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. "\" title=\"". Config::$siteName. "\" />\n";
     }
 ?>
 <script type="text/javascript">
