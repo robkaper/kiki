@@ -45,12 +45,14 @@
   $allUsers = ($fbUser && $twUser);
 
   // Don't log trivial and overly frequent requests like IM updates
-  if ( !preg_match( '#/(im).php(\?)?#', $_SERVER['REQUEST_URI'] ) )
+  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+  if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
   {
     $fbUserTxt = $fbUser ? ", fbUser: $fbUser->id ($fbUser->name)" : "";
     $twUserTxt = $twUser ? ", twUser: $twUser->id ($twUser->name)" : "";
 
-    $log = sprintf( "%4s: %s%s%s", $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $fbUserTxt, $twUserTxt );
+    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
+    $log = sprintf( "%4s: %s%s%s", $reqMethod, $reqUri, $fbUserTxt, $twUserTxt );
     Log::debug( $log );
   }
 ?>
