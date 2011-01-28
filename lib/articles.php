@@ -93,9 +93,9 @@ class Articles
     $content .= "<footer>\n";
 
     if ( $o->facebook_url )
-      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_16.png\" /></a> <a href=\"$o->facebook_url\">Bekijk op Facebook</a></li>\n";
+      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_16.png\" alt=\"\" /></a> <a href=\"$o->facebook_url\">Bekijk op Facebook</a></li>\n";
     if ( $o->twitter_url )
-      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_16.png\" /></a> <a href=\"$o->twitter_url\">Bekijk op Twitter</a></li>\n";
+      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_16.png\" alt=\"\" /></a> <a href=\"$o->twitter_url\">Bekijk op Twitter</a></li>\n";
 
     // FIXME: doesn't degrade without js
     if ( $user->id == $o->user_id )

@@ -35,7 +35,7 @@ class Boilerplate
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )
   {
     $img = $type ? "/img/komodo/${type}_16.png" : "/img/blank.gif";
-    return "<img class=\"social $extraClasses\" style=\"background: url('$pictureUrl'); $extraStyles\" src=\"". Config::$kikiPrefix. "$img\" alt=\"$name\" />\n";
+    return "<img class=\"social $extraClasses\" style=\"background: url('$pictureUrl'); $extraStyles\" src=\"". Config::$kikiPrefix. "$img\" alt=\"[$name]\" />\n";
   }
 
   static function commentForm( &$user, $objectId )
