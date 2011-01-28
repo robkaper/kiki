@@ -3,7 +3,7 @@
   global $user, $anyUser, $allUsers;
 
   $me = new User(1);
-  if ( $me->id )
+  if ( (Config::$facebookApp || Config::$twitterApp) && $me->id )
   {
     list( $type, $name, $pic ) = $me->socialData();
     echo "<div class=\"box\">\n";
@@ -17,20 +17,25 @@
   $whoStyleOr = $anyUser ? "display: none;" : "";
   $whoStyleAnd = $allUsers ? "display: none;" : "";
 
-  list( $type, $name, $pic ) = $user->socialData( 'facebook' );
-  echo "<div class=\"box\" id=\"fbYouAre\" style=\"$fbStyle\">\n";
-  echo Boilerplate::socialImage( 'facebook', $name, $pic, "fbImg" );
-  echo "<p>Jij bent <b><span class=\"fbName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
-  echo "</div>\n";
+  if ( Config::$facebookApp )
+  {
+    list( $type, $name, $pic ) = $user->socialData( 'facebook' );
+    echo "<div class=\"box\" id=\"fbYouAre\" style=\"$fbStyle\">\n";
+    echo Boilerplate::socialImage( 'facebook', $name, $pic, "fbImg" );
+    echo "<p>Jij bent <b><span class=\"fbName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
+    echo "</div>\n";
+  }
 
-  list( $type, $name, $pic ) = $user->socialData( 'twitter' );
-  echo "<div class=\"box\" id=\"twYouAre\" style=\"$twStyle\">\n";
-  echo Boilerplate::socialImage( 'twitter', $name, $pic, "twImg" );
-  echo "<p>Jij bent <b><span class=\"twName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
-  echo "</div>\n";
+  if ( Config::$twitterApp )
+  {
+    list( $type, $name, $pic ) = $user->socialData( 'twitter' );
+    echo "<div class=\"box\" id=\"twYouAre\" style=\"$twStyle\">\n";
+    echo Boilerplate::socialImage( 'twitter', $name, $pic, "twImg" );
+    echo "<p>Jij bent <b><span class=\"twName\">$name</span></b>.</p><br class=\"spacer\"/>\n";
+    echo "</div>\n";
+  }
 
   echo "<div class=\"box\" id=\"whoAreYou\" style=\"$whoStyleAnd\">\n";
-  echo "<a name=\"login\"></a>\n";
   echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
 
   // FIXME: boilerplate this?
@@ -41,14 +46,14 @@
     {
       $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
       if ( $fbUrl )
-        echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"return fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+        echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
     }
   }
 
   if ( !$user->twUser && Config::$twitterApp )
       echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
 
-  echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
+  // echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
 
   if ( 0 && $user->isAdmin() )
     echo Google::adSense( "4246395131" );
