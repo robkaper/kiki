@@ -35,29 +35,32 @@
     echo "</div>\n";
   }
 
-  echo "<div class=\"box\" id=\"whoAreYou\" style=\"$whoStyleAnd\">\n";
-  echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
-
-  // FIXME: boilerplate this?
-  if ( !$user->fbUser )
+  if ( Config::$facebookApp || Config::$twitterApp )
   {
-    global $fb;
-    if ( Config::$facebookApp && $fb )
+    echo "<div class=\"box\" id=\"whoAreYou\" style=\"$whoStyleAnd\">\n";
+    echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
+
+    // FIXME: boilerplate this?
+    if ( !$user->fbUser )
     {
-      $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
-      if ( $fbUrl )
-        echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+      global $fb;
+      if ( Config::$facebookApp && $fb )
+      {
+        $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
+        if ( $fbUrl )
+          echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+      }
     }
+
+    if ( !$user->twUser && Config::$twitterApp )
+        echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
+
+    // echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
+
+    if ( 0 && $user->isAdmin() )
+      echo Google::adSense( "4246395131" );
+
+    echo "</div>\n";
   }
-
-  if ( !$user->twUser && Config::$twitterApp )
-      echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
-
-  // echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
-
-  if ( 0 && $user->isAdmin() )
-    echo Google::adSense( "4246395131" );
-
-  echo "</div>\n";
 ?>
 </aside></div>
