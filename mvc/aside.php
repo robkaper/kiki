@@ -55,7 +55,9 @@
     if ( !$user->twUser && Config::$twitterApp )
         echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
 
-    // echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
+    // FIXME: make conditional based on Config::privacyUrl or something similar, even though I
+    // think every site should have a proclaimer and privacy policy...
+    echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
 
     if ( 0 && $user->isAdmin() )
       echo Google::adSense( "4246395131" );
