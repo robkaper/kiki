@@ -65,10 +65,20 @@ class Articles
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
-        echo Articles::showArticle( $user, $o );
+        echo Articles::showArticle( $user, $o, false, 800 );
   }
 
-  public static function showArticle( &$user, &$o, $json = false )
+  public static function url( &$db, $sectionId, $cname )
+  {
+    $qSection = $db->escape( $sectionId );
+    $sectionBaseUri = $db->getSingleValue( "select base_uri from sections where id=$qSection" );
+    $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
+    $myUrl = $urlPrefix. $sectionBaseUri. $cname;
+    Log::debug( "myUrl: [$myUrl] -- [$urlPrefix][$sectionBaseUri][$cname]" );
+    return $myUrl;
+  }
+
+  public static function showArticle( &$user, &$o, $json = false, $maxLength=0 )
   {
     $content = "";
 
@@ -89,7 +99,15 @@ class Articles
     $content .= "<span class=\"author\">$author</span>\n";
     $content .= "<time class=\"relTime\" datetime=\"$date\">$relTime geleden</time>\n";
     $content .= "</header>\n";
-    $content .= $body;
+
+    if ( $maxLength )
+    {
+      $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
+      $content .= Misc::textSummary( $o->body, $maxLength ). " <a href=\"$myUrl\">Lees verder</a>\n";
+    }
+    else
+      $content .= $body;
+
     $content .= "<footer>\n";
 
     if ( $o->facebook_url )
@@ -146,11 +164,8 @@ class Articles
 
     if ( sizeof($errors) )
       return $articleId;
-      
-    $sectionBaseUri = $db->getSingleValue( "select base_uri from sections where id=$qSection" );
-    $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
-    $myUrl = $urlPrefix. $sectionBaseUri. $cname;
-    Log::debug( "myUrl: [$myUrl] -- [$urlPrefix][$sectionBaseUri][$cname]" );
+
+    $myUrl = Articles::url( $db, $qSection, $cname );
 
     $tinyUrl = TinyUrl::get( $sectionBaseUri. $cname );
     Log::debug( "tinyUrl: [$tinyUrl]" );

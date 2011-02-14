@@ -101,6 +101,31 @@ class Misc
       return $uri;
   }
 
+  public static function textStrip( $str )
+  {
+    $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
+
+    // Twice, because of [ul][li] nests (and possibly others)
+    $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
+
+    return $str;
+  }
+
+  public static function textSummary( $str, $maxLength = 250 )
+  {
+    $str = Misc::textStrip( $str );
+    if ( strlen($str) > $maxLength )
+    {
+      $str = substr( $str, 0, $maxLength );
+      $pos = strrpos( $str, " " );
+      if ( $pos !== NULL )
+        $str = substr( $str, 0, $pos );
+        $str .= "...";
+    }
+
+    return $str;
+  }
+
 }
 
 ?>
