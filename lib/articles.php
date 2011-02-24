@@ -74,7 +74,6 @@ class Articles
     $sectionBaseUri = $db->getSingleValue( "select base_uri from sections where id=$qSection" );
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
     $myUrl = $urlPrefix. $sectionBaseUri. $cname;
-    Log::debug( "myUrl: [$myUrl] -- [$urlPrefix][$sectionBaseUri][$cname]" );
     return $myUrl;
   }
 
@@ -166,9 +165,7 @@ class Articles
       return $articleId;
 
     $myUrl = Articles::url( $db, $qSection, $cname );
-
-    $tinyUrl = TinyUrl::get( $sectionBaseUri. $cname );
-    Log::debug( "tinyUrl: [$tinyUrl]" );
+    $tinyUrl = TinyUrl::get( $myUrl );
 
     if ( isset($_POST['fbPublish']) && $_POST['fbPublish'] == 'on' )
     {
