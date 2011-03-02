@@ -102,7 +102,7 @@ class Articles
     if ( $maxLength )
     {
       $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
-      $content .= Misc::textSummary( $o->body, $maxLength ). " <a href=\"$myUrl\">Lees verder</a>\n";
+      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
     }
     else
       $content .= $body;
@@ -125,7 +125,8 @@ class Articles
 
     $content .= Articles::form( $user, $o );
     // FIXME: page/filter comments in embedded view
-    $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
+    if  ( !$maxLength )
+      $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
 
     if ( !$json )
        $content .= "</article>\n";
