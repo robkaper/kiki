@@ -123,6 +123,9 @@ class Misc
         $str .= "...";
     }
 
+    // Substitute double breaks to paragraphs.
+    $str = preg_replace('(<br /><br />)', "</p>\n\n<p>\n", $str );
+        
     return $str;
   }
 

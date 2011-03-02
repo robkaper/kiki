@@ -65,7 +65,7 @@ class Articles
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
-        echo Articles::showArticle( $user, $o, false, 800 );
+        echo Articles::showArticle( $user, $o, false, 750 );
   }
 
   public static function url( &$db, $sectionId, $cname )
