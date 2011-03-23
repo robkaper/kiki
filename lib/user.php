@@ -321,9 +321,9 @@ class User
   // Returns type, name and picture URL
   public function socialData( $type = null )
   {
-    if ( (!$type || $type=='facebook') && $this->fbUser )
+    if ( (!$type || $type=='facebook') && $this->fbUser->id )
       return array( 'facebook', $this->fbUser->name, "http://graph.facebook.com/". $this->fbUser->id. "/picture" );
-    else if ( (!$type || $type=='twitter') && $this->twUser )
+    else if ( (!$type || $type=='twitter') && $this->twUser->id )
       return array( 'twitter', $this->twUser->name, $this->twUser->picture );
     else if ( isset($_SERVER['HTTP_USER_AGENT']) && preg_match( "/^Googlebot/", $_SERVER['HTTP_USER_AGENT'] ) )
       return array( null, "Googlebot", null );
