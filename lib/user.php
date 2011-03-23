@@ -14,6 +14,22 @@ class User
   {
     $this->db = $GLOBALS['db'];
     $this->reset();
+
+    // FIXME: make these real classes
+    $this->fbUser = new stdClass;
+    $this->fbUser->id = 0;
+    $this->fbUser->accessToken = "";
+    $this->fbUser->name = "";
+    $this->fbUser->authenticated = null;
+
+    $this->twUser = new stdClass;
+    $this->twUser->id = 0;
+    $this->twUser->accessToken = "";
+    $this->twUser->secret = "";
+    $this->twUser->name = "";
+    $this->twUser->screenName = "";
+    $this->twUser->picture = "";
+    $this->twUser->authenticated = null;
     
     if ( $id )
       $this->load( $id );
@@ -49,21 +65,21 @@ class User
 
   private function fbLoad( $id )
   {
+    Log::debug( "fbLoad $id" );
     $qId = $this->db->escape( $id );
     $q = "select access_token, name from facebook_users where id='$qId'";
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
 
-    $this->fbUser = new stdClass;
     $this->fbUser->id = $id;
     $this->fbUser->accessToken = $o->access_token;
     $this->fbUser->name = $o->name;
-    $this->fbUser->authenticated = null;
   }
 
   private function twLoad( $id )
   {
+    Log::debug( "twLoad $id" );
     $qId = $this->db->escape( $id );
     $q = "select access_token, secret, name, screen_name, picture from twitter_users where id='$qId' and secret is not null";
     $rs = $this->db->query($q);
@@ -71,20 +87,20 @@ class User
     if ( !$o )
       return;
 
-    $this->twUser = new stdClass;
     $this->twUser->id = $id;
     $this->twUser->accessToken = $o->access_token;
     $this->twUser->secret = $o->secret;
     $this->twUser->name = $o->name;
     $this->twUser->screenName = $o->screen_name;
     $this->twUser->picture = $o->picture;
-    $this->fbUser->authenticated = null;
   }
 
   public function identify()
   {
     $this->fbIdentify();
+    $this->fbLoad( $this->fbUser->id );
     $this->twIdentify();
+    $this->twLoad( $this->twUser->id );
   }
 
   public function authenticate()
@@ -92,8 +108,8 @@ class User
     $this->fbAuthenticate();
     $this->twAuthenticate();
 
-    $qFbUserId = $this->fbUser ? $this->db->escape( $this->fbUser->id ) : 0;
-    $qTwUserId = $this->twUser ? $this->db->escape( $this->twUser->id ) : 0;
+    $qFbUserId = $this->db->escape( $this->fbUser->id );
+    $qTwUserId = $this->db->escape( $this->twUser->id );
     $q = "select id,facebook_user_id,twitter_user_id from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
     $rs = $this->db->query($q);
     
@@ -111,7 +127,7 @@ class User
         $o = $this->db->fetch_object($rs);
         $this->id = $o->id;
 
-        if ( ($this->fbUser && !$o->facebook_user_id) || ($this->twUser && !$o->twitter_user_id) )
+        if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
         {
           $q = "update users set mtime=now(), facebook_user_id=$qFbUserId, twitter_user_id=$qTwUserId where id = $o->id";
           Log::debug( $q );
@@ -119,10 +135,10 @@ class User
         }
       }
     }
-    else if ( $this->fbUser || $this->twUser )
+    else if ( $this->fbUser->id || $this->twUser->id )
     {
-      $qFbUserId = $this->fbUser ? $this->db->escape( $this->fbUser->id ) : 'NULL';
-      $qTwUserId = $this->twUser ? $this->db->escape( $this->twUser->id ) : 'NULL';
+      $qFbUserId = $this->fbUser->id ? $this->db->escape( $this->fbUser->id ) : 'NULL';
+      $qTwUserId = $this->twUser->id ? $this->db->escape( $this->twUser->id ) : 'NULL';
       $q = "insert into users(ctime, mtime, facebook_user_id, twitter_user_id) values (now(), now(), $qFbUserId, $qTwUserId)";
       Log::debug( $q );
       $rs = $this->db->query($q);
@@ -132,7 +148,7 @@ class User
   public function fbIdentify( $fbUserId = 0 )
   {
     if ( $fbUserId )
-      $this->fbUserId = $fbUserId;
+      $this->fbUser->id = $fbUserId;
     else
     {
       $fbCookie = $this->fbCookie();
@@ -140,19 +156,15 @@ class User
       {
         Log::debug( "fbCookie: ". print_r( $fbCookie, true ) );
         // FIXME: load desired ID from cookie
-        $this->fbUserId = 0;
+        $this->fbUser->id = "fbCookie";
       }
     }
   }
 
   public function fbAuthenticate()
   {
-    if ( !$this->fbUser )
-    {
-      $this->fbLoad( $this->fbUserId );
-      if ( !$this->fbUser )
+    if ( !$this->fbUser->id )
         return;
-    }
 
     global $fb, $fbSession;
 
@@ -166,6 +178,7 @@ class User
     {
       Log::debug( "setting fbUser $this->fbUserId from accessToken" );
       $fb->setUser( $this->fbUserId, $this->fbUser->accessToken, 0 );
+      Log::debug( "// TODO: check whether we need to do something with new session or /me" );
       return;
     }
 
@@ -176,12 +189,11 @@ class User
 
       try
       {
-        $fbUserId = $fb->getUser();
-        if ( !$fbUserId )
-        {
-          $this->fbUser = null;
+        $this->fbUser->id = $fb->getUser();
+        if ( !$this->fbUser->id )
           return;
-        }
+
+        $this->fbLoad( $this->fbUser->id );
 
         if ( array_key_exists( 'session', $_GET ) )
         {
@@ -191,8 +203,6 @@ class User
           header( "Location: ". $_SERVER['SCRIPT_URL'], true, 301 );
           exit();
         }
-
-        $this->fbLoad( $fbUserId );
       }
       catch ( FacebookApiException $e )
       {
@@ -205,9 +215,9 @@ class User
   public function twIdentify( $twUserId = 0 )
   {
     if ( $twUserId )
-      $this->twUserId = $twUserId;
+      $this->twUser->id = $twUserId;
     else
-      $this->twUserId = $this->twCookie();
+      $this->twUser->id = $this->twCookie();
   }
 
   // FIXME: Only use verify when post permissions are required (make a second call when needed). We ordinarily ignore verify_credentials because the request takes a painful ~800ms, check if @Anywhere with json-update callback could fix this later in the event queue
