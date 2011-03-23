@@ -165,16 +165,10 @@ class User
 
   public function fbAuthenticate()
   {
-    if ( !$this->fbUser->id )
-        return;
-
     global $fb, $fbSession;
 
-    $fb = new Facebook( array(
-      'appId'  => Config::$facebookApp,
-      'secret' => Config::$facebookSecret,
-      'cookie' => true
-     ) );
+    if ( !$this->fbUser->id )
+        return;
 
     if ( $this->fbUser->accessToken )
     {
