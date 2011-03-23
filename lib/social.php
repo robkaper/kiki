@@ -9,7 +9,12 @@ class Social
     $result->url = null;
     $result->error = null;
 
+    // TODO: check validity of using access_token here
+    global $user;
+    $fbUser = $user->fbUser;
+
     $attachment = array(
+      'access_token' => $fbUser->accessToken['access_token'],
       'message' => $msg,
       'link' => $link, 
       'name' => $name,
