@@ -73,7 +73,7 @@ class User
       return;
 
     $this->fbUser->id = $id;
-    $this->fbUser->accessToken = $o->access_token;
+    $this->fbUser->accessToken = unserialize($o->access_token);
     $this->fbUser->name = $o->name;
   }
 
@@ -302,7 +302,7 @@ class User
     $fbSession = $fb->getSession();
     Log::debug( "only store access_token when expires=0?" );
     $qId = $this->db->escape( $fbUser['id'] );
-    $qAccessToken = $this->db->escape( $fbSession['access_token'] );
+    $qAccessToken = $this->db->escape( serialize($fbSession) );
     $qName = $this->db->escape( $fbUser['name'] );
     $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
 
