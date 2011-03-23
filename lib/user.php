@@ -171,15 +171,6 @@ class User
     {
       Log::debug( "fbSession: ". print_r( $fbSession, true ) );
       $fb->setSession( $this->fbUser->accessToken );
-      $fbSession = $fb->getSession();
-      Log::debug( "fbSession: ". print_r( $fbSession, true ) );
-
-      if ( $fbSession )
-      {
-        Log::debug( "got a session, user is authenticated?" );
-        $this->fbUser->authenticated = true;
-        return;
-      }
     }
 
     $fbSession = $fb->getSession();
