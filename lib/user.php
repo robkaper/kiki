@@ -170,7 +170,8 @@ class User
     if ( $this->fbUser->accessToken )
     {
       Log::debug( "setting fbUser $this->fbUserId from accessToken" );
-      $fb->setUser( $this->fbUserId, $this->fbUser->accessToken, 0 );
+      $rs = $fb->set_user( $this->fbUserId, $this->fbUser->accessToken, 0 );
+      Log::debug( "rs: ". print_r( $rs, true ) );
       Log::debug( "// TODO: check whether we need to do something with new session or /me" );
       $this->fbUser->authenticated = true;
       return;
