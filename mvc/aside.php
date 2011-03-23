@@ -12,8 +12,8 @@
     echo "</div>\n";
   }
 
-  $fbStyle = $user->fbUser->id ? "" : "display: none;";
-  $twStyle = $user->twUser->id ? "" : "display: none;";
+  $fbStyle = $user->fbUser->authenticated ? "" : "display: none;";
+  $twStyle = $user->twUser->authenticated ? "" : "display: none;";
   $whoStyleOr = $anyUser ? "display: none;" : "";
   $whoStyleAnd = $allUsers ? "display: none;" : "";
 
@@ -41,7 +41,7 @@
     echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
 
     // FIXME: boilerplate this?
-    if ( !$user->fbUser->id )
+    if ( !$user->fbUser->authenticated )
     {
       global $fb;
       if ( Config::$facebookApp && $fb )
@@ -52,7 +52,7 @@
       }
     }
 
-    if ( !$user->twUser->id && Config::$twitterApp )
+    if ( !$user->twUser->authenticated && Config::$twitterApp )
         echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
 
     // FIXME: make conditional based on Config::privacyUrl or something similar, even though I

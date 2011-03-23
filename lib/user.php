@@ -181,6 +181,7 @@ class User
       Log::debug( "setting fbUser $this->fbUserId from accessToken" );
       $fb->setUser( $this->fbUserId, $this->fbUser->accessToken, 0 );
       Log::debug( "// TODO: check whether we need to do something with new session or /me" );
+      $this->fbUser->authenticated = true;
       return;
     }
 
@@ -194,6 +195,8 @@ class User
         $this->fbUser->id = $fb->getUser();
         if ( !$this->fbUser->id )
           return;
+
+        $this->fbUser->authenticated = true;
 
         $this->fbLoad( $this->fbUser->id );
 
@@ -239,8 +242,7 @@ class User
 
     global $tw;
     $tw = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->twUser->accessToken, $this->twUser->secret);
-
-    $this->twUser->authenticated = false;
+    $this->twUser->authenticated = true;
 
     if ( !$verify )
       return;
