@@ -136,8 +136,12 @@ class User
     else
     {
       $fbCookie = $this->fbCookie();
-      Log::debug( "fbCookie: ". print_r( $fbCookie, true ) );
-      $this->fbUserId = "fbCookie";
+      if ( $fbCookie )
+      {
+        Log::debug( "fbCookie: ". print_r( $fbCookie, true ) );
+        // FIXME: load desired ID from cookie
+        $this->fbUserId = 0;
+      }
     }
   }
 
@@ -160,6 +164,7 @@ class User
 
     if ( $this->fbUser->accessToken )
     {
+      Log::debug( "setting fbUser $this->fbUserId from accessToken" );
       $fb->setUser( $this->fbUserId, $this->fbUser->accessToken, 0 );
       return;
     }
@@ -173,7 +178,10 @@ class User
       {
         $fbUserId = $fb->getUser();
         if ( !$fbUserId )
+        {
+          $this->fbUser = null;
           return;
+        }
 
         if ( array_key_exists( 'session', $_GET ) )
         {
