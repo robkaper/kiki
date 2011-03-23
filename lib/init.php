@@ -37,7 +37,9 @@
   if ( Config::$singleUser )
     $user->load( Config::$singleUser );
   else
-    $user->authenticate();
+    $user->identify();
+
+  $user->authenticate();
 
   $fbUser = $user->fbUser;
   $twUser = $user->twUser;
