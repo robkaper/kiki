@@ -44,12 +44,17 @@
     // FIXME: boilerplate this?
     if ( !$user->fbUser->authenticated )
     {
+      Log::debug( "fbUser not authenticated, need to show login button" );
       global $fb;
       if ( Config::$facebookApp && $fb )
       {
+        Log::debug( "global fb exists" );
         $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
         if ( $fbUrl )
+        {
+          Log::debug( "fb url not empty" );
           echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+        }
       }
     }
 
