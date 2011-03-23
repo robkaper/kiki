@@ -169,15 +169,14 @@ class User
 
     if ( $this->fbUser->accessToken )
     {
-      Log::debug( "fbSession: ". print_r( $fbSession, true ) );
+      Log::debug( "setSession fbSession: ". print_r( $fbSession, true ) );
       $fb->setSession( $this->fbUser->accessToken );
     }
 
     $fbSession = $fb->getSession();
+    Log::debug( "getSession fbSession: ". print_r( $fbSession, true ) );
     if ( $fbSession )
     {
-      Log::debug( "fbSession: ". print_r( $fbSession, true ) );
-
       try
       {
         $this->fbUser->id = $fb->getUser();
