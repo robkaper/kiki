@@ -169,9 +169,13 @@ class User
 
     if ( $this->fbUser->accessToken )
     {
-      Log::debug( "setting fbUser $this->fbUserId from accessToken" );
-      $rs = $fb->set_user( $this->fbUserId, $this->fbUser->accessToken, 0 );
-      Log::debug( "rs: ". print_r( $rs, true ) );
+      Log::debug( "creating new fb with accessToken" );
+      $fb = new Facebook( array(
+        'appId'  => Config::$facebookApp,
+        'secret' => $this->fbUser->accessToken,
+        'cookie' => true
+      ) );
+
       Log::debug( "// TODO: check whether we need to do something with new session or /me" );
       $this->fbUser->authenticated = true;
       return;
@@ -307,7 +311,7 @@ class User
     $fbSession = $fb->getSession();
 
     $qId = $this->db->escape( $fbUser['id'] );
-    $qAccessToken = $this->db->escape( $fbSession['session_key'] );
+    $qAccessToken = $this->db->escape( $fbSession['secret'] );
     $qName = $this->db->escape( $fbUser['name'] );
     $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
 
