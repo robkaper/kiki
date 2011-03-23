@@ -159,6 +159,8 @@ class User
         $this->fbUser->id = "fbCookie";
       }
     }
+
+    Log::debug( "fbIdentify $fbUserId -> ". $this->fbUser->id );
   }
 
   public function fbAuthenticate()
@@ -218,6 +220,8 @@ class User
       $this->twUser->id = $twUserId;
     else
       $this->twUser->id = $this->twCookie();
+
+    Log::debug( "twIdentify $twUserId -> ". $this->twUser->id );
   }
 
   // FIXME: Only use verify when post permissions are required (make a second call when needed). We ordinarily ignore verify_credentials because the request takes a painful ~800ms, check if @Anywhere with json-update callback could fix this later in the event queue
