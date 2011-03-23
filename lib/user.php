@@ -153,11 +153,7 @@ class User
     {
       $fbCookie = $this->fbCookie();
       if ( $fbCookie )
-      {
-        Log::debug( "fbCookie: ". print_r( $fbCookie, true ) );
-        // FIXME: load desired ID from cookie
-        $this->fbUser->id = "fbCookie";
-      }
+        $this->fbUser->id = $fbCookie['uid'];
     }
 
     Log::debug( "fbIdentify $fbUserId -> ". $this->fbUser->id );
@@ -167,6 +163,7 @@ class User
   {
     global $fb, $fbSession;
 
+    Log::debug( "fbAuthenticate" );
     if ( !$this->fbUser->id )
         return;
 
@@ -189,6 +186,9 @@ class User
         $this->fbUser->id = $fb->getUser();
         if ( !$this->fbUser->id )
           return;
+
+        if ( !$this->fbUser->accessToken )
+          $this->fbRegisterAuth( &$fb );
 
         $this->fbUser->authenticated = true;
 
@@ -306,7 +306,7 @@ class User
     $fbSession = $fb->getSession();
 
     $qId = $this->db->escape( $fbUser['id'] );
-    $qAccessToken = $this->db->escape( $fbSession );
+    $qAccessToken = $this->db->escape( $fbSession['session_key'] );
     $qName = $this->db->escape( $fbUser['name'] );
     $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
 
