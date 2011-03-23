@@ -49,7 +49,9 @@
       if ( Config::$facebookApp && $fb )
       {
         Log::debug( "global fb exists" );
-        $fbUrl = htmlspecialchars( $fb->getLoginUrl() );
+        // FIXME: rjkcust
+        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'next' => 'http://robkaper.nl/' ) ) );
+
         if ( $fbUrl )
         {
           Log::debug( "fb url not empty" );

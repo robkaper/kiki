@@ -184,7 +184,7 @@ class User
         if ( !$this->fbUser->id )
           return;
 
-        if ( !$this->fbUser->accessToken )
+        if ( !$this->fbUser->accessToken || $this->fbUser->accessToken != $fbSession )
           $this->fbRegisterAuth( &$fb );
 
         $this->fbUser->authenticated = true;
