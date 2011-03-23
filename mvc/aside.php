@@ -50,7 +50,7 @@
       {
         Log::debug( "global fb exists" );
         // FIXME: rjkcust
-        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'next' => 'http://robkaper.nl/' ) ) );
+        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'reg_perms' => 'publish_stream, offline_access', 'next' => 'http://robkaper.nl' ) ) );
 
         if ( $fbUrl )
         {
