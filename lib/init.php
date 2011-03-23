@@ -43,8 +43,8 @@
 
   $fbUser = $user->fbUser;
   $twUser = $user->twUser;
-  $anyUser = ($fbUser || $twUser);
-  $allUsers = ($fbUser && $twUser);
+  $anyUser = ($fbUser->id || $twUser->id);
+  $allUsers = ($fbUser->id && $twUser->id);
 
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
