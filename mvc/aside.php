@@ -14,6 +14,7 @@
 
   $fbStyle = $user->fbUser->authenticated ? "" : "display: none;";
   $twStyle = $user->twUser->authenticated ? "" : "display: none;";
+  Log::debug( "anyUser: $anyUser, allUsers: $allUsers" );
   $whoStyleOr = $anyUser ? "display: none;" : "";
   $whoStyleAnd = $allUsers ? "display: none;" : "";
 
