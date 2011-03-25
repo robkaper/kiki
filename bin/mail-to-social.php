@@ -78,12 +78,18 @@
     $picture = "http://robkaper.nl/upload/". $attachments[0];
     $tinyUrl = TinyUrl::get( $myUrl );
   }
+  else
+    exit();
+
+  $name = '[no name]';
+  $caption = '[no caption]';
+  $description = '[no description]';
 
   $twMsg = $subject. " ". $tinyUrl;
 
   $user->load(1);
   $user->authenticate();
 
-  // $fbRs = Social::fbPublish( &$fb, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
-  // $twRs = Sociall:twPublish( &$tw, $msg );
+  $fbRs = Social::fbPublish( $fb, $fbMsg, $link, $name, $caption, $description, $picture );
+  $twRs = Sociall:twPublish( $tw, $twMsg );
 ?>
