@@ -45,10 +45,10 @@
     {
       if ( Config::$facebookApp )
       {
-        $fbUrl = htmlspecialchars( $user->fbUser->fb->getLoginUrl( array( 'req_perms' => 'publish_stream,offline_access' ) ) );
+        $fbUrl = htmlspecialchars( $user->fbUser->fb->getLoginUrl( array( 'req_perms' => '' ) ) );
         if ( $fbUrl )
         {
-          echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
+          echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"return fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
         }
       }
     }
