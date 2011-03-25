@@ -53,9 +53,10 @@
       if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
-        // FIXME: rjkcust
+        // FIXME: rjkcust, needs to be stored in and made accessible from database
         $fileName = "/www/robkaper.nl/htdocs/upload/". $info['disposition-filename']; // "$partFile.data"
         file_put_contents( $fileName, $contents );
+        chmod( $fileName, 0644 );
         $attachments[] = $info['disposition-filename'];
         Log::debug( "saved attachment: $fileName (". $info['content-type']. ")" );
       }
@@ -91,5 +92,5 @@
   $user->authenticate();
 
   $fbRs = Social::fbPublish( $fb, $fbMsg, $link, $name, $caption, $description, $picture );
-  $twRs = Sociall:twPublish( $tw, $twMsg );
+  $twRs = Social::twPublish( $tw, $twMsg );
 ?>
