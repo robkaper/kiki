@@ -1,7 +1,7 @@
 <?
-  include_once "../../../lib/init.php";
+  include_once "../../lib/init.php";
 
-  $page->setTitle( "My Account" );
+  $page = new Page( "My Account" );
   $page->header();
 
   $page->footer();
