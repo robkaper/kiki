@@ -60,7 +60,7 @@ class TwitterUser
     else
     {
       $this->id = $this->cookie();
-      Log::debug( "TwitterUser->identify: trust time-limited cookie, don't verify credentials" );
+      Log::debug( "TwitterUser->identify: trust session cookie, don't verify credentials" );
       $this->mustVerify = false;
     }
 
@@ -86,13 +86,13 @@ class TwitterUser
     if ( $this->mustVerify )
     {
       $twRs = $this->tw->get( "account/verify_credentials" );
-      Log::debug( "TwiterUser->authenticate: ". print_r( $twRs, true ) );
+      Log::debug( "TwiterUser->authenticate account/verify_credentials: ". print_r( $twRs, true ) );
       if ( isset($twRs['error']) )
         return;
       $this->mustVerify = false;
     }
     else
-      Log::debug( "TwitterUser->authenticate: trust time-limited cookie, don't verify credentials" );
+      Log::debug( "TwitterUser->authenticate: trusted session, didn't verify credentials" );
 
     $this->authenticated = true;
   }

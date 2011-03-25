@@ -44,7 +44,7 @@ class FacebookUser
     $this->id = $id;
     $this->accessToken = @unserialize($o->access_token);
     if( $this->accessToken )
-      Log::debug( "loaded offline_access token!" );
+      Log::debug( "FacebookUser->load has offline_access token!" );
     
     $this->name = $o->name;
   }
@@ -185,12 +185,13 @@ class FacebookUser
     try
     {
       $fbRs = $this->fb->api('/me/feed', 'post', $attachment);
+      Log::debug( "fbRs: ". print_r( $fbRs, true ) );
     }
     catch ( FacebookApiException $e )
     {
-      error_log($e);
+      $result->error = $e;
+      return $result;
     }
-    Log::debug( "fbRs: ". print_r( $fbRs, true ) );
 
     if ( isset($fbRs['id']) )
     {
