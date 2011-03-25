@@ -71,10 +71,17 @@ class FacebookUser
     if ( !$this->id )
         return;
 
+    $fbSession = $this->fb->getSession();
+    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession ) );
     if ( $this->accessToken )
+    {
+      $fbSession = $this->fb->getSession();
+      Log::debug( "FacebookUser->authenticate setSession: ". print_r( $this->accessToken, true ) );
       $this->fb->setSession( $this->accessToken );
+    }
 
     $fbSession = $this->fb->getSession();
+    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession ) );
     if ( $fbSession )
     {
       try
@@ -100,6 +107,7 @@ class FacebookUser
       }
       catch ( FacebookApiException $e )
       {
+        Log::debug( "FacebookUser->authenticate error: $e" );
         error_log($e);
       }
     }
@@ -189,6 +197,7 @@ class FacebookUser
     }
     catch ( FacebookApiException $e )
     {
+      Log::debug( "fbPublish error: $e" );
       $result->error = $e;
       return $result;
     }
@@ -200,7 +209,10 @@ class FacebookUser
       $result->url = "http://www.facebook.com/$uid/posts/$postId";
     }
     else
+    {
+      Log::debug( "fbPublish error: $fbRs" );
       $result->error = $fbRs;
+    }
     
     return $result;
   }
