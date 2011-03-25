@@ -2,7 +2,7 @@
 <?
   $_SERVER['SERVER_NAME'] = $argv[1];
   $_SERVER['REQUEST_URI'] = "";
-  include_once base64_decode( "../lib/init.php" );
+  include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
   // Temporarily store e-mail
   $data = file_get_contents("php://stdin");
@@ -31,7 +31,7 @@
   // Log::debug( "structure: ". print_r( $structure, true ) );
 
   // Iterate structure
-  $msg = "";
+  $body = "";
   $attachments = array();
   foreach( $structure as $structurePart )
   {
@@ -50,7 +50,7 @@
       $contents = ob_get_contents();
       ob_end_clean();
 
-      if ( $info['disposition-filename'] )
+      if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
         // FIXME: rjkcust
@@ -59,11 +59,10 @@
         $attachments[] = $info['disposition-filename'];
         Log::debug( "saved attachment: $fileName (". $info['content-type']. ")" );
       }
-      else if ( !$savedBody && $info['content-type'] == 'text/plain' )
+      else if ( !$body && $info['content-type'] == 'text/plain' )
       {
         // Body part
         $body = preg_replace( '/-- [\r\n]+.*/s', '', $contents );
-        $savedBody = true;
       }
     }
   }
@@ -73,7 +72,7 @@
 
   $fbMsg = $subject;
   // FIXME: rjkcust
-  if ( $count($attachments) )
+  if ( count($attachments) )
   {
     $link = "http://robkaper.nl/upload/". $attachments[0];
     $picture = "http://robkaper.nl/upload/". $attachments[0];
@@ -85,6 +84,6 @@
   $user->load(1);
   $user->authenticate();
 
-  $fbRs = Social::fbPublish( &$fb, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
-  $twRs = Sociall:twPublish( &$tw, $msg );
+  // $fbRs = Social::fbPublish( &$fb, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
+  // $twRs = Sociall:twPublish( &$tw, $msg );
 ?>
