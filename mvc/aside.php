@@ -61,6 +61,9 @@
 
   echo "<div class=\"box\">\n";
 
+  // FIXME: add boilerplate/jsonload and only show when anyUser true
+  echo "<p><a href=\"/kiki/account/\">Jouw Account</a></p>\n";
+
   // FIXME: make conditional based on Config::privacyUrl or something similar, even though I
   // think every site should have a proclaimer and privacy policy...
   echo "<p><a href=\"/proclaimer.php#privacy\">Privacybeleid</a></p>\n";
