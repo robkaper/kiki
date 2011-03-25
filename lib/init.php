@@ -46,14 +46,14 @@
   $allUsers = ($fbUser->authenticated && $twUser->authenticated);
 
   // Don't log trivial and overly frequent requests like IM updates
-  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
   if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
   {
     $fbUserTxt = $fbUser ? ", fbUser($fbUser->authenticated): $fbUser->id ($fbUser->name)" : "";
     $twUserTxt = $twUser ? ", twUser($twUser->authenticated): $twUser->id ($twUser->name)" : "";
 
-    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
-    $log = sprintf( "%4s: %s%s%s", $reqMethod, $reqUri, $fbUserTxt, $twUserTxt );
+    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
+    $log = sprintf( "%-4s: %s%s%s", $reqMethod, $reqUri, $fbUserTxt, $twUserTxt );
     Log::debug( $log );
   }
 ?>
