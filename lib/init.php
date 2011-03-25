@@ -23,6 +23,14 @@
   Log::init();
   Config::init();
 
+  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
+  if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
+  {
+    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
+    $log = sprintf( "%-4s: %s", $reqMethod, $reqUri );
+    Log::debug( $log );
+  }
+
   // HACK: fb_xd_fragment parameter bug: sets display:none on body, so redirect without it (also, we don't want it to appear in analytics)
   if ( array_key_exists( 'fb_xd_fragment', $_GET ) )
   {

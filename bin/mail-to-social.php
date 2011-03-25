@@ -1,7 +1,6 @@
 #!/usr/bin/php -q
 <?
   $_SERVER['SERVER_NAME'] = $argv[1];
-  $_SERVER['REQUEST_URI'] = "";
   include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
   // Temporarily store e-mail
