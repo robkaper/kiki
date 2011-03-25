@@ -83,6 +83,8 @@ class FacebookUser
         if ( !$this->id )
           return;
 
+        Log::debug( "FacebookUser->authenticate: authenticated" );
+
         if ( !$this->accessToken || $this->accessToken != $fbSession )
           $this->registerAuth();
 

@@ -70,8 +70,6 @@ class TwitterUser
 
   public function authenticate()
   {
-    Log::debug( "TwiterUser->authenticate" );
-
     if ( !$this->id )
         return;
 
@@ -86,7 +84,7 @@ class TwitterUser
     if ( $this->mustVerify )
     {
       $twRs = $this->tw->get( "account/verify_credentials" );
-      Log::debug( "TwiterUser->authenticate account/verify_credentials: ". print_r( $twRs, true ) );
+      Log::debug( "TwiterUser->authenticate: account/verify_credentials: ". print_r( $twRs, true ) );
       if ( isset($twRs['error']) )
         return;
       $this->mustVerify = false;
