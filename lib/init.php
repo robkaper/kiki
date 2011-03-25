@@ -33,11 +33,14 @@
   $db = $GLOBALS['db'] = new Database( Config::$db );
   $mvc = $GLOBALS['mvc'] = new MVC();
 
-  $fb = new Facebook( array(
-    'appId'  => Config::$facebookApp,
-    'secret' => Config::$facebookSecret,
-    'cookie' => true
-   ) );
+  if ( Config::$facebookApp )
+  {
+   $fb = new Facebook( array(
+     'appId'  => Config::$facebookApp,
+     'secret' => Config::$facebookSecret,
+     'cookie' => true
+     ) );
+  }
 
   $user = $GLOBALS['user'] = new User();
   if ( Config::$singleUser )

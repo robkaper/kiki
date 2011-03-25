@@ -43,9 +43,9 @@
     // FIXME: boilerplate this?
     if ( !$user->fbUser->authenticated )
     {
-      global $fb;
-      if ( Config::$facebookApp && $fb )
+      if ( Config::$facebookApp )
       {
+        global $fb;
         $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'req_perms' => 'publish_stream,offline_access' ) ) );
         if ( $fbUrl )
         {

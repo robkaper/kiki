@@ -19,7 +19,14 @@ class Social
     );
 
     Log::debug( "fbPublish: ". print_r( $attachment, true ) );
-    $fbRs = $fb->api('/me/feed', 'post', $attachment);
+    try
+    {
+      $fbRs = $fb->api('/me/feed', 'post', $attachment);
+    }
+    catch ( FacebookApiException $e )
+    {
+      error_log($e);
+    }
     Log::debug( "fbRs: ". print_r( $fbRs, true ) );
 
     if ( isset($fbRs['id']) )
