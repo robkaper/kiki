@@ -2,11 +2,14 @@
 
 class Form
 {
-  public static function open( $id=null, $action=null, $method='POST', $class=null )
+  public static function open( $id=null, $action=null, $method='POST', $class=null, $enctype=null, $target=null )
   {
     $id = $id ? " id=\"$id\"" : "";
     $class = $class ? " class=\"$class\"" : "";
-    return "<form ${id} action=\"$action\" method=\"$method\"${class}>\n";
+    $enctype = $enctype ? " enctype=\"$enctype\"" : "";
+    $target = $target ? " target=\"$target\"" : "";
+    
+    return "<form ${id} action=\"$action\" method=\"$method\" ${class}${enctype}${target}>\n";
   }
 
   public static function close()
@@ -108,8 +111,7 @@ $( function() {
 
   public static function attachFile( $label=null, $target=null )
   {
-    // TODO: extend Form::open to support target and enctype
-    $content = "<form id=\"attachFile\" method=\"post\" enctype=\"multipart/form-data\" action=\"". Config::$kikiPrefix. "/add-attachment.php\" target=\"attachTarget\">\n";
+    $content = Form::open( "attachFile", Config::$kikiPrefix. "/add-attachment.php", 'POST', null, "multipart/form-data", "attachTarget" );
     $content .= Form::hidden( "target", $target );
     $content .= Form::file( "attachment", $label );
     $content .= Form::button( "submitAttachment", "submit", "Attach file" );
