@@ -1,4 +1,20 @@
 <?php
+/**
+ *
+ * Copyright 2011 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 
 if (!function_exists('curl_init')) {
   throw new Exception('Facebook needs the CURL PHP extension.');
@@ -125,10 +141,11 @@ class Facebook
    * Maps aliases to Facebook domains.
    */
   public static $DOMAIN_MAP = array(
-    'api'      => 'https://api.facebook.com/',
-    'api_read' => 'https://api-read.facebook.com/',
-    'graph'    => 'https://graph.facebook.com/',
-    'www'      => 'https://www.facebook.com/',
+    'api'       => 'https://api.facebook.com/',
+    'api_video' => 'https://api-video.facebook.com/',
+    'api_read'  => 'https://api-read.facebook.com/',
+    'graph'     => 'https://graph.facebook.com/',
+    'www'       => 'https://www.facebook.com/',
   );
 
   /**
@@ -849,6 +866,8 @@ class Facebook
     $name = 'api';
     if (isset($READ_ONLY_CALLS[strtolower($method)])) {
       $name = 'api_read';
+    } else if (strtolower($method) == 'video.upload') {
+      $name = 'api_video';
     }
     return self::getUrl($name, 'restserver.php');
   }
