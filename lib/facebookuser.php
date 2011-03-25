@@ -72,16 +72,15 @@ class FacebookUser
         return;
 
     $fbSession = $this->fb->getSession();
-    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession ) );
-    if ( $this->accessToken )
+    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession, true ) );
+    if ( !isset($fbSession['uid'] && $this->accessToken )
     {
-      $fbSession = $this->fb->getSession();
       Log::debug( "FacebookUser->authenticate setSession: ". print_r( $this->accessToken, true ) );
       $this->fb->setSession( $this->accessToken );
     }
 
     $fbSession = $this->fb->getSession();
-    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession ) );
+    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession, true ) );
     if ( $fbSession )
     {
       try
