@@ -108,6 +108,8 @@ class Boilerplate
   {
     $content = "";
 
+    $content .= "</ul>\n";
+
     if ( $user->fbUser->authenticated )
     {
       $content .= "<li>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
@@ -130,6 +132,8 @@ class Boilerplate
     }
     else
       $content .= "<li>Je bent niet ingelogd.</li>\n";
+
+    $content .= "</ul>\n";
 
     return $content;
   }

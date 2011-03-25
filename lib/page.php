@@ -104,6 +104,8 @@ twttr.anywhere( function (T) {
 <div class="footer"><?= Boilerplate::copyright(); ?></div>
 </div>
 
+<div id="jsonUpdate"></div>
+
 </body>
 </html>
 <?

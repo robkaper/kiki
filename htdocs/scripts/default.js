@@ -1,8 +1,10 @@
 function jsonUpdate()
 {
   var ids = new Array();
+  $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
-    $(this).prepend( boilerplates['jsonLoad'] );
+    $(this).css( 'opacity', '0.7' );
+    // $(this).append( boilerplates['jsonLoad'] );
     ids[ids.length] = $(this).attr('id');
   } );
   if ( ids.length==0 )
@@ -10,9 +12,10 @@ function jsonUpdate()
 
   var json = { 'uri': requestUri, 'content': ids };
   $.getJSON( kikiPrefix + '/json/update.php', json, function(data) {
-    $('.jsonload').remove();
+    $('#jsonUpdate').fadeOut().empty();
+    // $('.jsonload').remove();
     $.each(data.content, function(i,item) {
-      $('#' + item.id).html(item.html);
+      $('#' + item.id).html(item.html).css( 'opacity', '1' );
     } );
   } );
 }
