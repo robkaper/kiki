@@ -5,7 +5,7 @@
 
 Edit config/htaccess and adjust to match your Kiki install path.
 
-Then place directly the contents in your VirtualHost directive.
+Then place the contents in your VirtualHost directive.
 
 2) Directly under your document root, create debug.txt writeable to Apache.
 
