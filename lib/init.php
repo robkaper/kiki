@@ -33,21 +33,11 @@
   $db = $GLOBALS['db'] = new Database( Config::$db );
   $mvc = $GLOBALS['mvc'] = new MVC();
 
-  if ( Config::$facebookApp )
-  {
-   $fb = new Facebook( array(
-     'appId'  => Config::$facebookApp,
-     'secret' => Config::$facebookSecret,
-     'cookie' => true
-     ) );
-  }
-
   $user = $GLOBALS['user'] = new User();
   if ( Config::$singleUser )
     $user->load( Config::$singleUser );
   else
     $user->identify();
-
   $user->authenticate();
 
   $fbUser = $user->fbUser;

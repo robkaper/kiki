@@ -13,23 +13,11 @@ class User
   public function __construct( $id = null )
   {
     $this->db = $GLOBALS['db'];
+
     $this->reset();
 
-    // FIXME: make these real classes
-    $this->fbUser = new stdClass;
-    $this->fbUser->id = 0;
-    $this->fbUser->accessToken = "";
-    $this->fbUser->name = "";
-    $this->fbUser->authenticated = null;
-
-    $this->twUser = new stdClass;
-    $this->twUser->id = 0;
-    $this->twUser->accessToken = "";
-    $this->twUser->secret = "";
-    $this->twUser->name = "";
-    $this->twUser->screenName = "";
-    $this->twUser->picture = "";
-    $this->twUser->authenticated = null;
+    $this->fbUser = new FacebookUser();
+    $this->twUser = new TwitterUser();
     
     if ( $id )
       $this->load( $id );
@@ -59,53 +47,20 @@ class User
       return;
 
     $this->id = $o->id;
-    $this->fbLoad( $o->facebook_user_id );
-    $this->twLoad( $o->twitter_user_id );
-  }
-
-  private function fbLoad( $id )
-  {
-    Log::debug( "fbLoad $id" );
-    $qId = $this->db->escape( $id );
-    $q = "select access_token, name from facebook_users where id='$qId'";
-    $o = $this->db->getSingle($q);
-    if ( !$o )
-      return;
-
-    $this->fbUser->id = $id;
-    $this->fbUser->accessToken = @unserialize($o->access_token);
-    $this->fbUser->name = $o->name;
-  }
-
-  private function twLoad( $id )
-  {
-    $qId = $this->db->escape( $id );
-    $q = "select access_token, secret, name, screen_name, picture from twitter_users where id='$qId' and secret is not null";
-    $rs = $this->db->query($q);
-    $o = $this->db->getSingle($q);
-    if ( !$o )
-      return;
-
-    $this->twUser->id = $id;
-    $this->twUser->accessToken = $o->access_token;
-    $this->twUser->secret = $o->secret;
-    $this->twUser->name = $o->name;
-    $this->twUser->screenName = $o->screen_name;
-    $this->twUser->picture = $o->picture;
+    $this->fbUser->load( $o->facebook_user_id );
+    $this->twUser->load( $o->twitter_user_id );
   }
 
   public function identify()
   {
-    $this->fbIdentify();
-    $this->fbLoad( $this->fbUser->id );
-    $this->twIdentify();
-    $this->twLoad( $this->twUser->id );
+    $this->fbUser->identify();
+    $this->twUser->identify();
   }
 
   public function authenticate()
   {
-    $this->fbAuthenticate();
-    $this->twAuthenticate();
+    $this->fbUser->authenticate();
+    $this->twUser->authenticate();
 
     $qFbUserId = $this->db->escape( $this->fbUser->id );
     $qTwUserId = $this->db->escape( $this->twUser->id );
@@ -142,183 +97,6 @@ class User
       Log::debug( $q );
       $rs = $this->db->query($q);
     }
-  }
-
-  public function fbIdentify( $fbUserId = 0 )
-  {
-    if ( $fbUserId )
-      $this->fbUser->id = $fbUserId;
-    else
-    {
-      $fbCookie = $this->fbCookie();
-      if ( $fbCookie )
-        $this->fbUser->id = $fbCookie['uid'];
-    }
-
-    Log::debug( "fbIdentify $fbUserId -> ". $this->fbUser->id );
-  }
-
-  public function fbAuthenticate()
-  {
-    global $fb, $fbSession;
-
-    Log::debug( "fbAuthenticate" );
-    if ( !$this->fbUser->id )
-        return;
-
-    if ( $this->fbUser->accessToken )
-    {
-      Log::debug( "setSession fbSession: ". print_r( $this->fbUser->accessToken, true ) );
-      $fb->setSession( $this->fbUser->accessToken );
-    }
-
-    $fbSession = $fb->getSession();
-    Log::debug( "getSession fbSession: ". print_r( $fbSession, true ) );
-    if ( $fbSession )
-    {
-      try
-      {
-        $this->fbUser->id = $fb->getUser();
-        if ( !$this->fbUser->id )
-          return;
-
-        if ( !$this->fbUser->accessToken || $this->fbUser->accessToken != $fbSession )
-          $this->fbRegisterAuth( &$fb );
-
-        $this->fbUser->authenticated = true;
-
-        $this->fbLoad( $this->fbUser->id );
-
-        if ( array_key_exists( 'session', $_GET ) )
-        {
-          $this->fbRegisterAuth( &$fb );
-
-          // Redirect to avoid ?session= request to appear in Analytics etc
-          header( "Location: ". $_SERVER['SCRIPT_URL'], true, 301 );
-          exit();
-        }
-      }
-      catch ( FacebookApiException $e )
-      {
-        error_log($e);
-      }
-    }
-
-  }
-
-  public function twIdentify( $twUserId = 0 )
-  {
-    if ( $twUserId )
-      $this->twUser->id = $twUserId;
-    else
-      $this->twUser->id = $this->twCookie();
-  }
-
-  // FIXME: Only use verify when post permissions are required (make a second call when needed). We ordinarily ignore verify_credentials because the request takes a painful ~800ms, check if @Anywhere with json-update callback could fix this later in the event queue
-  public function twAuthenticate( $verify = false )
-  {
-    if ( !$this->twUser )
-    {
-      $this->twLoad( $this->twUserId );
-      if ( !$this->twUser )
-        return;
-    }
-
-    if ( !$this->twUser->accessToken )
-      return;
-
-    global $tw;
-    $tw = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->twUser->accessToken, $this->twUser->secret);
-    $this->twUser->authenticated = true;
-
-    if ( !$verify )
-      return;
-
-    $twApiUser = $tw ? $tw->get('account/verify_credentials') : null;
-    if ( $twApiUser )
-    {
-      if (isset($twApiUser->error) )
-      {
-         Log::error( "twAuthenticate error: $twApiUser->error, twUserId: $twUserId" );
-         return;
-      }
-      // FIXME: inspect twApiUser to check if user is verified
-      $this->twUser->authenticated = true;
-    }
-  }
-
-  // Returns a Twitter user ID, or 0 if not valid or no cookie present
-  private function twCookie()
-  {
-    if ( array_key_exists( 'twitter_anywhere_identity', $_COOKIE ) )
-    {
-      list( $twUserId, $twSig ) = split( ":", $_COOKIE['twitter_anywhere_identity'] );
-      $hexDigest = sha1($twUserId. Config::$twitterSecret);
-      $valid = ($twSig == $hexDigest);
-      return $valid ? $twUserId : 0;
-    }
-    return 0;
-  }
-
-  // Returns entire verified cookie as array, or null if not valid or no cookie present
-  // Should not be necessary, Facebook API does it all, but kept for reference
-  private function fbCookie()
-  {
-    $args = array();
-
-    $cookieId = "fbs_". Config::$facebookApp;
-    if ( array_key_exists( $cookieId, $_COOKIE ) )
-      parse_str( trim($_COOKIE[$cookieId], '\\"'), $args );\
-
-    ksort($args);
-    
-    $payload = '';
-    foreach ( $args as $key => $value )
-      if ( $key != 'sig' )
-        $payload .= $key. '='. $value;
-
-    if ( !array_key_exists( 'sig', $args ) || md5($payload. Config::$facebookSecret) != $args['sig'] )
-      return null;
-
-    return $args;
-  }
-
-  private function fbRegisterAuth( &$fb )
-  {
-    Log::debug( "fbRegisterAuth" );
-
-    global $user;
-
-    $fbUser = $fb->api('/me');
-    Log::debug( 'fb /me' );
-    if ( !$fbUser )
-    {
-      Log::debug( "SNH: fbRegisterAuth failed, no fbUser" );
-      return;
-    }
-
-    $fbSession = $fb->getSession();
-    if ( $fbSession && $fbSession['expires'] == 0 )
-    {
-      $qAccessToken = $this->db->escape( serialize($fbSession) );
-      Log::debug( "storing session access token (expires=0)" );
-    }
-    else
-    {
-      $qAccessToken = $user->fbUser->accessToken;
-      Log::debug( "storing existing access token, if any" );
-    }
-
-    $qId = $this->db->escape( $fbUser['id'] );
-    $qName = $this->db->escape( $fbUser['name'] );
-    $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
-
-    Log::debug( "fbRegisterAuth q: $q" );
-    $this->db->query($q);
-  }
-
-  private function twRegisterAuth()
-  {
   }
 
   // Returns type, name and picture URL

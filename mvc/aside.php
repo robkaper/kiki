@@ -45,8 +45,7 @@
     {
       if ( Config::$facebookApp )
       {
-        global $fb;
-        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'req_perms' => 'publish_stream,offline_access' ) ) );
+        $fbUrl = htmlspecialchars( $user->fbUser->fb->getLoginUrl( array( 'req_perms' => 'publish_stream,offline_access' ) ) );
         if ( $fbUrl )
         {
           echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
@@ -57,14 +56,18 @@
     if ( !$user->twUser->authenticated && Config::$twitterApp )
         echo "<a id=\"twLogin\" href=\"/kiki/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
 
-    // FIXME: make conditional based on Config::privacyUrl or something similar, even though I
-    // think every site should have a proclaimer and privacy policy...
-    echo "<p style=\"$whoStyleAnd\">(<a href=\"/proclaimer.php#privacy\">Privacybeleid</a>)</p>\n";
-
-    if ( 0 && $user->isAdmin() )
-      echo Google::adSense( "4246395131" );
-
     echo "</div>\n";
   }
+
+  echo "<div class=\"box\">\n";
+
+  // FIXME: make conditional based on Config::privacyUrl or something similar, even though I
+  // think every site should have a proclaimer and privacy policy...
+  echo "<p><a href=\"/proclaimer.php#privacy\">Privacybeleid</a></p>\n";
+
+  if ( 0 && $user->isAdmin() )
+    echo Google::adSense( "4246395131" );
+
+  echo "</div>\n";
 ?>
 </aside></div>
