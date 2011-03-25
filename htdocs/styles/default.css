@@ -106,8 +106,8 @@ blockquote {
 	top: 40%;
 	left: 40%;
 	width: 20%;
-	height: 20%;
 	background: white;
+	padding: 5px;
 	border: 1px solid #deb;
 	-moz-border-radius: 5px;
 }
