@@ -176,17 +176,16 @@ class Articles
       $caption = '';
       $description = '';
       $picture = $picture ? $picture : Config::$headerLogo;
-      Log::debug( "Social::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
-      $fbRs = Social::fbPublish( $fb, $msg, $link, $title, $caption, $description, $picture );
+      Log::debug( "Article::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
+      $fbRs = $user->fbUser->post( $msg, $link, $title, $caption, $description, $picture );
       $qFacebookUrl = $fbRs->url;
     }
 
     if ( isset($_POST['twPublish']) && $_POST['twPublish'] == 'on' )
     {
-      global $tw;
       $msg = "$title $tinyUrl";
-      Log::debug( "Social::twPublish( $msg );" );
-      $twRs = Social::twPublish( $tw, $msg );
+      Log::debug( "Article::twPublish( $msg );" );
+      $twRs = $user->twUser->post( $msg );
       $qTwitterUrl = $twRs->url;
     }
 

@@ -158,6 +158,51 @@ class FacebookUser
     Log::debug( "fbRegisterAuth q: $q" );
     $this->db->query($q);
   }
+  
+  public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
+  {
+    $result = new stdClass;
+    $result->id = null;
+    $result->url = null;
+    $result->error = null;
+
+    if ( !$this->authenticated || !$this->fb )
+    {
+      $result->error = "Facebook user not authenticated.";
+      return $result;
+    }
+
+    $attachment = array(
+      'message' => $msg,
+      'link' => $link, 
+      'name' => $name,
+      'caption' => $caption,
+      'description' => $description,
+      'picture' => $picture
+    );
+
+    Log::debug( "fbPublish: ". print_r( $attachment, true ) );
+    try
+    {
+      $fbRs = $this->fb->api('/me/feed', 'post', $attachment);
+    }
+    catch ( FacebookApiException $e )
+    {
+      error_log($e);
+    }
+    Log::debug( "fbRs: ". print_r( $fbRs, true ) );
+
+    if ( isset($fbRs['id']) )
+    {
+      $result->id = $fbRs['id'];
+      list( $uid, $postId ) = split( "_", $fbRs['id']);
+      $result->url = "http://www.facebook.com/$uid/posts/$postId";
+    }
+    else
+      $result->error = $fbRs;
+    
+    return $result;
+  }
 }
 
 ?>

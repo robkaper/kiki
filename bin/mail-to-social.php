@@ -91,6 +91,6 @@
   $user->load(1);
   $user->authenticate();
 
-  $fbRs = Social::fbPublish( $fb, $fbMsg, $link, $name, $caption, $description, $picture );
-  $twRs = Social::twPublish( $tw, $twMsg );
+  $fbRs = $user->fbUser->post( $fbMsg, $link, $name, $caption, $description, $picture );
+  $twRs = $user->twUser->post( $twMsg );
 ?>

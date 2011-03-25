@@ -110,6 +110,34 @@ class TwitterUser
   private function registerAuth()
   {
   }
+
+  public function post( $msg )
+  {
+    $result = new stdClass;
+    $result->id = null;
+    $result->url = null;
+    $result->error = null;
+
+    if ( !$this->authenticated || !$this->tw )
+    {
+      $result->error = "Twitter user not authenticated." )
+      return $result;
+    }
+
+    Log::debug( "TwitterUser->publish: $msg" );
+    $twRs = $this->tw->post( 'statuses/update', array( 'status' => $msg ) );
+    Log::debug( "twRs: ". print_r( $twRs, true ) );
+
+    if ( isset($twRs->error) )
+      $result->error = $twRs->error;
+    else
+    {
+      $result->id = $twRs->id;
+      $result->url = "http://www.twitter.com/". $twRs->user->screen_name. "/status/". $result->id;
+    }
+    
+    return $result;
+  }
 }
 
 ?>
