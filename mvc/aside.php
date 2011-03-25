@@ -14,7 +14,6 @@
 
   $fbStyle = $user->fbUser->authenticated ? "" : "display: none;";
   $twStyle = $user->twUser->authenticated ? "" : "display: none;";
-  Log::debug( "anyUser: $anyUser, allUsers: $allUsers" );
   $whoStyleOr = $anyUser ? "display: none;" : "";
   $whoStyleAnd = $allUsers ? "display: none;" : "";
 
@@ -44,17 +43,12 @@
     // FIXME: boilerplate this?
     if ( !$user->fbUser->authenticated )
     {
-      Log::debug( "fbUser not authenticated, need to show login button" );
       global $fb;
       if ( Config::$facebookApp && $fb )
       {
-        Log::debug( "global fb exists" );
-        // FIXME: rjkcust
-        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'reg_perms' => 'publish_stream, offline_access', 'next' => 'http://robkaper.nl' ) ) );
-
+        $fbUrl = htmlspecialchars( $fb->getLoginUrl( array( 'req_perms' => 'publish_stream,offline_access' ) ) );
         if ( $fbUrl )
         {
-          Log::debug( "fb url not empty" );
           echo "<a id=\"fbLogin\" href=\"$fbUrl\" onclick=\"fbLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_signin.png\" alt=\"Sign in with Facebook\"/></a>\n";
         }
       }

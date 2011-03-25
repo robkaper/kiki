@@ -73,13 +73,12 @@ class User
       return;
 
     $this->fbUser->id = $id;
-    $this->fbUser->accessToken = unserialize($o->access_token);
+    $this->fbUser->accessToken = @unserialize($o->access_token);
     $this->fbUser->name = $o->name;
   }
 
   private function twLoad( $id )
   {
-    Log::debug( "twLoad $id" );
     $qId = $this->db->escape( $id );
     $q = "select access_token, secret, name, screen_name, picture from twitter_users where id='$qId' and secret is not null";
     $rs = $this->db->query($q);
@@ -213,8 +212,6 @@ class User
       $this->twUser->id = $twUserId;
     else
       $this->twUser->id = $this->twCookie();
-
-    Log::debug( "twIdentify $twUserId -> ". $this->twUser->id );
   }
 
   // FIXME: Only use verify when post permissions are required (make a second call when needed). We ordinarily ignore verify_credentials because the request takes a painful ~800ms, check if @Anywhere with json-update callback could fix this later in the event queue
@@ -288,8 +285,9 @@ class User
 
   private function fbRegisterAuth( &$fb )
   {
-    // TODO: store session in fbRegisterAuth
     Log::debug( "fbRegisterAuth" );
+
+    global $user;
 
     $fbUser = $fb->api('/me');
     Log::debug( 'fb /me' );
@@ -300,9 +298,18 @@ class User
     }
 
     $fbSession = $fb->getSession();
-    Log::debug( "only store access_token when expires=0?" );
+    if ( $fbSession && $fbSession['expires'] == 0 )
+    {
+      $qAccessToken = $this->db->escape( serialize($fbSession) );
+      Log::debug( "storing session access token (expires=0)" );
+    }
+    else
+    {
+      $qAccessToken = $user->fbUser->accessToken;
+      Log::debug( "storing existing access token, if any" );
+    }
+
     $qId = $this->db->escape( $fbUser['id'] );
-    $qAccessToken = $this->db->escape( serialize($fbSession) );
     $qName = $this->db->escape( $fbUser['name'] );
     $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
 

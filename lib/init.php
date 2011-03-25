@@ -51,7 +51,6 @@
   $twUser = $user->twUser;
   $anyUser = ($fbUser->authenticated || $twUser->authenticated);
   $allUsers = ($fbUser->authenticated && $twUser->authenticated);
-  Log::debug( "anyUser: $anyUser, allUsers: $allUsers" );
 
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
