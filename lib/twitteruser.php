@@ -9,6 +9,7 @@ class TwitterUser
 
   public $id, $accessToken, $name, $authenticated;
   public $secret, $screenName, $picture;
+  private $mustVerify;
 
   public function __construct( $id = null )
   {
@@ -30,6 +31,7 @@ class TwitterUser
     $this->screenName = "";
     $this->picture = "";
     $this->authenticated = null;
+    $this->mustVerify = true;
   }
 
   public function load( $id )
@@ -56,7 +58,11 @@ class TwitterUser
     if ( $id )
       $this->id = $id;
     else
+    {
       $this->id = $this->cookie();
+      Log::debug( "TwitterUser->identify: trust time-limited cookie, don't verify credentials" );
+      $this->mustVerify = false;
+    }
 
     Log::debug( "TwitterUser->identify $id -> ". $this->id );
 
@@ -74,8 +80,20 @@ class TwitterUser
 
     $this->tw = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->accessToken, $this->secret);
 
-    // FIXME: should check result here before we consider the user authenticated
-    Log::debug( "TwiterUser->authenticate: ". print_r( $this->tw, true ) );
+    if ( !$this->tw )
+      return;
+
+    if ( $this->mustVerify )
+    {
+      $twRs = $this->tw->get( "account/verify_credentials" );
+      Log::debug( "TwiterUser->authenticate: ". print_r( $twRs, true ) );
+      if ( isset($twRs['error']) )
+        return;
+      $this->mustVerify = false;
+    }
+    else
+      Log::debug( "TwitterUser->authenticate: trust time-limited cookie, don't verify credentials" );
+
     $this->authenticated = true;
   }
 
