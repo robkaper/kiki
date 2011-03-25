@@ -120,7 +120,7 @@ class TwitterUser
 
     if ( !$this->authenticated || !$this->tw )
     {
-      $result->error = "Twitter user not authenticated." )
+      $result->error = "Twitter user not authenticated.";
       return $result;
     }
 
