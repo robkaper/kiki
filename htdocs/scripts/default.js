@@ -62,6 +62,9 @@ function onFbResponse(response)
     if (response.perms) {}
 
     FB.api('/me', function(response) {
+      if ( response.id == fbUser )
+        return;
+
       fbUser = response.id;
       var userName = response.name;
 
