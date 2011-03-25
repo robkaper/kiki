@@ -7,7 +7,7 @@
     Log::debug( "request: ". print_r( $_REQUEST, true ) );
   }
 
-  $user->fbUser->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'ext_perm' => $_GET['permission'] ) );
+  $user->fbUser->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $_GET['permission'] ) );
 
   header( "Location: ". $_SERVER['HTTP_REFERER'] );
   exit();
