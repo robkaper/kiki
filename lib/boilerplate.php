@@ -110,7 +110,7 @@ class Boilerplate
 
     if ( $user->fbUser->authenticated )
     {
-      $content .= "<p>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong>.</p>";
+      $content .= "<li>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
 
       $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang" );
       foreach( $actions as $action => $desc )
@@ -119,17 +119,17 @@ class Boilerplate
         if ( $permission )
         {
           $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
-          $content .= "<p>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</p>\n";
+          $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
         }
         else
         {
           $permissionUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => $action ) );
-          $content .= "<p>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</p>\n";
+          $content .= "<li>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</li>\n";
         }
       }
     }
     else
-      $content .= "<p>Je bent niet ingelogd.</p>\n";
+      $content .= "<li>Je bent niet ingelogd.</li>\n";
 
     return $content;
   }
