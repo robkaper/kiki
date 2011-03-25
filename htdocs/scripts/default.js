@@ -4,7 +4,6 @@ function jsonUpdate()
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
     $(this).css( 'opacity', '0.7' );
-    // $(this).append( boilerplates['jsonLoad'] );
     ids[ids.length] = $(this).attr('id');
   } );
   if ( ids.length==0 )
@@ -13,7 +12,6 @@ function jsonUpdate()
   var json = { 'uri': requestUri, 'content': ids };
   $.getJSON( kikiPrefix + '/json/update.php', json, function(data) {
     $('#jsonUpdate').fadeOut().empty();
-    // $('.jsonload').remove();
     $.each(data.content, function(i,item) {
       $('#' + item.id).html(item.html).css( 'opacity', '1' );
     } );
@@ -127,7 +125,7 @@ function onTwLogout( user )
 
 function addAttachment( target, uri )
 {
-  $('.jsonload').remove();
+  $('#jsonUpdate').empty().fadeOut();
   $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
 }
 
@@ -155,7 +153,7 @@ function onReady() {
     if ( $submit.hasClass('disabled') )
       return false;
 
-    $submit.after( boilerplates['jsonSave'] );
+    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     $submit.addClass('disabled');
 
     var json = { formId: $(this).attr('id'), json: 1 };
@@ -179,7 +177,7 @@ function onReady() {
         // return;
       }
 
-      $('.jsonload').remove();
+      $('#jsonUpdate').empty().fadeOut();
 
       var $submit = $('[id^=articleForm_] button[name=submit]');
       $submit.removeClass('disabled');
@@ -192,8 +190,8 @@ function onReady() {
   $('[id^=comments_] div[id^=commentForm_]').live( 'submit', function() {
     $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' );
     $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
-    $('#' + $(this).attr('id') + ' button').after( boilerplates['jsonSave'] );
     $('#' + $(this).attr('id') + ' button').hide();
+    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
 
     var last = $('#' + $(this).parent().attr('id') + ' [id^=comment_]:last').attr('id');
 
@@ -205,7 +203,7 @@ function onReady() {
     } );
 
     $.post( kikiPrefix + '/json/comment.php', json, function(data) {
-      $('.jsonload').remove();
+      $('#jsonUpdate').empty().fadeOut();
 
       $.each(data.comments, function(i,item) {
         $('[id^=comment_' + data.objectId + '_]:last').after( item );
@@ -225,7 +223,7 @@ function onReady() {
   } );
 
   $('#attachFile').live( 'submit', function() {
-    $('#attachFile button').after( boilerplates['jsonSave'] );
+    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     return true;
   } );
   

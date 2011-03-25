@@ -110,6 +110,7 @@ blockquote {
 	padding: 5px;
 	border: 1px solid #deb;
 	-moz-border-radius: 5px;
+	display: none;
 }
 
 .jsonload {
