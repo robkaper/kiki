@@ -20,9 +20,7 @@
   echo "<h2>Facebook</h2>\n";
 ?> 
 <div id="facebookPermissions" class="jsonupdate">
-<ul>
 <?= Boilerplate::facebookPermissions( $user ); ?>
-</ul>
 </div>
 <?
   $page->footer();

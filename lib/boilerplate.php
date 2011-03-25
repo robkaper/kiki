@@ -108,7 +108,7 @@ class Boilerplate
   {
     $content = "";
 
-    $content .= "</ul>\n";
+    $content .= "<ul>\n";
 
     if ( $user->fbUser->authenticated )
     {
