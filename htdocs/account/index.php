@@ -27,9 +27,8 @@
       $permission = $user->fbUser->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $action ) );
       if ( $permission )
       {
-        $permissionUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => $action ) );
-        echo "<p>Deze site heeft $desc.</p>\n"; // (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</p>\n";
-        // TODO: revoke link.. using auth.revokeExtendedPermission, perm=action, uid=0, callback=0
+        $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
+        echo "<p>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</p>\n";
       }
       else
       {
