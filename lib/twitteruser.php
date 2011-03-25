@@ -36,14 +36,14 @@ class TwitterUser
 
   public function load( $id )
   {
-    Log::debug( "TwitterUser->load $id" );
-      
     $qId = $this->db->escape( $id );
     $q = "select access_token, secret, name, screen_name, picture from twitter_users where id='$qId' and secret is not null";
     $rs = $this->db->query($q);
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
+
+    Log::debug( "TwitterUser->load $id" );
 
     $this->id = $id;
     $this->accessToken = $o->access_token;
@@ -60,11 +60,10 @@ class TwitterUser
     else
     {
       $this->id = $this->cookie();
-      Log::debug( "TwitterUser->identify: trust session cookie, don't verify credentials" );
       $this->mustVerify = false;
     }
 
-    Log::debug( "TwitterUser->identify $id -> ". $this->id );
+    Log::debug( "TwitterUser->identify $id -> $this->id (mustVerify: $this->mustVerify)" );
 
     $this->load( $this->id );
   }
@@ -72,6 +71,7 @@ class TwitterUser
   public function authenticate()
   {
     Log::debug( "TwiterUser->authenticate" );
+
     if ( !$this->id )
         return;
 

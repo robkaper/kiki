@@ -33,19 +33,16 @@ class FacebookUser
 
   public function load( $id )
   {
-    Log::debug( "FacebookUser->load $id" );
-
     $qId = $this->db->escape( $id );
     $q = "select access_token, name from facebook_users where id='$qId'";
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
 
+    Log::debug( "FacebookUser->load $id" );
+
     $this->id = $id;
     $this->accessToken = @unserialize($o->access_token);
-    if( $this->accessToken )
-      Log::debug( "FacebookUser->load has offline_access token!" );
-    
     $this->name = $o->name;
   }
 
@@ -67,20 +64,17 @@ class FacebookUser
 
   public function authenticate()
   {
-    Log::debug( "FacebookUser->authenticate" );
     if ( !$this->id )
         return;
 
     $fbSession = $this->fb->getSession();
-    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession, true ) );
     if ( !isset($fbSession['uid']) && $this->accessToken )
     {
-      Log::debug( "FacebookUser->authenticate setSession: ". print_r( $this->accessToken, true ) );
+      Log::debug( "FacebookUser->authenticate setSession" );
       $this->fb->setSession( $this->accessToken );
     }
 
     $fbSession = $this->fb->getSession();
-    Log::debug( "FacebookUser->authenticate getSession: ". print_r( $fbSession, true ) );
     if ( $fbSession )
     {
       try
@@ -137,8 +131,6 @@ class FacebookUser
 
   private function registerAuth()
   {
-    Log::debug( "FacebookUser->registerAuth" );
-
     $fbUser = $this->fb->api('/me');
     if ( !$fbUser )
     {
@@ -148,21 +140,14 @@ class FacebookUser
 
     $fbSession = $this->fb->getSession();
     if ( $fbSession && $fbSession['expires'] == 0 )
-    {
       $qAccessToken = $this->db->escape( serialize($fbSession) );
-      Log::debug( "storing session access token (expires=0)" );
-    }
     else
-    {
       $qAccessToken = $this->accessToken;
-      Log::debug( "storing existing access token, if any" );
-    }
 
     $qId = $this->db->escape( $fbUser['id'] );
     $qName = $this->db->escape( $fbUser['name'] );
     $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
-
-    Log::debug( "fbRegisterAuth q: $q" );
+    Log::debug( "FacebookUser->registerAuth q: $q" );
     $this->db->query($q);
   }
   
