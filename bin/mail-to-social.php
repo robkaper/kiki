@@ -1,0 +1,90 @@
+#!/usr/bin/php -q
+<?
+  $_SERVER['SERVER_NAME'] = $argv[1];
+  $_SERVER['REQUEST_URI'] = "";
+  include_once base64_decode( "../lib/init.php" );
+
+  // Temporarily store e-mail
+  $data = file_get_contents("php://stdin");
+  $tmpFile = tempnam( "/tmp", "kiki" );
+  file_put_contents( $tmpFile, $data );
+
+  // Parse headers for Subject
+  list( $rawHeaders, $body ) = split( "(\r)?\n(\r)?\n", $data );
+  $headers = array();
+  preg_match_all('/([^: ]+): (.+?(?:(\r)?\n\s(?:.+?))*)(\r)?\n/m', "$rawHeaders\n", $headers );
+  foreach( $headers[1] as $id => $key )
+  {
+    switch( strtolower(trim($key)) )
+    {
+    case 'subject':
+      $subject = $headers[2][$id];
+      Log::debug( "subject: $subject" );
+      break;
+    default:;
+    }
+  }
+
+  // Get structure
+  $mp = mailparse_msg_parse_file( $tmpFile );
+  $structure = mailparse_msg_get_structure($mp);
+  // Log::debug( "structure: ". print_r( $structure, true ) );
+
+  // Iterate structure
+  $msg = "";
+  $attachments = array();
+  foreach( $structure as $structurePart )
+  {
+    $partFile = "$tmpFile-$structurePart";
+
+    $section = mailparse_msg_get_part($mp, $structurePart);
+    $info = mailparse_msg_get_part_data($section);
+    // Log::debug( "info: ". print_r( $info, true ) );
+
+    if ( !in_array( $info['content-type'], array('multipart/mixed', 'multipart/alternative') ) )
+    {
+      // Get contents
+      $part = mailparse_msg_get_part( $mp, $structurePart );
+      ob_start();
+      mailparse_msg_extract_part_file( $part, $tmpFile );
+      $contents = ob_get_contents();
+      ob_end_clean();
+
+      if ( $info['disposition-filename'] )
+      {
+        // Attachment, store
+        // FIXME: rjkcust
+        $fileName = "/www/robkaper.nl/htdocs/upload/". $info['disposition-filename']; // "$partFile.data"
+        file_put_contents( $fileName, $contents );
+        $attachments[] = $info['disposition-filename'];
+        Log::debug( "saved attachment: $fileName (". $info['content-type']. ")" );
+      }
+      else if ( !$savedBody && $info['content-type'] == 'text/plain' )
+      {
+        // Body part
+        $body = preg_replace( '/-- [\r\n]+.*/s', '', $contents );
+        $savedBody = true;
+      }
+    }
+  }
+
+  // Delete tmp file
+  unlink( $tmpFile );
+
+  $fbMsg = $subject;
+  // FIXME: rjkcust
+  if ( $count($attachments) )
+  {
+    $link = "http://robkaper.nl/upload/". $attachments[0];
+    $picture = "http://robkaper.nl/upload/". $attachments[0];
+    $tinyUrl = TinyUrl::get( $myUrl );
+  }
+
+  $twMsg = $subject. " ". $tinyUrl;
+
+  $user->load(1);
+  $user->authenticate();
+
+  $fbRs = Social::fbPublish( &$fb, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
+  $twRs = Sociall:twPublish( &$tw, $msg );
+?>
