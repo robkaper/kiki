@@ -14,10 +14,6 @@ touch debug.txt && chgrp www-data debug.txt && chmod 660 debug.txt
 
 3) Facebook Connect
 
-The canvas root for your Kiki application will be:
-
-http://example.com/kiki/facebook-xd/
-
 Your callback URL is:
 
 http://example.com/kiki/facebook-callback.php

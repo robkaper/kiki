@@ -1,14 +1,13 @@
 This TODO file lists outstanding work towards a completely brandless and
 installable Kiki. It does not include outstanding work in the codebase
-itself, which should be documented through FIXME: and TODO: comments.
+itself, which should be documented through FIXME and TODO comments.
 
 - Make all remaining customisations in the code configurable
 
 - Finish INSTALL instructions (or better yet, provide a simple install.php to
   be placed in the document root)
 
-- Provide generic htdocs files (cross-domain functionality,
-  JSON listener)
+- Provide generic htdocs files for /rewrite/ in robkaper.nl
 
 - Don't include third-party libraries (facebook.php and lib/twitteroauth)
   but reference them through configuration
@@ -20,5 +19,3 @@ itself, which should be documented through FIXME: and TODO: comments.
   and requirements
 
 - Document mail-to-social plugin.
-
-- Make write and offline permissions more flexible.
