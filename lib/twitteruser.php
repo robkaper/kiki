@@ -63,11 +63,7 @@ class TwitterUser
     $this->load( $this->id );
   }
 
-  // FIXME: Only use verify when post permissions are required (make a
-  // second call when needed).  We ordinarily ignore verify_credentials
-  // because the request takes a painful ~800ms, check if @Anywhere with
-  // json-update callback could fix this later in the event queue
-  public function authenticate( $verify = false )
+  public function authenticate()
   {
     Log::debug( "TwiterUser->authenticate" );
     if ( !$this->id )
@@ -77,22 +73,10 @@ class TwitterUser
       return;
 
     $this->tw = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->accessToken, $this->secret);
+
+    // FIXME: should check result here before we consider the user authenticated
+    Log::debug( "TwiterUser->authenticate: ". print_r( $this->tw, true ) );
     $this->authenticated = true;
-
-    if ( !$verify || !$this->tw )
-      return;
-
-    $twApiUser = $this->tw->get('account/verify_credentials');
-    if ( $twApiUser )
-    {
-      if (isset($twApiUser->error) )
-      {
-         Log::debug( "TwiterUser->authenticate error: $twApiUser->error, id: $this->id" );
-         return;
-      }
-      // FIXME: inspect twApiUser to check if user is verified
-      // $this->verified = true;
-    }
   }
 
   private function cookie()
