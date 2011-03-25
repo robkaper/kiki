@@ -103,6 +103,37 @@ class Boilerplate
     $content .= "</ul>\n";
     return $content;
   }
+
+  public static function facebookPermissions( &$user )
+  {
+    $content = "";
+
+    if ( $user->fbUser->authenticated )
+    {
+      $content .= "<p>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong>.</p>";
+
+      $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang" );
+      foreach( $actions as $action => $desc )
+      {
+        $permission = $user->fbUser->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $action ) );
+        if ( $permission )
+        {
+          $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
+          $content .= "<p>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</p>\n";
+        }
+        else
+        {
+          $permissionUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => $action ) );
+          $content .= "<p>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</p>\n";
+        }
+      }
+    }
+    else
+      $content .= "<p>Je bent niet ingelogd.</p>\n";
+
+    return $content;
+  }
+
 }
 
 ?>

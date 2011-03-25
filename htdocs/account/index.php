@@ -16,29 +16,10 @@
     echo "<p>Je bent niet ingelogd.</p>\n";
 
   echo "<h2>Facebook</h2>\n";
-
-  if ( $user->fbUser->authenticated )
-  {
-    echo "<p>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong>.</p>";
-
-    $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang" );
-    foreach( $actions as $action => $desc )
-    {
-      $permission = $user->fbUser->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $action ) );
-      if ( $permission )
-      {
-        $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
-        echo "<p>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</p>\n";
-      }
-      else
-      {
-        $permissionUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => $action ) );
-        echo "<p>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</p>\n";
-      }
-    }
-  }
-  else
-    echo "<p>Je bent niet ingelogd.</p>\n";
-
+?> 
+<div id="facebookPermissions" class="jsonupdate">
+<?= Boilerplate::facebookPermissions( $user ); ?>
+</div>
+<?
   $page->footer();
 ?>

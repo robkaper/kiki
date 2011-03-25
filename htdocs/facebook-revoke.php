@@ -8,13 +8,14 @@
   }
 
   $permission = $_GET['permission'];
-  Log::debug( "fbSession pre-revoke: ". print_r( $user->fbUser->fb->getSession(), true ) );
-  $user->fbUser->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $permission ) );
-  Log::debug( "fbSession post-revoke: ". print_r( $user->fbUser->fb->getSession(), true ) );
+  $fbRs = $user->fbUser->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $permission ) );
 
   $qUserId = $user->fbUser->id;
   $q = "update facebook_users set access_token=null where id=$qUserId";
   $db->query($q);
+
+  $cookieId = "fbs_". Config::$facebookApp;
+  setcookie( $cookieId, "", time()-3600, "/", $_SERVER['SERVER_NAME'] );
 
   header( "Location: ". $_SERVER['HTTP_REFERER'] );
   exit();
