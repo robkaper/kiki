@@ -50,7 +50,7 @@ function showArticleComments( articleId )
 
 function fbLogin()
 {
-  FB.login( function(response) { onFbResponse(response); }, { perms: 'publish_stream' } );
+  FB.login( function(response) { onFbResponse(response); }, { perms: 'publish_stream, offline_access', next: 'http://robkaper.nl/' } );
   return false;
 }
 
