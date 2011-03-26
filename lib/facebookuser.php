@@ -84,12 +84,10 @@ class FacebookUser
           return;
 
         Log::debug( "FacebookUser->authenticate: authenticated" );
+        $this->authenticated = true;
 
         if ( !$this->accessToken || $this->accessToken != $fbSession )
           $this->registerAuth();
-
-        $this->authenticated = true;
-        $this->load( $this->id );
 
         if ( array_key_exists( 'session', $_GET ) )
         {
@@ -202,6 +200,23 @@ class FacebookUser
     
     return $result;
   }
+
+  public function revoke( $perm )
+  {
+    $fbRs = $this->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
+
+    $q = "update facebook_users set access_token=null where id=$this->id";
+    $this->db->query($q);
+
+    $cookieId = "fbs_". Config::$facebookApp;
+    setcookie( $cookieId, "", time()-3600, "/", $_SERVER['SERVER_NAME'] );
+  }
+
+  public function hasPerm( $perm )
+  {
+    return $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+  }
+
 }
 
 ?>

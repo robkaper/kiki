@@ -117,7 +117,7 @@ class Boilerplate
       $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang" );
       foreach( $actions as $action => $desc )
       {
-        $permission = $user->fbUser->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $action ) );
+        $permission = $user->fbUser->hasPerm( $action );
         if ( $permission )
         {
           $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
