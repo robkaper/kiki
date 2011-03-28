@@ -23,5 +23,14 @@
 <?= Boilerplate::facebookPermissions( $user ); ?>
 </div>
 <?
+
+  if ( $anyUser )
+  {
+    echo "<h2>Sociale hulpmiddelen</h2>\n";
+    echo "<ul>\n";
+    echo "<li><a href=\"social.php\">Update sociale statussen</a></li>\n";
+    echo "</ul>\n";
+  }
+
   $page->footer();
 ?>
