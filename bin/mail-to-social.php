@@ -52,12 +52,8 @@
       if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
-        // FIXME: rjkcust, needs to be stored in and made accessible from database
-        $fileName = "/www/robkaper.nl/htdocs/upload/". $info['disposition-filename']; // "$partFile.data"
-        file_put_contents( $fileName, $contents );
-        chmod( $fileName, 0644 );
-        $attachments[] = $info['disposition-filename'];
-        Log::debug( "saved attachment: $fileName (". $info['content-type']. ")" );
+        $id = Storage::save( $info['disposition-filename'], $contents );
+        $attachments[] = $id;
       }
       else if ( !$body && $info['content-type'] == 'text/plain' )
       {
@@ -71,19 +67,19 @@
   unlink( $tmpFile );
 
   $fbMsg = $subject;
-  // FIXME: rjkcust
+
   if ( count($attachments) )
   {
-    $link = "http://robkaper.nl/upload/". $attachments[0];
-    $picture = "http://robkaper.nl/upload/". $attachments[0];
-    $tinyUrl = TinyUrl::get( $myUrl );
+    $link = Storage::url( $attachments[0] );
+    $picture = Storage::url( $attachments[0] );
+    $tinyUrl = TinyUrl::get( $link );
   }
   else
     exit();
 
-  $name = '[no name]';
-  $caption = '[no caption]';
-  $description = '[no description]';
+  $name = '';
+  $caption = '';
+  $description = '';
 
   $twMsg = $subject. " ". $tinyUrl;
 

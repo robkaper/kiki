@@ -17,6 +17,7 @@ create table facebook_users (
   primary key(id),
   ctime datetime not null,
   mtime datetime not null,
+  access_token text default null,
   name varchar(255) default null
 );
 
@@ -91,4 +92,14 @@ create table menu_items (
   admin boolean default false,
   class varchar(255) default null,
   sortorder tinyint unsigned not null
+);
+
+drop table if exists storage;
+create table storage (
+  id int unsigned not null auto_increment,
+  primary key(id),
+  hash varchar(40) not null,
+  original_name varchar(255) not null,
+  extension varchar(255) not null,
+  size int unsigned not null default 0
 );
