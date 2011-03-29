@@ -30,6 +30,8 @@ class Config
 	public static $twitterSecret = null;
 	public static $twitterCallback = null;
 	public static $twitterAnywhere = false;
+	public static $flickrApp = null;
+	public static $flickrSecret = null;
 
 	public static $singleUser = 0;
 	public static $devUsers = array();
