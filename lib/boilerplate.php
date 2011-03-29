@@ -75,6 +75,8 @@ class Boilerplate
 
   public static function navMenu( &$user, $level = 1 )
   {
+    // FIXME: merge non-dynamic entries (such as functionality of /kiki/account/)
+
     $context = null;
 
     $content = "<ul id=\"navMenu-${level}\" class=\"jsonupdate\">\n";    
