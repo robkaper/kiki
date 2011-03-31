@@ -43,8 +43,6 @@ class TwitterUser
     if ( !$o )
       return;
 
-    Log::debug( "TwitterUser->load $id" );
-
     $this->id = $id;
     $this->accessToken = $o->access_token;
     $this->secret = $o->secret;
@@ -63,7 +61,8 @@ class TwitterUser
       $this->mustVerify = false;
     }
 
-    Log::debug( "TwitterUser->identify $id -> $this->id (mustVerify: $this->mustVerify)" );
+    if ( $this->id )
+      Log::debug( "TwitterUser->identify $id -> $this->id (mustVerify: $this->mustVerify)" );
 
     $this->load( $this->id );
   }

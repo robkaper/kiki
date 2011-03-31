@@ -39,8 +39,6 @@ class FacebookUser
     if ( !$o )
       return;
 
-    Log::debug( "FacebookUser->load $id" );
-
     $this->id = $id;
     $this->accessToken = @unserialize($o->access_token);
     $this->name = $o->name;
@@ -57,7 +55,8 @@ class FacebookUser
         $this->id = $cookie['uid'];
     }
 
-    Log::debug( "FacebookUser->identify $id -> ". $this->id );
+    if ( $this->id )
+      Log::debug( "FacebookUser->identify $id -> ". $this->id );
 
     $this->load( $this->id );
   }
