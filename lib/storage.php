@@ -12,7 +12,7 @@ class Storage
   {
     $db = $GLOBALS['db'];
     $qId = $db->escape($id);
-    $o = $db->getSingleObject( "select hash,extension from storage where id=$qId" );
+    $o = $db->getSingle( "select hash,extension from storage where id=$qId" );
     return sprintf( "%s.%s", $o->hash, $o->extension );
   }
 
@@ -30,7 +30,7 @@ class Storage
   {
     $db = $GLOBALS['db'];
 
-    $extension = substr( $fileName, strrpos( '.', $fileName )+1 );
+    $extension = substr( $fileName, strrpos( $fileName, '.' )+1 );
     $hash = sha1( uniqid(). $data );
 
     $qHash = $db->escape( $hash );
@@ -42,7 +42,7 @@ class Storage
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
 
-    $fileName =  self::localFile($id);
+    $fileName = self::localFile($id);
     file_put_contents( $fileName, $data );
     chmod( 0644, $fileName );
 
