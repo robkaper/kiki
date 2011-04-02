@@ -10,11 +10,14 @@ class FacebookUser
   public function __construct( $id = null )
   {
     $this->db = $GLOBALS['db'];
-    $this->fb = new Facebook( array(
-      'appId'  => Config::$facebookApp,
-      'secret' => Config::$facebookSecret,
-      'cookie' => true
-      ) );
+    if ( Config::$facebookApp && extension_loaded('curl') )
+    {
+      $this->fb = new Facebook( array(
+        'appId'  => Config::$facebookApp,
+        'secret' => Config::$facebookSecret,
+        'cookie' => true
+        ) );
+    }
 
     $this->reset();
 
@@ -64,7 +67,10 @@ class FacebookUser
   public function authenticate()
   {
     if ( !$this->id )
-        return;
+      return;
+
+    if ( !$this->fb )
+      return;
 
     $fbSession = $this->fb->getSession();
     if ( !isset($fbSession['uid']) && $this->accessToken )
@@ -130,6 +136,9 @@ class FacebookUser
 
   private function registerAuth()
   {
+    if ( !$this->fb )
+      return;
+
     $fbUser = $this->fb->api('/me');
     if ( !$fbUser )
     {
@@ -202,6 +211,9 @@ class FacebookUser
 
   public function revoke( $perm )
   {
+    if ( !$this->fb )
+      return;
+
     $fbRs = $this->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
 
     $q = "update facebook_users set access_token=null where id=$this->id";
@@ -213,6 +225,9 @@ class FacebookUser
 
   public function hasPerm( $perm )
   {
+    if ( !$this->fb )
+      return false;
+
     return $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
   }
 
