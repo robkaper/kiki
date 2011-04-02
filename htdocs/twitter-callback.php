@@ -5,25 +5,7 @@
   if ( isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
     Log::error( "SNH: twitter-callback token mismatch" );
 
-  // Create TwitteroAuth object with app key/secret and token key/secret from default phase
-  $connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret'] );
-  $httpCode = $connection ? $connection->http_code : null;
-
-  $accessToken = $connection->getAccessToken($_REQUEST['oauth_verifier']);
-  $twApiUser = $connection ? $connection->get('account/verify_credentials') : null;
-
-  $qId = $db->escape( $accessToken['user_id'] );
-  $qAccessToken = $db->escape( $accessToken['oauth_token'] );
-  $qSecret = $db->escape( $accessToken['oauth_token_secret'] );
-  $qName = $twApiUser ? $db->escape( $twApiUser->name ) : "";
-  $qScreenName = $db->escape( $accessToken['screen_name'] );
-  $qPicture = $twApiUser ? $db->escape( $twApiUser->profile_image_url ) : "";
-  if ( $qId )
-  {
-    $q = "insert into twitter_users (id,access_token,secret,name,screen_name,picture) values( $qId, '$qAccessToken', '$qSecret', '$qName', '$qScreenName', '$qPicture') on duplicate key update access_token='$qAccessToken', secret='$qSecret', name='$qName', screen_name='$qScreenName', picture='$qPicture'";
-    Log::debug( "twitter-callback q: $q" );
-    $db->query($q);
-  }
+  $accessToken = $this->user->twUser->registerAuth();
 
   // Remove no longer needed request tokens
   unset($_SESSION['oauth_token']);
