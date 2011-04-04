@@ -13,6 +13,9 @@
     $data = '';
     switch( $id )
     {
+    case 'accountLink':
+      $data = $anyUser ? Boilerplate::accountLink() : null;
+      break;
     case 'address':
       $data = $anyUser ? Boilerplate::address() : Boilerplate::login();
       break;
