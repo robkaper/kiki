@@ -32,6 +32,11 @@ class Boilerplate
     return "<p>\n<a href=\"#login\">Log in</a> via Facebook of Twitter om te reageren.</p>\n";
   }
 
+  static function accountLink()
+  {
+    return "<p><a href=\"/kiki/account/\">Jouw Account</a></p>\n";
+  }
+
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )
   {
     $img = $type ? "/img/komodo/${type}_16.png" : "/img/blank.gif";
