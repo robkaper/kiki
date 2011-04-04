@@ -115,17 +115,17 @@ class TwitterUser
     $accessToken = $connection->getAccessToken($_REQUEST['oauth_verifier']);
     $twApiUser = $connection ? $connection->get('account/verify_credentials') : null;
 
-    $qId = $db->escape( $accessToken['user_id'] );
-    $qAccessToken = $db->escape( $accessToken['oauth_token'] );
-    $qSecret = $db->escape( $accessToken['oauth_token_secret'] );
-    $qName = $twApiUser ? $db->escape( $twApiUser->name ) : "";
-    $qScreenName = $db->escape( $accessToken['screen_name'] );
-    $qPicture = $twApiUser ? $db->escape( $twApiUser->profile_image_url ) : "";
+    $qId = $this->db->escape( $accessToken['user_id'] );
+    $qAccessToken = $this->db->escape( $accessToken['oauth_token'] );
+    $qSecret = $this->db->escape( $accessToken['oauth_token_secret'] );
+    $qName = $twApiUser ? $this->db->escape( $twApiUser->name ) : "";
+    $qScreenName = $this->db->escape( $accessToken['screen_name'] );
+    $qPicture = $twApiUser ? $this->db->escape( $twApiUser->profile_image_url ) : "";
     if ( $qId )
     {
       $q = "insert into twitter_users (id,access_token,secret,name,screen_name,picture) values( $qId, '$qAccessToken', '$qSecret', '$qName', '$qScreenName', '$qPicture') on duplicate key update access_token='$qAccessToken', secret='$qSecret', name='$qName', screen_name='$qScreenName', picture='$qPicture'";
       Log::debug( "TwitterUser->registerAuth q: $q" );
-      $db->query($q);
+      $this->db->query($q);
     }
 
     return $accessToken;
