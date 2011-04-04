@@ -106,7 +106,7 @@ class TwitterUser
     return 0;
   }
 
-  public function registerAuth( $accessToken )
+  public function registerAuth()
   {
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     $connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret'] );
