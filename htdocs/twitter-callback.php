@@ -5,7 +5,7 @@
   if ( isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
     Log::error( "SNH: twitter-callback token mismatch" );
 
-  $accessToken = $this->user->twUser->registerAuth();
+  $accessToken = $user->twUser->registerAuth();
 
   // Remove no longer needed request tokens
   unset($_SESSION['oauth_token']);
