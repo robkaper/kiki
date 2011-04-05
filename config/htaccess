@@ -1,5 +1,13 @@
 RewriteEngine On
 
+# TinyURL support
 RewriteRule ^/[0-9a-zA-Z]{3}$ /www/git/kiki/htdocs/tinyurl-redirect.php [E=id:$1,L]
 
+# Kiki htdocs files
 RewriteRule ^/kiki/(.*)$ /www/git/kiki/htdocs/$1
+
+# Blog/article base URI rewrite
+RewriteRule ^/(myblog)(/(.*))?$ /kiki/rewrite/articles.php [E=section:$1,E=articleId:$3,L]
+
+# Public URL for storage directory
+# RewriteRule ^/storage/(.*)$ /www/robkaper.nl/storage/$1
