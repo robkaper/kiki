@@ -83,6 +83,8 @@ class Articles
     $content = "";
 
     $title = $o->title;
+    if ( !$o->visible )
+      $title .= " (unpublished)";
     $body = Misc::markup( $o->body );
     $date = $o->ctime;
     $uAuthor = new User( $o->user_id );
