@@ -20,11 +20,11 @@ class Storage
   {
     $pos = strrpos( $name, '.' );
     if ( $pos === FALSE )
-      return ( $name, null );
+      return array( $name, null );
 
     $base = substr( $name, 0, $pos );
     $ext = substr( $name, $pos+1 );
-    return ( $base, $ext );
+    return array( $base, $ext );
   }
 
   public static function getBase( $name )
