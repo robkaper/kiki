@@ -14,6 +14,7 @@
   }
 
   $page = new Page( $title );
+  $page->addStylesheet( "/kiki/scripts/prettify/prettify.css" );
   $page->header();
 
   if ( $articleId )

@@ -63,6 +63,9 @@ class Misc
     // Replace [s]text[/s]
     $text = preg_replace( '(\[s\]([^\[\]]+)\[/s\])', "<span class=\"strike\">\\1</span>", $text );
 
+    // Replace [code]text[/code] for use with prettify.js
+    $text = preg_replace( '(\[code\]([^\[\]]+)\[/code\])', "<pre><code>\\1</code></pre>", $text );
+
     if ( $authorMode )
     {
         // TODO: Use (.*?) maybe? (First match with as few repeats as possible.)

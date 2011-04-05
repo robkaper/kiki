@@ -130,6 +130,16 @@ function addAttachment( target, uri )
 }
 
 function onReady() {
+  var prettify = false;
+  $("pre code").each(function() {
+    $(this).parent().addClass('prettyprint');
+    prettify = true;
+  } );
+
+  if ( prettify ) {
+    $.getScript("/kiki/scripts/prettify/prettify.js", function() { prettyPrint() } );
+  }
+
   $('input[placeholder], textarea[placeholder]').placeholder();
            
   $('[id^=comments_] [id^=commentForm_]').live( 'focusin', function() {

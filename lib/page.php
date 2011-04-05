@@ -3,12 +3,19 @@
 class Page
 {
   private $title;
+  private $stylesheets;
   public $tagLine;
 
   public function __construct( $title = null, $tagLine = null )
   {
     $this->title = $title;
+    $this->stylesheets = array();
     $this->tagLine = $tagLine;
+  }
+
+  public function addStylesheet( $url )
+  {
+    $this->stylesheets[] = $url;
   }
 
   public function header()
@@ -27,7 +34,10 @@ class Page
 <link rel="stylesheet" type="text/css" href="<?= Config::$kikiPrefix ?>/styles/default.css" title="Kiki Default" />
 <?
     if ( Config::$customCss )
-      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::$customCss. "\" />\n";
+      $this->stylesheets[] = Config::$customCss;
+
+    foreach( $this->stylesheets as $stylesheet )
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$stylesheet\" />\n";
 ?>
 <script type="text/javascript">
 var boilerplates = new Array();
