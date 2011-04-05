@@ -47,7 +47,7 @@ class Articles
   {
     $qId = $db->escape($articleId);
     $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
-    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere";
+    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
     $o = $db->getSingle($q);
     return $o ? Articles::showArticle( $user, $o, $json ) : null;
   }
@@ -60,8 +60,9 @@ class Articles
 
   public static function showMulti( &$db, &$user, $sectionId )
   {
+    $qUserId = $db->escape( $user->id );
     $qSection = $db->escape( $sectionId );
-    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and visible=1 and ctime<=now() order by ctime desc";
+    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and (visible=1 or user_id=$qUserId) and ctime<=now() order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
