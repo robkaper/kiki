@@ -34,7 +34,7 @@ class Boilerplate
 
   static function accountLink()
   {
-    return "<p><a href=\"/kiki/account/\">Jouw Account</a></p>\n";
+    return "<p><a href=\"". Config::$kikiPrefix. "/account/\">Jouw Account</a></p>\n";
   }
 
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )
@@ -127,7 +127,7 @@ class Boilerplate
         $permission = $user->fbUser->hasPerm( $action );
         if ( $permission )
         {
-          $permissionUrl = "/kiki/facebook-revoke.php?permission=$action";
+          $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?permission=$action";
           $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
         }
         else

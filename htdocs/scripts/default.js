@@ -137,7 +137,7 @@ function onReady() {
   } );
 
   if ( prettify ) {
-    $.getScript("/kiki/scripts/prettify/prettify.js", function() { prettyPrint() } );
+    $.getScript( kikiPrefix + '/scripts/prettify/prettify.js', function() { prettyPrint() } );
   }
 
   $('input[placeholder], textarea[placeholder]').placeholder();
