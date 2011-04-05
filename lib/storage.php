@@ -16,6 +16,29 @@ class Storage
     return sprintf( "%s.%s", $o->hash, $o->extension );
   }
 
+  public static function splitExtension( $name )
+  {
+    $pos = strrpos( $name, '.' );
+    if ( $pos === FALSE )
+      return ( $name, null );
+
+    $base = substr( $name, 0, $pos );
+    $ext = substr( $name, $pos+1 );
+    return ( $base, $ext );
+  }
+
+  public static function getBase( $name )
+  {
+    list( $base ) = self::splitExtension($name);
+    return $base;
+  }
+
+  public static function getExtension( $name )
+  {
+    list( $base, $ext ) = self::splitExtension($name);
+    return $ext;
+  }
+  
   public static function data( $id )
   {
     return file_get_contents( self::localFile($id) );
