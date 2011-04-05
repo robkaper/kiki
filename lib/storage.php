@@ -53,7 +53,7 @@ class Storage
   {
     $db = $GLOBALS['db'];
 
-    $extension = substr( $fileName, strrpos( $fileName, '.' )+1 );
+    $extension = self::getExtension( $fileName );
     $hash = sha1( uniqid(). $data );
 
     $qHash = $db->escape( $hash );
