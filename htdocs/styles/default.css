@@ -18,6 +18,11 @@ header, footer, aside, nav, article {
   src: local("Forgotten Futurist"), url( /fonts/Forgotte.ttf ) format("truetype"); /* non-IE */
 }
 
+tt {
+	font-family: monospaced;
+	font-size: 1em;
+}
+
 #sw, #cw, #fw {
 	margin: 0 auto;
 	-moz-margin: 0 auto;
