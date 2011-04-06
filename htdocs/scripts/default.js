@@ -130,6 +130,8 @@ function addAttachment( target, uri )
 }
 
 function onReady() {
+  $('.album .navarrow img').fadeOut();
+
   var prettify = false;
   $("pre code").each(function() {
     $(this).parent().addClass('prettyprint');
@@ -235,6 +237,29 @@ function onReady() {
   $('#attachFile').live( 'submit', function() {
     $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     return true;
+  } );
+
+  $('.album .imgw').live('mouseenter', function() {
+    $(this).parent().find('.navarrow img').fadeIn();
+  } );
+
+  $('.album .imgw').live('mouseleave', function() {
+    $(this).parent().find('.navarrow img').fadeOut();
+  } );
+
+  $('.album .navarrow').click( function() {
+    var album = $(this).parent().parent().parent().parent().attr('id');
+    var action = $(this).attr('id');
+    var current = $(this).parent().parent().find('>img').attr('id');
+
+    var json = { album: album, action: action, current: current };
+    $.getJSON( kikiPrefix + '/json/album.php', json, function(data) { 
+    if ( data.id )
+      // FIXME: only do for relevant album
+      $('.album .imgw >img').attr('id',data.id).attr('src',data.url); 
+    } );
+
+    return false;
   } );
   
 }

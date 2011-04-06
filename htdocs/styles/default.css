@@ -368,6 +368,48 @@ aside img.social {
 	font-size: 0.875em;
 }
 
+.album .header {
+	background: #deb;
+	-moz-border-radius: 5px 5px 0px 0px;
+	padding: 5px 0;
+	font-weight: bold;
+}
+
+.album .imgw {
+	style="background: #000;
+	padding: 0 0 2px 0;
+	text-align: center;
+	width: 100%;
+	height: 480px;
+	line-height: 480px;">
+}
+
+.album .imgw >img {
+	max-width: 100%;
+	max-height: 480px;
+	margin: 0;
+	vertical-align: middle;
+	z-index: 1;
+
+.album .navarroww {
+	position: relative;
+	float: left;
+	top: -480px;
+	width: 32px;
+	height: 32px;
+	z-index: 10;
+	vertical-align: middle;
+}
+
+.album #navrightw {
+	float: right;
+}
+
+.album .footer {
+	background: #deb;
+	padding: 5px 0;
+}
+
 @media print {
 	#content a[href^="http"]:after {
 		content: " (" attr(href) ") ";
