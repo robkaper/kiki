@@ -25,7 +25,7 @@ class Album
     <div id="navleftw" class="navarroww"><a id="navleft" class="navarrow" href="#"><img src="/static/img/dryicons/32x32/left_arrow.png" alt="&gt;" width="32" height="32" /></a></div>
     <div id="navrightw" class="navarroww"><a id="navright" class="navarrow" href="#"><img src="/static/img/dryicons/32x32/right_arrow.png" alt="&gt;" width="32" height="32" /></a></div>
   </div>
-  <div class="footer">[// TODO: tag/like bar]</div>
+  <div class="bar">[// TODO: tag/like bar]</div>
   <div><?= Comments::show( $GLOBALS['db'], $GLOBALS['user'], 0 ); ?></div>
 </div>
 <?
