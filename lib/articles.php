@@ -46,6 +46,7 @@ class Articles
   public static function showSingle( &$db, &$user, $articleId, $json = false )
   {
     $qId = $db->escape($articleId);
+    $qUserId = $db->escape( $user->id );
     $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
     $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
     $o = $db->getSingle($q);
