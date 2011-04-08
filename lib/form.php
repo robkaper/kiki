@@ -64,6 +64,7 @@ class Form
   {
     $content = "<p><label>${label}</label>\n";
     $content .= "<select name=\"${id}\">\n";
+    $content .= "<option value=\"\">Select ...</option>\n";
     foreach( $options as $id => $label )
     {
       $selected = ($id == $preset) ? " selected" : "";
