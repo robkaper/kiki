@@ -204,6 +204,19 @@ form textarea {
 	height: 10em;
 }
 
+form label span.remaining {
+	font-size: 0.875em;
+	font-weight: bold;
+}
+
+form label span.remaining.error {
+	color: #f00;
+}
+
+form label span.remaining.warning {
+	color: #fc0;
+}
+ 
 div.commentTxt > form {
 	border: 0;
 	-moz-border-radius: 0;

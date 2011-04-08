@@ -38,13 +38,22 @@ class Form
     return self::text( $id, $value, $label, $placeholder, true );
   }
 
-  public static function textarea( $id, $value=null, $label=null, $placeholder = null )
+  public static function textarea( $id, $value=null, $label=null, $placeholder=null, $maxLength=0 )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
+    $class = $maxLength ? " class=\"keyup\"" : "";
+    $maxlength = $maxLength ? " maxlength=\"$maxLength\"" : "";
+
+    if ( $maxLength )
+    {
+      $remaining = $maxLength - strlen( $value );
+      $label .= " <span class=\"remaining\">$remaining</span>\n";
+    }
+
     if ( $label )
     {
-      $content = "<p><label>${label}</label>\n";
-      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea></p>\n";
+      $content = "<p><label for=\"${id}\">${label}</label>\n";
+      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}${maxlength}${class}>${value}</textarea></p>\n";
     }
     else
       $content = "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea>\n";

@@ -234,6 +234,24 @@ function onReady() {
     return false;
   } );
 
+  $('textarea.keyup').live( 'keyup', function() {
+    var maxLength = $(this).attr('maxlength');
+    var length = $(this).val().length;
+    var remaining = maxLength - length;
+    var target = $(this).attr('id');
+
+    var $(span) = $(this).parent().find('label[for=' + target + '] span.remaining');
+
+    if ( remaining < 0 )
+      $(span).addClass('error').removeClass('warning');
+    else if ( remaining <= 10 )
+      $(span).addClass('warning').removeClass('error');
+    else
+      $(span).removeClass('error').removeClass('warning');
+
+    $(span).html( remaining );
+  } );
+
   $('#attachFile').live( 'submit', function() {
     $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     return true;
