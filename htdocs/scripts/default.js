@@ -51,12 +51,17 @@ function showArticleComments( articleId )
 
 function fbLogin()
 {
+  // TODO: perhaps we can use a jsonLoggingIn boilerplate or similar for here and twLogin?
+  $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
+
   FB.login( function(response) { onFbResponse(response); }, { perms: '' } );
   return false;
 }
 
 function onFbResponse(response)
 {
+  $('#jsonUpdate').empty().fadeOut();
+
   if (response.session)
   {
     // perms is a comma separated list of granted permissions
@@ -93,6 +98,11 @@ function onFbResponse(response)
     if ( !twUser )
       $('.youUnknown').show();
   }
+}
+
+function twLogin()
+{
+  $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
 }
 
 function onTwLogin( e, user )
