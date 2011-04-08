@@ -123,7 +123,7 @@ function onTwLogout( user )
       $('.youUnknown').show();
 }
 
-function addAttachment( target, uri )
+function addAttachment( target, id, uri )
 {
   $('#jsonUpdate').empty().fadeOut();
   $('#' + target).append( '[attachment]' + uri + '[/attachment]' );

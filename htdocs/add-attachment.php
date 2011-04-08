@@ -6,9 +6,8 @@
   $size = $_FILES['attachment']['size'];
   $target = $_POST['target'];
 
-  // FIXME: actually store attachment, assign proper URI, relay URI
-  $fileUri = uniqid();
+  $id = Storage::save( $name, file_get_contents($tmpFile) );
 ?>
 <script type="text/javascript">
-window.parent.addAttachment( '<?= $target; ?>', '<?= $fileUri; ?>' );
+window.parent.addAttachment( '<?= $target; ?>', $id, '<?= Storage::url($id); ?>' );
 </script>
