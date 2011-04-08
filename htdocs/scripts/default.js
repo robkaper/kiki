@@ -240,7 +240,7 @@ function onReady() {
     var remaining = maxLength - length;
     var target = $(this).attr('id');
 
-    var $(span) = $(this).parent().find('label[for=' + target + '] span.remaining');
+    var span = $(this).parent().find('label[for=' + target + '] span.remaining');
 
     if ( remaining < 0 )
       $(span).addClass('error').removeClass('warning');
