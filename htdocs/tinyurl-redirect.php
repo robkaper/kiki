@@ -9,9 +9,8 @@
     exit();
   }
   
-  // FIXME: write a nice "sorry, we didn't find the long URL for your tinyURL" message
   $page = new Page( "TinyURL Not Found" );
   $page->header();
-  echo "<p>\nSorry!</p>\n";
+  echo "<p>\nSorry! Kiki CMS couldn't find a destination for this tiny URL.</p>\n";
   $page->footer();
 ?>
