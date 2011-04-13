@@ -481,7 +481,7 @@ body > header {
 #title {
 	display: block;
 	max-width: 850px;
-	margin: 0.5em auto;
+	margin: 0 auto;
 }
 
 #title img {
