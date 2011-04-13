@@ -54,7 +54,7 @@
     }
 
     if ( !$user->twUser->authenticated && Config::$twitterApp )
-        echo "<a id=\"twLogin\" href=\"". Config::$kikiPrefix. "/twitter-redirect.php\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
+        echo "<a id=\"twLogin\" href=\"". Config::$kikiPrefix. "/twitter-redirect.php\" onclick=\"return twLogin();\" rel=\"nofollow\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_signin.png\" alt=\"Sign in with Twitter\"/></a>\n";
 
     echo "</div>\n";
   }
