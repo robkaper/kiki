@@ -1,13 +1,16 @@
 <?
-  include_once "../../lib/init.php";
+  include_once "../lib/init.php";
 
-  $tempFile = $_FILES['attachment']['tmp_name'];
+  $tmpFile = $_FILES['attachment']['tmp_name'];
   $name = $_FILES['attachment']['name'];
   $size = $_FILES['attachment']['size'];
   $target = $_POST['target'];
 
-  $id = Storage::save( $name, file_get_contents($tmpFile) );
+  if ( $tmpFile )
+    $id = Storage::save( $name, file_get_contents($tmpFile) );
+  else
+    $id = 0;
 ?>
 <script type="text/javascript">
-window.parent.addAttachment( '<?= $target; ?>', $id, '<?= Storage::url($id); ?>' );
+window.parent.addAttachment( '<?= $target; ?>', '<?= $id; ?>', '<?= Storage::url($id); ?>' );
 </script>

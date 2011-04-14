@@ -1,5 +1,8 @@
 <?
 
+// TODO: add attachment display to preview/sort/delete attachments
+// TODO: require attachment display for all attachments, handle insertion into textarea differently (HTML5 contenteditable wysiwyg?)
+
 class Form
 {
   public static function open( $id=null, $action=null, $method='POST', $class=null, $enctype=null, $target=null )
@@ -38,6 +41,7 @@ class Form
     return self::text( $id, $value, $label, $placeholder, true );
   }
 
+  // TODO: remove id=, use textarea[name=...] selector instead
   public static function textarea( $id, $value=null, $label=null, $placeholder=null, $maxLength=0 )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
@@ -119,6 +123,7 @@ $( function() {
     return $content;
   }
 
+  // TODO: allow to be used inside a form instead of prior/afterwards
   public static function attachFile( $label=null, $target=null )
   {
     $content = Form::open( "attachFile", Config::$kikiPrefix. "/add-attachment.php", 'POST', null, "multipart/form-data", "attachTarget" );

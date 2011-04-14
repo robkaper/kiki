@@ -136,7 +136,15 @@ function onTwLogout( user )
 function addAttachment( target, id, uri )
 {
   $('#jsonUpdate').empty().fadeOut();
-  $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
+
+  if ( $('#' + target).is("textarea") )
+    $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
+  else
+  {
+    var val = $('input[name=' + target + ']').val();
+    val += ( ";" + uri );
+    $('input[name=' + target + ']').val(val);
+  }
 }
 
 function onReady() {
