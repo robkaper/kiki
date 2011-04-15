@@ -177,8 +177,8 @@ class Articles
       global $fb;
       $msg = '';
       $link = $myUrl;
-      $caption = '';
-      $description = '';
+      $caption = $_SERVER['SERVER_NAME'];
+      $description = Misc::textSummary( $_POST['body'], 400 );
       $picture = $picture ? $picture : Config::$headerLogo;
       Log::debug( "Article::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
       $fbRs = $user->fbUser->post( $msg, $link, $title, $caption, $description, $picture );

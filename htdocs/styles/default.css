@@ -415,8 +415,17 @@ aside img.social {
 	vertical-align: middle;
 }
 
+.album .navarroww img {
+        background: #9c6;
+        -moz-border-radius: 0px 16px 16px 0px; 
+}
+
 .album #navrightw {
 	float: right;
+}
+
+.album #navrightw img {
+        -moz-border-radius: 16px 0px 0px 16px;
 }
 
 .album .bar {

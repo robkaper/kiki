@@ -62,6 +62,10 @@ class Misc
     $text = preg_replace( '(\[b\]([^\[\]]+)\[/b\])', "<strong>\\1</strong>", $text );
     // Replace [s]text[/s]
     $text = preg_replace( '(\[s\]([^\[\]]+)\[/s\])', "<span class=\"strike\">\\1</span>", $text );
+    // Replace [q]text[/q]
+    $text = preg_replace( '(\[q\]([^\[\]]+)\[/q\])', "<q>\\1</q>", $text );
+    // Replace [quote]text[/quote]
+    $text = preg_replace( '(\[quote\]([^\[\]]+)\[/quote\])', "<blockquote>\\1</blockquote>", $text );
 
     // Replace [code]text[/code] for use with prettify.js
     $text = preg_replace( '(\[code\]([^\[\]]+)\[/code\])', "<pre><code>\\1</code></pre>", $text );
