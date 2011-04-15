@@ -537,6 +537,12 @@ body > nav ul li:hover, body > nav ul li.active {
 	background: #deb;
 }
 
+body > nav ul li.icon {
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 37px;
+}
+
 body > nav.second ul li:hover, body > nav.second ul li.active {
 	text-decoration: none;
 	background: white;

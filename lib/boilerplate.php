@@ -75,7 +75,10 @@ class Boilerplate
 
     $match = preg_match( "#$o->url#", $_SERVER['REQUEST_URI'] );
     $class = $o->class. ($match ? " active" : "");
-    return "<li class=\"$class\"><a href=\"$o->url\">$o->title</a></li>\n";
+    $class = $o->class. ($o->icon ? " icon" : "");
+    if ( $o->icon )
+      $style = " style=\"background-image: url(". Config::$iconPrefix. "/$o->icon);\"";
+    return "<li class=\"$class\"${style}><a href=\"$o->url\">$o->title</a></li>\n";
   }
 
   public static function navMenu( &$user, $level = 1 )
@@ -102,7 +105,7 @@ class Boilerplate
     $qLevel = $db->escape( $level );
     $qContext = $db->escape( $context );
 
-    $q = "select title, url, admin, class from menu_items where level=$qLevel and (context='$qContext' or context is null) order by sortorder asc";
+    $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context='$qContext' or context is null) order by sortorder asc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $o = $db->fetchObject($rs) )
