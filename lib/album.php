@@ -17,13 +17,12 @@ class Album
     $img = "<img id=\"$imgId\" src=\"$imgUrl\" />";
 
     // TODO: navleft/right only showing when available
-    // FIXME: rjkcust, include dryicons in Kiki
 ?>
 <div id="album_<?= $id ?>" class="album">
   <div class="header"><?= $title ?></div>
   <div class="imgw"><?= $img ?><br class="clear" />
-    <div id="navleftw" class="navarroww"><a id="navleft" class="navarrow" href="#"><img src="/static/img/dryicons/32x32/left_arrow.png" alt="&gt;" width="32" height="32" /></a></div>
-    <div id="navrightw" class="navarroww"><a id="navright" class="navarrow" href="#"><img src="/static/img/dryicons/32x32/right_arrow.png" alt="&gt;" width="32" height="32" /></a></div>
+    <div id="navleftw" class="navarroww"><a id="navleft" class="navarrow" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_left_alt1_32x32.png" alt="&lt;" width="32" height="32" /></a></div>
+    <div id="navrightw" class="navarroww"><a id="navright" class="navarrow" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_right_alt1_32x32.png" alt="&gt;" width="32" height="32" /></a></div>
   </div>
   <div class="bar">[// TODO: tag/like bar]</div>
   <div><?= Comments::show( $GLOBALS['db'], $GLOBALS['user'], 0 ); ?></div>

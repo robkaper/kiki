@@ -20,6 +20,9 @@ class Config
 	public static $headerLogo = null;
 	public static $customCss = null;
 
+    	public static $iconSetColor = "black";
+    	public static $iconPrefix = null;
+
 	public static $googleSiteVerification = null;
 	public static $googleAnalytics = null;
 	public static $googleAdSense = null;
@@ -51,6 +54,9 @@ class Config
 		self::$copySince = date("Y");
 
 		self::$headerLogo = self::$kikiPrefix. "/img/kiki-logo-50.png";
+
+		self::$iconPrefix = self::$kikiPrefix. "/img/iconic/". Config::$iconSetColor;
+        
 		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
 	}
 
