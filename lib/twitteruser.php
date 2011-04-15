@@ -110,7 +110,16 @@ class TwitterUser
   {
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     $connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret'] );
-    $httpCode = $connection ? $connection->http_code : null;
+    if ( !$connection )
+    {
+      Log::error( "TwitterUser->registerAuth failed, no connection" );
+      return null;
+    }
+    else if ( $connection->http_code != 200 )
+    {
+      Log::error( "TwitterUser->registerAuth failed, http_code=$connection->http_code" );
+      return null;
+    }
 
     $accessToken = $connection->getAccessToken($_REQUEST['oauth_verifier']);
     $twApiUser = $connection ? $connection->get('account/verify_credentials') : null;

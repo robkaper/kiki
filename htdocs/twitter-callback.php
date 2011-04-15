@@ -11,18 +11,19 @@
   unset($_SESSION['oauth_token']);
   unset($_SESSION['oauth_token_secret']);
 
-  // HACK: not all browsers (read: my HTC Hero) store the cookie Twitter sets, (re-)set it here ourselves
-  $twUid = $accessToken['user_id'];
-  $twSig = sha1( $twUid. Config::$twitterSecret );
-  $expire = 0; // time() + (7*24*3600);
-  setcookie( "twitter_anywhere_identity", "$twUid:$twSig", $expire, "/" );
-
-  if ( $httpCode == 200 || $twUid )
+  if ( $accessToken )
   {
-    $ref = array_key_exists( 'HTTP_REFERER', $_SERVER ) ? $_SERVER['HTTP_REFERER'] : "";
-    Log::debug( "twitter-callback redirect: $ref" );
-    header( 'Location: '. ($ref ? $ref : "/") );
+    $twUid = $accessToken['user_id'];
+    if ( $twUid )
+    {
+      // HACK: not all browsers (read: my HTC Hero) store the cookie Twitter sets, (re-)set it here ourselves
+      $twSig = sha1( $twUid. Config::$twitterSecret );
+      $expire = 0; // time() + (7*24*3600);
+      setcookie( "twitter_anywhere_identity", "$twUid:$twSig", $expire, "/" );
+    }
   }
-  else
-    Log::error( "twitter-callback failed, httpCode=$httpCode" );
+
+  $ref = array_key_exists( 'HTTP_REFERER', $_SERVER ) ? $_SERVER['HTTP_REFERER'] : "";
+   Log::debug( "twitter-callback redirect: $ref" );
+   header( 'Location: '. ($ref ? $ref : "/") );
 ?>
