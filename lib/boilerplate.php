@@ -74,8 +74,9 @@ class Boilerplate
       return null;
 
     $match = preg_match( "#$o->url#", $_SERVER['REQUEST_URI'] );
-    $class = $o->class. ($match ? " active" : "");
-    $class = $o->class. ($o->icon ? " icon" : "");
+    $class = $o->class;
+    $class .= ($match ? " active" : null);
+    $class .= ($o->icon ? " icon" : null);
     if ( $o->icon )
       $style = " style=\"background-image: url(". Config::$iconPrefix. "/$o->icon);\"";
     return "<li class=\"$class\"${style}><a href=\"$o->url\">$o->title</a></li>\n";
