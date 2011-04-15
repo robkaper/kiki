@@ -68,8 +68,6 @@ class Misc
 
     if ( $authorMode )
     {
-        // TODO: Use (.*?) maybe? (First match with as few repeats as possible.)
-
         // Replace [img]img[/img]
         $text = preg_replace( '(\[img\]([^\[\]]+)\[/img\])', "<div class=\"center\"><img src=\"\\1\" alt=\"\\1\" style=\"width: 99%\" /></div>", $text );
         // Replace [blockquote]text[/blockquote]
