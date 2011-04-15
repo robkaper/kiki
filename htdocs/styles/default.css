@@ -417,7 +417,7 @@ aside img.social {
 
 .album .navarroww img {
         background: #9c6;
-        -moz-border-radius: 0px 14px 14px 0px; 
+        -moz-border-radius: 0px 16px 16px 0px; 
 }
 
 .album #navrightw {
@@ -425,7 +425,7 @@ aside img.social {
 }
 
 .album #navrightw img {
-        -moz-border-radius: 14px 0px 0px 14px;
+        -moz-border-radius: 16px 0px 0px 16px;
 }
 
 .album .bar {
