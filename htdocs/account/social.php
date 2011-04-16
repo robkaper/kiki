@@ -53,7 +53,7 @@
   if ( $anyUser )
   {
     echo Form::open( "socialForm" );
-    echo Form::textarea( "msg", null, "Message", "Waar denk je aan?" );
+    echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
     if ( $user->fbUser )
       echo Form::checkbox( "postFb", false, "Facebook", "Update Facebook status" );
     if ( $user->twUser )
