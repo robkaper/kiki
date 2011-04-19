@@ -67,7 +67,7 @@ class Storage
 
     $fileName = self::localFile($id);
     file_put_contents( $fileName, $data );
-    chmod( 0644, $fileName );
+    chmod( $fileName, 0644 );
 
     return $id;    
   }
