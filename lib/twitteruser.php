@@ -147,6 +147,11 @@ class TwitterUser
     Log::debug( "TwitterUser->publish: $msg" );
     $twRs = $this->tw->post( 'statuses/update', array( 'status' => $msg ) );
     Log::debug( "twRs: ". print_r( $twRs, true ) );
+    if ( !$twRs )
+    {
+      $result->error = "Twitter status update failed.";
+      return $result;
+    }
 
     if ( isset($twRs->error) )
       $result->error = $twRs->error;
