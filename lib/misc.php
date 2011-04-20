@@ -121,13 +121,16 @@ class Misc
     $str = Misc::textStrip( $str );
     if ( strlen($str) > $maxLength )
     {
+      $postfix = " ...";
+      $maxLength -= strlen($postfix);
       $str = substr( $str, 0, $maxLength );
       $pos = strrpos( $str, " " );
       if ( $pos !== NULL )
         $str = substr( $str, 0, $pos );
-        $str .= "...";
+        $str .= $postfix;
     }
 
+    // TODO: we should probably have a textSummary plain and a textSummary specifically for articles
     // Substitute newlines to breaks.
     $str = preg_replace('((\r)?\n)', "<br />", $str );
 
