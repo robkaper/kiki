@@ -1,6 +1,6 @@
 <?
 
-class Social
+class SocialUpdate
 {
 
   public static $fbRs = null;
@@ -61,9 +61,10 @@ class Social
     self::$twRs = $user->twUser->post( $twMsg );
   }
 
-  public static method postArticle( &$user, $article ) {}
+  public static method postLink( &$user, $link ) {}
   {
     // TODO: move from Article::save
+    // TODO: add parameters, method assumes known details about link
     // TODO: support hashtags (manual but also pre-defined in article sections)
   }
 }
