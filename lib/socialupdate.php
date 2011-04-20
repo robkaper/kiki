@@ -6,7 +6,7 @@ class SocialUpdate
   public static $fbRs = null;
   public static $twRs = null;
 
-  public static method postStatus( &$user, $msg )
+  public static function postStatus( &$user, $msg )
   {
     if ( !$msg )
       return;
@@ -15,17 +15,18 @@ class SocialUpdate
     self::$twRs = $user->twUser->post( $msg );
   }
 
-  public static method postPicture( $user, $storageId, $title='', $description='' );
+  public static function postPicture( &$user, $storageId, $title='', $description='' )
   {
     // Assumes a single picture posted outside the context of an album.
     // TODO: deprecate this, all pictures should end up in an album somehow, even if it's a default one.
 
-    $link = Storage::url( $id );
+    $link = Storage::url( $storageId );
 
     // Post to Facebook
 
+    $fbTitle = $title ? $title : "Untitled picture";
     $caption = $_SERVER['SERVER_NAME'];
-    $picture = Storage::url( $id );
+    $picture = Storage::url( $storageId );
 
     $fbMsg = 'uploaded a picture:';
     self::$fbRs = $user->fbUser->post( $fbMsg, $link, $title, $caption, $description, $picture );
@@ -56,15 +57,13 @@ class SocialUpdate
     $maxLength = 140 - strlen($prefix) - strlen($postfix);
     $msg = Misc::textSummary( $msg, $maxLength );
     $twMsg = "${prefix}${msg}${postfix}";
-
-    $twMsg .= " $tinyUrl";
     self::$twRs = $user->twUser->post( $twMsg );
   }
 
-  public static method postLink( &$user, $link ) {}
+  public static function postLink( &$user, $link )
   {
     // TODO: move from Article::save
-    // TODO: add parameters, method assumes known details about link
+    // TODO: add parameters, function assumes known details about link
     // TODO: support hashtags (manual but also pre-defined in article sections)
   }
 }

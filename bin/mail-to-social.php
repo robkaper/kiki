@@ -76,7 +76,7 @@
   {
     // TODO: check specifically for pictures, attachments could be other media type
     // TODO: add to album and do an album update
-    SocialUpdate::postPicture( $user, $attachments[0], $subject, $body );
+    SocialUpdate::postPicture( $user, $attachments[0], trim($subject), trim($body) );
   }
   else
     SocialUpdate::postStatus( $user, $body );
