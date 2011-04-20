@@ -77,9 +77,9 @@
   else
     exit();
 
-  $name = '';
-  $caption = '';
-  $description = '';
+  $name = $subject;
+  $caption = $_SERVER['SERVER_NAME'];
+  $description = $body;
 
   $twMsg = $subject. " ". $tinyUrl;
 
