@@ -21,6 +21,13 @@ create table facebook_users (
   name varchar(255) default null
 );
 
+drop table if exists facebook_user_perms;
+create table facebook_user_perms (
+  facebook_user_id int unsigned not null,
+  perm_key varchar(255) not null,
+  perm_value boolean not null default false
+);
+
 drop table if exists users;
 create table users (
   id bigint unsigned not null auto_increment,

@@ -14,9 +14,9 @@
     if ( $function )
       $loaded = function_exists($function);
     else
-      $loaded = extension_loaded( $module );
+      $loaded = extension_loaded( $extension );
     $loadedStr = $loaded ? "enabled" : "<span style=\"color: red\">disabled</span>";
-    echo "<li><strong>$module</strong>: ${loadedStr}.</li>\n";
+    echo "<li><strong>$extension</strong>: ${loadedStr}.</li>\n";
   }
   echo "</ul>\n";
 

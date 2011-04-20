@@ -11,13 +11,6 @@ header, footer, aside, nav, article {
 	display: block;  
 }  
 
-/* / FIXME: rjkcust */
-@font-face {
-  font-family: "Forgotten Futurist";
-  src: url( /fonts/Forgotte.eot ); /* IE */  
-  src: local("Forgotten Futurist"), url( /fonts/Forgotte.ttf ) format("truetype"); /* non-IE */
-}
-
 tt {
 	font-family: monospaced;
 	font-size: 1em;
@@ -56,8 +49,6 @@ aside p {
 
 
 h1, h2, h3, h4 {
-/* / FIXME: rjkcust */
-	font-family: "Forgotten Futurist", sans-serif;
 	color: #463;
 }
 
@@ -363,7 +354,11 @@ img.social {
 	height: 16px;
 	margin: 0 5px 0 0;
 	-moz-margin: 0 0.5em 0 0;
-	padding: 33px 1px 1px 33px; /* / FIXME: twitter icons are 48px and 33+16+1 assumes 50px */
+	padding: 33px 1px 1px 33px;
+
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: transparent;
 }
 
 aside img.social {
@@ -439,8 +434,7 @@ aside img.social {
    	}
 
 	#content a[href^="/"]:after {
-/* / FIXME: rjkcust */
-		content: " (http://robkaper.nl" attr(href) ") ";
+                content: " (" attr(href) ") ";
    	}
 
 	aside .box {
@@ -450,7 +444,10 @@ aside img.social {
 	aside {
 		float: left;
 	}
+
 	#content {
+		width: auto;
+		max-width: none;
 		margin: 0;
 		-moz-margin: 0;
 	}
