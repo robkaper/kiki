@@ -354,7 +354,11 @@ img.social {
 	height: 16px;
 	margin: 0 5px 0 0;
 	-moz-margin: 0 0.5em 0 0;
-	padding: 33px 1px 1px 33px; /* / FIXME: twitter icons are 48px and 33+16+1 assumes 50px */
+	padding: 33px 1px 1px 33px;
+
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: transparent;
 }
 
 aside img.social {
