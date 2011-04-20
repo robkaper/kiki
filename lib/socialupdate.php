@@ -29,7 +29,7 @@ class SocialUpdate
     $picture = Storage::url( $storageId );
 
     $fbMsg = 'uploaded a picture:';
-    self::$fbRs = $user->fbUser->post( $fbMsg, $link, $title, $caption, $description, $picture );
+    self::$fbRs = $user->fbUser->post( $fbMsg, $link, $fbTitle, $caption, $description, $picture );
 
     // Post to Twitter
 
