@@ -16,12 +16,31 @@
   {
     switch( strtolower(trim($key)) )
     {
+    case 'to':
+      $recipient = $headers[2][$id];
+      Log::debug( "recipient: $recipient" );
+      break;
     case 'subject':
       $subject = $headers[2][$id];
       Log::debug( "subject: $subject" );
       break;
     default:;
     }
+  }
+
+  // Retrieve security code. Doesn't consider invalid e-mail adresses, the
+  // e-mail was delivered after all.
+  list( $localPart, $domain ) = split( "@", $recipient );
+  list( $target, $mailAuthToken ) = split( "+", $localPart );
+
+  $qToken = $db->escape( $mailAuthToken );
+  $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+
+  if ( !$userId )
+  {
+    // FIXME: error handling, perhaps send a reply
+    Log::debug( "invalid mailAuthToken: $mailAuthToken ($recipient)" );
+    exit();
   }
 
   // Get structure
@@ -66,18 +85,32 @@
   // Delete tmp file
   unlink( $tmpFile );
 
-  if ( !$subject && !$body && !count($attachments) )
-    exit();
-
-  $user->load(1);
-  $user->authenticate();
+  $fbMsg = $subject;
 
   if ( count($attachments) )
   {
-    // TODO: check specifically for pictures, attachments could be other media type
-    // TODO: add to album and do an album update
-    SocialUpdate::postPicture( $user, $attachments[0], trim($subject), trim($body) );
+    $link = Storage::url( $attachments[0] );
+    $picture = Storage::url( $attachments[0] );
+    $tinyUrl = TinyUrl::get( $link );
   }
   else
-    SocialUpdate::postStatus( $user, $body );
+  {
+    // FIXME: error handling, perhaps send a reply
+    exit();
+  }
+
+  $name = '';
+  $caption = '';
+  $description = '';
+
+  $twMsg = $subject. " ". $tinyUrl;
+
+  $user->load( $userId );
+  $user->authenticate();
+
+  $fbRs = $user->fbUser->post( $fbMsg, $link, $name, $caption, $description, $picture );
+  $twRs = $user->twUser->post( $twMsg );
+
+  // FIXME: error handling, perhaps send a reply
+
 ?>
