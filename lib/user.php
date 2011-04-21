@@ -7,7 +7,7 @@ class User
   private $db;
 
   public $id, $ctime, $mtime;
-  private $authToken;
+  private $authToken, $mailAuthToken;
   public $fbUser, $twUser;
 
   public function __construct( $id = null )
@@ -29,6 +29,7 @@ class User
     $this->ctime = time();
     $this->mtime = time();
     $this->authToken = "";
+    $this->mailAuthToken = "";
     $this->fbUser = null;
     $this->twUser = null;
   }
@@ -41,12 +42,13 @@ class User
   public function load( $id )
   {
     $qId = $this->db->escape( $id );
-    $q = "select id,facebook_user_id,twitter_user_id from users where id=$qId";
+    $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where id=$qId";
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
 
     $this->id = $o->id;
+    $this->mailAuthToken = $o->mail_auth_token;
     $this->fbUser->load( $o->facebook_user_id );
     $this->twUser->load( $o->twitter_user_id );
   }

@@ -36,6 +36,8 @@ class Config
 	public static $flickrApp = null;
 	public static $flickrSecret = null;
 
+	public static $mailToSocialAddress = null;
+
 	public static $singleUser = 0;
 	public static $devUsers = array();
 

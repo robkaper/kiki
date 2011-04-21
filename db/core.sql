@@ -35,6 +35,7 @@ create table users (
   ctime datetime not null,
   mtime datetime not null,
   auth_token varchar(40) not null,
+  mail_auth_token varchar(40) not null,
   facebook_user_id bigint unsigned default NULL,
   twitter_user_id bigint unsigned default NULL,
   unique key( facebook_user_id ),

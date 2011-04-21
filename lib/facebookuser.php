@@ -214,8 +214,15 @@ class FacebookUser
     if ( !$this->fb )
       return;
 
+    // Tell Facebook to revoke permission
     $fbRs = $this->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
 
+    // Remove permission from database
+    // TODO: insert permission when it is granted
+    $q = "update facebook_user_perms set perm_value=0 where perm_key='$qPerm' and facebook_user_id=$this->id";
+    $this->db->query($q);
+
+    // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
     $q = "update facebook_users set access_token=null where id=$this->id";
     $this->db->query($q);
 

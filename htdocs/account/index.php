@@ -35,6 +35,21 @@
     echo "<h2>Sociale hulpmiddelen</h2>\n";
     echo "<ul>\n";
     echo "<li><a href=\"social.php\">Update status</a></li>\n";
+
+    if ( Config::$mailToSocialAddress )
+    {
+      if ( !$user->mailAuthToken )
+      {
+        // TODO: salt, pepper, re-hash... this is only moderately secure
+        $user->mailAuthToken = sha1( uniqid(). $user->id );
+        $db->query( "update users set mail_auth_token='$user->mailAuthToken' where id=$user->id" );
+      } 
+
+      list( $localPart, $domain ) = split( "@", Config::$mailToSocialAddress );mm>
+      $mailToSocialUserAddress = $localPart. "+". $user->mailAuthToken. "@". $domain;
+      echo "<li>Update je status en foto's door ze te e-mailen naar <strong>$mailToSocialUserAddress</strong></li>\n";
+    }
+
     echo "</ul>\n";
   }
 

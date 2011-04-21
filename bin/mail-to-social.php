@@ -16,12 +16,31 @@
   {
     switch( strtolower(trim($key)) )
     {
+    case 'to':
+      $recipient = $headers[2][$id];
+      Log::debug( "recipient: $recipient" );
+      break;
     case 'subject':
       $subject = $headers[2][$id];
       Log::debug( "subject: $subject" );
       break;
     default:;
     }
+  }
+
+  // Retrieve security code. Doesn't consider invalid e-mail adresses, the
+  // e-mail was delivered after all.
+  list( $localPart, $domain ) = split( "@", $recipient );
+  list( $target, $mailAuthToken ) = split( "+", $localPart );
+
+  $qToken = $db->escape( $mailAuthToken );
+  $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+
+  if ( !$userId )
+  {
+    // FIXME: error handling, perhaps send a reply
+    Log::debug( "invalid mailAuthToken: $mailAuthToken ($recipient)" );
+    exit();
   }
 
   // Get structure
@@ -75,7 +94,10 @@
     $tinyUrl = TinyUrl::get( $link );
   }
   else
+  {
+    // FIXME: error handling, perhaps send a reply
     exit();
+  }
 
   $name = '';
   $caption = '';
@@ -83,9 +105,12 @@
 
   $twMsg = $subject. " ". $tinyUrl;
 
-  $user->load(1);
+  $user->load( $userId );
   $user->authenticate();
 
   $fbRs = $user->fbUser->post( $fbMsg, $link, $name, $caption, $description, $picture );
   $twRs = $user->twUser->post( $twMsg );
+
+  // FIXME: error handling, perhaps send a reply
+
 ?>
