@@ -17,6 +17,7 @@
     {
       if ( isset($_POST['postFb']) && $_POST['postFb'] == 'on' )
       {
+        // TODO: use SocialUpdate::postStatus
         $fbRs = $user->fbUser->post( $msg );
         if ( isset($fbRs->id) )
           echo "<p>Facebook status geupdate: <a target=\"_blank\" href=\"". $fbRs->url. "\">". $fbRs->url. "</a></p>\n";

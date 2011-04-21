@@ -169,6 +169,7 @@ class Articles
     if ( sizeof($errors) )
       return $articleId;
 
+    // TODO: use SocialUpdate::postLink
     $myUrl = Articles::url( $db, $qSection, $cname );
     $tinyUrl = TinyUrl::get( $myUrl );
 

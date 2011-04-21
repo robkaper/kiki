@@ -45,7 +45,7 @@
         $db->query( "update users set mail_auth_token='$user->mailAuthToken' where id=$user->id" );
       } 
 
-      list( $localPart, $domain ) = split( "@", Config::$mailToSocialAddress );mm>
+      list( $localPart, $domain ) = split( "@", Config::$mailToSocialAddress );
       $mailToSocialUserAddress = $localPart. "+". $user->mailAuthToken. "@". $domain;
       echo "<li>Update je status en foto's door ze te e-mailen naar <strong>$mailToSocialUserAddress</strong></li>\n";
     }
