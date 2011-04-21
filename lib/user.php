@@ -67,7 +67,7 @@ class User
 
     $qFbUserId = $this->db->escape( $this->fbUser->id );
     $qTwUserId = $this->db->escape( $this->twUser->id );
-    $q = "select id,facebook_user_id,twitter_user_id from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
+    $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
     $rs = $this->db->query($q);
     
     if ( $rs && $rows = $this->db->numrows($rs) )
@@ -83,6 +83,7 @@ class User
       {
         $o = $this->db->fetch_object($rs);
         $this->id = $o->id;
+        $this->mailAuthToken = $o->mail_auth_token;
 
         if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
         {
