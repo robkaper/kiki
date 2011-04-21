@@ -7,7 +7,8 @@ class User
   private $db;
 
   public $id, $ctime, $mtime;
-  private $authToken, $mailAuthToken;
+  private $authToken;
+  public $mailAuthToken;
   public $fbUser, $twUser;
 
   public function __construct( $id = null )
