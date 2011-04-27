@@ -5,7 +5,7 @@
   {
     $articleId = Articles::save( $db, $user );
     
-    if ( $_POST['json'] )
+    if ( isset($_POST['json']) )
     {
       $response = array();
       $response['formId'] = $_POST['formId'];
