@@ -85,31 +85,24 @@
   // Delete tmp file
   unlink( $tmpFile );
 
-  $fbMsg = $subject;
-
-  if ( count($attachments) )
-  {
-    $link = Storage::url( $attachments[0] );
-    $picture = Storage::url( $attachments[0] );
-    $tinyUrl = TinyUrl::get( $link );
-  }
-  else
+  if ( !$subject && !$body && !count($attachments) )
   {
     // FIXME: error handling, perhaps send a reply
     exit();
   }
 
-  $name = '';
-  $caption = '';
-  $description = '';
-
-  $twMsg = $subject. " ". $tinyUrl;
-
   $user->load( $userId );
   $user->authenticate();
 
-  $fbRs = $user->fbUser->post( $fbMsg, $link, $name, $caption, $description, $picture );
-  $twRs = $user->twUser->post( $twMsg );
+
+  if ( count($attachments) )
+  {
+    // TODO: check specifically for pictures, attachments could be other media type
+    // TODO: add to album and do an album update
+    SocialUpdate::postPicture( $user, $attachments[0], trim($subject), trim($body) );
+  }
+  else
+    SocialUpdate::postStatus( $user, $body );
 
   // FIXME: error handling, perhaps send a reply
 
