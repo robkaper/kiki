@@ -111,3 +111,28 @@ create table storage (
   extension varchar(255) not null,
   size int unsigned not null default 0
 );
+
+drop table if exists albums;
+create table albums (
+  id int unsigned not null auto_increment,
+  primary key(id),
+  title varchar(255) not null
+);
+
+drop table if exists pictures;
+create table pictures (
+  id int unsigned not null auto_increment,
+  primary key(id),
+  title varchar(255) not null,
+  description text not null,
+  storage_id int unsigned not null
+);
+
+drop table if exists album_pictures;
+create table album_pictures (
+  album_id int unsigned not null,
+  picture_id int unsigned not null,
+  key(album_id),
+  key(picture_id),
+  key(album_id,picture_id)
+);

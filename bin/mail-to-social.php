@@ -98,6 +98,10 @@
   if ( count($attachments) )
   {
     // TODO: check specifically for pictures, attachments could be other media type
+
+    // Find album (and create if not exists)
+    $album = Album::findByTitle('Mobile uploads', true );
+
     // TODO: add to album and do an album update
     SocialUpdate::postPicture( $user, $attachments[0], trim($subject), trim($body) );
   }

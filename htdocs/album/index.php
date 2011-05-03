@@ -4,7 +4,11 @@
   $page = new Page();
   $page->header();
 
-  Album::showAlbum( $db, 1 );
+  $albumId = isset($_SERVER['albumId']) ? $_SERVER['albumId'] : null;
+  $pictureId = isset($_SERVER['pictureId']) ? $_SERVER['pictureId'] : null;
+
+  $album = new Album( $albumId );
+  $album->show( $pictureId );
 
   $page->footer();
 ?>

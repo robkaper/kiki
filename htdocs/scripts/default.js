@@ -276,7 +276,11 @@ function onReady() {
   } );
 
   $('.album .imgw').live('mouseenter', function() {
-    $(this).parent().find('.navarrow img').fadeIn();
+    var navarrow = $(this).parent().find('.navarrow');
+    $(navarrow).each( function() {
+      if ( !$(this).hasClass('disabled') )
+        var img = $(this).find('img').fadeIn();
+    } );
   } );
 
   $('.album .imgw').live('mouseleave', function() {
@@ -284,7 +288,10 @@ function onReady() {
   } );
 
   $('.album .navarrow').click( function() {
-    var album = $(this).parent().parent().parent().parent().attr('id');
+    if ( $(this).hasClass('disabled') )
+      return false;
+
+    var album = $(this).parent().parent().parent().attr('id');
     var action = $(this).attr('id');
     var current = $(this).parent().parent().find('>img').attr('id');
 
@@ -292,7 +299,12 @@ function onReady() {
     $.getJSON( kikiPrefix + '/json/album.php', json, function(data) { 
     if ( data.id )
       // FIXME: only do for relevant album
+      // TODO: update comment box
       $('.album .imgw >img').attr('id',data.id).attr('src',data.url); 
+      $('.album span.pictureTitle').html(data.title);
+
+      $('.album #navleft').toggleClass( 'disabled', !data.prev ).find('img').fadeTo( 'normal', data.prev?1:0 );
+      $('.album #navright').toggleClass( 'disabled', !data.next ).find('img').fadeTo( 'normal', data.next?1:0 );
     } );
 
     return false;
