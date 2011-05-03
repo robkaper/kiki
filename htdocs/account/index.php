@@ -47,7 +47,7 @@
 
       list( $localPart, $domain ) = split( "@", Config::$mailToSocialAddress );
       $mailToSocialUserAddress = $localPart. "+". $user->mailAuthToken. "@". $domain;
-      echo "<li>Update je status en foto's door ze te e-mailen naar <strong>$mailToSocialUserAddress</strong></li>\n";
+      echo "<li>Update je status en foto's door ze te e-mailen naar <a href=\"mailto:$mailToSocialUserAddress\">$mailToSocialUserAddress</a></li>\n";
     }
 
     echo "</ul>\n";
