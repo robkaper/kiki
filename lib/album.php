@@ -36,7 +36,6 @@ class Album
 
   public function show( $pictureId=0 )
   {
-    echo "<hr />Album::show [id:$this->id][pictureId:$pictureId]";
     $photos = array();
 
     // Find latest if not starting picture specified
@@ -45,7 +44,6 @@ class Album
       $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
       $pictureId = $this->db->getSingleValue($q);
     }
-    echo "<hr />Album::show [id:$this->id][pictureId:$pictureId]";
 
     if ( !$pictureId )
       echo "<p>\nNo pictures in this album.</p>\n";
