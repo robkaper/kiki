@@ -95,6 +95,7 @@ class Boilerplate
     $matches = array();
     $requestUri = isset($_GET['uri']) ? $_GET['uri'] : $_SERVER['REQUEST_URI'];
     preg_match( '#(/(.*))/((.*)(\.php)?)#', $requestUri, $matches );
+    $active = null;
     if ( count($matches) )
     {
       $context = $matches[2];
@@ -107,7 +108,9 @@ class Boilerplate
     $qLevel = $db->escape( $level );
     $qContext = $db->escape( $context );
 
-    $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context='$qContext' or context is null) order by sortorder asc";
+    Log::debug( "navMenu: [level:$level][context:$context][active:$active][requestUri:$requestUri]" );
+
+    $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context like '$qContext%' or context is null) order by sortorder asc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $o = $db->fetchObject($rs) )
