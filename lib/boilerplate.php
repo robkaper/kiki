@@ -110,7 +110,10 @@ class Boilerplate
 
     Log::debug( "navMenu: [level:$level][context:$context][active:$active][requestUri:$requestUri]" );
 
-    $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context like '$qContext%' or context is null) order by sortorder asc";
+    if ( $context )
+      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context like '$qContext%' or context is null) order by sortorder asc";
+    else
+      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and context is null order by sortorder asc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $o = $db->fetchObject($rs) )
