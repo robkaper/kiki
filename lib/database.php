@@ -17,6 +17,19 @@ class Database
 			@mysql_select_db( $this->name, $this->dbh );
 	}
 
+	public function connected()
+	{
+		if ( !$this->dbh )
+			$this->connect();
+
+		return $this->dbh ? true : false;
+	}
+
+	public function dbh()
+	{
+		return $this->dbh;
+	}
+
 	function setDatabase($name)
 	{
 		if ( !$this->dbh )
