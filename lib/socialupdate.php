@@ -60,6 +60,42 @@ class SocialUpdate
     self::$twRs = $user->twUser->post( $twMsg );
   }
 
+  public static function postAlbumUpdate( &$user, &$album, &$pictures )
+  {
+    $count = count($pictures);
+    $pictureId = end($pictures);
+
+    // Post to Facebook
+
+    $link = $album->url( $pictureId );
+    
+    $title = $album->title; // TODO: use title of picture if count==1
+    $desc = ""; // TODO: use description of picture if count==1
+    $caption = $_SERVER['SERVER_NAME'];
+
+    $db = $GLOBALS['db'];
+    $storageId = $db->getSingleValue( "select storage_id from pictures where id=$pictureId" );
+    $picture = Storage::url( $storageId );
+
+    $fbMsg = "uploaded ". ($count==1 ? "a picture" : "$count pictures"). " to album '$album->title':";
+    self::$fbRs = $user->fbUser->post( $fbMsg, $link, $title, $caption, $desc, $picture );
+
+    // Post to Twitter
+
+    $tinyUrl = TinyUrl::get( $link );
+
+    // TODO: add title/description of picture when count==1
+    $prefix = "uploaded ". ($count==1 ? "a picture" : "$count pictures"). " to album '$album->title':";
+    $msg = '';
+    $postfix = " $tinyUrl";
+
+    $maxLength = 140 - strlen($prefix) - strlen($postfix);
+    $msg = Misc::textSummary( $msg, $maxLength );
+
+    $twMsg = "${prefix}${msg}${postfix}";
+    self::$twRs = $user->twUser->post( $twMsg );
+  }
+
   public static function postLink( &$user, $link )
   {
     // TODO: move from Article::save

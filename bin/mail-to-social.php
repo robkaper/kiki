@@ -9,6 +9,7 @@
   file_put_contents( $tmpFile, $data );
 
   // Parse headers for Subject
+  $subject = null;
   list( $rawHeaders, $body ) = split( "(\r)?\n(\r)?\n", $data );
   $headers = array();
   preg_match_all('/([^: ]+): (.+?(?:(\r)?\n\s(?:.+?))*)(\r)?\n/m', "$rawHeaders\n", $headers );
@@ -30,8 +31,8 @@
 
   // Retrieve security code. Doesn't consider invalid e-mail adresses, the
   // e-mail was delivered after all.
-  list( $localPart, $domain ) = split( "@", $recipient );
-  list( $target, $mailAuthToken ) = split( "+", $localPart );
+  list( $localPart, $domain ) = explode( "@", $recipient );
+  list( $target, $mailAuthToken ) = explode( "+", $localPart );
 
   $qToken = $db->escape( $mailAuthToken );
   $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
@@ -94,16 +95,15 @@
   $user->load( $userId );
   $user->authenticate();
 
-
   if ( count($attachments) )
   {
-    // TODO: check specifically for pictures, attachments could be other media type
-
     // Find album (and create if not exists)
     $album = Album::findByTitle('Mobile uploads', true );
+    
+    // TODO: check specifically for pictures, attachments could be other media type
+    $pictures = $album->addPictures( trim($subject), trim($body), $attachments );
 
-    // TODO: add to album and do an album update
-    SocialUpdate::postPicture( $user, $attachments[0], trim($subject), trim($body) );
+    SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
   }
   else
     SocialUpdate::postStatus( $user, $body );

@@ -34,6 +34,11 @@ class Album
     $this->title = $o->title;
   }
 
+  public function url( $pictureId = 0 )
+  {
+    return Config::$kikiPrefix. "/album/$this->id/". ($pictureId ? "$pictureId/" : null);
+  }
+
   public function show( $pictureId=0 )
   {
     $photos = array();
@@ -70,10 +75,34 @@ class Album
     <div id="navleftw" class="navarroww"><a id="navleft" class="navarrow<?= $leftClass; ?>" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_left_alt1_32x32.png" alt="&lt;" width="32" height="32" /></a></div>
     <div id="navrightw" class="navarroww"><a id="navright" class="navarrow<?= $rightClass; ?>" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_right_alt1_32x32.png" alt="&gt;" width="32" height="32" /></a></div>
   </div>
-  <div class="bar">[// TODO: tag/like bar]</div>
+<? // TODO: tag/like bar ?>
+  <div class="bar"></div>
   <div><?= Comments::show( $GLOBALS['db'], $GLOBALS['user'], 0 ); ?></div>
 </div>
 <?
+  }
+
+  public function addPictures( $title, $description, $storageIds )
+  {
+    // TODO: takes array of storageIds, actual picture creation should be outside of this method
+    $pictures = array();
+    foreach( $storageIds as $storageId )
+    {
+      $qTitle = $this->db->escape( $title );
+      $qDesc = $this->db->escape( $description );
+      $q = "insert into pictures (title, description, storage_id) values ('$qTitle', '$qDesc', $storageId)";
+      $rs = $this->db->query($q);
+      $pictures[]= $this->db->lastInsertId($rs);
+    }
+
+    // Link pictures into album
+    foreach( $pictures as $pictureId )
+    {
+      $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
+      $this->db->query($q);
+    }
+
+    return $pictures;
   }
 
   public static function findPrevious( $albumId, $pictureId )
