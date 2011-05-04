@@ -11,7 +11,10 @@
     $pictureId = isset($_SERVER['pictureId']) ? $_SERVER['pictureId'] : null;
 
     $album = new Album( $albumId );
-    $album->show( $pictureId );
+    if ( $album->id )
+      $album->show( $pictureId );
+    else
+      echo "<p>No such album.</p>\n";
   }
   else
     echo "<p>No album specified.</p>\n";
