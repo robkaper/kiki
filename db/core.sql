@@ -1,3 +1,14 @@
+drop table if exists config;
+create table config (
+  id bigint unsigned not null auto_increment,
+  primary key(id),
+  `key` varchar(255) default null,
+  unique key(`key`),
+  value varchar(255) default null
+);
+
+insert into config (`key`, value) values( 'dbVersion', '0.1.0' );
+
 drop table if exists twitter_users;
 create table twitter_users (
   id bigint unsigned not null,
@@ -99,6 +110,7 @@ create table menu_items (
   context varchar(255) not null,
   admin boolean default false,
   class varchar(255) default null,
+  icon varchar(255) default null,
   sortorder tinyint unsigned not null
 );
 

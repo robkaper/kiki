@@ -41,6 +41,8 @@ class Config
 	public static $singleUser = 0;
 	public static $devUsers = array();
 
+	public static $dbVersionRequired = "0.1.0";
+
 	public static function init()
 	{
 		self::setDefaults();
@@ -62,9 +64,14 @@ class Config
 		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
 	}
 
+	public static function configFile()
+	{
+		return $GLOBALS['root']. "/config.php";
+	}
+
 	private static function load()
 	{
-		$file = $GLOBALS['root']. "/config.php";
+		$file = self::configFile();
 		if ( !file_exists($file) )
 		{
 			Log::debug( "configuration file not found: $file" );

@@ -1,5 +1,6 @@
 === NOTE: THESE INSTRUCTIONS ARE NOT COMPLETE. I DO NOT YET CONSIDER KIKI TO
-=== BE INSTALLABLE, DOCUMENTATION IS INCOMPLETE AT THIS STAGE
+=== BE A USER-FRIENDLY INSTALL, DOCUMENTATION IS INCOMPLETE AT THIS STAGE.
+=== PLEASE SEND ME YOUR IDEAS OR AMEND THIS FILE ON GITHUB.
 
 1) Make Kiki htdocs available as /kiki/
 
@@ -17,13 +18,20 @@ touch debug.txt
 mkdir storage
 chgrp www-data debug.txt storage && chmod g+w debug.txt storage
 
-3) Facebook Connect
+3) Data model
+
+Kiki offers a setup/status/update page, available as http://example.com/kiki/ 
+
+This page lists (and checks) required PHP modules and extensions, tests your
+database configuration, and installs or updates your data model.
+
+4) Facebook Connect
 
 Your callback URL is:
 
 http://example.com/kiki/facebook-callback.php
 
-4) Twitter Connect
+5) Twitter Connect
 
 Your callback URL is:
 

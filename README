@@ -1,16 +1,26 @@
 Kiki is a website framework.
 
     * based on LAMP (Linux, Apache, MySQL and PHP)
+
     * completely HTML5 with CSS
-    * extensive use of Ajax and JSON using JQuery, but fully non-admin
-      functions are fully functional without Javascript
+
+    * extensive use of Ajax and JSON using JQuery
+      * Javascript currently required, but the aim is to make all non-admin
+        functionality fully functional without
+
     * single sign-on for Facebook and Twitter
       * supports publish and offline permissions
+
     * blog/article system
-        * BBCode-like markup (including Youtube video embeds)
-        * publish integration with Facebook and Twitter (including
-          own URL-shortener)
+      * BBCode-like markup (including Youtube video embeds)
+      * publish integration with Facebook and Twitter
+
+    * picture/album system
+      * publish integration with Facebook and Twitter
+
     * comment system
+    * custom URL shortener
+    * mail-to-social update channel
 
 For more information please see:
 
