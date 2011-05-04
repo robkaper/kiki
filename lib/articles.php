@@ -45,11 +45,24 @@ class Articles
 
   public static function showSingle( &$db, &$user, $articleId, $json = false )
   {
-    $qId = $db->escape($articleId);
-    $qUserId = $db->escape( $user->id );
-    $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
-    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
-    $o = $db->getSingle($q);
+    if ( $articleId )
+    {
+      $qId = $db->escape($articleId);
+      $qUserId = $db->escape( $user->id );
+      $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
+      $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
+      $o = $db->getSingle($q);
+    }
+    else
+    {
+      $o = new stdClass;
+      $o->id = 0;
+      $o->title = "...";
+      $o->body = "...";
+      $o->date = time();
+      $o->user_id = $user->id;
+    }
+
     return $o ? Articles::showArticle( $user, $o, $json ) : null;
   }
 
@@ -145,9 +158,9 @@ class Articles
     if ( !$user->id )
       $errors[] = "Je bent niet ingelogd.";
 
-    $articleId = $_POST['articleId'];
+    $articleId = (int)$_POST['articleId'];
     $qId = $db->escape( $articleId );
-    $qSection = $db->escape( $_POST['sectionId'] );
+    $qSection = $db->escape( (int)$_POST['sectionId'] );
     $qUserId = $db->escape( $user->id );
 
     list( $date, $time ) = split( " ", $_POST['ctime'] );

@@ -201,8 +201,10 @@ function onReady() {
 
       if ( data.articleId )
       {
-        $('#article_' + data.articleId).html( data.article );
+        $('#article_0').attr( 'id', 'article_' + data.articleId );
         $('#articleForm_0').attr( 'id', 'articleForm_' + data.articleId );
+
+        $('#article_' + data.articleId).html( data.article );
         $('#articleForm_' + data.articleId + ' input[name=articleId]').attr( 'value', data.articleId );
         // return;
       }
