@@ -102,7 +102,7 @@
     {
       if ( $db->connected() )
       {
-        echo "<li>Database tables not installed. Please insert the contents of <tt>db/core.sql</tt> into your database.</li>\n";
+        echo "<li>Database tables not installed.</li>\n";
 
         $file = $GLOBALS['kiki']. "/db/core.sql";
         echo "<li>Running install script <tt>$file</tt>:\n";
