@@ -12,7 +12,7 @@ header, footer, aside, nav, article {
 }  
 
 tt {
-	font-family: monospaced;
+	font-family: monospace;
 	font-size: 1em;
 }
 
