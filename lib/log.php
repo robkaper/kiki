@@ -20,7 +20,7 @@ class Log
 	public static function debug( $str )
 	{
 		$logFile = $GLOBALS['root']. "/debug.txt";
-		$fp = fopen( $logFile, "a" );
+		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{
 			Log::error( "cannot write to $logFile: $str" );
