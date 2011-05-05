@@ -16,7 +16,7 @@
       if ( !$q )
         continue;
 
-      echo "<blockquote>$q</blockquote>\n";
+      echo "<blockquote>$q;</blockquote>\n";
 
       $rs = $db->query($q);
       if ( !$rs )
@@ -30,17 +30,24 @@
 
   echo "<h2>PHP modules and PEAR/PECL extensions</h2>\n";
 
-  $extensions = array( 'curl' => null, 'mysql' => null , 'Mailparse (PECL)' => 'mailparse_msg_create' );
+  $extensions = array();
+  $extensions[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php5-curl' );
+  $extensions[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php5-mysql' );
+  $extensions[] = array( 'name' => 'PEAR', 'include' => 'PEAR.php', 'remedy' => 'apt-get install php-pear' );
+  $extensions[] = array( 'name' => 'Mailparse (PECL)', 'function' => 'mailparse_msg_create', 'remedy' => 'pecl install Mailparse' );
 
   echo "<ul>\n";
-  foreach( $extensions as $extension => $function )
+  foreach( $extensions as $extension )
   {
-    if ( $function )
-      $loaded = function_exists($function);
+    if ( isset($extension['function']) )
+      $loaded = function_exists($extension['function']);
+    else if ( isset($extension['include']) )
+      $loaded = @include_once($extension['include']);
     else
-      $loaded = extension_loaded( $extension );
+      $loaded = extension_loaded( $extension['name'] );
     $loadedStr = $loaded ? "enabled" : "<span style=\"color: red\">disabled</span>";
-    echo "<li><strong>$extension</strong>: ${loadedStr}.</li>\n";
+    $remedyStr = (!$loaded && isset($extension['remedy'])) ? ( " Potential remedy: <tt>". $extension['remedy']. "</tt>." ) : null;
+    echo "<li><strong>". $extension['name']. "</strong>: ${loadedStr}.${remedyStr}</li>\n";
   }
   echo "</ul>\n";
 
