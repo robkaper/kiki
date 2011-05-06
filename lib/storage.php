@@ -13,7 +13,7 @@ class Storage
     $db = $GLOBALS['db'];
     $qId = $db->escape($id);
     $o = $db->getSingle( "select hash,extension from storage where id=$qId" );
-    return sprintf( "%s.%s", $o->hash, $o->extension );
+    return $o ? sprintf( "%s.%s", $o->hash, $o->extension ) : null;
   }
 
   public static function splitExtension( $name )
