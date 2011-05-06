@@ -13,7 +13,7 @@
     $queries = preg_split( "/;\n/", $script );
     foreach( $queries as $q )
     {
-      if ( !$q )
+      if ( !trim($q) )
         continue;
 
       echo "<blockquote>$q;</blockquote>\n";

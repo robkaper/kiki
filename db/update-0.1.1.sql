@@ -7,4 +7,3 @@ create table social_updates (
   post text not null,
   response text not null
 );
-            
