@@ -122,7 +122,7 @@ class Articles
       $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
     }
     else
-      $content .= $body;
+      $content .= "<span class=\"body\">$body</span>";
 
     $content .= "<footer>\n";
 

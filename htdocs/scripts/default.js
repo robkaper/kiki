@@ -177,6 +177,18 @@ function onReady() {
     }, 10 );
   } );
 
+/* TODO: partially rjkcust, not practical needs rewriting to manual Preview button
+  $('[id^=articleForm_] textarea').live( 'keyup', function() {
+    var text = $(this).val();
+    var json = { text: text };
+    
+    $.post( '/test/preview.php', json, function(data) {
+      $('[id^=article_] span.body').html(data.preview);
+    }, 'json' );
+    return false;
+  } );
+*/
+
   $('[id^=articleForm_]').live( 'submit', function() {
 
     var $submit = $('#' + $(this).attr('id') + ' button[name=submit]');
