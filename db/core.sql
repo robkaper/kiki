@@ -149,7 +149,8 @@ create table album_pictures (
   key(album_id,picture_id)
 );
 
-drop table if exists social_updates (
+drop table if exists social_updates;
+create table social_updates (
   id int unsigned not null auto_increment,
   primary key(id),
   ctime datetime not null,
