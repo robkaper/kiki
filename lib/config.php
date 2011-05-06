@@ -41,7 +41,7 @@ class Config
 	public static $singleUser = 0;
 	public static $devUsers = array();
 
-	public static $dbVersionRequired = "0.1.0";
+	public static $dbVersionRequired = "0.1.1";
 
 	public static function init()
 	{

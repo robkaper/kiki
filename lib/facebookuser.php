@@ -181,16 +181,20 @@ class FacebookUser
       'picture' => $picture
     );
 
-    Log::debug( "fbPublish: ". print_r( $attachment, true ) );
+    Log::debug( "FacebookUser->post: ". print_r( $attachment, true ) );
     try
     {
       $fbRs = $this->fb->api('/me/feed', 'post', $attachment);
-      Log::debug( "fbRs: ". print_r( $fbRs, true ) );
+
+      $qPost = $this->db->escape( serialize($attachment) );
+      $qResponse = $this->db->escape( serialize($fbRs) );
+      $q = "insert into social_updates (ctime,network,post,response) values (now(), 'facebook', '$qPost', '$qResponse')";
+      $this->db->query($q);
     }
     catch ( FacebookApiException $e )
     {
-      Log::debug( "fbPublish error: $e" );
       $result->error = $e;
+      Log::debug( "fbPost error: $result->error" );
       return $result;
     }
 
@@ -202,8 +206,8 @@ class FacebookUser
     }
     else
     {
-      Log::debug( "fbPublish error: $fbRs" );
       $result->error = $fbRs;
+      Log::debug( "fbPost error: $result->error" );
     }
     
     return $result;

@@ -148,9 +148,14 @@ class TwitterUser
       return $result;
     }
 
-    Log::debug( "TwitterUser->publish: $msg" );
+    Log::debug( "TwitterUser->post: $msg" );
     $twRs = $this->tw->post( 'statuses/update', array( 'status' => $msg ) );
-    Log::debug( "twRs: ". print_r( $twRs, true ) );
+
+    $qPost = $this->db->escape( $msg );
+    $qResponse = $this->db->escape( serialize($twRs) );
+    $q = "insert into social_updates (ctime,network,post,response) values (now(), 'twitter', '$qPost', '$qResponse')";
+    $this->db->query($q);
+
     if ( !$twRs )
     {
       $result->error = "Twitter status update failed.";
@@ -158,7 +163,10 @@ class TwitterUser
     }
 
     if ( isset($twRs->error) )
+    {
       $result->error = $twRs->error;
+      Log::debug( "twPost error: $result->error" );
+    }
     else
     {
       $result->id = $twRs->id;
