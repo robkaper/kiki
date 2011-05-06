@@ -92,7 +92,6 @@ class Comments
     if ( !sizeof($errors) )
     {
       $q = "insert into comments (ctime, mtime, ip_addr, object_id, user_id, body) values (now(), now(), '$qIp', $qObjectId, $qUserId, '$qComment')";
-      Log::debug($q);
       $db->query($q);
     }
 

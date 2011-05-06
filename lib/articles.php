@@ -220,7 +220,6 @@ class Articles
       $rs = $db->query($q);
       $articleId = $db->lastInsertId($rs);
     }
-    Log::debug( $q );
 
     return $articleId;
   }

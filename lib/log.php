@@ -12,8 +12,10 @@ class Log
 		self::$ctime = microtime(true);
 	}
 
-	public static function error( $str )
+	public static function error( $str, $alsoDebug = true )
 	{
+		if ( $alsoDebug )
+			Log::debug($str);
 		error_log( $_SERVER['REQUEST_URI']. ": ". $str );
 	}
 
@@ -23,7 +25,7 @@ class Log
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{
-			Log::error( "cannot write to $logFile: $str" );
+			Log::error( "cannot write to $logFile: $str", false );
 			return;
 		}
 

@@ -88,7 +88,6 @@ class User
         if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
         {
           $q = "update users set mtime=now(), facebook_user_id=$qFbUserId, twitter_user_id=$qTwUserId where id = $o->id";
-          Log::debug( $q );
           $rs = $this->db->query($q);
         }
       }
@@ -98,7 +97,6 @@ class User
       $qFbUserId = $this->fbUser->id ? $this->db->escape( $this->fbUser->id ) : 'NULL';
       $qTwUserId = $this->twUser->id ? $this->db->escape( $this->twUser->id ) : 'NULL';
       $q = "insert into users(ctime, mtime, facebook_user_id, twitter_user_id) values (now(), now(), $qFbUserId, $qTwUserId)";
-      Log::debug( $q );
       $rs = $this->db->query($q);
     }
   }

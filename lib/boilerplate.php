@@ -108,8 +108,6 @@ class Boilerplate
     $qLevel = $db->escape( $level );
     $qContext = $db->escape( $context );
 
-    Log::debug( "navMenu: [level:$level][context:$context][active:$active][requestUri:$requestUri]" );
-
     if ( $context )
       $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context like '$qContext%' or context is null) order by sortorder asc";
     else

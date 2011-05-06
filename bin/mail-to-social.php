@@ -19,11 +19,9 @@
     {
     case 'to':
       $recipient = $headers[2][$id];
-      Log::debug( "recipient: $recipient" );
       break;
     case 'subject':
       $subject = $headers[2][$id];
-      Log::debug( "subject: $subject" );
       break;
     default:;
     }
