@@ -21,7 +21,7 @@
       $recipient = $headers[2][$id];
       break;
     case 'subject':
-      $subject = $headers[2][$id];
+      $subject = iconv_mime_decode( $headers[2][$id] );
       break;
     default:;
     }
@@ -70,7 +70,8 @@
       if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
-        $id = Storage::save( $info['disposition-filename'], $contents );
+        $fileName = iconv_mime_decode( $info['disposition-filename'] );
+        $id = Storage::save( $fileName, $contents );
         $attachments[] = $id;
       }
       else if ( !$body && $info['content-type'] == 'text/plain' )
