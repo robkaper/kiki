@@ -67,7 +67,7 @@ class SocialUpdate
 
     // Post to Facebook
 
-    $link = $album->url( $pictureId );
+    $link = "http://". $_SERVER['SERVER_NAME']. $album->url( $pictureId );
     
     $title = $album->title; // TODO: use title of picture if count==1
     $desc = ""; // TODO: use description of picture if count==1
