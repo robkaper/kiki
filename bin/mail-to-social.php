@@ -21,7 +21,11 @@
       $recipient = $headers[2][$id];
       break;
     case 'subject':
-      $subject = iconv_mime_decode( $headers[2][$id] );
+      $subject = $headers[2][$id];
+      // TODO: check debug.txt for live data, still problems with HTC Mail
+      Log::debug( "subject: $subject" );
+      $subject = iconv_mime_decode( $subject );
+      Log::debug( "subject: $subject" );
       break;
     default:;
     }
