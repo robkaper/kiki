@@ -18,13 +18,13 @@
     switch( strtolower(trim($key)) )
     {
     case 'to':
-      $recipient = $headers[2][$id];
+      $recipient = iconv_mime_decode($headers[2][$id]);
       break;
     case 'from':
-      $sender = $headers[2][$id];
+      $sender = iconv_mime_decode($headers[2][$id]);
       break;
     case 'subject':
-      $subject = trim( $headers[2][$id] );
+      $subject = trim( iconv_mime_decode($headers[2][$id]) );
       break;
     default:;
     }
@@ -129,7 +129,7 @@
   {
     // Find album (and create if not exists)
     $album = Album::findByTitle('Mobile uploads', true );
-    
+
     // TODO: check specifically for pictures, attachments could be other media type
     $pictures = $album->addPictures( $subject, $body, $attachments );
 
