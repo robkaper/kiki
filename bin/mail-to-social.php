@@ -20,25 +20,46 @@
     case 'to':
       $recipient = $headers[2][$id];
       break;
+    case 'from':
+      $sender = $headers[2][$id];
+      break;
     case 'subject':
-      $subject = $headers[2][$id];
+      $subject = trim( $headers[2][$id] );
       break;
     default:;
     }
   }
 
+  Log::debug( "recipient: $recipient, sender: $sender" );
   // Retrieve security code. Doesn't consider invalid e-mail adresses, the
   // e-mail was delivered after all.
   list( $localPart, $domain ) = explode( "@", $recipient );
   list( $target, $mailAuthToken ) = explode( "+", $localPart );
 
-  $qToken = $db->escape( $mailAuthToken );
-  $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+  $userId = 0;
+  if ( $mailAuthToken )
+  {
+    $qToken = $db->escape( $mailAuthToken );
+    $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+  }
+
+  Log::debug( "mailAuthToken: $mailAuthToken, userId: $userId" );
 
   if ( !$userId )
   {
-    // FIXME: error handling, perhaps send a reply
     Log::debug( "invalid mailAuthToken: $mailAuthToken ($recipient)" );
+
+    if ( $sender )
+    {
+      $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
+      $to = $sender;
+      $subject = "Mail-to-social error";
+      
+      $msg = "Your mail-to-social request could not be processed. You e-mailed\n\n$recipient\n\n but \"$mailAuthToken\" is not a valid authentication token.";
+      $mailer = new Mailer( $from, $to, $subject, $msg );
+      $mailer->send();
+    }
+    
     exit();
   }
 
@@ -76,7 +97,7 @@
       else if ( !$body && $info['content-type'] == 'text/plain' )
       {
         // Body part
-        $body = preg_replace( '/-- [\r\n]+.*/s', '', $contents );
+        $body = trim( preg_replace( '/-- [\r\n]+.*/s', '', $contents ) );
       }
     }
   }
@@ -86,7 +107,18 @@
 
   if ( !$subject && !$body && !count($attachments) )
   {
-    // FIXME: error handling, perhaps send a reply
+    Log::debug( "empty message" );
+
+    if ( $sender )
+    {
+      $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
+      $to = $sender;
+      $subject = "Mail-to-social error";
+      
+      $msg = "Your mail-to-social request could not be processed. You sent an empty message.";
+      $mailer = new Mailer( $from, $to, $subject, $msg );
+      $mailer->send();
+    }
     exit();
   }
 
@@ -99,13 +131,23 @@
     $album = Album::findByTitle('Mobile uploads', true );
     
     // TODO: check specifically for pictures, attachments could be other media type
-    $pictures = $album->addPictures( trim($subject), trim($body), $attachments );
+    $pictures = $album->addPictures( $subject, $body, $attachments );
 
     SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
   }
   else
     SocialUpdate::postStatus( $user, $body );
 
-  // FIXME: error handling, perhaps send a reply
+  if ( $sender )
+  {
+    $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
+    $to = $sender;
+    $subject = "Mail-to-social success";
+      
+    $msg = "Your mail-to-social request was processed successfully.";
+    // FIXME: include links to status URLS and album URLs
+    $mailer = new Mailer( $from, $to, $subject, $msg );
+    $mailer->send();
+  }
 
 ?>
