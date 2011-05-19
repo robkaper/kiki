@@ -227,8 +227,6 @@ class Mailer
       return $error;
     }
 
-    print_r( $this->to );
-
     foreach( $this->to as $to )
     {
       $pureAddresses = $rfc->parseAddressList($to);
