@@ -184,25 +184,35 @@ class Mailer
 
   public function send()
   {
+    Log::debug( "Mailer: subject:[$this->subject], from:[$this->from], to:". print_r($this->to), true) );
+
     if ( !Config::$smtpHost && !Config::$smtpUser && !Config::$smtpPass )
     {
-      Log::debug( "Mailer: no SMTP credentials supplied" );
+      $error = "Mailer: no SMTP credentials supplied";
+      Log::debug($error);
+      return $error;
     }
     
     if ( !($smtp = new Net_SMTP(Config::$smtpHost, Config::$smtpPort)) )
     {
-      Log::debug( "Unable to instantiate Net_SMTP object" );
+      $error = "Mailer: unable to instantiate Net_SMTP object";
+      Log::debug($error);
+      return $error;
     }
     // $smtp->setDebug(true);
 
     if ( PEAR::isError($e = $smtp->connect()) )
     {
-      Log::debug( "Connect error: ". $e->getMessage() );
+      $error = "Mailer: connect error: ". $e->getMessage();
+      Log::debug($error);
+      return $error;
     }
 
     if ( PEAR::isError($e = $smtp->auth(Config::$smtpUser, Config::$smtpPass, Config::$smtpAuthType)) )
     {
-      Log::debug( "Auth error:". $e->getMessage() );
+      $error = "Mailer: authentication error: ". $e->getMessage();
+      Log::debug($error);
+      return $error;
     }
 
     $rfc = new Mail_RFC822();
@@ -212,7 +222,9 @@ class Mailer
 
     if ( PEAR::isError($e = $smtp->mailFrom($email)))
     {
-      Log::debug( "Unable to set sender to [$email]: ". $e->getMessage() );
+      $error = "Unable to set sender to [$email]: ". $e->getMessage();
+      Log::debug($error);
+      return $error;
     }
 
     print_r( $this->to );
@@ -226,21 +238,23 @@ class Mailer
 
         if ( PEAR::isError($e = $smtp->rcptTo($email)) )
         {
-          Log::debug( "Unable to add recipient [$email]: ". $e->getMessage() );
+          $error = "Unable to set recipient to [$email]: ". $e->getMessage();
+          Log::debug($error);
+          return $error;
         }
       }
     }
 
     if ( PEAR::isError($e = $smtp->data($this->body(), $this->headers())) )
     {
-      Log::debug( "Unable to send data:". $e->getMessage() );
+      $error = "Unable to set data: ". $e->getMessage();
+      Log::debug($error);
+      return $error;
     }
 
-    Log::debug( "sent: ". print_r($smtp, true) );
+    Log::debug( "Mailer: sent: ". $smtp['_arguments'][0] );
 
     $smtp->disconnect();
-
-    Log::debug( "disconnected: ". print_r($smtp, true) );
   }
 }
 
