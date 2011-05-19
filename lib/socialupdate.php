@@ -63,18 +63,27 @@ class SocialUpdate
   public static function postAlbumUpdate( &$user, &$album, &$pictures )
   {
     $count = count($pictures);
-    $pictureId = end($pictures);
+    $lastPicture = end($pictures);
+    reset($pictures);
 
     // Post to Facebook
-
-    $link = $album->url( $pictureId );
-    
-    $title = $album->title; // TODO: use title of picture if count==1
-    $desc = ""; // TODO: use description of picture if count==1
+    $link = $album->url( $lastPicture['id'] );
+    if ( $count==1 )
+    {
+      $title = $lastPicture['title'];
+      $desc = $lastPicture['description'];
+    }
+    else
+    {
+      $title = $album->title;
+      $desc = "";
+      foreach( $pictures as $picture )
+        $desc .= $picture['title']. "\n";
+    }
     $caption = $_SERVER['SERVER_NAME'];
 
     $db = $GLOBALS['db'];
-    $storageId = $db->getSingleValue( "select storage_id from pictures where id=$pictureId" );
+    $storageId = $db->getSingleValue( "select storage_id from pictures where id=". $lastPicture['id'] );
     $picture = Storage::url( $storageId );
 
     $fbMsg = "uploaded ". ($count==1 ? "a picture" : "$count pictures"). " to album '$album->title':";

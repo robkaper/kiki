@@ -97,12 +97,13 @@ class Album
       $qDesc = $this->db->escape( $description );
       $q = "insert into pictures (title, description, storage_id) values ('$qTitle', '$qDesc', $storageId)";
       $rs = $this->db->query($q);
-      $pictures[]= $this->db->lastInsertId($rs);
+      $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'title' => $title, 'description' => $description );
     }
 
     // Link pictures into album
-    foreach( $pictures as $pictureId )
+    foreach( $pictures as $picture )
     {
+      $pictureId = $picture['id'];
       $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
       $this->db->query($q);
     }
