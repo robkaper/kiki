@@ -250,7 +250,7 @@ class Mailer
       return $error;
     }
 
-    Log::debug( "Mailer: sent: ". $smtp['_arguments'][0] );
+    Log::debug( "Mailer: sent: ". print_r($smtp->_arguments, true) );
 
     $smtp->disconnect();
   }

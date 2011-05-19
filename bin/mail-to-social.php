@@ -30,12 +30,15 @@
     }
   }
 
-  Log::debug( "recipient: $recipient, sender: $sender" );
   // Retrieve security code. Doesn't consider invalid e-mail adresses, the
   // e-mail was delivered after all.
   list( $localPart, $domain ) = explode( "@", $recipient );
-  list( $target, $mailAuthToken ) = explode( "+", $localPart );
 
+  $mailAuthToken = null;
+  if ( strstr($localPart, "+") )
+    list( $target, $mailAuthToken ) = explode( "+", $localPart );
+
+  // Get user
   $userId = 0;
   if ( $mailAuthToken )
   {
@@ -53,9 +56,9 @@
     {
       $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
       $to = $sender;
-      $subject = "Mail-to-social error";
+      $subject = "Update error";
       
-      $msg = "Your mail-to-social request could not be processed. You e-mailed\n\n$recipient\n\n but \"$mailAuthToken\" is not a valid authentication token.";
+      $msg = "Your update request could not be processed. You e-mailed\n\n$recipient\n\nbut \"$mailAuthToken\" is not a valid authentication token.";
       $mailer = new Mailer( $from, $to, $subject, $msg );
       $mailer->send();
     }
@@ -113,9 +116,9 @@
     {
       $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
       $to = $sender;
-      $subject = "Mail-to-social error";
+      $subject = "Update error";
       
-      $msg = "Your mail-to-social request could not be processed. You sent an empty message.";
+      $msg = "Your update was not processed: you sent an empty message.";
       $mailer = new Mailer( $from, $to, $subject, $msg );
       $mailer->send();
     }
@@ -125,6 +128,7 @@
   $user->load( $userId );
   $user->authenticate();
 
+  $albumUrl = null;
   if ( count($attachments) )
   {
     // Find album (and create if not exists)
@@ -133,19 +137,32 @@
     // TODO: check specifically for pictures, attachments could be other media type
     $pictures = $album->addPictures( $subject, $body, $attachments );
 
-    SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+    $requestType = "album update";
+    $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
   }
   else
+  {
+    $requestType = "status update";
     SocialUpdate::postStatus( $user, $body );
+  }
 
   if ( $sender )
   {
     $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
     $to = $sender;
-    $subject = "Mail-to-social success";
-      
-    $msg = "Your mail-to-social request was processed successfully.";
-    // FIXME: include links to status URLS and album URLs
+    $subject = "Update successful";
+
+    $msg = "Your $requestType was successful.\n\n";
+
+    if ($albumUrl)
+      $msg .= "Album URL:\n$albumUrl\n\n";
+
+    if ( ($fbUrl=SocialUpdate::$fbRs->url) )
+      $msg .= "Facebook URL:\n$fbUrl\n\n";
+
+    if ( ($twUrl=SocialUpdate::$twRs->url) )
+      $msg .= "Twitter URL:\n$twUrl\n\n";
+
     $mailer = new Mailer( $from, $to, $subject, $msg );
     $mailer->send();
   }

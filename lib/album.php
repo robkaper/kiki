@@ -34,7 +34,12 @@ class Album
     $this->title = $o->title;
   }
 
-  public function url( $pictureId = 0 )
+  public function url( $pictureId=0 )
+  {
+    return "http://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
+  }
+
+  public function uri( $pictureId=0 )
   {
     return Config::$kikiPrefix. "/album/$this->id/". ($pictureId ? "$pictureId/" : null);
   }

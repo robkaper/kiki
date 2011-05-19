@@ -81,7 +81,6 @@ class SocialUpdate
     self::$fbRs = $user->fbUser->post( $fbMsg, $link, $title, $caption, $desc, $picture );
 
     // Post to Twitter
-
     $tinyUrl = TinyUrl::get( $link );
 
     // TODO: add title/description of picture when count==1
@@ -94,6 +93,8 @@ class SocialUpdate
 
     $twMsg = "${prefix}${msg}${postfix}";
     self::$twRs = $user->twUser->post( $twMsg );
+
+    return $link;
   }
 
   public static function postLink( &$user, $link )
