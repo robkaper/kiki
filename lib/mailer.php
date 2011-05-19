@@ -184,7 +184,7 @@ class Mailer
 
   public function send()
   {
-    Log::debug( "Mailer: subject:[$this->subject], from:[$this->from], to:". print_r($this->to), true) );
+    Log::debug( "Mailer: subject:[$this->subject], from:[$this->from], to:". print_r($this->to, true) );
 
     if ( !Config::$smtpHost && !Config::$smtpUser && !Config::$smtpPass )
     {
