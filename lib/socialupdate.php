@@ -3,6 +3,7 @@
 class SocialUpdate
 {
 
+  public static $type = null;
   public static $fbRs = null;
   public static $twRs = null;
 
@@ -11,6 +12,7 @@ class SocialUpdate
     if ( !$msg )
       return;
 
+    self::$type = 'status';
     self::$fbRs = $user->fbUser->post( $msg );
     self::$twRs = $user->twUser->post( $msg );
   }
@@ -62,6 +64,8 @@ class SocialUpdate
 
   public static function postAlbumUpdate( &$user, &$album, &$pictures )
   {
+    self::$type = 'album';
+
     $count = count($pictures);
     $lastPicture = end($pictures);
     reset($pictures);

@@ -3,6 +3,37 @@
   $_SERVER['SERVER_NAME'] = $argv[1];
   include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
+  function sendReport( $to, &$errors, &$notices )
+  {
+    if (!$to)
+      return;
+
+    $errorCount = count($errors);      
+    $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
+    $subject = $errorCount ? "Update error" : "Update successful";
+
+    if ( $errorCount )
+    {
+      $msg = "Your update was not processed because of the following error(s):\n\n";
+      foreach( $errors as $error )
+        $msg .= "- $error\n\n";
+    }
+    else
+    {
+      if ( count($notices) )
+      {
+        $msg = "Your ". SocialUpdate::$type. " update was successful:\n\n";
+        foreach( $notices as $notice )
+          $msg .= "- $notice\n\n";
+      }
+      else
+        $msg = "Your ". SocialUpdate::$type. " update was successful.";
+    }
+
+    $mailer = new Mailer( $from, $to, $subject, $msg );
+    $mailer->send();
+  }
+
   // Temporarily store e-mail
   $data = file_get_contents("php://stdin");
   $tmpFile = tempnam( "/tmp", "kiki" );
@@ -30,10 +61,16 @@
     }
   }
 
-  // Retrieve security code. Doesn't consider invalid e-mail adresses, the
-  // e-mail was delivered after all.
-  list( $localPart, $domain ) = explode( "@", $recipient );
+  // Get structure
+  $mp = mailparse_msg_parse_file( $tmpFile );
+  $structure = mailparse_msg_get_structure($mp);
+  // Log::debug( "structure: ". print_r( $structure, true ) );
 
+  // Delete tmp file
+  unlink( $tmpFile );
+
+  // Retrieve security code. Doesn't consider invalid e-mail adresses, the e-mail was delivered after all.
+  list( $localPart, $domain ) = explode( "@", $recipient );
   $mailAuthToken = null;
   if ( strstr($localPart, "+") )
     list( $target, $mailAuthToken ) = explode( "+", $localPart );
@@ -48,28 +85,16 @@
 
   Log::debug( "mailAuthToken: $mailAuthToken, userId: $userId" );
 
+  $errors = array();
+  $notices = array();
+
   if ( !$userId )
   {
-    Log::debug( "invalid mailAuthToken: $mailAuthToken ($recipient)" );
-
-    if ( $sender )
-    {
-      $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
-      $to = $sender;
-      $subject = "Update error";
-      
-      $msg = "Your update request could not be processed. You e-mailed\n\n$recipient\n\nbut \"$mailAuthToken\" is not a valid authentication token.";
-      $mailer = new Mailer( $from, $to, $subject, $msg );
-      $mailer->send();
-    }
-    
+    $errors[] = "You e-mailed <$recipient> but \"$mailAuthToken\" is not a valid authentication token.";
+    sendReport( $sender, $errors, $notices );
+    unlink($tmpFile);
     exit();
   }
-
-  // Get structure
-  $mp = mailparse_msg_parse_file( $tmpFile );
-  $structure = mailparse_msg_get_structure($mp);
-  // Log::debug( "structure: ". print_r( $structure, true ) );
 
   // Iterate structure
   $body = "";
@@ -105,23 +130,19 @@
     }
   }
 
-  // Delete tmp file
-  unlink( $tmpFile );
-
-  if ( !$subject && !$body && !count($attachments) )
+  // Validate picture attachments
+  $pictureAttachments=array();
+  foreach( $attachments as $storageId )
   {
-    Log::debug( "empty message" );
+    $finfo = @getimagesize( Storage::localFile($storageId) );
+    if ( empty($finfo) && in_array( $pictureMimeTypes, $file_info['mime'] ) )
+      $pictureAttachments[] = $storageId;
+  }
 
-    if ( $sender )
-    {
-      $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
-      $to = $sender;
-      $subject = "Update error";
-      
-      $msg = "Your update was not processed: you sent an empty message.";
-      $mailer = new Mailer( $from, $to, $subject, $msg );
-      $mailer->send();
-    }
+  if ( !$subject && !$body && !count($pictureAttachments) )
+  {
+    $errors[] = "You sent an empty message. (or only non-picture attachments)";
+    sendReport( $sender, $errors, $notices );
     exit();
   }
 
@@ -129,16 +150,16 @@
   $user->authenticate();
 
   $albumUrl = null;
-  if ( count($attachments) )
+  if ( count($pictureAttachments) )
   {
     // Find album (and create if not exists)
     $album = Album::findByTitle('Mobile uploads', true );
 
-    // TODO: check specifically for pictures, attachments could be other media type
-    $pictures = $album->addPictures( $subject, $body, $attachments );
+    $pictures = $album->addPictures( $subject, $body, $pictureAttachments );
 
     $requestType = "album update";
     $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+    $notices[] = "Album URL:\n$albumUrl";
   }
   else
   {
@@ -146,25 +167,11 @@
     SocialUpdate::postStatus( $user, $body );
   }
 
-  if ( $sender )
-  {
-    $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
-    $to = $sender;
-    $subject = "Update successful";
+  if ( ($fbUrl=SocialUpdate::$fbRs->url) )
+    $notices[] = "Facebook URL:\n$fbUrl";
 
-    $msg = "Your $requestType was successful.\n\n";
+  if ( ($twUrl=SocialUpdate::$twRs->url) )
+    $notices[] = "Twitter URL:\n$twUrl";
 
-    if ($albumUrl)
-      $msg .= "Album URL:\n$albumUrl\n\n";
-
-    if ( ($fbUrl=SocialUpdate::$fbRs->url) )
-      $msg .= "Facebook URL:\n$fbUrl\n\n";
-
-    if ( ($twUrl=SocialUpdate::$twRs->url) )
-      $msg .= "Twitter URL:\n$twUrl\n\n";
-
-    $mailer = new Mailer( $from, $to, $subject, $msg );
-    $mailer->send();
-  }
-
+  sendReport( $sender, $errors, $notices );
 ?>
