@@ -213,7 +213,14 @@ class FacebookUser
     return $result;
   }
 
-  public function revoke( $perm )
+  public function storePerm( $perm )
+  {
+    $qPerm = $this->db->escape( $perm );
+    $q = "insert into facebook_user_perms (facebook_user_id, perm_key, perm_value) values ($this->id, '$qPerm', 1)";
+    $this->db->query($q);
+  }
+
+  public function revokePerm( $perm )
   {
     if ( !$this->fb )
       return;
@@ -222,7 +229,7 @@ class FacebookUser
     $fbRs = $this->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
 
     // Remove permission from database
-    // TODO: insert permission when it is granted
+    $qPerm = $this->db->escape( $perm );
     $q = "update facebook_user_perms set perm_value=0 where perm_key='$qPerm' and facebook_user_id=$this->id";
     $this->db->query($q);
 

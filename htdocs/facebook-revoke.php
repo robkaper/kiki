@@ -1,7 +1,7 @@
 <?
   include_once "../lib/init.php";
 
-  $user->fbUser->revoke( $_GET['permission'] );
+  $user->fbUser->revokePerm( $_GET['permission'] );
 
   header( "Location: ". $_SERVER['HTTP_REFERER'] );
   exit();
