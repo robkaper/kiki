@@ -56,7 +56,10 @@ class Album
     }
 
     if ( !$pictureId )
+    {
       echo "<p>\nNo pictures in this album.</p>\n";
+      return;
+    }
 
     // Picture details
     $qPictureId = $this->db->escape($pictureId);
