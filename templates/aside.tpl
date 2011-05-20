@@ -1,6 +1,6 @@
 <div id="sw"><aside>
 <?
-  global $user, $anyUser, $allUsers;
+  // FIXME: some logic in a template is fine by me, but this is way too much
 
   $me = new User(1);
   if ( (Config::$facebookApp || Config::$twitterApp) && $me->id )

@@ -21,7 +21,6 @@ class Page
   public function header()
   {
     $user = $GLOBALS['user'];
-    $mvc = $GLOBALS['mvc'];
 
     echo "<!DOCTYPE html>\n";
     echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
@@ -67,9 +66,9 @@ var requestUri = '<?= $_SERVER['REQUEST_URI']; ?>';
 </head>
 <body>
 <?
-  $mvc->load( "header" );
-  $mvc->load( "nav" );
-  $mvc->load( "aside" );
+  include Template::file('header');
+  include Template::file('nav');
+  include Template::file('aside');
 ?>
 <div id="cw">
 <div id="content">
