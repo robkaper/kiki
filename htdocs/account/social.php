@@ -51,7 +51,7 @@
       echo "<p>\nJe kunt geen lege status versturen.</p>\n";
   }
 
-  if ( $anyUser )
+  if ( User::anyUser() )
   {
     echo Form::open( "socialForm" );
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );

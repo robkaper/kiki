@@ -1,3 +1,4 @@
+<? global $page; ?>
 <header>
 <section id="title">
 <a href="/"><img src="<?= Config::$headerLogo; ?>" alt="<?= Config::$siteName; ?>" style="width: 50px; height: 50px; float: left;"/></a>

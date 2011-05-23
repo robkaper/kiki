@@ -14,10 +14,10 @@
     switch( $id )
     {
     case 'accountLink':
-      $data = $anyUser ? Boilerplate::accountLink() : null;
+      $data = User::anyUser() ? Boilerplate::accountLink() : null;
       break;
     case 'address':
-      $data = $anyUser ? Boilerplate::address() : Boilerplate::login();
+      $data = User::anyUser() ? Boilerplate::address() : Boilerplate::login();
       break;
     case 'facebookPermissions':
       $data = Boilerplate::facebookPermissions($user);
@@ -26,7 +26,7 @@
       if ( preg_match( '/^commentForm_/', $id ) )
       {
         list( $dummy, $objectId ) = split( '_', $id );
-        $data = $anyUser ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
+        $data = User::anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
       }
       else if ( preg_match( '/^navMenu-/', $id) )
       {

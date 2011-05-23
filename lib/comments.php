@@ -4,10 +4,8 @@ class Comments
 {
   public static function form( &$user, $objectId )
   {
-    global $anyUser;
-    
     $content = "<div id=\"commentForm_$objectId\" class=\"jsonupdate shrunk\">\n";
-    $content .= $anyUser ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
+    $content .= User::anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
     $content .= "</div>\n";
     return $content;
   }
