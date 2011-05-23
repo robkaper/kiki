@@ -116,13 +116,13 @@ class User
 
   public static function anyUser()
   {
-    $user = $GLOBALS['user'] );
+    $user = $GLOBALS['user'];
     return ($user->fbUser->authenticated || $user->twUser->authenticated);
   }
   
   public static function allUsers()
   {
-    $user = $GLOBALS['user'] );
+    $user = $GLOBALS['user'];
     return ($user->fbUser->authenticated && $user->twUser->authenticated);
   }
 }
