@@ -119,7 +119,8 @@
       if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
-        $id = Storage::save( $info['disposition-filename'], $contents );
+        $name = iconv_mime_decode( $info['disposition-filename'] );
+        $id = Storage::save( $name, $contents );
         $attachments[] = $id;
       }
       else if ( !$body && $info['content-type'] == 'text/plain' )
