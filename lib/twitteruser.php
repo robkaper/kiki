@@ -127,7 +127,7 @@ class TwitterUser
     $qPicture = $twApiUser ? $this->db->escape( $twApiUser->profile_image_url ) : "";
     if ( $qId )
     {
-      $q = "insert into twitter_users (id,access_token,secret,name,screen_name,picture) values( $qId, '$qAccessToken', '$qSecret', '$qName', '$qScreenName', '$qPicture') on duplicate key update access_token='$qAccessToken', secret='$qSecret', name='$qName', screen_name='$qScreenName', picture='$qPicture'";
+      $q = "insert into twitter_users (id,ctime,mtime,access_token,secret,name,screen_name,picture) values( $qId, now(), now(), '$qAccessToken', '$qSecret', '$qName', '$qScreenName', '$qPicture') on duplicate key update access_token='$qAccessToken', secret='$qSecret', name='$qName', screen_name='$qScreenName', picture='$qPicture'";
       Log::debug( "TwitterUser->registerAuth q: $q" );
       $this->db->query($q);
     }

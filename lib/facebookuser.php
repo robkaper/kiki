@@ -154,7 +154,7 @@ class FacebookUser
 
     $qId = $this->db->escape( $fbUser['id'] );
     $qName = $this->db->escape( $fbUser['name'] );
-    $q = "insert into facebook_users (id,access_token,name) values( $qId, '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
+    $q = "insert into facebook_users (id,ctime,mtime,access_token,name) values( $qId, now(), now(), '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
     Log::debug( "FacebookUser->registerAuth q: $q" );
     $this->db->query($q);
   }
