@@ -96,11 +96,16 @@ class Mailer
     return implode( "\n", $this->headers). "\n";
   }
 
+  private function createMimeHeaders()
+  {
+    if ( $this->html || count($this->attachments) )
+      $this->addHeader( self::multipartHeader($this->mimeBoundary, 'mixed', true) );
+  }
+
   private function body()
   {
     if ( $this->html )
     {
-      $this->addHeader( self::multipartHeader($this->mimeBoundary, 'mixed', true) );
       $altBoundary = sha1(uniqid());
       return self::mimePart($this->mimeBoundary, self::multipartHeader($altBoundary, 'alternative') ).
         $this->textPart($altBoundary).
@@ -109,18 +114,10 @@ class Mailer
         $this->AttachmentParts().
         self::mimePart($this->mimeBoundary);
     }
+    else if ( count($this->attachments) )
+      return $this->textPart($this->mimeBoundary). $this->attachmentParts(). self::mimePart($this->mimeBoundary);
     else
-    {
-      if ( count($this->attachments) )
-      {
-        $this->addHeader( self::multipartHeader($this->mimeBoundary, 'mixed', true) );
-        return $this->textPart($this->mimeBoundary). $this->attachmentParts(). self::mimePart($this->mimeBoundary);
-      }
-      else
-      {
-        return $this->textPart();
-      }
-    }
+      return $this->textPart();
   }
 
   private function multipartHeader( $boundary, $type, $mimeVersion=false )
@@ -185,6 +182,7 @@ class Mailer
   public function send()
   {
     Log::debug( "Mailer: subject:[$this->subject], from:[$this->from], to:". print_r($this->to, true) );
+    $this->createMimeHeaders();
 
     if ( !Config::$smtpHost && !Config::$smtpUser && !Config::$smtpPass )
     {
@@ -243,7 +241,7 @@ class Mailer
       }
     }
 
-    if ( PEAR::isError($e = $smtp->data($this->body(), $this->headers())) )
+    if ( PEAR::isError($e = $smtp->data( $this->headers(). $this->body() )) )
     {
       $error = "Unable to set data: ". $e->getMessage();
       Log::debug($error);
