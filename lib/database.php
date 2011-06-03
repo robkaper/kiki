@@ -39,7 +39,7 @@ class Database
 		mysql_select_db( $this->name, $this->dbh );
 	}
 
-	public function prepare()
+	public function buildQuery()
 	{
 		$argv = func_get_args();
 		$format = array_shift($argv);
