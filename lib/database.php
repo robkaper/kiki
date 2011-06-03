@@ -5,7 +5,7 @@ class Database
 	private $host, $port, $user, $pass, $name;
 	private $dbh;
 
-	function __construct( &$confArray )
+	public function __construct( &$confArray )
 	{
 		list( $this->host, $this->port, $this->name, $this->user, $this->pass ) = array_values($confArray);
 	}
@@ -37,6 +37,17 @@ class Database
 
 		$this->name = $name;
 		mysql_select_db( $this->name, $this->dbh );
+	}
+
+	public function prepare()
+	{
+		$argv = func_get_args();
+		$format = array_shift($argv);
+
+		foreach( $argv as &$arg )
+			$arg = $this->escape($arg);
+
+		return vsprintf( $format, $argv );
 	}
 
 	function query( $q, $debug="" )
