@@ -55,7 +55,7 @@ class Comments
   return $content;
   }
 
-  private static function showDummy( $objectId );
+  private static function showDummy( $objectId )
   {
     ob_start();
     include Template::file('comments/show-dummy');
