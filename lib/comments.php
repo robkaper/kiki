@@ -50,8 +50,9 @@ class Comments
     return $comments;
 
   ob_start();
-  include Templates::file( 'comments/show' );
-  $content = ob_end_clean();
+  include Template::file( 'comments/show' );
+  $content = ob_get_contents();
+  ob_end_clean();
   return $content;
   }
 
@@ -59,7 +60,8 @@ class Comments
   {
     ob_start();
     include Template::file('comments/show-dummy');
-    $content = ob_end_clean();
+    $content = ob_get_contents();
+    ob_end_clean();
     return $content;
   }
 
@@ -67,7 +69,8 @@ class Comments
   {
     ob_start();
     include Template::file('comments/show-single');
-    $content = ob_end_clean();
+    $content = ob_get_contents();
+    ob_end_clean();
     return $content;
   }
 
