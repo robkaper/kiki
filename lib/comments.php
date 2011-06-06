@@ -13,10 +13,6 @@ class Comments
   public static function show( &$db, &$user, $objectId, $jsonLast=null )
   {
     $comments = array();
-    $content = "";
-
-    if ( $jsonLast===null )
-      $content .= "<div id=\"comments_$objectId\" class=\"comments\">\n";
 
     $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
@@ -44,33 +40,34 @@ class Comments
         $name = "name";
       }
 
-      if ( $jsonLast!==null )
-        $comments[] = Comments::showComment( $objectId, $o->id, $name, $pic, $type, $o->body, $o->ctime );
-      else
-        $content .= Comments::showComment( $objectId, $o->id, $name, $pic, $type, $o->body, $o->ctime );
+      $comments[] = Comments::showSingle( $objectId, $o->id, $name, $pic, $type, $o->body, $o->ctime );
     }
   }
   else if ( $jsonLast===null )
-    $content .= "<div id=\"comment_${objectId}_0\" class=\"comment dummy\" style=\"min-height: 0px;\"><p>\nPlaats de eerste reactie!</p>\n</div>\n";
+    $comments[] = Comments::showDummy( $objectId );
 
   if ( $jsonLast!==null )
     return $comments;
 
-  $content .= Comments::form( $user, $objectId );
-  $content .= "</div>\n";
+  ob_start();
+  include Templates::file( 'comments/show' );
+  $content = ob_end_clean();
   return $content;
   }
 
-  public static function showComment( $objectId, $id, $name, $pic, $type, $body, $ctime )
+  private static function showDummy( $objectId );
   {
-    $content = "";
-    $content .= "<div class=\"comment\" id=\"comment_${objectId}_${id}\">\n";
-    $content .= Boilerplate::socialImage( $type, $name, $pic );
-    $content .= "<div class=\"commentTxt\">\n";
-    $content .= "<a href=\"#\">$name</a> ". htmlspecialchars($body). "\n";
-    $content .= "<br /><time class=\"relTime\">". Misc::relativeTime($ctime). " geleden</time>\n";
-    $content .= "</div>\n";
-    $content .= "</div>\n";
+    ob_start();
+    include Template::file('comments/show-dummy');
+    $content = ob_end_clean();
+    return $content;
+  }
+
+  public static function showSingle( $objectId, $id, $name, $pic, $type, $body, $ctime )
+  {
+    ob_start();
+    include Template::file('comments/show-single');
+    $content = ob_end_clean();
     return $content;
   }
 
