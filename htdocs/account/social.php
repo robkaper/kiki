@@ -1,12 +1,10 @@
 <?
   include_once "../../lib/init.php";
 
-  // FIXME: error handling for facebook post with insufficient permissions
   // TODO: finalise error handling for twitter post with insufficient permissions
   // TODO: add follow me/friend me buttons/links to external social sites
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
-  // TODO: textarea with maximum number of characters (for twitter, max=140)
 
   $page = new Page( "Social updates" );
   $page->header();
@@ -22,11 +20,7 @@
         if ( isset($fbRs->id) )
           echo "<p>Facebook status geupdate: <a target=\"_blank\" href=\"". $fbRs->url. "\">". $fbRs->url. "</a></p>\n";
         else
-        {
           echo "<p>\nEr is een fout opgetreden bij het updaten van je Facebook status:</p>\n<pre>". print_r( $fbRs->error, true ). "</pre>\n";
-          $loginUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => 'publish_stream' ) );   
-          echo "<a href=\"$loginUrl\">Facebook login met publish_stream rechten</a>\n";
-        }
       }
     
       if ( isset($_POST['postTw']) && $_POST['postTw'] == 'on' )
@@ -55,7 +49,7 @@
   {
     echo Form::open( "socialForm" );
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
-    if ( $user->fbUser )
+    if ( $user->fbUser && $user->fbUser->hasPerm('publish_stream') )
       echo Form::checkbox( "postFb", false, "Facebook", "Update Facebook status" );
     if ( $user->twUser )
       echo Form::checkbox( "postTw", false, "Twitter", "Update Twitter status" );
