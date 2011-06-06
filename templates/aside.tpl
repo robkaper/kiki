@@ -70,8 +70,9 @@
   // think every site should have a proclaimer and privacy policy...
   echo "<p><a href=\"/proclaimer.php#privacy\">Privacybeleid</a></p>\n";
 
+  // FIXME: rjkcust
   if ( 0 && $user->isAdmin() )
-    echo Google::adSense( "4246395131" );
+    Google::adSense( "4246395131" );
 
   echo "</div>\n";
 ?>

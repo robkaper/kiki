@@ -26,8 +26,8 @@ class Page
     echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
     echo "<head>\n";
     echo "<meta charset=\"UTF-8\"/>\n"; // utf-8 ?
-    echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>\n";  
-    echo Google::siteVerification();
+    echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>\n";
+    Google::siteVerification();
 ?>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="<?= Config::$kikiPrefix ?>/styles/default.css" title="Kiki Default" />
@@ -61,7 +61,7 @@ var requestUri = '<?= $_SERVER['REQUEST_URI']; ?>';
     $title .= " - ";
   $title .= Config::$siteName;
   echo "<title>$title</title>\n";
-  echo Google::analytics();
+  Google::analytics();
 ?>
 </head>
 <body>
