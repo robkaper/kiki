@@ -34,7 +34,12 @@ class Album
     $this->title = $o->title;
   }
 
-  public function url( $pictureId = 0 )
+  public function url( $pictureId=0 )
+  {
+    return "http://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
+  }
+
+  public function uri( $pictureId=0 )
   {
     return Config::$kikiPrefix. "/album/$this->id/". ($pictureId ? "$pictureId/" : null);
   }
@@ -51,7 +56,10 @@ class Album
     }
 
     if ( !$pictureId )
-      echo "<p>\nNo pictures in this album.</p>\n";
+    {
+      include Template::file( 'album/show-empty' );
+      return;
+    }
 
     // Picture details
     $qPictureId = $this->db->escape($pictureId);
@@ -60,26 +68,12 @@ class Album
     $pictureTitle = $o->title;
     $storageId = $o->storage_id;
 
-    $title = "<span class=\"albumTitle\">$this->title</span>: <span class=\"pictureTitle\">$pictureTitle</span>";
-
     $imgId = $pictureId;
     $imgUrl = Storage::url($storageId);
-    $img = "<img id=\"$imgId\" src=\"$imgUrl\" />";
-
     $leftClass = self::findPrevious( $this->id, $imgId ) ? null : " disabled";
     $rightClass = self::findNext( $this->id, $imgId ) ? null : " disabled";
-?>
-<div id="album_<?= $this->id ?>" class="album">
-  <div class="header"><?= $title ?></div>
-  <div class="imgw"><?= $img ?><br class="clear" />
-    <div id="navleftw" class="navarroww"><a id="navleft" class="navarrow<?= $leftClass; ?>" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_left_alt1_32x32.png" alt="&lt;" width="32" height="32" /></a></div>
-    <div id="navrightw" class="navarroww"><a id="navright" class="navarrow<?= $rightClass; ?>" href="#"><img src="<?= Config::$iconPrefix ?>/arrow_right_alt1_32x32.png" alt="&gt;" width="32" height="32" /></a></div>
-  </div>
-<? // TODO: tag/like bar ?>
-  <div class="bar"></div>
-  <div><?= Comments::show( $GLOBALS['db'], $GLOBALS['user'], 0 ); ?></div>
-</div>
-<?
+
+    include Template::file( 'album/show' );
   }
 
   public function addPictures( $title, $description, $storageIds )
@@ -92,12 +86,13 @@ class Album
       $qDesc = $this->db->escape( $description );
       $q = "insert into pictures (title, description, storage_id) values ('$qTitle', '$qDesc', $storageId)";
       $rs = $this->db->query($q);
-      $pictures[]= $this->db->lastInsertId($rs);
+      $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'title' => $title, 'description' => $description );
     }
 
     // Link pictures into album
-    foreach( $pictures as $pictureId )
+    foreach( $pictures as $picture )
     {
+      $pictureId = $picture['id'];
       $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
       $this->db->query($q);
     }

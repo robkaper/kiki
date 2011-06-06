@@ -3,6 +3,37 @@
   $_SERVER['SERVER_NAME'] = $argv[1];
   include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
+  function sendReport( $to, &$errors, &$notices )
+  {
+    if (!$to)
+      return;
+
+    $errorCount = count($errors);      
+    $from = Config::$siteName. " <no-reply@". $_SERVER['SERVER_NAME']. ">";
+    $subject = $errorCount ? "Update error" : "Update successful";
+
+    if ( $errorCount )
+    {
+      $msg = "Your update was not processed because of the following error(s):\n\n";
+      foreach( $errors as $error )
+        $msg .= "- $error\n\n";
+    }
+    else
+    {
+      if ( count($notices) )
+      {
+        $msg = "Your ". SocialUpdate::$type. " update was successful:\n\n";
+        foreach( $notices as $notice )
+          $msg .= "- $notice\n\n";
+      }
+      else
+        $msg = "Your ". SocialUpdate::$type. " update was successful.";
+    }
+
+    $mailer = new Mailer( $from, $to, $subject, $msg );
+    $mailer->send();
+  }
+
   // Temporarily store e-mail
   $data = file_get_contents("php://stdin");
   $tmpFile = tempnam( "/tmp", "kiki" );
@@ -18,38 +49,52 @@
     switch( strtolower(trim($key)) )
     {
     case 'to':
-      $recipient = $headers[2][$id];
+      $recipient = iconv_mime_decode($headers[2][$id]);
+      break;
+    case 'from':
+      $sender = iconv_mime_decode($headers[2][$id]);
       break;
     case 'subject':
-      $subject = $headers[2][$id];
-      // TODO: check debug.txt for live data, still problems with HTC Mail
-      Log::debug( "subject: $subject" );
-      $subject = iconv_mime_decode( $subject );
-      Log::debug( "subject: $subject" );
+      $subject = trim( iconv_mime_decode($headers[2][$id]) );
       break;
     default:;
     }
-  }
-
-  // Retrieve security code. Doesn't consider invalid e-mail adresses, the
-  // e-mail was delivered after all.
-  list( $localPart, $domain ) = explode( "@", $recipient );
-  list( $target, $mailAuthToken ) = explode( "+", $localPart );
-
-  $qToken = $db->escape( $mailAuthToken );
-  $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
-
-  if ( !$userId )
-  {
-    // FIXME: error handling, perhaps send a reply
-    Log::debug( "invalid mailAuthToken: $mailAuthToken ($recipient)" );
-    exit();
   }
 
   // Get structure
   $mp = mailparse_msg_parse_file( $tmpFile );
   $structure = mailparse_msg_get_structure($mp);
   // Log::debug( "structure: ". print_r( $structure, true ) );
+
+  // Delete tmp file
+  unlink( $tmpFile );
+
+  // Retrieve security code. Doesn't consider invalid e-mail adresses, the e-mail was delivered after all.
+  list( $localPart, $domain ) = explode( "@", $recipient );
+  $mailAuthToken = null;
+  if ( strstr($localPart, "+") )
+    list( $target, $mailAuthToken ) = explode( "+", $localPart );
+
+  // Get user
+  $userId = 0;
+  if ( $mailAuthToken )
+  {
+    $qToken = $db->escape( $mailAuthToken );
+    $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+  }
+
+  Log::debug( "mailAuthToken: $mailAuthToken, userId: $userId" );
+
+  $errors = array();
+  $notices = array();
+
+  if ( !$userId )
+  {
+    $errors[] = "You e-mailed <$recipient> but \"$mailAuthToken\" is not a valid authentication token.";
+    sendReport( $sender, $errors, $notices );
+    unlink($tmpFile);
+    exit();
+  }
 
   // Iterate structure
   $body = "";
@@ -74,43 +119,60 @@
       if ( isset($info['disposition-filename']) )
       {
         // Attachment, store
-        $fileName = iconv_mime_decode( $info['disposition-filename'] );
-        $id = Storage::save( $fileName, $contents );
+        $name = iconv_mime_decode( $info['disposition-filename'] );
+        $id = Storage::save( $name, $contents );
         $attachments[] = $id;
       }
       else if ( !$body && $info['content-type'] == 'text/plain' )
       {
         // Body part
-        $body = preg_replace( '/-- [\r\n]+.*/s', '', $contents );
+        $body = trim( preg_replace( '/-- [\r\n]+.*/s', '', $contents ) );
       }
     }
   }
 
-  // Delete tmp file
-  unlink( $tmpFile );
-
-  if ( !$subject && !$body && !count($attachments) )
+  // Validate picture attachments
+  $pictureAttachments=array();
+  foreach( $attachments as $storageId )
   {
-    // FIXME: error handling, perhaps send a reply
+    $finfo = @getimagesize( Storage::localFile($storageId) );
+    if ( empty($finfo) && in_array( $pictureMimeTypes, $file_info['mime'] ) )
+      $pictureAttachments[] = $storageId;
+  }
+
+  if ( !$subject && !$body && !count($pictureAttachments) )
+  {
+    $errors[] = "You sent an empty message. (or only non-picture attachments)";
+    sendReport( $sender, $errors, $notices );
     exit();
   }
 
   $user->load( $userId );
   $user->authenticate();
 
-  if ( count($attachments) )
+  $albumUrl = null;
+  if ( count($pictureAttachments) )
   {
     // Find album (and create if not exists)
     $album = Album::findByTitle('Mobile uploads', true );
-    
-    // TODO: check specifically for pictures, attachments could be other media type
-    $pictures = $album->addPictures( trim($subject), trim($body), $attachments );
 
-    SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+    $pictures = $album->addPictures( $subject, $body, $pictureAttachments );
+
+    $requestType = "album update";
+    $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+    $notices[] = "Album URL:\n$albumUrl";
   }
   else
+  {
+    $requestType = "status update";
     SocialUpdate::postStatus( $user, $body );
+  }
 
-  // FIXME: error handling, perhaps send a reply
+  if ( ($fbUrl=SocialUpdate::$fbRs->url) )
+    $notices[] = "Facebook URL:\n$fbUrl";
 
+  if ( ($twUrl=SocialUpdate::$twRs->url) )
+    $notices[] = "Twitter URL:\n$twUrl";
+
+  sendReport( $sender, $errors, $notices );
 ?>

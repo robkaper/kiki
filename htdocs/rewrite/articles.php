@@ -10,7 +10,7 @@
   {
     $qBaseUri = '/'. $db->escape($section). '/';
     $o = $db->getSingle( "select id,title from sections where base_uri='$qBaseUri'" );
-    $title = $o->title;
+    $title = $o ? $o->title : null;
   }
 
   $page = new Page( $title );

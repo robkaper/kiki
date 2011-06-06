@@ -14,6 +14,12 @@ class Config
 	public static $dbPass = null;
 	public static $db = null;
 
+	public static $smtpHost = null;
+	public static $smtpPort = 25;
+	public static $smtpUser = null;
+	public static $smtpPass = null;
+	public static $smtpAuthType = 'plain';
+
 	public static $kikiPrefix = "/kiki";
 	public static $staticPrefix = "/static";
 

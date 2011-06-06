@@ -1,6 +1,6 @@
 Kiki is a website framework.
 
-    * based on LAMP (Linux, Apache, MySQL and PHP)
+    * based on LAMP (Linux, Apache, MySQL/MariaDB and PHP)
 
     * completely HTML5 with CSS
 

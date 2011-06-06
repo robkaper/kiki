@@ -3,6 +3,7 @@
 class SocialUpdate
 {
 
+  public static $type = null;
   public static $fbRs = null;
   public static $twRs = null;
 
@@ -11,6 +12,7 @@ class SocialUpdate
     if ( !$msg )
       return;
 
+    self::$type = 'status';
     self::$fbRs = $user->fbUser->post( $msg );
     self::$twRs = $user->twUser->post( $msg );
   }
@@ -62,26 +64,37 @@ class SocialUpdate
 
   public static function postAlbumUpdate( &$user, &$album, &$pictures )
   {
+    self::$type = 'album';
+
     $count = count($pictures);
-    $pictureId = end($pictures);
+    $lastPicture = end($pictures);
+    reset($pictures);
 
     // Post to Facebook
+    $link = $album->url( $lastPicture['id'] );
+    if ( $count==1 )
+    {
+      $title = $lastPicture['title'];
+      $desc = $lastPicture['description'];
+    }
+    else
+    {
+      $title = $album->title;
+      $desc = "";
+      foreach( $pictures as $picture )
+        $desc .= $picture['title']. "\n";
+    }
 
-    $link = "http://". $_SERVER['SERVER_NAME']. $album->url( $pictureId );
-    
-    $title = $album->title; // TODO: use title of picture if count==1
-    $desc = ""; // TODO: use description of picture if count==1
     $caption = $_SERVER['SERVER_NAME'];
 
     $db = $GLOBALS['db'];
-    $storageId = $db->getSingleValue( "select storage_id from pictures where id=$pictureId" );
+    $storageId = $db->getSingleValue( "select storage_id from pictures where id=". $lastPicture['id'] );
     $picture = Storage::url( $storageId );
 
     $fbMsg = "uploaded ". ($count==1 ? "a picture" : "$count pictures"). " to album '$album->title':";
     self::$fbRs = $user->fbUser->post( $fbMsg, $link, $title, $caption, $desc, $picture );
 
     // Post to Twitter
-
     $tinyUrl = TinyUrl::get( $link );
 
     // TODO: add title/description of picture when count==1
@@ -94,6 +107,8 @@ class SocialUpdate
 
     $twMsg = "${prefix}${msg}${postfix}";
     self::$twRs = $user->twUser->post( $twMsg );
+
+    return $link;
   }
 
   public static function postLink( &$user, $link )

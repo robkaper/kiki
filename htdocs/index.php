@@ -34,6 +34,9 @@
   $extensions[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php5-curl' );
   $extensions[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php5-mysql' );
   $extensions[] = array( 'name' => 'PEAR', 'include' => 'PEAR.php', 'remedy' => 'apt-get install php-pear' );
+  $extensions[] = array( 'name' => 'Mail_RFC822 (PEAR)', 'include' => 'Mail/RFC822.php', 'remedy' => 'pear install -a Mail' );
+  $extensions[] = array( 'name' => 'Net_SMTP (PEAR)', 'include' => 'Net/SMTP.php', 'remedy' => 'pear install -a Net_SMTP' );
+  $extensions[] = array( 'name' => 'Fileinfo (PECL', 'function' => 'finfo_open', 'remedy' => 'pecl install Fileinfo' );
   $extensions[] = array( 'name' => 'Mailparse (PECL)', 'function' => 'mailparse_msg_create', 'remedy' => 'pecl install Mailparse' );
 
   echo "<ul>\n";

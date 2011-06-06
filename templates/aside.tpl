@@ -1,6 +1,6 @@
 <div id="sw"><aside>
 <?
-  global $user, $anyUser, $allUsers;
+  // FIXME: some logic in a template is fine by me, but this is way too much
 
   $me = new User(1);
   if ( (Config::$facebookApp || Config::$twitterApp) && $me->id )
@@ -14,8 +14,8 @@
 
   $fbStyle = $user->fbUser->authenticated ? "" : "display: none;";
   $twStyle = $user->twUser->authenticated ? "" : "display: none;";
-  $whoStyleOr = $anyUser ? "display: none;" : "";
-  $whoStyleAnd = $allUsers ? "display: none;" : "";
+  $whoStyleOr = User::anyUser() ? "display: none;" : "";
+  $whoStyleAnd = User::allUsers() ? "display: none;" : "";
 
   if ( Config::$facebookApp )
   {
@@ -62,7 +62,7 @@
   echo "<div class=\"box\">\n";
 
   echo "<span id=\"accountLink\" class=\"jsonupdate\">\n";
-  if ( $anyUser )
+  if ( User::anyUser() )
     echo Boilerplate::accountLink();
   echo "</span>\n";
 

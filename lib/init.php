@@ -39,13 +39,9 @@
   }
 
   $db = $GLOBALS['db'] = new Database( Config::$db );
-  $mvc = $GLOBALS['mvc'] = new MVC();
-
   $user = $GLOBALS['user'] = new User();
-  if ( Config::$singleUser )
-    $user->load( Config::$singleUser );
-  else
-    $user->identify();
+
+  Config::$singleUser ? $user->load(Config::$singleUser): $user->identify();
   $user->authenticate();
 
   $fbUser = $user->fbUser;
