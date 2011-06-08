@@ -82,33 +82,17 @@ var requestUri = '<?= $_SERVER['REQUEST_URI']; ?>';
 </div>
 </div>
 
-<? if ( Config::$facebookApp ) { ?>
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_US/all.js"></script>
-<script>
-FB.init( {appId: '<?= Config::$facebookApp ?>', status: true, cookie: true, xfbml: true} );
-FB.Event.subscribe( 'auth.sessionChange', function(response) { onFbResponse(response); } );
-</script>
-<? } // Config::$facebookApp
-   if ( Config::$twitterApp && Config::$twitterAnywhere ) { ?>
-<script src="http://platform.twitter.com/anywhere.js?id=<?= Config::$twitterApp ?>&v=1" type="text/javascript"></script>
-<script>
-twttr.anywhere( function (T) {
-  T.bind("authComplete", function (e, user) { onTwLogin(e, user); } );
-  T.bind("signOut", function (e) { onTwLogout(e); } );
-  // TODO: twttr.anywhere.signOut();
-
-  var twLogin = document.getElementById("twLogin");
-  if ( twLogin )
-  {
-    twLogin.onclick = function () {
-      T.signIn();
-      return false;
+<?
+    if ( Config::$facebookApp )
+    {
+      include Templates::file('facebook/connect');
     }
-  }
-} );
-</script>
-<? } // Config::$twitterApp ?>
+
+    if ( Config::$twitterApp && Config::$twitterAnywhere )
+    {
+      include Templates::file('twitter/anywhere');
+    }
+?>
 <div id="fw">
 <div class="footer"><?= Boilerplate::copyright(); ?></div>
 </div>
