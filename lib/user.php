@@ -54,6 +54,7 @@ class User
     $this->twUser->load( $o->twitter_user_id );
   }
 
+  // FIXME: create local sign-in and make it leading
   public function identify()
   {
     $this->fbUser->identify();

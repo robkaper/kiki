@@ -1,5 +1,7 @@
 <?
 
+// This class feels slightly redundant now that we're using templates
+
 class Google
 {
   public static function siteVerification()

@@ -1,3 +1,10 @@
+# Full (MySQL/MariaDB) database scheme for Kiki CMS
+#
+# Although a new installation can easily be updated from the status page
+# (just reload it after installation), it is desired that this file is kept
+# up-to-date with the latest scheme changes so that the latest revision can
+# be installed right away.
+
 drop table if exists config;
 create table config (
   id bigint unsigned not null auto_increment,
@@ -7,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.0' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.1' );
 
 drop table if exists twitter_users;
 create table twitter_users (

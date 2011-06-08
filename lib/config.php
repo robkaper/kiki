@@ -1,5 +1,9 @@
 <?
 
+// This class ensures reasonable defaults for configuration values that can
+// be overridden in config.php, although the intention is to move most of
+// these to the config table in the database.
+
 class Config
 {
 	public static $siteName = null;
@@ -54,8 +58,12 @@ class Config
 		self::setDefaults();
 		self::load();
 
-//		if ( self::$dbName && self::$dbUser )
-			self::$db = array( 'host' => self::$dbHost, 'port' => self::$dbPort, 'name' => self::$dbName, 'user' => self::$dbUser, 'pass' => self::$dbPass );
+		// TODO: error-handling, a database might not be configured
+		// (which is noted on the /kiki/ status page, but such a
+		// fatal error that we should probably handle it more
+		// prominently.
+		// if ( self::$dbName && self::$dbUser )
+		self::$db = array( 'host' => self::$dbHost, 'port' => self::$dbPort, 'name' => self::$dbName, 'user' => self::$dbUser, 'pass' => self::$dbPass );
 	}
 	
 	private static function setDefaults()
@@ -80,6 +88,8 @@ class Config
 		$file = self::configFile();
 		if ( !file_exists($file) )
 		{
+			// This should probably be an error, no configuration means no database means no functional website.
+			// On the other hand, the framework itself should run just fine without any data available.
 			Log::debug( "configuration file not found: $file" );
 			return;
 		}

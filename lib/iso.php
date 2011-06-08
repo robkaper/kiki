@@ -4,6 +4,7 @@ class ISO
 {
   public static function countries( $key )
   {
+    // List taken from ISO-3166 
     $countries = array(
       'AF' => "Afghanistan",
       'AX' => "Aland Islands",

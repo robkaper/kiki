@@ -1,13 +1,22 @@
 <?
-  // FIXME: add i18 support for base strings
+  // FIXME: add i18n support for base strings
 
-  $GLOBALS['root'] = "/www/". $_SERVER['SERVER_NAME'];
+  // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
+
+  // FIXME: rjkcust, we shouldn't assume /www/server_name/ as site root. 
+  // Perhaps parent of $_SERVER['DOCUMENT_ROOT'], still an assumption but
+  // less specific.  We should also support having the root for these inside
+  // the document root (and provide proper htaccess rules), perhaps as
+  // fallback.  Used by Config, Log, Storage and Template classes.
+  $GLOBALS['root'] = "/www/". $_SERVER['SERVER_NAME'];
 
   function __autoload( $className )
   {
+    // Try local customisations first, but fallback no Kiki's base classes,
+    // allows developers to easily rewrite/extend.
     $local = $GLOBALS['root']. "/lib/". strtolower( $className ). ".php";
-    if ( 0 && file_exists($local) )
+    if ( file_exists($local) )
     {
       include_once "$local";
       return;
@@ -44,6 +53,7 @@
   Config::$singleUser ? $user->load(Config::$singleUser): $user->identify();
   $user->authenticate();
 
+  // Convenient, but necessary?
   $fbUser = $user->fbUser;
   $twUser = $user->twUser;
   $anyUser = ($fbUser->authenticated || $twUser->authenticated);

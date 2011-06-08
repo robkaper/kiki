@@ -3,6 +3,7 @@
   $_SERVER['SERVER_NAME'] = $argv[1];
   include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
+  // TODO: make template based (plain text and/or HTML: $mailer->setHtml)
   function sendReport( $to, &$errors, &$notices )
   {
     if (!$to)
@@ -140,6 +141,7 @@
       $pictureAttachments[] = $storageId;
   }
 
+  // No useable content
   if ( !$subject && !$body && !count($pictureAttachments) )
   {
     $errors[] = "You sent an empty message. (or only non-picture attachments)";

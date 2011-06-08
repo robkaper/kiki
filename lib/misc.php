@@ -1,7 +1,10 @@
 <?
 
+// Contains everything that (as of yet) doesn't really fit into Kiki's object model.
+
 class Misc
 {
+  // Returns a time description relative to the current time
   public static function relativeTime( $time )
   {
     $now = time();
@@ -26,6 +29,7 @@ class Misc
       return (int)($delta/86400). " dagen";
   }
 
+  // Turns text (plain or with BBcode markup) into HTML
   public static function markup( $text, $authorMode = true, $fullURLs = false )
   {
     // Turn ordinary URLs into [url]
@@ -96,6 +100,7 @@ class Misc
     return $text;
   }
 
+  // Converts a string (such as a title) into a version safe for use in URIs
   public static function uriSafe( $uri )
   {
       $uri = iconv("utf-8", "ascii//TRANSLIT", $uri); // TRANSLIT does the whole job
@@ -106,6 +111,7 @@ class Misc
       return $uri;
   }
 
+  // Removes BBcode markup from a string and returns a plain text version of the string
   public static function textStrip( $str )
   {
     $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
@@ -116,6 +122,8 @@ class Misc
     return $str;
   }
 
+  // Returns a summary of a larger string
+  // TODO: deprecate and include teaser/cutoff functionality where needed
   public static function textSummary( $str, $maxLength = 250 )
   {
     $str = Misc::textStrip( $str );

@@ -1,5 +1,9 @@
 <?
 
+// TODO: Should be deprecated, load values from database or otherwhise refactored.
+// Was nice to have this class in the simplest revisions of Kiki, but it's
+// not suitable as permanent solution.
+
 class Boilerplate
 {
   public static function address()
