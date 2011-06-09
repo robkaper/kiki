@@ -1,38 +1,70 @@
 <?
 
+/**
+* @class Log
+* Facilitates error and debug logging.
+* @author Rob Kaper <http://robkaper.nl/>
+*/ 
+
 class Log
 {
+	/**
+	* @var string unique identifier to separate different script instances (such as concurrent HTTP requests)
+	*/ 
 	private static $uniqId;
+
+	/**
+	* @var float timestamp with microseconds of initialisation
+	*/ 
 	private static $ctime;
+
+	/**
+	* @var float timestamp with microseconds of last debug call
+	*/ 
 	private static $mtime;
 
-	// Not done as __construct to remind ourselves that Log::init() must
-	// be called explicitely, while the constructor would implicitely be
-	// called when registering the first log entry which is most likely
-	// not the actual initialisation of the script.
-	public static function init()
+	/**
+	* Initialises the class.
+	* @see init()
+	*/
+	public static function __construct()
 	{
 		self::$uniqId = uniqid();
 		self::$ctime = microtime(true);
 	}
 
-	// Logs an error, using Apache's error_log
-	public static function error( $str, $alsoDebug = true )
+	/**
+ 	* This method is provided for convenience to allow execution of the
+ 	* constructor when desired, prior to the first debug entry (which
+ 	* isn't necesarily at the initialisation of the script).
+ 	* @see __construct()
+ 	*/
+	public static function init() {}
+
+	/**
+	* Logs a message (plus request URI) to Apache's error_log.
+	* @param $msg [string] message to log
+	* @param $alsoDebug [bool] (optional) whether to also record the message in the debug log
+	*/
+	public static function error( $msg, $alsoDebug = true )
 	{
 		if ( $alsoDebug )
-			Log::debug($str);
-		error_log( $_SERVER['REQUEST_URI']. ": ". $str );
+			Log::debug($msg);
+		error_log( $_SERVER['REQUEST_URI']. ": ". $msg );
 	}
 
-	// Logs a debug message including context and execution time since
-	// init and previous message
-	public static function debug( $str )
+	/**
+	* Logs a message to Kiki's debug log file, including request method,
+	* URI and execution times since init() and previous log entry.
+	* @param $msg [string] message to log
+	*/
+	public static function debug( $msg )
 	{
 		$logFile = $GLOBALS['root']. "/debug.txt";
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{
-			Log::error( "cannot write to $logFile: $str", false );
+			Log::error( "cannot write to $logFile: $msg", false );
 			return;
 		}
 
@@ -41,7 +73,7 @@ class Log
 
 		$step = sprintf( "%3.7f", self::$mtime - $last );
 		$total = sprintf( "%3.7f", self::$mtime - self::$ctime );
-		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] $str\n";
+		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] $msg\n";
 
 		fwrite( $fp, $logStr );
 		fclose( $fp );

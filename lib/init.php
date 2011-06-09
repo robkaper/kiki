@@ -1,5 +1,12 @@
 <?
-  // FIXME: add i18n support for base strings
+
+/**
+* @package Kiki CMS
+* Initialisation/bootloader script for Kiki CMS.
+* @todo add i18n support for Kiki's base strings (not necessarily a
+*   bootloader issue but I need to document this somewhere...)
+* @todo find a way to properly document a bootloader script in Doxygen
+*/
 
   // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );

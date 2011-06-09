@@ -1,8 +1,20 @@
 <?
 
+/**
+* @class ISO
+* Utility class for common ISO definitions
+* @author Rob Kaper <http://robkaper.nl/>
+*/
+
 class ISO
 {
-  public static function countries( $key )
+  /**
+  * Retrieves an ISO country name or full list including abbreviations.
+  * @param $key [string] (optional) two letter country code to lookup
+  * @return string|array full country name corresponding to provided key (null if none found), or the full list of keys/codes and names if no key is provided
+  * @see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+  */
+  public static function countries( $key=null )
   {
     // List taken from ISO-3166 
     $countries = array(
