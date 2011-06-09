@@ -20,7 +20,7 @@ class Comments
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
     {
-      while( $o = $db->fetch_object($rs) )
+      while( $o = $db->fetchObject($rs) )
       {
         if ( $o->facebook_user_id )
         {

@@ -77,12 +77,12 @@ class User
       {
         // FIXME: avoid this at all costs, or handle gracefully
         Log::debug( "User::authenticate -- more than one result in db, fbUserId=$qFbUserId, twUserId=$qTwUserId" );
-        while( $o = $this->db->fetch_object($rs) )
+        while( $o = $this->db->fetchObject($rs) )
           Log::debug( "o: ". print_r( $o, true ) );
       }
       else
       {
-        $o = $this->db->fetch_object($rs);
+        $o = $this->db->fetchObject($rs);
         $this->id = $o->id;
         $this->mailAuthToken = $o->mail_auth_token;
 

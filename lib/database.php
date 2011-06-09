@@ -106,14 +106,6 @@ class Database
 	}
 
 	/**
-	* @deprecated Use fetchObject() instead.
-	*/
-	function fetch_object( $rs )
-	{
-		return $this->fetchObject($rs);
-	}
-	
-	/**
 	* Retrieves the next object of a resource/result set returned by a succesful query.
 	* @todo Research if the (re)connection attempt can be removed, if
 	*   not, document it.  It seems likely that the provided resource is
@@ -149,14 +141,6 @@ class Database
 			$this->connect();
 
 		return mysql_num_rows($rs);
-	}
-
-	/**
-	* @deprecated Use lastInsertId() instead.
-	*/
-	function last_insert_id( $rs )
-	{
-		return $this->lastInsertId($rs);
 	}
 
 	/**
