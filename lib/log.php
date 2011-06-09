@@ -27,7 +27,7 @@ class Log
 	* Initialises the class.
 	* @see init()
 	*/
-	public static function __construct()
+	public function __construct()
 	{
 		self::$uniqId = uniqid();
 		self::$ctime = microtime(true);
