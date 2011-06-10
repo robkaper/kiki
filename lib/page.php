@@ -67,6 +67,7 @@ class Page
       $title .= " - ";
     $title .= Config::$siteName;
 
+    header( 'Content-Type: text/html; charset=utf-8' );
     include Template::file('page/html');
   }
 
