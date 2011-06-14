@@ -1,5 +1,15 @@
 <?
 
+/**
+* @class SocialUpdate
+* Utility class to post updates to social networks.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+* @todo Allow selection of which networks to post to, currently this class
+*   posts to all networks available.
+*/
+
 class SocialUpdate
 {
 
@@ -7,6 +17,11 @@ class SocialUpdate
   public static $fbRs = null;
   public static $twRs = null;
 
+  /**
+  * Posts a simple status update.
+  * @param $user [User] user to post as
+  * @param $msg [string] message to post
+  */
   public static function postStatus( &$user, $msg )
   {
     if ( !$msg )
@@ -17,11 +32,17 @@ class SocialUpdate
     self::$twRs = $user->twUser->post( $msg );
   }
 
+  /**
+  * Posts a single picture (link).
+  * @param $user [User] user to post as
+  * @param $storageId [int] database ID of the picture's Storage entry
+  * @param $title [string] title/caption of the picture
+  * @param $description [string] description of the picture
+  * @todo Pictures in Storage should all end up in an album view somehow, so
+  *   deprecate that use and convert this method to one that accepts URLs.
+  */
   public static function postPicture( &$user, $storageId, $title='', $description='' )
   {
-    // Assumes a single picture posted outside the context of an album.
-    // TODO: deprecate this, all pictures should end up in an album somehow, even if it's a default one.
-
     $link = Storage::url( $storageId );
 
     // Post to Facebook
@@ -62,6 +83,13 @@ class SocialUpdate
     self::$twRs = $user->twUser->post( $twMsg );
   }
 
+  /**
+  * Posts an album update.
+  * @param $user [User] user to post as
+  * @param $album [Album] the album that was updated
+  * @param $pictures [array] the pictures included in this update
+  * @return string album URL of the last picture included in this update
+  */
   public static function postAlbumUpdate( &$user, &$album, &$pictures )
   {
     self::$type = 'album';
@@ -111,11 +139,17 @@ class SocialUpdate
     return $link;
   }
 
+  /**
+  * Posts a link/URL.
+  * @param $user [User] user to post as
+  * @param $link URL of the link to be posted
+  * @warning not implemented yet
+  * @todo move from Article::save()
+  * @todo add parameters with link title/description details
+  * @todo support hashtags (manual but also pre-defined in article sections)
+  */
   public static function postLink( &$user, $link )
   {
-    // TODO: move from Article::save
-    // TODO: add parameters, function assumes known details about link
-    // TODO: support hashtags (manual but also pre-defined in article sections)
   }
 }
 

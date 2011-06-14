@@ -4,6 +4,8 @@
 * @class Google
 * Utility class to load Google HTML/Javascript templates. Slightly overkill, but checks whether Google features (page verification, Adsense, Analytics) have been configured.
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */
 
 class Google

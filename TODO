@@ -1,6 +1,6 @@
 This TODO file lists outstanding work towards a completely brandless and
 installable Kiki. It does not include outstanding work in the codebase
-itself, which should be documented through FIXME and TODO comments.
+itself, which should be documented through FIXME, TODO and Doxygen comments.
 
 - Make all remaining customisations in the code configurable
 

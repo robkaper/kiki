@@ -4,6 +4,8 @@
 * @class Storage
 * Stores and retrieves local filesystem data offering database and URI references.
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */ 
 
 class Storage

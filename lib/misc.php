@@ -1,10 +1,24 @@
 <?
 
-// Contains everything that (as of yet) doesn't really fit into Kiki's object model.
+/**
+* @class Misc
+* Utility class for common methods. Most do as of yet not fit into Kiki's object model yet.
+* @author Rob Kaper <http://robkaper.nl/>
+* Released under the terms of the MIT license.
+* @todo Move markup related methods to a Markup (or BBcode) class.
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
 
 class Misc
 {
-  // Returns a time description relative to the current time
+  /**
+  * Provides a description of the difference between a timestamp and the current time.
+  * @param $time [int] the time to compare the current time to
+  * @return string description of the difference in time
+  * @warning Only supports comparison to times in the past.
+  * @bug rjkcust: returns strings in Dutch.
+  */
   public static function relativeTime( $time )
   {
     $now = time();
@@ -29,7 +43,13 @@ class Misc
       return (int)($delta/86400). " dagen";
   }
 
-  // Turns text (plain or with BBcode markup) into HTML
+  /**
+  * Converts text (plain or with BBcode markup into formatted HTML.
+  * @param $text [string] input text
+  * @param $authorMode [bool] (optional) whether to allow images, blockquotes and lists
+  * @param $fullURLs [bool] (optional) whether to allow the use of relative URLs
+  * @return string the HTML formatted text
+  */
   public static function markup( $text, $authorMode = true, $fullURLs = false )
   {
     // Turn ordinary URLs into [url]
@@ -100,18 +120,31 @@ class Misc
     return $text;
   }
 
-  // Converts a string (such as a title) into a version safe for use in URIs
-  public static function uriSafe( $uri )
+  /**
+  * Converts a string into a version safe for use in URIs.
+  * @param $str [string] input string
+  * @return string the URI-safe string
+  */
+  public static function uriSafe( $str )
   {
-      $uri = iconv("utf-8", "ascii//TRANSLIT", $uri); // TRANSLIT does the whole job
-      $uri = preg_replace('~[^\\pL0-9_]+~u', '-', $uri); // substitutes anything but letters, numbers and '_' with separator
+      // Convert to ASCII with common translations
+      $uri = iconv("utf-8", "ascii//TRANSLIT", $str);
+      // Substitutes anything but letters, numbers and '_' with separator ('-')
+      $uri = preg_replace('~[^\\pL0-9_]+~u', '-', $uri);
+      // Remove seperators from the beginning and end
       $uri = trim($uri, "-");
+      // Lowercase
       $uri = strtolower($uri);
-      $uri = preg_replace('~[^-a-z0-9_]+~', '', $uri); // keep only letters, numbers, '_' and separator
+      // Keep only letters, numbers, '_' and separator
+      $uri = preg_replace('~[^-a-z0-9_]+~', '', $uri);
       return $uri;
   }
 
-  // Removes BBcode markup from a string and returns a plain text version of the string
+  /**
+  * Removes BBcode markup from a text.
+  * @param $str [string] input text
+  * @return string plain text version of the text
+  */
   public static function textStrip( $str )
   {
     $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
@@ -122,8 +155,15 @@ class Misc
     return $str;
   }
 
-  // Returns a summary of a larger string
-  // TODO: deprecate and include teaser/cutoff functionality where needed
+  /**
+  * Provides a summary of a larger text.
+  * @param $str [string] input text
+  * @param $maxLength [int] maximum output length
+  * @return string plain text version of the string
+  * @todo keep for phrases that need to be shortened for Twitter/SMS/etc,
+  *   but deprecate in article overviews and write teaster/cutoff
+  *   functionality there
+  */
   public static function textSummary( $str, $maxLength = 250 )
   {
     $str = Misc::textStrip( $str );
@@ -138,11 +178,10 @@ class Misc
         $str .= $postfix;
     }
 
-    // TODO: we should probably have a textSummary plain and a textSummary specifically for articles
-    // Substitute newlines to breaks.
+    // Substitute breaks for newlines.
     $str = preg_replace('((\r)?\n)', "<br />", $str );
 
-    // Substitute double breaks to paragraphs.
+    // Substitute paragraphs for double breaks.
     $str = preg_replace('(<br /><br />)', "</p>\n\n<p>\n", $str );
         
     return $str;

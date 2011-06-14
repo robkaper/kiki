@@ -1,9 +1,27 @@
 #!/usr/bin/php -q
 <?
+
+/**
+* @file mail-to-social.php
+* Reads an e-mail from STDIN and publishes the contents to social networks.
+* Attached images are stored in a local album and a link to the album is
+* published, not the image(s).
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   $_SERVER['SERVER_NAME'] = $argv[1];
   include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
-  // TODO: make template based (plain text and/or HTML: $mailer->setHtml)
+  /**
+  * Sends a report of the parsing and social update.
+  * @param $to [string] e-mail address to send the report to
+  * @param $errors [array] list of errors
+  * @param $notices [array] list of notices
+  * @todo Make template based (plain text and/or HTML using Mailer::setHtml()).
+  * @todo This function should probably be in the SocialUpdate class, as well as the error/notice handling.
+  */
   function sendReport( $to, &$errors, &$notices )
   {
     if (!$to)

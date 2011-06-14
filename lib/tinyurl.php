@@ -5,6 +5,8 @@
 * Creates, stores and resolves local tiny URLs
 * @todo Allow lookups of full URLs
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */
 
 class TinyUrl

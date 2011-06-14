@@ -1,7 +1,7 @@
 <?
   include_once "../lib/init.php";
 
-  $page = new Page( "Kiki CMS Status" );
+  $page = new Page( "Kiki Status" );
   $page->header();
 
   function sourceSqlFile( &$db, $fileName )
@@ -60,13 +60,13 @@
   $dbVersion = $db->getSingleValue($q);
 
   echo "<ul>\n";
-  echo "<li>Data model required: <strong>". Config::$dbVersionRequired. "</strong>.</li>\n";
+  echo "<li>Data model required: <strong>". Config::dbVersionRequired. "</strong>.</li>\n";
 
   if ( $dbVersion )
   {
     echo "<li>Data model installed: <strong>$dbVersion</strong>.</li>\n";
 
-    if ( version_compare($dbVersion, Config::$dbVersionRequired) < 0 )
+    if ( version_compare($dbVersion, Config::dbVersionRequired) < 0 )
     {
       echo "<li>Updating data model:\n";
 
@@ -77,7 +77,7 @@
         if ( !$file->isDot() )
         {
            $version = preg_filter( '/update-(.*)\.sql/', "$1", $file->getFilename() );
-           if ( $version && version_compare($version, $dbVersion) >= 0 && version_compare($version, Config::$dbVersionRequired) <= 0 )
+           if ( $version && version_compare($version, $dbVersion) >= 0 && version_compare($version, Config::dbVersionRequired) <= 0 )
              $versions[] = $version;
         }
       }

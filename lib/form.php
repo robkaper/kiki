@@ -1,7 +1,20 @@
 <?
 
-// TODO: add attachment display to preview/sort/delete attachments
-// TODO: require attachment display for all attachments, handle insertion into textarea differently (HTML5 contenteditable wysiwyg?)
+/**
+* @class Form
+* Builds HTML5 forms.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+* @bug Implemented statically, which prevents some sanity checking (such as
+*   the right order/use of attachFile, which is confusing currently, even to
+*   me).
+* @bug Undocumented pending rewrite away from static.
+* @todo add attachment display to preview/sort/delete attachments
+* @todo require attachment display for all attachments, handle insertion into textarea differently (if at all, inserting BBcode is ugly)
+* @todo All sorts of server- and client-side validation.
+* @todo Use the HTML5 types optimised for numbers, e-mail, etc.
+*/
 
 class Form
 {

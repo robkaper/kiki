@@ -4,6 +4,8 @@
 * @class Page
 * Creates a HTML page
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */
 
 class Page

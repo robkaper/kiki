@@ -1,5 +1,15 @@
 <?
 
+/**
+* @class Mailer
+* Composes and sends e-mails over SMTP. Supports a HTML alternative part,
+* MIME attachments as well as RFC-3636 compliant signatures.
+* @see http://tools.ietf.org/html/rfc3676#section-4.3
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
 require_once "Mail/RFC822.php";
 require_once "Net/SMTP.php";
 
@@ -16,6 +26,18 @@ class Mailer
   private $msgId;
   private $mimeBoundary;
 
+  /**
+  * Initialises the class and in combination with Mailer::send() all that is
+  * required for plain text e-mails.
+  * @param $from [string] e-mail address of the sender
+  * @param $to [string] e-mail address of the (primary) recipient
+  * @param $subject [string] subject of the e-mail
+  * @param $msg [string] plain text contents of the e-mail
+  * @param $signature [string] (optional) signature for the e-mail
+  * @bug No Cc: or Bcc: support
+  * @bug Mixed use of self:: and $this (probably elsewhere in Kiki as well)
+  * @bug Only constructor is documented.
+  */
   public function __construct( $from, $to, $subject, $msg, $signature=null )
   {
     self::reset();
@@ -58,6 +80,17 @@ class Mailer
   public function setSender( $from )
   {
     $this->from = $from;
+  }
+
+  private function resetRecipients()
+  {
+    $this->to = array();
+  }
+
+  public function setRecipient( $to )
+  {
+    $this->resetRecipients();
+    $this->addRecipient($to);
   }
 
   public function addRecipient( $to )

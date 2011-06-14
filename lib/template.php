@@ -8,9 +8,12 @@
 *   variables and objects are available in the present scope.
 * @bug Does not offer any parsing (such as htmlspecialchars), which means
 *   developers need to be careful about input that can inject unwanted
-*   HTML/CSS leading to potential XSS vulnerabilities.
+*   HTML/CSS leading to potential XSS vulnerabilities.  Perhaps htmlentities
+*   is even better, @see http://stackoverflow.com/questions/3623236/htmlspecialchars-vs-htmlentities-when-concerned-with-xss/3623297#3623297
 * @todo Support themes (/template/themename/etc)
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */
 
 class Template

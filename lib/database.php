@@ -2,11 +2,13 @@
 
 /**
 * @class Database
-* Utility Utility class for database operations. Offers SQL injection prevention.
+* Utility class for database operations. Offers SQL injection prevention.
 * Use one instance of this class for each separate database connection
 * required.
-* @warning Kiki CMS is purely LAMP and only works with MySQL and MariaDB.
+* @warning Kiki is purely LAMP and only works with MySQL and MariaDB.
 * @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
 */
 
 class Database

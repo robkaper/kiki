@@ -1,13 +1,19 @@
 <?
 
-// This class ensures reasonable defaults for configuration values that can
-// be overridden in config.php, although the intention is to move most of
-// these to the config table in the database.
+/**
+* @class Config
+* Ensures availability of core configuration values with reasonable defaults.
+* Values can be overriden in config.php, although the intention id to move
+* most of these to the config table in the database.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
 
 class Config
 {
 	public static $siteName = null;
-	public static $copyOwner = "Kiki CMS";
+	public static $copyOwner = "Kiki website framework";
 	public static $copySince = null;
 	public static $address = null;
 
@@ -51,8 +57,12 @@ class Config
 	public static $singleUser = 0;
 	public static $devUsers = array();
 
-	public static $dbVersionRequired = "0.1.1";
+	const dbVersionRequired = "0.1.1";
 
+	/**
+	* Initialises configuration values. Loads the defaults first and
+	* then loads the site-specific configuration file.
+	*/
 	public static function init()
 	{
 		self::setDefaults();
@@ -65,7 +75,11 @@ class Config
 		// if ( self::$dbName && self::$dbUser )
 		self::$db = array( 'host' => self::$dbHost, 'port' => self::$dbPort, 'name' => self::$dbName, 'user' => self::$dbUser, 'pass' => self::$dbPass );
 	}
-	
+
+	/**
+	* Sets defaults that depend on code and cannot be set in the member
+	* declarations.
+	*/
 	private static function setDefaults()
 	{
 		self::$siteName = $_SERVER['SERVER_NAME'];
@@ -78,11 +92,20 @@ class Config
 		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
 	}
 
+	/**
+	* Provides the full path of the configuration file.
+	* @return string full path of the configuration file
+	* @todo Search multiple locations and don't assume config.php is in
+	*   $GLOBALS['root'].
+	*/
 	public static function configFile()
 	{
 		return $GLOBALS['root']. "/config.php";
 	}
 
+	/**
+	* Loads the configuration file, if it exists.
+	*/
 	private static function load()
 	{
 		$file = self::configFile();

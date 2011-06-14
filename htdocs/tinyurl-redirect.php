@@ -11,6 +11,6 @@
   
   $page = new Page( "TinyURL Not Found" );
   $page->header();
-  echo "<p>\nSorry! Kiki CMS couldn't find a destination for this tiny URL.</p>\n";
+  echo "<p>\nSorry! Kiki couldn't find a destination for this tiny URL.</p>\n";
   $page->footer();
 ?>
