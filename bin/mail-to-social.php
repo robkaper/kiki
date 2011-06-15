@@ -49,8 +49,9 @@
         $msg = "Your ". SocialUpdate::$type. " update was successful.";
     }
 
-    $mailer = new Mailer( $from, $to, $subject, $msg );
-    $mailer->send();
+    $email = new Email( $from, $to, $subject );
+    $email->setPlain( $msg );
+    $email->send();
   }
 
   // Temporarily store e-mail
