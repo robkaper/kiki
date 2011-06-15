@@ -1,7 +1,7 @@
 <?
 
 /**
-* @class MailerQueue.php
+* @class MailerQueue
 * Manages the e-mail queue.
 * @author Rob Kaper <http://robkaper.nl/>
 * @section license_sec License
@@ -60,7 +60,7 @@ class MailerQueue
     }
   }
 
-  /// Unlocks a queued e-mail. If the e-mail is
+  /// Unlocks a queued e-mail.
   /// @param $id [int] database ID of the queued e-mail
   private function unlock( $id )
   {

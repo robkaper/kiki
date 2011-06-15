@@ -16,7 +16,7 @@ class Mailer
 {
   public static function send( &$email, $priority = 10 )
   {
-    /// @warning MailQueue requires a mail sending daemon, which isn't included in this repository yet.
+    /// @warning MailerQueue requires a mail sending daemon/script, which isn't included in this repository yet.
     if ( Config::$mailerQueue )
       self::queue( $email, $priority );
     else

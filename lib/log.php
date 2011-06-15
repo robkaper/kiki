@@ -80,6 +80,15 @@ class Log
 		fwrite( $fp, $logStr );
 		fclose( $fp );
 	}
+
+	/**
+	* @deprecated Still referenced by the Daemon class which expects a
+	*   syslog compatible Log class, which Kiki currently doesn't provide.
+	*/
+	public static function info( $msg )
+	{
+		echo $msg. PHP_EOL;
+	}
 }
 
 ?>
