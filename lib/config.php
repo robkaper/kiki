@@ -24,6 +24,8 @@ class Config
 	public static $dbPass = null;
 	public static $db = null;
 
+	public static $mailerQueue = false;
+
 	public static $smtpHost = null;
 	public static $smtpPort = 25;
 	public static $smtpUser = null;

@@ -57,6 +57,9 @@
   $db = $GLOBALS['db'] = new Database( Config::$db );
   $user = $GLOBALS['user'] = new User();
 
+  if ( Config::$mailerQueue )
+    MailerQueue::init();
+
   Config::$singleUser ? $user->load(Config::$singleUser): $user->identify();
   $user->authenticate();
 
