@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/socialupdate.php
+* Provides the SocialUpdate class.
 * @class SocialUpdate
 * Utility class to post updates to social networks.
 * @author Rob Kaper <http://robkaper.nl/>

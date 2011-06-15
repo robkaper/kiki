@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/form.php
+* Provides the Form class.
 * @class Form
 * Builds HTML5 forms.
 * @author Rob Kaper <http://robkaper.nl/>

@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/page.php
+* Provides the Page class.
 * @class Page
 * Creates a HTML page
 * @author Rob Kaper <http://robkaper.nl/>

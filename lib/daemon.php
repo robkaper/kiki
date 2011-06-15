@@ -3,6 +3,8 @@
 declare( ticks = 1 );
 
 /**
+* @file lib/daemon.php
+* Provides the Daemon class.
 * @class Daemon
 * Extendable base class for daemon processess.
 * @author Rob Kaper <http://robkaper.nl/>

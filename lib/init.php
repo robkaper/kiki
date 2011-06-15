@@ -1,7 +1,7 @@
 <?
 
 /**
-* @package Kiki
+* @file lib/init.php
 * Initialisation/bootloader script for Kiki.
 * @todo add i18n support for Kiki's base strings (not necessarily a
 *   bootloader issue but I need to document this somewhere...)

@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/database.php
+* Provides the Database class.
 * @class Database
 * Utility class for database operations. Offers SQL injection prevention.
 * Use one instance of this class for each separate database connection

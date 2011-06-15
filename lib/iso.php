@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/iso.php
+* Provides the ISO class.
 * @class ISO
 * Utility class for common ISO definitions
 * @author Rob Kaper <http://robkaper.nl/>

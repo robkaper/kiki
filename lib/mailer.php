@@ -1,8 +1,10 @@
 <?
 
 /**
+* @file lib/mailer.php
+* Provides the Mailer class.
 * @class Mailer
-* Sends e-mails from Email objects over SMTP.
+* Sends e-mails (using Email objects) over SMTP.
 * @author Rob Kaper <http://robkaper.nl/>
 * @section license_sec License
 * Released under the terms of the MIT license.

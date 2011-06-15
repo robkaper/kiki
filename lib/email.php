@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/email.php
+* Provides the Email class.
 * @class Email
 * Constructs an e-mail message to be used by Mailer. Supports a HTML alternative part,
 * MIME attachments as well as RFC-3636 compliant signatures.
@@ -149,11 +151,6 @@ class Email
       return $this->headers;
 
     $this->verifyMimeHeaders();
-
-/// @deprecated
-//    $headers = array();
-//    foreach( $this->headerList as $name => $value )
-//      $headers[]= "$name: $value";
 
     return implode( "\n", $this->headerList). "\n";
   }

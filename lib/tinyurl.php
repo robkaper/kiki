@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/tinyurl.php
+* Provides the TinyUrl class.
 * @class TinyUrl
 * Creates, stores and resolves local tiny URLs
 * @todo Allow lookups of full URLs

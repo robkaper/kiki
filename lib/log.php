@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/log.php
+* Provides the Log class.
 * @class Log
 * Facilitates error and debug logging.
 * @author Rob Kaper <http://robkaper.nl/>

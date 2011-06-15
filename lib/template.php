@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/template.php
+* Provides the Template class.
 * @class Template
 * Resolves template file locations to be included.  Does NOT offer any language constructs (PHP is a fine templating language itself).
 * @todo Add variable assignments so that templaters do not need to rely on a

@@ -1,13 +1,16 @@
 <?
 
+/// @file .doxygen.php
+/// Provides generic documentation not directly related to the source code.
 /// @mainpage Kiki framework
 /// Kiki is a website framework.
 /// @author Rob Kaper <http://robkaper.nl/>
-/// @warning This documentation might not be up-to-date. Run
+/// @warning Online versions of this documentation might not be up-to-date. Run
 /// @code
 /// doxygen .doxygen.conf
 /// @endcode
-/// in Kiki's source tree to update.
+/// in Kiki's source tree to create an up-to-date version of the
+/// documentation specific to that version.
 ///
 /// @section download_sec Download
 /// Kiki is currently only available as Github repository:

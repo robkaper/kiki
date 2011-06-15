@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/misc.php
+* Provides the Misc class.
 * @class Misc
 * Utility class for common methods. Most do as of yet not fit into Kiki's object model yet.
 * @author Rob Kaper <http://robkaper.nl/>

@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/storage.php
+* Provides the Storage class.
 * @class Storage
 * Stores and retrieves local filesystem data offering database and URI references.
 * @author Rob Kaper <http://robkaper.nl/>

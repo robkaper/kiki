@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/album.php
+* Provides the Album class.
 * @class Album
 * Provides a picture album.
 * @author Rob Kaper <http://robkaper.nl/>

@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/config.php
+* Provides the Config class.
 * @class Config
 * Ensures availability of core configuration values with reasonable defaults.
 * Values can be overriden in config.php, although the intention id to move

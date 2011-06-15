@@ -1,6 +1,8 @@
 <?
 
 /**
+* @file lib/mailerqueue.php
+* Provides the MailerQueue class.
 * @class MailerQueue
 * Manages the e-mail queue.
 * @author Rob Kaper <http://robkaper.nl/>
