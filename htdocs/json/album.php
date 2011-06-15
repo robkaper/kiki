@@ -5,13 +5,12 @@
   $current = $_GET['current'];
   $action = $_GET['action'];
 
-  $qId = $db->escape( $current );
   if ( $action == "navleft" )
     $id = Album::findPrevious( $albumId, $current );
   else
     $id = Album::findNext( $albumId, $current );
 
-  $q = "select title, storage_id from pictures where id=$id";
+  $q = $db->buildQuery( "select title, storage_id from pictures where id=%d", $id );
   $o = $db->getSingle($q);
 
   $response = array();

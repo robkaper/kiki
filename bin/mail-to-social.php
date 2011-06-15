@@ -99,8 +99,8 @@
   $userId = 0;
   if ( $mailAuthToken )
   {
-    $qToken = $db->escape( $mailAuthToken );
-    $userId = $db->getSingleValue( "select id from users where mail_auth_token='$qToken'" );
+    $q = $db->buildQuery( "select id from users where mail_auth_token='%s'", $mailAuthToken );
+    $userId = $db->getSingleValue($q);
   }
 
   Log::debug( "mailAuthToken: $mailAuthToken, userId: $userId" );

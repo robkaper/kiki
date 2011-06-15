@@ -20,9 +20,8 @@ class TinyUrl
   public static function lookup( $id )
   {
     $db = $GLOBALS['db'];
-    $qId = $db->escape( $id );
-    $q = "select url from tinyurl where id='$qId'";
-    return $db->getSingleValue( "select url from tinyurl where id='$qId'" );
+    $q = $db->buildQuery( "select url from tinyurl where id='%s'", $id );
+    return $db->getSingleValue($q);
   }
 
   /**
@@ -43,8 +42,7 @@ class TinyUrl
   public static function insert( $url )
   {
     $db = $GLOBALS['db'];
-    $qUrl = $db->escape( $url );
-    $q = "insert into tinyurl(url) values('$qUrl')";
+    $q = $db->buildQuery( "insert into tinyurl(url) values('%s')", $url );
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
     return $id;
@@ -58,8 +56,7 @@ class TinyUrl
   public static function get( $url )
   {
     $db = $GLOBALS['db'];
-    $qUrl = $db->escape( $url );
-    $q = "select id from tinyurl where url='$qUrl'";
+    $q = $db->buildQuery( "select id from tinyurl where url='%s'", $url );
     $id = $db->getSingleValue($q);
     if ( !$id )
       $id = TinyUrl::insert($url);

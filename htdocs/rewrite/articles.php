@@ -8,8 +8,8 @@
     $title = Articles::title( $db, $user, $articleId );
   else
   {
-    $qBaseUri = '/'. $db->escape($section). '/';
-    $o = $db->getSingle( "select id,title from sections where base_uri='$qBaseUri'" );
+    $q = $db->buildQuery( "select id,title from sections where base_uri='/%s/'", $section );
+    $o = $db->getSingle($q);
     $title = $o ? $o->title : null;
   }
 

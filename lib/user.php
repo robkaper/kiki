@@ -42,8 +42,7 @@ class User
 
   public function load( $id )
   {
-    $qId = $this->db->escape( $id );
-    $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where id=$qId";
+    $q = $this->db->buildQuery( "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where id=%d", $id );
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
