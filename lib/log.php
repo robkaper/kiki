@@ -87,7 +87,7 @@ class Log
 	*/
 	public static function info( $msg )
 	{
-		echo $msg. PHP_EOL;
+		self::debug( $msg );
 	}
 }
 
