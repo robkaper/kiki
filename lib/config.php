@@ -35,6 +35,7 @@ class Config
 	public static $kikiPrefix = "/kiki";
 	public static $staticPrefix = "/static";
 
+	public static $template = 'default';
 	public static $headerLogo = null;
 	public static $customCss = null;
 

@@ -10,7 +10,6 @@
 *   developers need to be careful about input that can inject unwanted
 *   HTML/CSS leading to potential XSS vulnerabilities.  Perhaps htmlentities
 *   is even better, @see http://stackoverflow.com/questions/3623236/htmlspecialchars-vs-htmlentities-when-concerned-with-xss/3623297#3623297
-* @todo Support themes (/template/themename/etc)
 * @author Rob Kaper <http://robkaper.nl/>
 * @section license_sec License
 * Released under the terms of the MIT license.
@@ -25,13 +24,26 @@ class Template
   */
   static function file( $template )
   {
-    // Try site specific template first
-    $file = $GLOBALS['root']. '/templates/'. $template. '.tpl';
+    if ( Config::$template != 'default' )
+    {
+      // Try site-specific version of chosen template
+      $file = $GLOBALS['root']. '/templates/'. Config::$template. '/'. $template. '.tpl';
+      if ( file_exists($file) )
+        return $file;
+
+      // Try Kiki base version of chosen template
+      $file = $GLOBALS['root']. '/templates/'. Config::$template. '/'. $template. '.tpl';
+      if ( file_exists($file) )
+        return $file;
+    }
+
+    // Try site-specific version of default template
+    $file = $GLOBALS['root']. '/templates/default/'. $template. '.tpl';
     if ( file_exists($file) )
       return $file;
 
-    // Fallback to Kiki default template
-    return $GLOBALS['kiki']. '/templates/'. $template. '.tpl';
+    // Fallback to Kiki base version default template
+    return $GLOBALS['kiki']. '/templates/default/'. $template. '.tpl';
   }
 }
 
