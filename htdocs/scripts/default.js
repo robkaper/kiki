@@ -1,8 +1,21 @@
+/// @file default.js
+/// Core Javascript functionality for Kiki.
+/// @author Rob Kaper <http://robkaper.nl/>
+/// @section license_sec License
+/// Released under the terms of the MIT license.
+
+/// @note Required to queue button.hide() on focusout so .submit() can
+///   trigger first.
+var submitTimer = null;
+
+/// Updates each element with class .jsonupdate through JSON.
 function jsonUpdate()
 {
   var ids = new Array();
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
+    /// @todo Add a class to manage the opacity so it can be configured in
+    ///   the stylesheet.
     $(this).css( 'opacity', '0.7' );
     ids[ids.length] = $(this).attr('id');
   } );
@@ -18,15 +31,15 @@ function jsonUpdate()
   } );
 }
 
-// HACK: required to queue button.hide() on focusout so .submit() can trigger first
-var submitTimer = null;
-
+/// Expands a specific comment form.
+/// @param $id string full ID of the comment form outer div element (e.g. commentForm_1)
 function growCommentForm( id )
 {
   $('#' + id).removeClass( 'shrunk' );
   $('#' + id + ' img.social').show();
 }
 
+/// Shrinks all comment forms on a page.
 function shrinkCommentForms()
 {
   $('[id^=comments_] [id^=commentForm_]').addClass( 'shrunk' );
