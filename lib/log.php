@@ -28,22 +28,13 @@ class Log
 	private static $mtime;
 
 	/**
-	* Initialises the class.
-	* @see init()
-	*/
-	public function __construct()
+ 	* Initialises a unique identifier and starting timestamp.
+ 	*/
+	public static function init()
 	{
 		self::$uniqId = uniqid();
 		self::$ctime = microtime(true);
 	}
-
-	/**
- 	* This method is provided for convenience to allow execution of the
- 	* constructor when desired, prior to the first debug entry (which
- 	* isn't necesarily at the initialisation of the script).
- 	* @see __construct()
- 	*/
-	public static function init() {}
 
 	/**
 	* Logs a message (plus request URI) to Apache's error_log.
