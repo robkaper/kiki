@@ -98,7 +98,7 @@ class TwitterUser
   {
     if ( array_key_exists( 'twitter_anywhere_identity', $_COOKIE ) )
     {
-      list( $twUserId, $twSig ) = split( ":", $_COOKIE['twitter_anywhere_identity'] );
+      list( $twUserId, $twSig ) = explode( ":", $_COOKIE['twitter_anywhere_identity'] );
       $hexDigest = sha1($twUserId. Config::$twitterSecret);
       $valid = ($twSig == $hexDigest);
       return $valid ? $twUserId : 0;

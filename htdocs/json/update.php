@@ -25,12 +25,12 @@
     default:
       if ( preg_match( '/^commentForm_/', $id ) )
       {
-        list( $dummy, $objectId ) = split( '_', $id );
+        list( $dummy, $objectId ) = explode( '_', $id );
         $data = User::anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
       }
       else if ( preg_match( '/^navMenu-/', $id) )
       {
-        list( $dummy, $level ) = split( '-', $id );
+        list( $dummy, $level ) = explode( '-', $id );
         $data = Boilerplate::navMenu( $user, $level );
       }
       break;

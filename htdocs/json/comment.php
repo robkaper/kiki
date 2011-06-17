@@ -7,7 +7,7 @@
     
     if ( $_POST['json'] )
     {
-      list( $dummy, $objectId, $last ) = split( "_", $_POST['last'] );
+      list( $dummy, $objectId, $last ) = explode( "_", $_POST['last'] );
 
       $response = array();
       $response['formId'] = $_POST['formId'];

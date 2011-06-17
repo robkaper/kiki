@@ -163,8 +163,8 @@ class Articles
     $qSection = $db->escape( (int)$_POST['sectionId'] );
     $qUserId = $db->escape( $user->id );
 
-    list( $date, $time ) = split( " ", $_POST['ctime'] );
-    list( $day, $month, $year ) = split( "-", $date );
+    list( $date, $time ) = explode( " ", $_POST['ctime'] );
+    list( $day, $month, $year ) = explode( "-", $date );
 
     $ctime = "$year-$month-$day $time";
     $qCtime = $db->escape( $ctime );

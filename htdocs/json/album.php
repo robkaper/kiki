@@ -1,7 +1,7 @@
 <?
   include "../../lib/init.php";
 
-  list( $dummy, $albumId ) = split( "_", $_GET['album'] );
+  list( $dummy, $albumId ) = explode( "_", $_GET['album'] );
   $current = $_GET['current'];
   $action = $_GET['action'];
 

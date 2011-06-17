@@ -201,7 +201,7 @@ class FacebookUser
     if ( isset($fbRs['id']) )
     {
       $result->id = $fbRs['id'];
-      list( $uid, $postId ) = split( "_", $fbRs['id']);
+      list( $uid, $postId ) = explode( "_", $fbRs['id']);
       $result->url = "http://www.facebook.com/$uid/posts/$postId";
     }
     else
