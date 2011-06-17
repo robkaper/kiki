@@ -90,7 +90,7 @@ class Config
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
 
-		self::$headerLogo = self::$kikiPrefix. "/img/kiki-logo-50.png";
+		self::$headerLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 
 		self::$iconPrefix = self::$kikiPrefix. "/img/iconic/". Config::$iconSetColor;
         
