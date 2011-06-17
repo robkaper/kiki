@@ -84,10 +84,6 @@
   // Get structure
   $mp = mailparse_msg_parse_file( $tmpFile );
   $structure = mailparse_msg_get_structure($mp);
-  // Log::debug( "structure: ". print_r( $structure, true ) );
-
-  // Delete tmp file
-  unlink( $tmpFile );
 
   // Retrieve security code. Doesn't consider invalid e-mail adresses, the e-mail was delivered after all.
   list( $localPart, $domain ) = explode( "@", $recipient );
@@ -125,16 +121,14 @@
 
     $section = mailparse_msg_get_part($mp, $structurePart);
     $info = mailparse_msg_get_part_data($section);
-    // Log::debug( "info: ". print_r( $info, true ) );
 
     if ( !in_array( $info['content-type'], array('multipart/mixed', 'multipart/alternative') ) )
     {
       // Get contents
       $part = mailparse_msg_get_part( $mp, $structurePart );
-      ob_start();
-      mailparse_msg_extract_part_file( $part, $tmpFile );
-      $contents = ob_get_contents();
-      ob_end_clean();
+
+      // Use NULL as callback to return as string and not to STDOUT.
+      $contents = mailparse_msg_extract_part_file( $part, $tmpFile, NULL );
 
       if ( isset($info['disposition-filename']) )
       {
@@ -151,12 +145,15 @@
     }
   }
 
+  // Delete tmp file
+  unlink( $tmpFile );
+
   // Validate picture attachments
   $pictureAttachments=array();
   foreach( $attachments as $storageId )
   {
     $finfo = @getimagesize( Storage::localFile($storageId) );
-    if ( empty($finfo) && in_array( $pictureMimeTypes, $file_info['mime'] ) )
+    if ( !empty($finfo) )
       $pictureAttachments[] = $storageId;
   }
 
