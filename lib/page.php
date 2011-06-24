@@ -32,6 +32,10 @@ class Page
   */
   public $tagLine;
 
+  /**
+  * @var int HTTP status code
+  */
+  private $httpStatus = 200;
 
   /**
   * Initialises the page.
@@ -48,7 +52,8 @@ class Page
     $this->tagLine = $tagLine;
   }
 
-  /** Appends a stylesheet.
+  /** 
+  * Appends a stylesheet.
   * @param $url [string] URL of the stylesheet
   */
   public function addStylesheet( $url )
@@ -57,7 +62,51 @@ class Page
   }
 
   /**
-  * Generates the full HTML of the page.
+  * Sets HTTP status code.
+  * @param int HTTP status code
+  */
+  public function setHttpStatus( $httpStatus )
+  {
+    $this->httpStatus = $httpStatus;
+  }
+
+  /**
+  * Sends the raw HTTP headers.
+  * @todo Support all HTTP/1.1 codes from RFC2616 when sending the status
+  *   code.  Currently only 200, 301, 302, 404 and 500 are supported. 
+  *   Defaults to 200, but setting any unrecognised code in setHttpStatus()
+  *   results in 500.
+  */
+  public function httpHeaders()
+  {
+    switch( $this->httpStatus )
+    {
+      case 200:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 200 OK', 200 );
+        header( 'Content-Type: text/html; charset=utf-8' );
+        break;
+      case 301:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 301 Moved Permanently', 301 );
+        break;
+      case 302:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 302 Found', 302 );
+        break;
+      case 303:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 303 See Other', 303 );
+        break;
+      case 404:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
+        header( 'Content-Type: text/html; charset=utf-8' );
+        break;
+      case 500:
+      default:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 500 Internal Server Error', 500 );
+        break;
+    }
+  }
+
+  /**
+  * Outputs the full HTML of the page. (Plus HTTP headers.)
   */
   public function html()
   {
@@ -71,7 +120,7 @@ class Page
       $title .= " - ";
     $title .= Config::$siteName;
 
-    header( 'Content-Type: text/html; charset=utf-8' );
+    $this->httpHeaders();
     include Template::file('page/html');
   }
 
