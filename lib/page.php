@@ -52,6 +52,14 @@ class Page
     $this->tagLine = $tagLine;
   }
 
+  /**
+  * Sets the page title.
+  */
+  public function setTitle( $title )
+  {
+    $this->title = $title;
+  }
+
   /** 
   * Appends a stylesheet.
   * @param $url [string] URL of the stylesheet
@@ -63,7 +71,7 @@ class Page
 
   /**
   * Sets HTTP status code.
-  * @param int HTTP status code
+  * @param $httpStatus [int] HTTP status code
   */
   public function setHttpStatus( $httpStatus )
   {
