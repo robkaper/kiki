@@ -1,4 +1,14 @@
 <?
+
+/**
+* @file htdocs/add-attachment.php
+* Stores a Form file upload and calls addAttachment in parent window (Ajax
+* uploads use iframes) which can then handle it.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   include_once "../lib/init.php";
 
   $tmpFile = $_FILES['attachment']['tmp_name'];

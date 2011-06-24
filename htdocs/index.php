@@ -1,4 +1,14 @@
 <?
+
+/**
+* @file htdocs/index.php
+* Kiki status page. Checks required modules and extensions and also the
+* database version (installing/upgrading when possible and necessary).
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   include_once "../lib/init.php";
 
   $page = new Page( "Kiki Status" );
