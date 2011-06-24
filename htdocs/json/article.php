@@ -1,4 +1,12 @@
 <?
+
+/**
+* @file htdocs/json/article.php
+* Handles Ajax saves of Article forms.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
   include_once "../../lib/init.php";
 
   if ($_POST)

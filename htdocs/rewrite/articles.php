@@ -1,4 +1,17 @@
 <?
+
+/**
+* @file htdocs/rewrite/articles.php
+* Controller for the Article system, assumes mod_rewrite rules pointing
+* baseURI here and setting section and articleId already.
+* @todo Move this into a proper controller system, where the main controller
+* maps baseURI to the local controller, which handles the remainder of the
+* URI.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   include_once "../../lib/init.php";
 
   $section = $_SERVER['section'];

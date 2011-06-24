@@ -1,4 +1,14 @@
 <?
+
+/**
+* @file htdocs/json/update.php
+* Handles updateable page snippets requested by jsonUpdate() from htdocs/scripts/default.js.
+* @todo This is quite a mess (mostly because Boilerplate handling is awkward).
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   include_once "../../lib/init.php";
 
   $response = array();

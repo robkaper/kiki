@@ -1,4 +1,13 @@
 <?
+
+/**
+* @file htdocs/json/album.php
+* Handles Ajax updates for album views.
+* @author Rob Kaper <http://robkaper.nl/>
+* @section license_sec License
+* Released under the terms of the MIT license.
+*/
+
   include "../../lib/init.php";
 
   list( $dummy, $albumId ) = explode( "_", $_GET['album'] );
