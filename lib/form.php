@@ -84,7 +84,7 @@ class Form
   {
     $checked = $checked ? " checked" : "";
     $content = "<p><label>${label}</label>\n";
-    $content .= "<input type=\"checkbox\" name=\"${id}\" ${checked}\" /><span>${aside}</span></p>\n";
+    $content .= "<input type=\"checkbox\" name=\"${id}\" ${checked} /><span>${aside}</span></p>\n";
     return $content;
   }
 
