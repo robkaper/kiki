@@ -27,7 +27,6 @@ class FacebookUser
 
   public function reset()
   {
-
     $this->id = 0;
     $this->accessToken = "";
     $this->name = "";
@@ -178,7 +177,10 @@ class FacebookUser
       'name' => $name,
       'caption' => $caption,
       'description' => $description,
-      'picture' => $picture
+      'picture' => $picture,
+      'privacy' => json_encode( array('value' => 'ALL_FRIENDS') )
+
+      // @todo allow choice of EVERYONE, CUSTOM, ALL_FRIENDS, NETWORKS_FRIENDS, FRIENDS_OF_FRIENDS, SELF.
     );
 
     Log::debug( "FacebookUser->post: ". print_r( $attachment, true ) );
@@ -243,7 +245,7 @@ class FacebookUser
 
   public function hasPerm( $perm )
   {
-    if ( !$this->fb )
+    if ( !$this->fb || !$this->authenticated )
       return false;
 
     return $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
