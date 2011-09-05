@@ -76,8 +76,6 @@ class Auth
       if ( time() + 86400 > $expires )
         setCookie($id);
 
-      // @todo remove return 0, it's here for debugging login/registration
-      return 0;
       return $id;
     }
     
