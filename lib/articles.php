@@ -72,7 +72,7 @@ class Articles
     return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
-  public static function showMulti( &$db, &$user, $sectionId, $maxLength=750 )
+  public static function showMulti( &$db, &$user, $sectionId, $maxLength=1, $lengthInParagraphs=true )
   {
     $qUserId = $db->escape( $user->id );
     $qSection = $db->escape( $sectionId );
@@ -80,7 +80,7 @@ class Articles
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
-        echo Articles::showArticle( $user, $o, false, $maxLength );
+        echo Articles::showArticle( $user, $o, false, $maxLength, $lengthInParagraphs );
   }
 
   public static function url( &$db, $sectionId, $cname )
@@ -92,7 +92,7 @@ class Articles
     return $myUrl;
   }
 
-  public static function showArticle( &$user, &$o, $json = false, $maxLength=0 )
+  public static function showArticle( &$user, &$o, $json = false, $maxLength=0, $lengthInParagraphs=false )
   {
     $content = "";
 
@@ -119,7 +119,7 @@ class Articles
     if ( $maxLength )
     {
       $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
-      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
+      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
     }
     else
       $content .= "<span class=\"body\">$body</span>";

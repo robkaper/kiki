@@ -41,7 +41,7 @@
     }
   }
   else
-    echo Articles::showMulti( $db, $user, $o->id );
+    echo Articles::showMulti( $db, $user, $o->id, 2 );
 
   $page->footer();
 ?>

@@ -166,10 +166,16 @@ class Misc
   *   but deprecate in article overviews and write teaster/cutoff
   *   functionality there
   */
-  public static function textSummary( $str, $maxLength = 250 )
+  public static function textSummary( $str, $maxLength = 250, $lengthInParagraphs=false )
   {
     $str = Misc::textStrip( $str );
-    if ( strlen($str) > $maxLength )
+    if ( $lengthInParagraphs )
+    {
+      $paragraphs = explode( "\n\n", $str );
+      $keep = array_chunk( $paragraphs, $maxLength );
+      $str = join( "\n\n", array_values($keep[0]) );
+    }
+    else if ( strlen($str) > $maxLength )
     {
       $postfix = " ...";
       $maxLength -= strlen($postfix);
