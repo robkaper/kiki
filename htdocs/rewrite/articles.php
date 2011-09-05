@@ -31,7 +31,15 @@
   $page->header();
 
   if ( $articleId )
-    echo Articles::showSingle( $db, $user, $articleId );
+  {
+    if ( $title )
+      echo Articles::showSingle( $db, $user, $articleId );
+    else
+    {
+      include $GLOBALS['kiki']. "/htdocs/404.php";
+      exit();
+    }
+  }
   else
     echo Articles::showMulti( $db, $user, $o->id );
 
