@@ -11,12 +11,14 @@
 <?
   if ( Config::$facebookApp )
   {
-    include Template::file('facebook/connect');
+    // @todo consider re-enabling, although we prefer explicit logins
+    // include Template::file('facebook/connect');
   }
 
   if ( Config::$twitterApp && Config::$twitterAnywhere )
   {
-    include Template::file('twitter/anywhere');
+    // @todo consider re-enabling, although we prefer explicit logins
+    // include Template::file('twitter/anywhere');
   }
 
   include Template::file('page/body/footer');
