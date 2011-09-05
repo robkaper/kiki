@@ -62,7 +62,13 @@ class Config
 	public static $singleUser = 0;
 	public static $devUsers = array();
 
-	const dbVersionRequired = "0.1.1";
+	// @warning Check these in setup, they *must* be set.
+	public static $passwordHashPepper =  null;
+	public static $passwordHashIterations = 0;
+	public static $authCookiePepper = null;
+	public static $authCookieName = 'kikiAuth';
+
+	const dbVersionRequired = "0.1.3";
 
 	/**
 	* Initialises configuration values. Loads the defaults first and
