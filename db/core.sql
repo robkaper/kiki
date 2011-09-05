@@ -52,12 +52,15 @@ create table users (
   primary key(id),
   ctime datetime not null,
   mtime datetime not null,
+  name varchar(255) not null,
+  email varchar(255) not null,
   auth_token varchar(40) not null,
   mail_auth_token varchar(40) not null,
   facebook_user_id bigint unsigned default NULL,
   twitter_user_id bigint unsigned default NULL,
-  unique key( facebook_user_id ),
-  unique key( twitter_user_id )
+  unique key(email),
+  unique key(facebook_user_id),
+  unique key(twitter_user_id)
 );
 
 drop table if exists comments;
