@@ -9,6 +9,9 @@ class User
   public $id, $ctime, $mtime;
   private $authToken;
   public $mailAuthToken;
+
+  public $linkedAccounts;
+
   public $fbUser, $twUser;
 
   public function __construct( $id = null )
@@ -49,25 +52,53 @@ class User
 
     $this->id = $o->id;
     $this->mailAuthToken = $o->mail_auth_token;
+
     $this->fbUser->load( $o->facebook_user_id );
     $this->twUser->load( $o->twitter_user_id );
   }
 
-  // FIXME: create local sign-in and make it leading
-  public function identify()
-  {
-    $this->fbUser->identify();
-    $this->twUser->identify();
-  }
-
   public function authenticate()
   {
-    $this->fbUser->authenticate();
-    $this->twUser->authenticate();
+    // Check Kiki's own cookie first, it's more authoritive than third parties.
+    if ( $userId = Auth::validateCookie() )
+    {
+      Log::debug( "User::authenticate valid cookie for $userId, user authenticated" );
+      $this->load($userId);
+      // @todo Update cookie to prevent it from expiring for regular users.
+
+      // @warning check facebook permissions
+      if ( $this->fbUser->id )
+      {
+        Log::debug( "authenticating facebook user..." );
+        $this->fbUser->authenticate();
+      }
+      if ( $this->twUser->id )
+      {
+        Log::debug( "authenticating twitter user..." );
+        $this->twUser->authenticate();
+      }
+
+      return;
+    }
+    else
+      Log::debug( "User::authenticate no (valid) cookie" );
+
+    Log::debug( "checking for facebook credentials..." );
+    if ( $this->fbUser->identify() )
+      $this->fbUser->authenticate();
+
+    Log::debug( "checking for twitter credentials..." );
+    if ( $this->twUser->identify() )
+      $this->twUser->authenticate();
+      
+    // Start third-party authentication.
+    // $this->fbUser->authenticate();
+    // $this->twUser->authenticate();
 
     $qFbUserId = $this->db->escape( $this->fbUser->id );
     $qTwUserId = $this->db->escape( $this->twUser->id );
     $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
+    Log::debug( $q );
     $rs = $this->db->query($q);
     
     if ( $rs && $rows = $this->db->numrows($rs) )
@@ -85,20 +116,36 @@ class User
         $this->id = $o->id;
         $this->mailAuthToken = $o->mail_auth_token;
 
+        Log::debug( "user $o->id authenticated by third party" );
+        Auth::setCookie($o->id);
+
         if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
         {
           $q = "update users set mtime=now(), facebook_user_id=$qFbUserId, twitter_user_id=$qTwUserId where id = $o->id";
           $rs = $this->db->query($q);
+          Log::debug( "updating 3rd party links $q" );
         }
+        else
+          Log::debug( "no need to update" );
       }
     }
     else if ( $this->fbUser->id || $this->twUser->id )
     {
+      // User is created based on third-party login, authtoken is therefore
+      // a dummy because user has not set a password yet.
+      $qAuthToken = Auth::hashPassword( uniqid() );
+
       $qFbUserId = $this->fbUser->id ? $this->db->escape( $this->fbUser->id ) : 'NULL';
       $qTwUserId = $this->twUser->id ? $this->db->escape( $this->twUser->id ) : 'NULL';
-      $q = "insert into users(ctime, mtime, facebook_user_id, twitter_user_id) values (now(), now(), $qFbUserId, $qTwUserId)";
+      $q = "insert into users(ctime, mtime, auth_token, facebook_user_id, twitter_user_id) values (now(), now(), $qAuthToken, $qFbUserId, $qTwUserId)";
       $rs = $this->db->query($q);
+
+      $userId = $this->db->lastInsertId($rs);
+      Log::debug( "user $userId created by third party" );
+      Auth::setCookie($userId);
     }
+    else
+      Log::debug( "no user found for third party query" );
   }
 
   // Returns type, name and picture URL

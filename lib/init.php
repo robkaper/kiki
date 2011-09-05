@@ -60,8 +60,10 @@
   if ( Config::$mailerQueue )
     MailerQueue::init();
 
-  Config::$singleUser ? $user->load(Config::$singleUser): $user->identify();
-  $user->authenticate();
+  if ( Config::$singleUser )
+    $user->load(Config::$singleUser);
+  else
+    $user->authenticate();
 
   // Convenient, but necessary?
   $fbUser = $user->fbUser;
@@ -73,11 +75,12 @@
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
   if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
   {
+    $userTxt = ", user: $user->id";
     $fbUserTxt = $fbUser ? ", fbUser($fbUser->authenticated): $fbUser->id ($fbUser->name)" : "";
     $twUserTxt = $twUser ? ", twUser($twUser->authenticated): $twUser->id ($twUser->name)" : "";
 
     $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
-    $log = sprintf( "%-4s: %s%s%s", $reqMethod, $reqUri, $fbUserTxt, $twUserTxt );
+    $log = sprintf( "%-4s: %s%s%s%s", $reqMethod, $reqUri, $userTxt, $fbUserTxt, $twUserTxt );
     Log::debug( $log );
   }
 ?>

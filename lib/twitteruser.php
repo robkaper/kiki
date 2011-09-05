@@ -69,6 +69,8 @@ class TwitterUser
 
   public function authenticate()
   {
+    $this->identify();
+
     if ( !$this->id )
         return;
 
