@@ -72,7 +72,7 @@ class Articles
     return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
-  public static function showMulti( &$db, &$user, $sectionId )
+  public static function showMulti( &$db, &$user, $sectionId, $maxLength=750 )
   {
     $qUserId = $db->escape( $user->id );
     $qSection = $db->escape( $sectionId );
@@ -80,7 +80,7 @@ class Articles
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
-        echo Articles::showArticle( $user, $o, false, 750 );
+        echo Articles::showArticle( $user, $o, false, $maxLength );
   }
 
   public static function url( &$db, $sectionId, $cname )
