@@ -38,8 +38,6 @@ class Articles
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
 
-    // $content .= Form::attachFile( "Image", "body" );
-          
     return $content;
   }
 
@@ -72,6 +70,13 @@ class Articles
     return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
+  public static function sectionTitle( &$db, &$user, $section )
+  {
+    $q = $db->buildQuery( "select id,title from sections where base_uri='/%s/'", $section );
+    $o = $db->getSingle($q);
+    return $o ? $o->title : null;
+  }
+        
   public static function showMulti( &$db, &$user, $sectionId, $maxLength=1, $lengthInParagraphs=true )
   {
     $qUserId = $db->escape( $user->id );
