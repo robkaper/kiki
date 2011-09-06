@@ -494,6 +494,14 @@ body > header {
 	margin: 0 auto;
 }
 
+#title span.title {
+	font-size: 1.25em;
+}
+
+#title a {
+	text-decoration: none;
+}
+
 #title img {
 	margin-right: 25px;
 }
