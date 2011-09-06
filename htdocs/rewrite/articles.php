@@ -17,14 +17,11 @@
   $section = $_SERVER['section'];
   $articleId = $_SERVER['articleId'];
 
+  $sectionTitle = Articles::sectionTitle( $db, $user, $section );
   if ( $articleId )
     $title = Articles::title( $db, $user, $articleId );
   else
-  {
-    $q = $db->buildQuery( "select id,title from sections where base_uri='/%s/'", $section );
-    $o = $db->getSingle($q);
-    $title = $o ? $o->title : null;
-  }
+    $title = $sectionTitle;
 
   $page = new Page( $title );
   $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
