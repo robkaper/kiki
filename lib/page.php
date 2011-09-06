@@ -127,6 +127,8 @@ class Page
     if ( $title )
       $title .= " - ";
     $title .= Config::$siteName;
+    if ( $this->tagLine )
+      $title .= " - $this->tagLine";
 
     $this->httpHeaders();
     include Template::file('page/html');
