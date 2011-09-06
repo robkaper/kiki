@@ -139,13 +139,13 @@ $( function() {
   }
 
   // TODO: allow to be used inside a form instead of prior/afterwards
-  public static function attachFile( $label=null, $target=null )
+  public static function ajaxFileUpload( $label=null, $target=null )
   {
-    $content = Form::open( "attachFile", Config::$kikiPrefix. "/add-attachment.php", 'POST', null, "multipart/form-data", "attachTarget" );
+    $content = Form::open( "ajaxFileUpload", Config::$kikiPrefix. "/file-upload.php", 'POST', null, "multipart/form-data", "ajaxFileUploadTarget" );
     $content .= Form::hidden( "target", $target );
     $content .= Form::file( "attachment", $label );
     $content .= Form::button( "submitAttachment", "submit", "Attach file" );
-    $content .= "<iframe id=\"attachTarget\" name=\"attachTarget\" src=\"\"></iframe>\n";
+    $content .= "<iframe id=\"ajaxFileUploadTarget\" name=\"ajaxFileUploadTarget\" src=\"\"></iframe>\n";
     $content .= Form::close();
     return $content;
   }
