@@ -18,6 +18,11 @@ class Page
   private $title;
 
   /**
+  * @var string description of the page
+  */
+  private $description;
+
+  /**
   * @var array available stylesheets
   */
   private $stylesheets;
@@ -41,12 +46,14 @@ class Page
   * Initialises the page.
   * @param $title [string] (optional) nearly required, but probably best left empty for the index page of a site
   * @param $tagLine [string] (optional) tagline (subtitle) of the page
+  * @param $decription [string] (optional) description of the page
   * @todo Perhaps title should not be optional. It could be omited in a
   *   special template for the main page.
   */
-  public function __construct( $title = null, $tagLine = null )
+  public function __construct( $title = null, $tagLine = null, $description = null )
   {
     $this->title = $title;
+    $this->description = $description;
     $this->stylesheets = array();
     $this->content = null;
     $this->tagLine = $tagLine;
@@ -58,6 +65,14 @@ class Page
   public function setTitle( $title )
   {
     $this->title = $title;
+  }
+
+  /**
+  * Sets the page description.
+  */
+  public function setDescription( $description )
+  {
+    $this->description = $description;
   }
 
   /** 
