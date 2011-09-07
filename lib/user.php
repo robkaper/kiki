@@ -93,7 +93,7 @@ class User
     // $this->fbUser->authenticate();
     // $this->twUser->authenticate();
 
-    if ( !($this->fbUser->id || $this->ftwUser->id) )
+    if ( !($this->fbUser->id || $this->twUser->id) )
     {
       Log::debug( "no identification/authentication of third-party users" );
       return;
