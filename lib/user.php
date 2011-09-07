@@ -83,11 +83,9 @@ class User
     else
       Log::debug( "User::authenticate no (valid) cookie" );
 
-    Log::debug( "checking for facebook credentials..." );
     if ( $this->fbUser->identify() )
       $this->fbUser->authenticate();
 
-    Log::debug( "checking for twitter credentials..." );
     if ( $this->twUser->identify() )
       $this->twUser->authenticate();
       
@@ -95,18 +93,22 @@ class User
     // $this->fbUser->authenticate();
     // $this->twUser->authenticate();
 
+    if ( !($this->fbUser->id || $this->ftwUser->id) )
+    {
+      Log::debug( "no identification/authentication of third-party users" );
+      return;
+    }
+
     $qFbUserId = $this->db->escape( $this->fbUser->id );
     $qTwUserId = $this->db->escape( $this->twUser->id );
     $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
-    Log::debug( $q );
     $rs = $this->db->query($q);
-    
     if ( $rs && $rows = $this->db->numrows($rs) )
     {
       if ( $rows!=1 )
       {
         // FIXME: avoid this at all costs, or handle gracefully
-        Log::debug( "User::authenticate -- more than one result in db, fbUserId=$qFbUserId, twUserId=$qTwUserId" );
+        Log::debug( "User::authenticate -- more than one result in db for q [$q], fbUserId=$qFbUserId, twUserId=$qTwUserId" );
         while( $o = $this->db->fetchObject($rs) )
           Log::debug( "o: ". print_r( $o, true ) );
       }
@@ -116,14 +118,14 @@ class User
         $this->id = $o->id;
         $this->mailAuthToken = $o->mail_auth_token;
 
-        Log::debug( "user $o->id authenticated by third party" );
+        Log::debug( "user $o->id authenticated by third party by q [$q]" );
         Auth::setCookie($o->id);
 
         if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
         {
           $q = "update users set mtime=now(), facebook_user_id=$qFbUserId, twitter_user_id=$qTwUserId where id = $o->id";
           $rs = $this->db->query($q);
-          Log::debug( "updating 3rd party links $q" );
+          Log::debug( "updated 3rd party connections [$q]" );
         }
         else
           Log::debug( "no need to update" );
@@ -141,11 +143,11 @@ class User
       $rs = $this->db->query($q);
 
       $userId = $this->db->lastInsertId($rs);
-      Log::debug( "user $userId created by third party" );
+      Log::debug( "user $userId created by third party, fbUserId=$qFbUserId, twUserId=$qTwUserId" );
       Auth::setCookie($userId);
     }
     else
-      Log::debug( "no user found for third party query" );
+      Log::debug( "no user found for third party query [$q]" );
   }
 
   // Returns type, name and picture URL
