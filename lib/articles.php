@@ -143,12 +143,12 @@ class Articles
     $content .= "<ul>\n";
     
     if ( $o->facebook_url )
-      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_16.png\" alt=\"\" /></a> <a href=\"$o->facebook_url\">Bekijk op Facebook</a></li>\n";
+      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_16.png\" alt=\"[Facebook]\" /></a></li>\n";
     if ( $o->twitter_url )
-      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_16.png\" alt=\"\" /></a> <a href=\"$o->twitter_url\">Bekijk op Twitter</a></li>\n";
+      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/twitter_16.png\" alt=\"[Twitter]\" /></a></li>\n";
 
     // FIXME: doesn't degrade without js
-    if ( $user->id == $o->user_id )
+    if ( !$maxLength && $user->id == $o->user_id )
       $content .= "<li><a href=\"javascript:showArticleForm($o->id);\">Wijzigen</a></li>\n";
 
     // $content .= "<li><a href=\"javascript:showArticleComments($o->id);\">Reacties</a></li>\n";
