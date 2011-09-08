@@ -79,14 +79,14 @@
   // @todo make this nicer
   $articleUris = array();
   $q = $db->buildQuery( "select id,base_uri from sections" );
-  $rs = $db->query("select id,base_uri from sections");
+  $rs = $db->query($q);
   if ( $rs && $db->numrows($rs) )
     while( $o = $db->fetchObject($rs) )
       $articleUris[$o->base_uri] = $o->id;
 
   if ( count($articleUris) )
   {
-    $pattern = "#^(". join("|", array_keys($articleUris)). ")([^/\?]+)(.*)#";
+    $pattern = "#^(". join("|", array_keys($articleUris)). ")([^/\?]+)?(.*)#";
     $subject = $reqUri;
     $replace = "$1:$2";
 
@@ -118,10 +118,22 @@
 //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
 
   // Nothing found? 
+  // @fixme return this to a 404 when router debugging is finished
   $page = new Page();
-  $page->setTitle( "Kiki 404" );
-  $page->setHttpStatus(404);
+  $page->setHttpStatus(503);
+  $page->setTitle( "Plat voor onderhoud" );
+  $page->beginContent();
+?>
+<p>
+Ik ben even offline. Deal with it.</p>
+<?
+  $page->endContent();
   $page->html();
+
+  // @fixme rjkcust for debugging
+  $msg = $reqUri. "\n$debugQ\n$debugA\narticleUris: ". print_r( $articleUrls, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
+  mail( "rob@robkaper.nl", "Kiki 503/404: $reqUri", $msg );
+
   exit();
   
   /// @bug rjkcust, these routes should be generated or queried from the
@@ -129,6 +141,8 @@
   /// is just for testing.
 
   /// @todo re-use this testing code when purifying the above
+
+/*
   function testRoute( $url )
   {
     global $routes;
@@ -226,4 +240,6 @@
   }
 
   $page->html();
+*/
+
 ?>
