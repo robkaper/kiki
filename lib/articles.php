@@ -70,18 +70,9 @@ class Articles
     return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
-  public static function sectionId( &$db, $section )
+  public static function sectionTitle( &$db, &$user, $sectionId )
   {
-    $q = $db->buildQuery( "select id,title from sections where id=%d or base_uri='/%s/'", $section, $section );
-    Log::debug($q);
-    $o = $db->getSingle($q);
-    return $o ? $o->id : 0;
-  }
-
-  public static function sectionTitle( &$db, &$user, $section )
-  {
-    $q = $db->buildQuery( "select id,title from sections where id=%d or base_uri='/%s/'", $section, $section );
-    Log::debug($q);
+    $q = $db->buildQuery( "select id,title from sections where id=%d", $sectionId );
     $o = $db->getSingle($q);
     return $o ? $o->title : null;
   }
@@ -99,8 +90,7 @@ class Articles
 
   public static function url( &$db, $sectionId, $cname )
   {
-    $qSection = $db->escape( $sectionId );
-    $sectionBaseUri = $db->getSingleValue( "select base_uri from sections where id=$qSection" );
+    $sectionBaseUri = Router::getBaseUri( 'articles', $sectionId );
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
     $myUrl = $urlPrefix. $sectionBaseUri. $cname;
     return $myUrl;

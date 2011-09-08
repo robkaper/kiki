@@ -71,46 +71,24 @@
     Controller::missingThumbnail($matches) && exit();
   }
 
-  // Album controller
-  // @todo give albums base_uris just like blogs and move URIs outside of kiki base
-  // @todo unify base_uris into single controller table
-
-  // Article base URIs
-  // @todo make this nicer
-  $articleUris = array();
-  $q = $db->buildQuery( "select id,base_uri from sections" );
-  $rs = $db->query($q);
-  if ( $rs && $db->numrows($rs) )
-    while( $o = $db->fetchObject($rs) )
-      $articleUris[$o->base_uri] = $o->id;
-
-  if ( count($articleUris) )
+  // Check if URI contains a base handled by a dynamic controller
+  $handler = Router::findHandler($reqUri);
+  if ( $handler )
   {
-    $pattern = "#^(". join("|", array_keys($articleUris)). ")([^/\?]+)?(.*)#";
-    $subject = $reqUri;
-    $replace = "$1:$2";
-
-    if ( $result = preg_filter($pattern, $replace, $subject) )
+    // @todo replace with a nice factory
+    if ( $handler->type=='articles' )
     {
-      list($matchedUri, $remainder) = explode(":", $result);
-      if ( $matchedUri )
-      {
-        $sectionId = $articleUris[$matchedUri];
-        Log::debug( "Controller: BLOG section $sectionId, remainder $remainder" );
-        // @todo generate the content and settings but don't let the controller create the page..
-        Controller::articles( $sectionId, $remainder );
-        // @todo don't exit here, in case of 404
-        exit();
-      }
+      // @todo generate the content and settings but don't let the controller create the page..
+      Controller::articles( $handler->instanceId, $handler->remainder );
+      // @todo don't exit here, in case of 404
+       exit();
     }
   }
 
   // @todo /kiki/album/
   // @todo content pages + test
   // $routes["contact"] = array( "type" => "page", "id" => "contact.php" );
-  // @todo test physical pages
-  // @todo test directoryindices
-  // @todo test missing directoryindices (most notably /)
+  // @todo test missing directoryindices (most notably / when moving content to database)
   // @todo custom db redirects + test
 
 //RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]

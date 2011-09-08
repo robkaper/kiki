@@ -52,17 +52,15 @@ class Controller
     return true;
   }
 
-  public static function articles( $section, $articleId )
+  public static function articles( $sectionId, $articleId )
   {
     $db = $GLOBALS['db'];
     $user = $GLOBALS['user'];
 
-    $sectionId = Articles::sectionId( $db, $section );
-    $sectionTitle = Articles::sectionTitle( $db, $user, $sectionId );
     if ( $articleId )
       $title = Articles::title( $db, $user, $articleId );
     else
-      $title = $sectionTitle;
+      $title = Articles::sectionTitle( $db, $user, $sectionId );
 
     $page = new Page( $title );
     $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
