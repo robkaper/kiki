@@ -496,6 +496,7 @@ body > header {
 
 #title span.title {
 	font-size: 1.25em;
+	font-weight: bold;
 }
 
 #title a {
@@ -510,6 +511,7 @@ body > nav {
 	display: block;
 	margin: 0 auto;
 	background: #9c6;
+        font-size: 0.875em;
 }
 
 body > nav.second {
