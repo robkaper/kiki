@@ -26,6 +26,8 @@ class Router
 
   public static function getBaseUri( $type, $instanceId )
   {
+    $db = $GLOBALS['db'];
+
     $q = $db->buildQuery( "select base_uri from router_base_uris where type='%s' and instance_id=%d", $type, $instanceId );
     return $db->getSingleValue($q);
   }
