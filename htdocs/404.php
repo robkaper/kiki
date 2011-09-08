@@ -1,7 +1,9 @@
 <?
   include_once "../lib/init.php";
 
-  Controller::checkMissingThumbnail();
+  // @todo this entire file ought to be deprecated for router.php which can
+  // include 404 template as last resort while also handling all the
+  // redirects (database driven)
 
   // @todo remove rjkcust
   $redirectUrl = null;
