@@ -70,9 +70,18 @@ class Articles
     return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
   }
 
+  public static function sectionId( &$db, $section )
+  {
+    $q = $db->buildQuery( "select id,title from sections where id=%d or base_uri='/%s/'", $section, $section );
+    Log::debug($q);
+    $o = $db->getSingle($q);
+    return $o ? $o->id : 0;
+  }
+
   public static function sectionTitle( &$db, &$user, $section )
   {
-    $q = $db->buildQuery( "select id,title from sections where base_uri='/%s/'", $section );
+    $q = $db->buildQuery( "select id,title from sections where id=%d or base_uri='/%s/'", $section, $section );
+    Log::debug($q);
     $o = $db->getSingle($q);
     return $o ? $o->title : null;
   }
