@@ -18,6 +18,7 @@ class Config
 	public static $copyOwner = "Kiki website framework";
 	public static $copySince = null;
 	public static $address = null;
+	public static $language = "en";
 
 	public static $dbHost = "localhost";
 	public static $dbPort = 3306;
