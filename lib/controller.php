@@ -2,7 +2,9 @@
 
 /**
 * @class Controller
-* Controller class returning a content handler for URIs.
+* Controller class. Sort of.
+* @todo Make this a proper abstract to be reimplemented, plus a factory so
+* router can select the correct handler.
 * @author Rob Kaper <http://robkaper.nl/>
 * @section license_sec License
 * Released under the terms of the MIT license.
@@ -10,57 +12,83 @@
 
 class Controller
 {
-  private $routes;
-  
-  public function addRoute( $uri, $type, $id=0 )
+  public static function redirect( $url, $permanent = true )
   {
-    $routes["$uri"] = array( 'type' => $type, 'id' => $id );
+    Log::debug( "redirect($url)" );
+    if ( !$url )
+      return false;
+
+    header( "Location: $url", true, $permanent ? 301 : 302 );
+    return true;
   }
 
-  public function getRoutes()
+  public static function missingThumbnail( &$matches )
   {
-    return $routes;
-  }
+    list( $dummy, $id, $w, $h, $dummy, $crop ) = $matches;
 
-  public function getHandler( $uri )
-  {
-    $matches = preg_match_all( $uri, 
-
-  }
-
-  public static function checkMissingThumbnail()
-  {
-    if ( !preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?)(m?))?#', $_SERVER['REQUEST_URI'], $matches) )
-      return;
-
-    list( $dummy, $id, $w, $h, $dummy, $crop, $maintainAspectRatio ) = $matches;
     if ( !$fileName = Storage::localFile($id) )
-      return;
+      return false;
 
     if ( !file_exists($fileName) )
-      return;
+      return false;
 
-    $scaleFile = Storage::generateThumb( $fileName, $w, $h, $crop, $maintainAspectRatio );
+    $scaleFile = Storage::generateThumb( $fileName, $w, $h, $crop );
     if ( !file_exists($scaleFile) )
-      return;
+      return false;
 
-    switch( Storage::getExtension($scaleFile) )
+    $ext = Storage::getExtension($scaleFile);
+    switch( $ext )
     {
       case "gif":
-        header( "Content-type: image/gif" );
-        break;
       case "jpg":
-        header( "Content-type: image/jpeg" );
-        break;
       case "png":
-        header( "Content-type: image/png" );
+        header( "Content-type: ". Storage::getMimeType($ext) );
         break;
       default:
-        return;
+        return false;
     }
 
     echo file_get_contents($scaleFile);
-    exit();
+    return true;
+  }
+
+  public static function articles( $section, $articleId )
+  {
+    $db = $GLOBALS['db'];
+    $user = $GLOBALS['user'];
+
+    $sectionId = Articles::sectionId( $db, $section );
+    $sectionTitle = Articles::sectionTitle( $db, $user, $sectionId );
+    if ( $articleId )
+      $title = Articles::title( $db, $user, $articleId );
+    else
+      $title = $sectionTitle;
+
+    $page = new Page( $title );
+    $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
+    $page->header();
+
+    if ( $articleId )
+    {
+      if ( $title )
+      {
+        Log::debug("showSingle $articleId");
+        echo Articles::showSingle( $db, $user, $articleId );
+      }
+      else
+      {
+        Log::debug("article404");
+        // @todo allow setting custom 404 template
+        return;
+      }
+    }
+    else
+    {
+      Log::debug( "showMulti $sectionId" );
+      echo Articles::showMulti( $db, $user, $sectionId, 2 );
+    }
+
+    $page->footer();
   }
 
 }

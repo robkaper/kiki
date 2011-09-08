@@ -1,18 +1,23 @@
+# Enable mod_rewrite.
+# (required)
+# It is technically possible to abuse ErrorDocument 404 to get all requests
+# into router.php, however.
+# @todo Consider supporting said option, thus making mod_rewrite optional.
 RewriteEngine On
 
-# TinyURL support
-RewriteRule ^/[0-9a-zA-Z]{3}$ /www/git/kiki/htdocs/tinyurl-redirect.php [E=id:$1,L]
+# Kiki htdocs files.
+# (optional but recommended)
+# Kiki's router can take care of this, but bypassing PHP is advised for
+# performance.
+RewriteRule ^/kiki/(.*)?$ /www/git/kiki/htdocs/$1 [L]
 
-# Album rewrites
-RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]
-RewriteRule ^/kiki/album/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,L]
-RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
+# Kiki upload storage.
+# (optional but recommended)
+# It is good practice to separate writeable folders from the DOCUMENT_ROOT.
+# RewriteRule ^/storage/(.*)$ /www/mydomain/storage/$1 [L]
 
-# Blog/article base URI rewrite
-RewriteRule ^/(myblog)(/(.*))?$ /kiki/rewrite/articles.php [E=section:$1,E=articleId:$3,L]
-
-# Other Kiki htdocs files
-RewriteRule ^/kiki/(.*)$ /www/git/kiki/htdocs/$1
-
-# Public URL for storage directory
-# RewriteRule ^/storage/(.*)$ /www/mydomain/storage/$1
+# Send everything that is not a regular directory or file to router.php
+# (required)
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /www/git/kiki/htdocs/router.php [L,QSA]
