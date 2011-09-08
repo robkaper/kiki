@@ -74,7 +74,32 @@ class Storage
     list( $base, $ext ) = self::splitExtension($name);
     return $ext;
   }
-  
+
+  /**
+  * Returns a mimetype based on a filename's extension.
+  * @param $ext [string] extension
+  * return string mimetype
+  */
+  public static function getMimeType( $ext )
+  {
+    switch($ext)
+    {
+      case 'css':
+        return 'text/css';
+      case 'gif':
+        return 'image/gif';
+      case 'jpg':
+        return 'image/jpeg';
+      case 'js':
+        return 'application/javascript';
+      case 'png':
+        return 'image/png';
+      default:;
+    }
+
+    return null;
+  }
+    
   /**
   * Retrieves the raw data of a stored resource.
   * @param $id [int] database ID of the resource
@@ -124,7 +149,7 @@ class Storage
     return $id;    
   }
 
-  public static function generateThumb( $fileName, $w, $h, $crop=false, $maintainAspectRatio=true )
+  public static function generateThumb( $fileName, $w, $h, $crop=false )
   {
     list( $base, $ext ) = self::splitExtension($fileName);
     switch($ext)
@@ -148,52 +173,39 @@ class Storage
     $srcH = imagesy( $image );
     $srcX = $srcY = $dstX = $dstY = 0;
 
-    if ( $maintainAspectRatio )
+    list( $dstW, $dstH, $scaleRatio ) = self::calculateScaleSize( $srcW, $srcH, $w, $h, !$crop );
+
+    if ( $scaleRatio !=1 )
     {
       if ( $crop )
       {
-        // Maintaining aspect ratio with crop, returned dimensions are larger than actual image
-        list( $newW, $newH, $scaleRatio ) = self::calculateScaleSize( $srcW, $srcH, $w, $h, false );
-
-        // Therefore, we offset the original image so the thumbnail gets the content from the center
-        if ( $scaleRatio<1 )
+        // Returned image is larger than dimensions, therefore we need to crop the the original image.
+        if ( $dstW > $w )
         {
-          $srcY = ((1-$scaleRatio)*$srcH)/2;
-          $srcH -= $srcY;
+          $dstX = ($w-$dstW)/2;
         }
         else
         {
-          $srcX = (($scaleRatio-1)*$srcW)/2;
-          $srcW -= $srcX;
+          $dstY = ($h-$dstH)/2;
         }
       }
       else
       {
-        // Maintaining aspect ratio without crop, returned dimensions are smaller than actual image
-        list( $newW, $newH, $scaleRatio ) = self::calculateScaleSize( $srcW, $srcH, $w, $h );
-
-        // Therefore, we offset the destination so the content gets centered in the thumbnail
-        if ( $scaleRatio>1 )
-          $dstY = ($h-$newH)/2;
+        // Returned is smaller than dimensions, therefore we need to offset the target.
+        if ( $dstW < $w )
+          $dstX = ($w-$dstW)/2;
         else
-          $dstX = ($w-$newW)/2;
+          $dstY = ($h-$dstH)/2;
       }
-    }
-    else
-    {
-      // scale indiscriminately, black bars will occur
-      list( $newW, $newH ) = array( $w, $h );
     }
 
     Log::debug( "resampling $fileName: dstX: $dstX, dstY: $dstY, srcX: $srcY, srcY: $srcY, dstW: $dstW, dstH: $dstH, srcW: $srcW, srcH: $srcH" );
     $scaled = imagecreatetruecolor( $w, $h );
-    imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $newW, $newH, $srcW, $srcH );
+    imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
 
-    $c = $crop ? "c" : null;
-    $m = $maintainAspectRatio ? "m" : null;
-    $cmdot = ($c||$m) ? ".": null;
-    $scaledFile = "${base}.${w}x${h}.${c}${m}${cmdot}${ext}";
+    $c = $crop ? "c." : null;
+    $scaledFile = "${base}.${w}x${h}.${c}${ext}";
     Log::debug( "resampled file is $scaledFile" );
 
     if ( file_exists($scaledFile) )
@@ -218,28 +230,19 @@ class Storage
   }
 
   /**
-   * In case both newW and newH are given and the resulting ratios differ,
-   * the returned dimension is the smallest fitting.  Set $useMaxRatio to
-   * false to go out of bounds (to allow an image to be cropped later).
+   * Calculates the dimensions of a scaled image, maintaining aspect ration. 
+   * Returns the maximum size fitting within the given dimensions, or a
+   * larger one in case pan and scan is true.
    */
-  public static function calculateScaleSize( $w, $h, $newW=0, $newH=0, $useMaxRatio=true )
+  public static function calculateScaleSize( $w, $h, $newW, $newH, $panAndScan=false )
   {
     $wScale = $w / $newW;
     $hScale = $h / $newH;
 
-    if ( $newW && $newH )
-    {
-      if ( $useMaxRatio )
+    if ( $panAndScan )
         $ratio = max( $wScale, $hScale );
       else
         $ratio = min( $wScale, $hScale );
-    }
-    else if ( $newW )
-      $ratio = $wScale;
-    else if ( $newH )
-      $ratio = $hScale;
-    else
-      $ratio = 1;
 
     if ( $ratio != 0 )
     {
@@ -247,7 +250,7 @@ class Storage
       $h = $h / $ratio;
     }
 
-    return array( (int)$w, (int)$h, $wScale/$hScale );
+    return array( (int)$w, (int)$h, $ratio );
   }
 
 }
