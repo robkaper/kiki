@@ -121,6 +121,10 @@ class Page
         header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
         header( 'Content-Type: text/html; charset=utf-8' );
         break;
+      case 503:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 503 Service Unavailable', 503 );
+        header( 'Content-Type: text/html; charset=utf-8' );
+        break;
       case 500:
       default:
         header( $_SERVER['SERVER_PROTOCOL']. ' 500 Internal Server Error', 500 );
