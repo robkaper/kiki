@@ -25,6 +25,6 @@ var requestUri = '<?= $_SERVER['REQUEST_URI']; ?>';
 <script type="text/javascript" src="<?= Config::$kikiPrefix ?>/scripts/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="<?= Config::$kikiPrefix ?>/scripts/jquery.placeholder.js"></script>
 <script type="text/javascript" src="<?= Config::$kikiPrefix ?>/scripts/default.js"></script>
-<title><?= $title; ?></title>
+<title><?= strip_tags($title); ?></title>
 <? Google::analytics(); ?>
 </head>
