@@ -297,7 +297,7 @@ function onReady() {
     $(span).html( remaining );
   } );
 
-  $('#attachFile').live( 'submit', function() {
+  $('#ajaxFileUpload').live( 'submit', function() {
     $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     return true;
   } );
