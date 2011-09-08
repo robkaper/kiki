@@ -120,6 +120,7 @@ class Articles
     list( $type, $name, $pic ) = $uAuthor->socialData();
     $author = $name;
     $relTime = Misc::relativeTime($date);
+    $dateTime = date("c", strtotime($date));
 
     if ( !$json )
       $content .= "<article id=\"article_". $o->id. "\">\n";
@@ -127,7 +128,7 @@ class Articles
     $content .= "<header>\n";
     $content .= "<h2><span>$title</span></h2>\n";
     $content .= "<span class=\"author\">$author</span>\n";
-    $content .= "<time class=\"relTime\" datetime=\"$date\">$relTime geleden</time>\n";
+    $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
     $content .= "</header>\n";
 
     if ( $maxLength )
@@ -139,7 +140,8 @@ class Articles
       $content .= "<span class=\"body\">$body</span>";
 
     $content .= "<footer>\n";
-
+    $content .= "<ul>\n";
+    
     if ( $o->facebook_url )
       $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/facebook_16.png\" alt=\"\" /></a> <a href=\"$o->facebook_url\">Bekijk op Facebook</a></li>\n";
     if ( $o->twitter_url )
@@ -154,7 +156,8 @@ class Articles
     $content .= "</ul>\n";
     $content .= "</footer>\n";
 
-    $content .= Articles::form( $user, $o );
+    if ( !$maxLength )
+      $content .= Articles::form( $user, $o );
     // FIXME: page/filter comments in embedded view
     if  ( !$maxLength )
       $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
