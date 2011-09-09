@@ -42,6 +42,8 @@ class Page
   */
   private $httpStatus = 200;
 
+  private $bodyTemplate = 'page/body';
+
   /**
   * Initialises the page.
   * @param $title [string] (optional) nearly required, but probably best left empty for the index page of a site
@@ -153,6 +155,11 @@ class Page
     include Template::file('page/html');
   }
 
+  public function setBodyTemplate( $bodyTemplate )
+  {
+    $this->bodyTemplate = $bodyTemplate;
+  }
+
   /**
   * Allows setting $content with a custom script. End content with endContent().
   * @see header()
@@ -171,6 +178,14 @@ class Page
   {
     $this->content = ob_get_contents();
     ob_end_clean();
+  }
+
+  /**
+  * Allows direct manipulation of content.
+  */
+  public function setContent($content)
+  {
+    $this->content = content;
   }
 
   /**
