@@ -53,8 +53,18 @@ class FacebookUser
     else
     {
       $cookie = $this->cookie();
+      Log::debug( "fbCookie: ". print_r( $cookie, true ) );
       if ( $cookie )
         $this->id = $cookie['uid'];
+
+      if ( $this->fb )
+      {
+        $fbSession = $this->fb->getSession();
+        Log::debug( "fbSession: ". print_r( $fbSession, true ) );
+        if ( isset($fbSession['uid']) )
+          $this->id = $fbSession['uid'];
+      }
+
     }
 
     if ( $this->id )
@@ -70,6 +80,8 @@ class FacebookUser
 
     if ( !$this->fb )
       return;
+
+    Log::debug( "FacebookUser::authenticate" );
 
     $fbSession = $this->fb->getSession();
     if ( !isset($fbSession['uid']) && $this->accessToken )
@@ -250,7 +262,6 @@ class FacebookUser
 
     return $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
   }
-
 }
 
 ?>
