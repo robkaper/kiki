@@ -10,12 +10,14 @@
 
 class Router
 {
-  public static function getBaseURIs()
+  public static function getBaseURIs( $type = null, $sort = false )
   {
     $db = $GLOBALS['db'];
 
     $baseUris = array();
-    $q = "select id, base_uri, type, instance_id from router_base_uris";
+    $qType = $type ? $db->buildQuery("where type='%s'", $type) : null;
+    $qSort = $sort ? "order by base_uri asc" : null;
+    $q = "select id, base_uri, type, instance_id from router_base_uris $qType $qSort";
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
       while( $o = $db->fetchObject($rs) )
