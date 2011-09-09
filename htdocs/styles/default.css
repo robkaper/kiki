@@ -22,10 +22,6 @@ tt {
 	max-width: 850px;
 }
 
-#cw.noaside {
-	max-width: 950px;
-}
-
 #content {
 	font-size: 0.875em; /* 0.875*16=14 */
         max-width: 800px;
@@ -33,8 +29,8 @@ tt {
 }
 
 #cw.noaside #content {
-	max-width: 900px;
 	margin: 0.5em 0 0.5em 0;
+	-moz-margin: 0.5em 0 0.5em 0;
 }
 
 aside {
