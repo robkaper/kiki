@@ -117,16 +117,11 @@
   // Nothing found? 
   $page = new Page();
   $page->setHttpStatus(404);
-  $page->setTitle( "404! Vierhonderdvier! Four hundred and four! Cuatrocientoscuatro! N&eacute;gysz&aacute;mn&eacute;vn&eacute; Nelj&auml;sataanelj&auml;" );
-  $page->beginContent();
-?>
-<p>
-Tja, dat is pech hebben. Deze pagina bestaat dus (niet) meer.</p>
-<?
-  $page->endContent();
+  $page->setTitle( "Kiki says: <q>mea culpa</q>" );
+  $page->setBodyTemplate( 'page/body-404' );
   $page->html();
 
   // @fixme rjkcust for debugging
-  $msg = $reqUri. "\nhandler: ". print_r( $handler, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
-  mail( "rob@robkaper.nl", "Kiki 503/404: $reqUri", $msg );
+  // $msg = $reqUri. "\nhandler: ". print_r( $handler, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
+  // mail( "rob@robkaper.nl", "Kiki 404: $reqUri", $msg );
 ?>
