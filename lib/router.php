@@ -10,7 +10,7 @@
 
 class Router
 {
-  private static function getBaseURIs()
+  public static function getBaseURIs()
   {
     $db = $GLOBALS['db'];
 
@@ -19,7 +19,12 @@ class Router
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
       while( $o = $db->fetchObject($rs) )
+      {
+        $last = substr( $o->base_uri, -1 );
+        if ( $last == "/" )
+          $o->base_uri =  substr( $o->base_uri, 0, -1 );
         $baseUris[$o->base_uri] = $o;
+      }
 
     return $baseUris;
   }
@@ -40,27 +45,63 @@ class Router
     if ( !count($baseUris) )
       return false;
 
-    $pattern = "#^(". join("|", array_keys($baseUris)). ")([^/\?]+)?(.*)#";
-    $subject = $uri;
-    $replace = "$1:$2";
-
-    if ( !($result = preg_filter($pattern, $replace, $subject)) )
-      return false;
-
-    list($matchedUri, $remainder) = explode(":", $result);
+    // No trailing slash
+    // @todo accept pages, otherwise add and 301
+    $trailingSlash = false;
+    $result = self::matchBaseUri($uri);
+    if ( $result )
+    {
+      // Log::debug( "Router-/ $uri, result: $result, accept: pages=show, else=add and 301" );
+    }
+    else
+    {
+      $trailingSlash = true;
+      $result = self::matchBaseUri($uri,true);
+      if ( !$result )
+        return false;
+      // Log::debug( "Router+/ $uri, result: $result, accept: albums,articles," );
+    }
+    
+    list($matchedUri, $remainder, $q ) = explode(":", $result);
     if ( !$matchedUri )
       return false;
 
     $route = $baseUris[$matchedUri];
 
     $handler = new stdClass;
+    $handler->matchedUri = $matchedUri;
     $handler->type = $route->type;
     $handler->instanceId = $route->instance_id;
+    $handler->trailingSlash = $trailingSlash;
     $handler->remainder = $remainder;
+    $handler->q = $q;
 
-    Log::debug( "Router::findHandler, type ". $handler->type. ", instanceId ". $handler->instanceId. ", remainder ". $remainder );
+    // Log::debug( "Router::findHandler, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", remainder:". $remainder. ", q:$q" );
 
     return $handler;
+  }
+
+  public static function matchBaseUri( $uri, $trailingSlash = false )
+  {
+    $baseUris = self::getBaseUris();
+
+    if ( $trailingSlash )
+    {
+      // pakt alles met een slash
+      $pattern = "#^(". join("|", array_keys($baseUris)). ")/([^/\?]+)?(.*)#";
+      $replace = "$1:$2:$3";
+    }
+    else
+    {
+      // moet alles zonder slash pakken, met slash hoeft niet meer
+      $pattern = "#^(". join("|", array_keys($baseUris)). ")(\?(.*))?$#";
+      $replace = "$1::$2";
+    }
+
+    $result = preg_filter($pattern, $replace, $uri);
+    Log::debug( "$uri, pattern $pattern result: ". print_r($result, true) );
+
+    return $result;
   }
 }
   

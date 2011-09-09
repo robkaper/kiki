@@ -33,7 +33,8 @@
   }
 
   // Kiki base
-  // @todo support DirectoryIndex equivalent
+  // @todo support DirectoryIndex equivalent, or else simply rely on
+  // mod_rewrite and remove this
   else if ( preg_match('#^/kiki/(.*)#', $reqUri, $matches) )
   {
     Log::debug( "Controller: KIKI, remainder ". $matches[1] );
@@ -75,13 +76,31 @@
   $handler = Router::findHandler($reqUri);
   if ( $handler )
   {
-    // @todo replace with a nice factory
-    if ( $handler->type=='articles' )
+    if ( !$handler->trailingSlash )
     {
-      // @todo generate the content and settings but don't let the controller create the page..
-      Controller::articles( $handler->instanceId, $handler->remainder );
-      // @todo don't exit here, in case of 404
-       exit();
+      if ( $handler->type=='page' )
+      {
+        Log::debug( "Router: show page ". $handler->instanceId );
+       // @todo page handler
+      }
+      else
+      {
+        $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
+        Log::debug( "Router: 301 $url" );
+        Controller::redirect($url, true) && exit();
+      }
+    }
+    else
+    {
+      // @todo replace with a nice factory
+      if ( $handler->type=='articles' )
+      {
+        Log::debug( "Router: show ". $handler->type. " collection ". $handler->instanceId. " ". $handler->remainder. " ". $handler->q ); 
+        // @todo generate the content and settings but don't let the controller create the page..
+        Controller::articles( $handler->instanceId, $handler->remainder );
+        // @todo don't exit here, in case of 404
+        exit();
+      }
     }
   }
 
@@ -96,128 +115,18 @@
 //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
 
   // Nothing found? 
-  // @fixme return this to a 404 when router debugging is finished
   $page = new Page();
-  $page->setHttpStatus(503);
-  $page->setTitle( "Plat voor onderhoud" );
+  $page->setHttpStatus(404);
+  $page->setTitle( "404! Vierhonderdvier! Four hundred and four! Cuatrocientoscuatro! N&eacute;gysz&aacute;mn&eacute;vn&eacute; Nelj&auml;sataanelj&auml;" );
   $page->beginContent();
 ?>
 <p>
-Ik ben even offline. Deal with it.</p>
+Tja, dat is pech hebben. Deze pagina bestaat dus (niet) meer.</p>
 <?
   $page->endContent();
   $page->html();
 
   // @fixme rjkcust for debugging
-  $msg = $reqUri. "\n$debugQ\n$debugA\narticleUris: ". print_r( $articleUrls, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
+  $msg = $reqUri. "\nhandler: ". print_r( $handler, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
   mail( "rob@robkaper.nl", "Kiki 503/404: $reqUri", $msg );
-
-  exit();
-  
-  /// @bug rjkcust, these routes should be generated or queried from the
-  /// database (where all dynamic pages should be defined).  This data here
-  /// is just for testing.
-
-  /// @todo re-use this testing code when purifying the above
-
-/*
-  function testRoute( $url )
-  {
-    global $routes;
-
-    // echo "routing $url\n";
-
-    $parsedUrl = parse_url( $url );
-    $pathParts = array_values( array_filter( explode('/', $parsedUrl['path']) ) );
-
-    $handler = array( "type" => "404default" );
-
-    if ( !count($pathParts) )
-    {
-      // echo "no pathParts\n";
-      $handler = array( "type" => "mainpage" );
-      // echo "returning handler: ". print_r($handler, true). "\n";
-      return $handler;
-    }
-
-    $curRoutes = $routes;
-    $depth = 0;
-    $pathDepth = count($pathParts);
-    foreach( $pathParts as $pathPart )
-    {
-      $depth++;
-      if ( isset($curRoutes[$pathPart]) )
-      {
-        // echo "found $pathPart in route, setting handler\n";
-        $handler = $curRoutes[$pathPart];
-        if ( !isset($handler["routes"]) )
-          $handler["routes"] = array();
-
-        // echo "depth: $depth, pathdepth: $pathDepth\n";
-
-        if ( $depth == $pathDepth )
-        {
-          // echo "depth and pathDepth match, return\n";
-          // echo "returning handler: ". print_r($handler, true). "\n";
-          return $handler;
-        }
-
-        // echo "preparing next depth, setting new curRoutes\n";
-        $curRoutes = $handler["routes"];
-      }
-      else
-      {
-        // echo "part $pathPart not found in route, returning handler plus remainder of path\n";
-        if ( $handler["type"]=="blog" )
-        {
-          // blog code parses remainder itself
-        }
-        else
-        {
-          // extra nonsense in the path by default should result in a 404
-          $handler = array( "type" => "404" );
-        }
-        $handler["remainder"] = join( "/", array_slice( $pathParts, $depth-1 ) );
-        // echo "remainder path: ". print_r($handler["remainder"], true). "\n";
-        // echo "returning handler: ". print_r($handler, true). "\n";
-        return $handler;
-      }
-    }
-
-    echo "end of loop??\n";
-    // echo "returning handler: ". print_r($handler, true). "\n";
-    return $handler;
-  }
-
-  $handler = testRoute( $reqUri );
-
-  if ( !isset($handler["id"]) )
-    $handler["id"] = null;
-  if ( !isset($handler["remainder"]) )
-    $handler["remainder"] = null;
-
-  echo "url: $url\n";
-  echo "handler type:$handler[type], id:$handler[id], remainder:$handler[remainder]\n";
-?>
-</pre>
-<?
-  $page->endContent();
-
-  switch( $handler["type"] )
-  {
-  case "mainpage":
-  case "page":
-  case "blog":
-    $page->setHttpStatus(200);
-    break;
-  case "404":
-  default:
-    $page->setTitle( "Kiki 404" );
-    $page->setHttpStatus(404);
-    break;
-  }
-
-  $page->html();
-*/
-
 ?>
