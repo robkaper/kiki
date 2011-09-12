@@ -64,9 +64,9 @@ function showArticleComments( articleId )
 
 function fbLogin()
 {
-  // TODO: perhaps we can use a jsonLoggingIn boilerplate or similar for here and twLogin?
+  // @todo perhaps we can use a jsonLoggingIn boilerplate or similar for here and twLogin?
+  // @todo don't we need FB.init here?
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
-
   FB.login( function(response) { onFbResponse(response); }, { perms: '' } );
   return false;
 }
