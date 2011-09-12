@@ -57,6 +57,19 @@ class User
     $this->twUser->load( $o->twitter_user_id );
   }
 
+  public function identify()
+  {
+    // @todo restore logical separate steps: 1 identify, 2 authenticate, 3 register/update if necessary
+
+    // Identify Kiki IDs
+    // Identify third party IDs
+
+    // Kiki 1, 3rd 0: user logged in, show connect options, verify stored 3rd party tokens
+    // Kiki 0, 3rd 1: register user and log it in, result is Kiki also 1
+    // Kiki 1, 3rd 1: user logged in, may have connected, check added perms/auth for 3rd parties
+    // Kiki 0, 3rd 0: nada, show login options
+  }
+
   public function authenticate()
   {
     // Check Kiki's own cookie first, it's more authoritive than third parties.
