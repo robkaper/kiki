@@ -168,6 +168,10 @@ class FacebookUser
     $q = "insert into facebook_users (id,ctime,mtime,access_token,name) values( $qId, now(), now(), '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
     Log::debug( "FacebookUser->registerAuth q: $q" );
     $this->db->query($q);
+
+    $perms = explode(",", $_GET['perms'] );
+    foreach( $perms as $perm )
+      self::storePerm($perm);
   }
   
   public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
