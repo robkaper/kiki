@@ -91,6 +91,8 @@ class Articles
   public static function url( &$db, $sectionId, $cname )
   {
     $sectionBaseUri = Router::getBaseUri( 'articles', $sectionId );
+    if ( !$sectionBaseUri )
+      $sectionBaseUri = "/";
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
     $myUrl = $urlPrefix. $sectionBaseUri. $cname;
     return $myUrl;
