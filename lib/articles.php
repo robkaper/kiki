@@ -79,13 +79,17 @@ class Articles
         
   public static function showMulti( &$db, &$user, $sectionId, $maxLength=1, $lengthInParagraphs=true )
   {
+    $content = "";
+
     $qUserId = $db->escape( $user->id );
     $qSection = $db->escape( $sectionId );
     $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and (visible=1 or user_id=$qUserId) and ctime<=now() order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
-        echo Articles::showArticle( $user, $o, false, $maxLength, $lengthInParagraphs );
+        $content .= Articles::showArticle( $user, $o, false, $maxLength, $lengthInParagraphs );
+
+    return $content;
   }
 
   public static function url( &$db, $sectionId, $cname )
