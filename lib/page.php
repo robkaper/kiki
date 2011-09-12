@@ -185,7 +185,7 @@ class Page
   */
   public function setContent($content)
   {
-    $this->content = content;
+    $this->content = $content;
   }
 
   /**
