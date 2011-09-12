@@ -135,7 +135,7 @@ class Boilerplate
     {
       $content .= "<li>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
 
-      $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang" );
+      $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang", 'create_event' => "event rechten" );
       foreach( $actions as $action => $desc )
       {
         $permission = $user->fbUser->hasPerm( $action );
