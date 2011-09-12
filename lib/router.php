@@ -1,15 +1,33 @@
 <?
 
 /**
-* @class Router
-* Router class. Sort of.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Router class. Sort of.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Router
 {
+  /**
+   * Sends a redirect header
+   *
+   * @param string URL of target location
+   * @param boolean whether redirect is permanent
+   * @return boolean true when redirect header was sent
+   *
+   * @todo add header to (new) Http object instead of sending it here
+   */
+  public static function redirect( $url, $permanent = true )
+  {
+    if ( !$url )
+      return false;
+
+    header( "Location: $url", true, $permanent ? 301 : 302 );
+    return true;
+  }
+
   public static function getBaseURIs( $type = null, $sort = false )
   {
     $db = $GLOBALS['db'];

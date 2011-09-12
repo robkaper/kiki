@@ -12,83 +12,61 @@
 
 class Controller
 {
-  public static function redirect( $url, $permanent = true )
+  protected $instanceId = 0;
+  protected $objectId = 0;
+
+  protected $status = 404;
+  protected $title = '404 Not found';
+  protected $template = 'page/body-404';
+  protected $content = null;
+
+  public static function factory($type)
   {
-    Log::debug( "redirect($url)" );
-    if ( !$url )
-      return false;
-
-    header( "Location: $url", true, $permanent ? 301 : 302 );
-    return true;
-  }
-
-  public static function missingThumbnail( &$matches )
-  {
-    list( $dummy, $id, $w, $h, $dummy, $crop ) = $matches;
-
-    if ( !$fileName = Storage::localFile($id) )
-      return false;
-
-    if ( !file_exists($fileName) )
-      return false;
-
-    $scaleFile = Storage::generateThumb( $fileName, $w, $h, $crop );
-    if ( !file_exists($scaleFile) )
-      return false;
-
-    $ext = Storage::getExtension($scaleFile);
-    switch( $ext )
+    $classFile = "controller/".  strtolower($type). ".php";
+    Log::debug( "factory $type, file: $classFile" );
+    if ( include_once($classFile) )
     {
-      case "gif":
-      case "jpg":
-      case "png":
-        header( "Content-type: ". Storage::getMimeType($ext) );
-        break;
-      default:
-        return false;
+      Log::debug( "included $classFile" );
+      // include_once "$classFile";
+      $classname = "Controller_". ucfirst($type);
+      return new $classname;
     }
 
-    echo file_get_contents($scaleFile);
-    return true;
+    Log::debug( "returning standard controller" );
+    return new Controller();
   }
 
-  public static function articles( $sectionId, $articleId )
+  public function setInstanceId( $instanceId )
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
-
-    if ( $articleId )
-      $title = Articles::title( $db, $user, $articleId );
-    else
-      $title = Articles::sectionTitle( $db, $user, $sectionId );
-
-    $page = new Page( $title );
-    $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
-    $page->header();
-
-    if ( $articleId )
-    {
-      if ( $title )
-      {
-        Log::debug("showSingle $articleId");
-        echo Articles::showSingle( $db, $user, $articleId );
-      }
-      else
-      {
-        Log::debug("article404");
-        // @todo allow setting custom 404 template
-        return;
-      }
-    }
-    else
-    {
-      Log::debug( "showMulti $sectionId" );
-      echo Articles::showMulti( $db, $user, $sectionId, 2 );
-    }
-
-    $page->footer();
+    $this->instanceId = $instanceId;
   }
 
+  public function setObjectId( $objectId )
+  {
+    $this->objectId = $objectId;
+  }
+
+  public function exec() {}
+
+  public function status()
+  {
+    return $this->status;
+  }
+
+  public function title()
+  {
+    return $this->title;
+  }
+
+  public function template()
+  {
+    return $this->template;
+  }
+
+  public function content()
+  {
+    return $this->content;
+  }
 }
   
 ?>

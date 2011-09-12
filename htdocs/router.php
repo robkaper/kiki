@@ -1,127 +1,82 @@
 <?
 
 /**
-* @file htdocs/router.php
-* Router script for Kiki. Should be called for all URI's where there is no
-* direct local file match.  Relays content handling to various controllers
-* based on URI configurations.
-*
-* @todo extend to minimise or totally make mod_rewrite optional
-* @warning album URLs currently broken
-*
-* @todo purify this code, 1. identify the required controller (one of
-* tinyurl, /kiki, /storage, dynamically loaded (base_uri's for blogs, pages
-* and albums) or default fallback where everything is a 404), 2.  get
-* remainder (optionally pre-split a la mvc into id/action/remainder), 3. 
-* get content (view)
-*
-*
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Router script for Kiki. Should be called for all URI's where there is no
+ * direct local file match.  Relays content handling to various controllers
+ * based on URI configurations.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ *
+ * @todo extend to minimise or totally make mod_rewrite optional
+ * @warning album URLs currently broken
+ */
 
   include_once "../lib/init.php";
 
   Log::debug( "router.php: $reqUri" );
 
+  $controller = null;
+
   // TinyURLs
   if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $reqUri) )
   {
-    Log::debug( "Controller::tinyUrl ". substr($reqUri, 1). "/". TinyUrl::lookup62(substr($reqUri, 1)) );
-    Controller::redirect( TinyUrl::lookup62(substr($reqUri, 1)) ) && exit();
+    $controller = Controller::factory('TinyUrl');
+    $controller->setObjectId( substr($reqUri, 1) );
   }
 
-  // Kiki base
-  // @todo support DirectoryIndex equivalent, or else simply rely on
-  // mod_rewrite and remove this
+  // Kiki base files
   else if ( preg_match('#^/kiki/(.*)#', $reqUri, $matches) )
   {
-    Log::debug( "Controller: KIKI, remainder ". $matches[1] );
-    $kikiFile = $GLOBALS['kiki']. "/htdocs/". $matches[1];
-    if ( file_exists($kikiFile) )
-    {
-      $ext = Storage::getExtension($kikiFile);
-      switch($ext)
-      {
-        case 'css':
-        case 'gif':
-        case 'jpg':
-        case 'js':
-        case 'png':
-          header('Content-Type: '. Storage::getMimeType($ext) );
-          exit( file_get_contents($kikiFile) );
-          break;
-        case 'php':
-          include_once($kikiFile);
-          exit();
-          break;
-        default:;
-      }
-      Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
-    }
-    else
-      Log::debug( "non-existant kikiFile $kikiFile" );
-    // Controller::kikiBase($matches) && exit();
+    $controller = Controller::factory('Kiki');
+    $controller->setObjectId( $matches[1] );
   }
 
   // Automatic thumbnails for storage files
   else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $reqUri, $matches) )
   {
-    Log::debug( "Controller::missingThumbnail" );
-    Controller::missingThumbnail($matches) && exit();
+    $controller = Controller::factory('Thumbnails');
+    $controller->setObjectId($matches);
   }
 
   // Check if URI contains a base handled by a dynamic controller
-  $handler = Router::findHandler($reqUri);
-  if ( $handler )
+  else if ( $handler = Router::findHandler($reqUri) )
   {
-    if ( !$handler->trailingSlash )
+    // Ensure trailing slash for all content except pages
+    // @fixme Find only collection controllers here, to keep baseURI matching simple, move page controller downwards
+    if ( !$handler->trailingSlash && $handler->type != 'page' )
     {
-      if ( $handler->type=='page' )
-      {
-        Log::debug( "Router: show page ". $handler->instanceId );
-       // @todo page handler
-      }
-      else
-      {
-        $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
-        Log::debug( "Router: 301 $url" );
-        Controller::redirect($url, true) && exit();
-      }
+      $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
+      Router::redirect($url, true) && exit();
     }
-    else
-    {
-      // @todo replace with a nice factory
-      if ( $handler->type=='articles' )
-      {
-        Log::debug( "Router: show ". $handler->type. " collection ". $handler->instanceId. " ". $handler->remainder. " ". $handler->q ); 
-        // @todo generate the content and settings but don't let the controller create the page..
-        Controller::articles( $handler->instanceId, $handler->remainder );
-        // @todo don't exit here, in case of 404
-        exit();
-      }
-    }
+       
+    // @todo this is nearly one on one, might as well let findHandler return the right controller..
+    $controller = Controller::factory($handler->type);
+    $controller->setInstanceId($handler->instanceId);
+    $controller->setObjectId($handler->remainder);
   }
 
+  // Nothing? Default controller (404 page)
+  else
+    $controller = new Controller();
+
   // @todo /kiki/album/
-  // @todo content pages + test
-  // $routes["contact"] = array( "type" => "page", "id" => "contact.php" );
+  //RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]
+  //RewriteRule ^/kiki/album/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,L]
+  //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
   // @todo test missing directoryindices (most notably / when moving content to database)
-  // @todo custom db redirects + test
 
-//RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]
-//RewriteRule ^/kiki/album/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,L]
-//RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
+  $controller->exec();
+  Log::debug( print_r($controller, true) );
 
-  // Nothing found? 
+  if ( $controller->status() == 301 )
+    Router::redirect($controller->content(), true) && exit();
+
   $page = new Page();
-  $page->setHttpStatus(404);
-  $page->setTitle( "Kiki says: <q>mea culpa</q>" );
-  $page->setBodyTemplate( 'page/body-404' );
+  $page->setHttpStatus( $controller->status() );
+  $page->setTitle( $controller->title() );
+  $page->setBodyTemplate( $controller->template() );
+  $page->setContent( $controller->content() );
   $page->html();
-
-  // @fixme rjkcust for debugging
-  // $msg = $reqUri. "\nhandler: ". print_r( $handler, true ). "\n\n_REQUEST: ". print_r( $_REQUEST, true ). "\n\n_SERVER: ". print_r( $_SERVER, true ); 
-  // mail( "rob@robkaper.nl", "Kiki 404: $reqUri", $msg );
 ?>
