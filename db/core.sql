@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.2' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.5' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -52,12 +52,13 @@ create table users (
   primary key(id),
   ctime datetime not null,
   mtime datetime not null,
-  name varchar(255) not null,
-  email varchar(255) not null,
-  auth_token varchar(40) not null,
-  mail_auth_token varchar(40) not null,
+  name varchar(255) not null default '',
+  email varchar(255) not null default '',
+  auth_token varchar(40) not null default '',
+  mail_auth_token varchar(40) not null default '',
   facebook_user_id bigint unsigned default NULL,
   twitter_user_id bigint unsigned default NULL,
+  admin boolean not null default false,
   unique key(email),
   unique key(facebook_user_id),
   unique key(twitter_user_id)
@@ -193,4 +194,3 @@ create table router_base_uris (
   type varchar(255) not null,
   instance_id int unsigned not null  
 );
-
