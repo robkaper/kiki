@@ -61,15 +61,21 @@ class Config
 	public static $mailToSocialAddress = null;
 
 	public static $singleUser = 0;
-	public static $devUsers = array();
+	public static $adminUsers = array();
 
-	// @warning Check these in setup, they *must* be set.
-	public static $passwordHashPepper =  null;
-	public static $passwordHashIterations = 0;
-	public static $authCookiePepper = null;
+	// @fixme Add check in setup, pepper *must* be changed from the
+	// defaults to avoid rainbow table lookups.
+	// @warning Changing these values will invalidate all user
+	// passwords already stored as hash.
+	public static $passwordHashPepper = '';
+	public static $passwordHashIterations = 5;
+
+	// @fixme Add check in setup, pepper *must* be changed from the
+	// defaults to avoid rainbow table lookups.
+	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
 
-	const dbVersionRequired = "0.1.4";
+	const dbVersionRequired = "0.1.5";
 
 	/**
 	* Initialises configuration values. Loads the defaults first and
