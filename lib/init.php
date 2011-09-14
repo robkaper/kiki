@@ -22,14 +22,14 @@
   {
     // Try local customisations first, but fallback no Kiki's base classes,
     // allows developers to easily rewrite/extend.
-    $local = $GLOBALS['root']. "/lib/". strtolower( $className ). ".php";
+    $local = $GLOBALS['root']. "/lib/". strtolower( str_replace("_", "/", $className) ). ".php";
     if ( file_exists($local) )
     {
       include_once "$local";
       return;
     }
 
-    $kiki = $GLOBALS['kiki']. "/lib/". strtolower( $className ). ".php";
+    $kiki = $GLOBALS['kiki']. "/lib/". strtolower( str_replace("_", "/", $className) ). ".php";
     if ( file_exists($kiki) )
     {
       include_once "$kiki";
@@ -55,6 +55,14 @@
   }
 
   $db = $GLOBALS['db'] = new Database( Config::$db );
+
+  // @fixme is this where we want this..
+  $q = "select id from users where admin=1"; // and verified=1
+  $rs = $db->query($q);
+  if ( $rs && $db->numRows($rs) )
+    while( $o = $db->fetchObject($rs) )
+      Config::$adminUsers[] = $o->id;
+
   $user = $GLOBALS['user'] = new User();
 
   if ( Config::$mailerQueue )
