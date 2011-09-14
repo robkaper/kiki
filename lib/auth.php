@@ -52,23 +52,20 @@ class Auth
   public static function validateCookie()
   {
     if ( !isset($_COOKIE[Config::$authCookieName]) )
-    {
-      Log::debug( "Auth::validateCookie: not set" );
-      return false;
-    }
+      return 0;
 
     list( $id, $expires, $hmac )  = explode( '|', $_COOKIE[Config::$authCookieName] );
 
     if ( time() > $expires )
     {
       Log::debug( "Auth::validateCookie: expired, time(". time(). "), expires($expires)" );
-      return false;
+      return 0;
     }
 
     $key = hash_hmac( 'md5', $id. $expires, Config::$authCookiePepper );
     $hash = hash_hmac( 'md5', $id. $expires, $key );
 
-    Log::debug( "Auth::validateCookie: hmac($hmac), hash($hash)" );
+    // Log::debug( "Auth::validateCookie: hmac($hmac), hash($hash)" );
     $valid = ($hmac==$hash);
     if ( $valid )
     {
