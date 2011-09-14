@@ -68,7 +68,18 @@ class Log
 
 		$step = sprintf( "%3.7f", self::$mtime - $last );
 		$total = sprintf( "%3.7f", self::$mtime - self::$ctime );
-		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] $msg\n";
+
+		$trace = debug_backtrace();
+		$caller = array_shift($trace);
+		while( isset($caller['class']) && $caller['class'] == 'Log' )
+			$caller = array_shift($trace);
+
+		if ( isset($caller['class']) )
+			$callerStr = $caller['class']. '::'. $caller['function'];
+		else
+			$callerStr = '';
+		
+		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$callerStr] $msg\n";
 
 		fwrite( $fp, $logStr );
 		fclose( $fp );
