@@ -46,32 +46,8 @@ class FacebookUser
     $this->name = $o->name;
   }
 
-  public function identify( $id = 0 )
-  {
-    if ( $id )
-      $this->id = $id;
-    else
-    {
-      $cookie = $this->cookie();
-      Log::debug( "fbCookie: ". print_r( $cookie, true ) );
-      if ( $cookie )
-        $this->id = $cookie['uid'];
-
-      if ( $this->fb )
-      {
-        $fbSession = $this->fb->getSession();
-        Log::debug( "fbSession: ". print_r( $fbSession, true ) );
-        if ( isset($fbSession['uid']) )
-          $this->id = $fbSession['uid'];
-      }
-
-    }
-
-    if ( $this->id )
-      Log::debug( "FacebookUser->identify $id -> ". $this->id );
-
-    $this->load( $this->id );
-  }
+  // @deprecated
+  public function identify() {}
 
   public function authenticate()
   {
@@ -123,27 +99,8 @@ class FacebookUser
 
   }
 
-  // Returns entire verified cookie as array, or null if not valid or no cookie present
-  private function cookie()
-  {
-    $args = array();
-
-    $cookieId = "fbs_". Config::$facebookApp;
-    if ( array_key_exists( $cookieId, $_COOKIE ) )
-      parse_str( trim($_COOKIE[$cookieId], '\\"'), $args );\
-
-    ksort($args);
-    
-    $payload = '';
-    foreach ( $args as $key => $value )
-      if ( $key != 'sig' )
-        $payload .= $key. '='. $value;
-
-    if ( !array_key_exists( 'sig', $args ) || md5($payload. Config::$facebookSecret) != $args['sig'] )
-      return null;
-
-    return $args;
-  }
+  // @deprecated
+  public function cookie() {}
 
   private function registerAuth()
   {
@@ -311,7 +268,16 @@ class FacebookUser
     if ( !$this->fb || !$this->authenticated )
       return false;
 
-    return $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+    try {
+      $perm = $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+      return $perm;
+    }
+    catch( FacebookApiException $e )
+    {
+      Log::debug( "error in fb api call for hasPerm, guessing user doesn't have it then" );
+      // @todo should then be unlinked for this user..
+      return false;
+    }
   }
 }
 

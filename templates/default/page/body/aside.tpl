@@ -2,8 +2,10 @@
 <?
   // FIXME: some logic in a template is fine by me, but this is way too much
 
+  // @fixme re-enable, socialData/Image needs to be adjusted to
+  // User::connections instead of User::fbUser and User::twUser
   $me = new User(1);
-  if ( (Config::$facebookApp || Config::$twitterApp) && $me->id )
+  if ( (Config::$facebookApp || Config::$twitterApp) && $me->id && false )
   {
     list( $type, $name, $pic ) = $me->socialData();
     echo "<div class=\"box\">\n";
@@ -14,8 +16,7 @@
 
   $fbStyle = $user->fbUser->authenticated ? "" : "display: none;";
   $twStyle = $user->twUser->authenticated ? "" : "display: none;";
-  $whoStyleOr = User::anyUser() ? "display: none;" : "";
-  $whoStyleAnd = User::allUsers() ? "display: none;" : "";
+  $whoStyleOr = $user->anyUser() ? "display: none;" : "";
 
   if ( Config::$facebookApp )
   {
@@ -35,9 +36,13 @@
     echo "</div>\n";
   }
 
-  if ( Config::$facebookApp || Config::$twitterApp )
+  // @fixme re-enable login stuff, backend seems to work (at least for
+  // twitter) but frontend needs to be adjusted to User::connections
+  // instead of User::fbUser and User::twUser
+  if ( false && (Config::$facebookApp || Config::$twitterApp) )
   {
-    echo "<div class=\"box\" id=\"whoAreYou\" style=\"$whoStyleAnd\">\n";
+    echo "<div class=\"box\" id=\"whoAreYou\">\n";
+
     echo "<p class=\"youUnknown\" style=\"$whoStyleOr\">Mag ik ook weten wie jij bent?</p>\n";
 
     // FIXME: boilerplate this?
@@ -62,7 +67,7 @@
   echo "<div class=\"box\">\n";
 
   echo "<span id=\"accountLink\" class=\"jsonupdate\">\n";
-  if ( User::anyUser() )
+  if ( $user->anyUser() )
     echo Boilerplate::accountLink();
   echo "</span>\n";
 

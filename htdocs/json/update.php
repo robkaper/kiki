@@ -36,7 +36,7 @@
       if ( preg_match( '/^commentForm_/', $id ) )
       {
         list( $dummy, $objectId ) = explode( '_', $id );
-        $data = User::anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
+        $data = $user->anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
       }
       else if ( preg_match( '/^navMenu-/', $id) )
       {

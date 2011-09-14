@@ -76,8 +76,6 @@
   // Convenient, but necessary?
   $fbUser = $user->fbUser;
   $twUser = $user->twUser;
-  $anyUser = ($fbUser->authenticated || $twUser->authenticated);
-  $allUsers = ($fbUser->authenticated && $twUser->authenticated);
 
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];

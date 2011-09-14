@@ -9,10 +9,13 @@ class User
   public $id, $ctime, $mtime;
   private $authToken;
   public $mailAuthToken;
+  private $isAdmin;
 
-  public $linkedAccounts;
+  private $connections = null;
+  private $identifiedConnections = null;
 
   public $fbUser, $twUser;
+  private $connectServices;
 
   public function __construct( $id = null )
   {
@@ -22,9 +25,15 @@ class User
 
     $this->fbUser = new FacebookUser();
     $this->twUser = new TwitterUser();
-    
-    if ( $id )
-      $this->load( $id );
+
+    // @fixme Move these configurations to the database, to be filled in by
+    // an administrator account.
+    if ( Config::$facebookApp )
+      $this->connectServices[] = 'User_Facebook';
+    if ( Config::$twitterApp )
+      $this->connectServices[] = 'User_Twitter';
+
+    $this->load( $id );
   }
 
   public function reset()
@@ -34,133 +43,185 @@ class User
     $this->mtime = time();
     $this->authToken = "";
     $this->mailAuthToken = "";
+    $this->isAdmin = false;
     $this->fbUser = null;
     $this->twUser = null;
   }
 
   public function isAdmin()
   {
-    return in_array( $this->id, Config::$devUsers );
+    return $this->isAdmin;
   }
 
-  public function load( $id )
+  public function load( $id = 0 )
   {
-    $q = $this->db->buildQuery( "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where id=%d", $id );
+    if ( !$id )
+      return;
+
+    $q = $this->db->buildQuery( "select id,mail_auth_token,admin from users where id=%d", $id );
     $o = $this->db->getSingle($q);
     if ( !$o )
+    {
+      $this->id = 0;
       return;
+    }
 
     $this->id = $o->id;
     $this->mailAuthToken = $o->mail_auth_token;
+    $this->isAdmin = $o->admin;
+  }
 
-    $this->fbUser->load( $o->facebook_user_id );
-    $this->twUser->load( $o->twitter_user_id );
+  public function getStoredConnections()
+  {
+    $connections = array();
+
+    $q = $this->db->buildQuery( "select external_id, service from users_connections where user_id=%d", $this->id );
+    $rs = $this->db->query($q);
+    if ( $rs && $this->db->numRows($rs) )
+      while( $o = $this->db->fetchObject($rs) )
+      {
+        $user = UserFactory::getInstance( $o->service, $o->external_id, $this->id );
+        $connections[$user->uniqId()] = $user;
+      }
+
+    return $connections;
+  }
+
+  public function identifyConnections()
+  {
+    if ( $this->identifiedConnections )
+    {
+      Log::debug( "not reidentifying, already did it.." );
+      return;
+    }
+
+    // Identify third party users
+    $this->identifiedConnections = array();
+    foreach( $this->connectServices as $service )
+    {
+      Log::debug( "starting identification for service $service" );
+      $user = UserFactory::getInstance($service);
+      if ( !$user || !$user->id() )
+        continue;
+
+      if ( !$user->token() )
+      {
+        Log::debug( "identified but no token, don't actually add to identified" );
+        continue;
+      }
+
+      $this->identifiedConnections[$user->uniqId()] = $user;
+    }
   }
 
   public function identify()
   {
-    // @todo restore logical separate steps: 1 identify, 2 authenticate, 3 register/update if necessary
-
-    // Identify Kiki IDs
-    // Identify third party IDs
-
-    // Kiki 1, 3rd 0: user logged in, show connect options, verify stored 3rd party tokens
-    // Kiki 0, 3rd 1: register user and log it in, result is Kiki also 1
-    // Kiki 1, 3rd 1: user logged in, may have connected, check added perms/auth for 3rd parties
-    // Kiki 0, 3rd 0: nada, show login options
-  }
-
-  public function authenticate()
-  {
-    // Check Kiki's own cookie first, it's more authoritive than third parties.
-    if ( $userId = Auth::validateCookie() )
+    if ( !$this->id )
     {
-      Log::debug( "User::authenticate valid cookie for $userId, user authenticated" );
-      $this->load($userId);
-      // @todo Update cookie to prevent it from expiring for regular users.
-
-      // @warning check facebook permissions
-      if ( $this->fbUser->id )
-      {
-        Log::debug( "authenticating facebook user..." );
-        $this->fbUser->authenticate();
-      }
-      if ( $this->twUser->id )
-      {
-        Log::debug( "authenticating twitter user..." );
-        $this->twUser->authenticate();
-      }
-
-      return;
-    }
-    else
-      Log::debug( "User::authenticate no (valid) cookie" );
-
-    if ( $this->fbUser->identify() )
-      $this->fbUser->authenticate();
-
-    if ( $this->twUser->identify() )
-      $this->twUser->authenticate();
-      
-    // Start third-party authentication.
-    // $this->fbUser->authenticate();
-    // $this->twUser->authenticate();
-
-    if ( !($this->fbUser->id || $this->twUser->id) )
-    {
-      Log::debug( "no identification/authentication of third-party users" );
-      return;
+      $this->id = Auth::validateCookie();
+      $this->load($this->id);
+      Log::debug( "cookie: ". $this->id );
     }
 
-    $qFbUserId = $this->db->escape( $this->fbUser->id );
-    $qTwUserId = $this->db->escape( $this->twUser->id );
-    $q = "select id,facebook_user_id,twitter_user_id,mail_auth_token from users where facebook_user_id=$qFbUserId or twitter_user_id=$qTwUserId";
-    $rs = $this->db->query($q);
-    if ( $rs && $rows = $this->db->numrows($rs) )
+    $this->identifyConnections();
+
+    if ( $this->id )
     {
-      if ( $rows!=1 )
+      $this->connections = $this->getStoredConnections();
+      Log::debug( "connections (stored): ". print_r($this->connections, true) );
+      foreach( $this->identifiedConnections as $id => $user )
       {
-        // FIXME: avoid this at all costs, or handle gracefully
-        Log::debug( "User::authenticate -- more than one result in db for q [$q], fbUserId=$qFbUserId, twUserId=$qTwUserId" );
-        while( $o = $this->db->fetchObject($rs) )
-          Log::debug( "o: ". print_r( $o, true ) );
-      }
-      else
-      {
-        $o = $this->db->fetchObject($rs);
-        $this->id = $o->id;
-        $this->mailAuthToken = $o->mail_auth_token;
-
-        Log::debug( "user $o->id authenticated by third party by q [$q]" );
-        Auth::setCookie($o->id);
-
-        if ( ($this->fbUser->id && !$o->facebook_user_id) || ($this->twUser->id && !$o->twitter_user_id) )
+        if ( isset($this->connections[$id]) )
         {
-          $q = "update users set mtime=now(), facebook_user_id=$qFbUserId, twitter_user_id=$qTwUserId where id = $o->id";
-          $rs = $this->db->query($q);
-          Log::debug( "updated 3rd party connections [$q]" );
+          Log::debug( "identified $id, already linked in store" );
+
+          // Identified user, no need to connect before link?
+          $user->loadRemoteData();
+
+          // Re-link connection to ensure the latest data is used (especially access token)
+          $user->unlink( $this->id );
+          $user->link($this->id );
+
+          // Use identified connection, it is the latest
+          $this->connections[$id] = $user;
         }
         else
-          Log::debug( "no need to update" );
+        {
+          Log::debug( "identified $id, store link" );
+
+          // Identified user, no need to connect before link?
+          $user->loadRemoteData();
+
+          $user->link($this->id);
+          $this->connections[$id] = $user;
+        }
       }
     }
-    else if ( $this->fbUser->id || $this->twUser->id )
+    else if ( count($this->identifiedConnections) )
     {
-      // User is created based on third-party login, authtoken is therefore
-      // a dummy because user has not set a password yet.
-      $qAuthToken = Auth::hashPassword( uniqid() );
+      $possibleUsers = array();
+      foreach( $this->identifiedConnections as $id => $user )
+        $possibleUsers = array_merge( $possibleUsers, $user->kikiUserIds() );
 
-      $qFbUserId = $this->fbUser->id ? $this->db->escape( $this->fbUser->id ) : 'NULL';
-      $qTwUserId = $this->twUser->id ? $this->db->escape( $this->twUser->id ) : 'NULL';
-      $q = "insert into users(ctime, mtime, auth_token, facebook_user_id, twitter_user_id) values (now(), now(), $qAuthToken, $qFbUserId, $qTwUserId)";
-      $rs = $this->db->query($q);
+      $possibleUsers = array_unique($possibleUsers);
+      $n = count($possibleUsers);
+      switch( $n )
+      {
+        case 0:
+          Log::debug( "register new user for found connections" );
 
-      $userId = $this->db->lastInsertId($rs);
-      Log::debug( "user $userId created by third party, fbUserId=$qFbUserId, twUserId=$qTwUserId" );
-      Auth::setCookie($userId);
+          // Register new user. Use random password, user must change it
+          // (and set email) before he/she can login with just a local ID.
+          $this->storeNew( uniqid(), uniqid() );
+
+          // Link the connection
+          $user->loadRemoteData();
+          $user->link($this->id);
+          $this->connections[] = $user;
+          break;
+
+        case 1:
+          // deducted user, rerun self so unknown connections can be stored
+          $this->id = $possibleUsers[0];
+          Log::debug( "deducted user ". $this->id. " recalling identify to check for unstored connections" );
+          Auth::setCookie($this->id);
+          $this->identify();
+          return;
+          break;
+
+        default:
+          Log::debug( "cannot detect user, multiple candidates" );
+          // cannot detect user, multiple candidates
+      }
     }
     else
-      Log::debug( "no user found for third party query [$q]" );
+    {
+      Log::debug( "no user, no connections" );
+    }
+
+    Log::debug( "id: ". $this->id );
+    Log::debug( "identifiedConnections: ". print_r($this->identifiedConnections, true) );
+    Log::debug( "connections: ". print_r($this->connections, true) );
+
+    $this->load( $this->id );
+  }
+
+  // @deprecated
+  public function authenticate()
+  {
+    $this->identify();
+  }
+
+  public function storeNew( $email, $password, $admin = false )
+  {
+    $qEmail = $this->db->escape( $email );
+    $qAuthToken = Auth::passwordHash($password);
+    $qAdmin = $this->admin = (int) $admin;
+    $q = "insert into users(ctime, mtime, email, auth_token, admin) values (now(), now(), '$qEmail', '$qAuthToken', $qAdmin)";
+    $rs = $this->db->query($q);
+
+    $this->id = $this->db->lastInsertId($rs);
+    Auth::setCookie($this->id);
   }
 
   // Returns type, name and picture URL
@@ -176,16 +237,9 @@ class User
       return array( null, null, null );
   }
 
-  public static function anyUser()
+  public function anyUser()
   {
-    $user = $GLOBALS['user'];
-    return ($user->fbUser->authenticated || $user->twUser->authenticated);
-  }
-  
-  public static function allUsers()
-  {
-    $user = $GLOBALS['user'];
-    return ($user->fbUser->authenticated && $user->twUser->authenticated);
+    return count($this->connections);
   }
 }
 

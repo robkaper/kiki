@@ -30,7 +30,7 @@
 <?
   }
 
-  if ( User::anyUser() )
+  if ( $user->anyUser() )
   {
     echo "<h2>Sociale hulpmiddelen</h2>\n";
     echo "<ul>\n";

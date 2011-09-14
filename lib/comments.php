@@ -5,11 +5,12 @@ class Comments
   public static function form( &$user, $objectId )
   {
     $content = "<div id=\"commentForm_$objectId\" class=\"jsonupdate shrunk\">\n";
-    $content .= User::anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
+    $content .= $user->anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
     $content .= "</div>\n";
     return $content;
   }
 
+  // @fixme port to users_connections
   public static function show( &$db, &$user, $objectId, $jsonLast=null )
   {
     $comments = array();

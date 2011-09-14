@@ -9,13 +9,15 @@
 * Released under the terms of the MIT license.
 */
 
-  include_once "../lib/init.php";
   session_start();
+
+  include_once "../lib/init.php";
 
   if ( isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
     Log::error( "SNH: twitter-callback token mismatch" );
 
-  $accessToken = $user->twUser->registerAuth();
+  Log::debug( "registerAuth etc can be removed here as User_Twitter should handle this" );
+  // $accessToken = $user->twUser->registerAuth();
 
   // Remove no longer needed request tokens
   unset($_SESSION['oauth_token']);
