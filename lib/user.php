@@ -90,10 +90,8 @@ class User
       while( $o = $this->db->fetchObject($rs) )
       {
         $user = Factory_User::getInstance( $o->service, $o->external_id, $this->id );
-        $connections[$user->uniqId()] = $user;
+        $this->connections[$user->uniqId()] = $user;
       }
-
-    return $connections;
   }
 
   public function identifyConnections()
@@ -135,7 +133,7 @@ class User
 
     if ( $this->id )
     {
-      $this->connections = $this->getStoredConnections();
+      $this->getStoredConnections();
       // Log::debug( "connections (stored): ". print_r($this->connections, true) );
       foreach( $this->identifiedConnections as $id => $user )
       {
