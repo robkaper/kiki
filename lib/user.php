@@ -75,6 +75,9 @@ class User
     $this->id = $o->id;
     $this->mailAuthToken = $o->mail_auth_token;
     $this->isAdmin = $o->admin;
+
+    // @todo make sure this doesn't load remote data
+    $this->getStoredConnections();
   }
 
   public function getStoredConnections()
