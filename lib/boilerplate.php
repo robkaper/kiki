@@ -36,9 +36,20 @@ class Boilerplate
     return "<p>\n<a href=\"#login\">Log in</a> via Facebook of Twitter om te reageren.</p>\n";
   }
 
+  static function accountLinks()
+  {
+    return self::accountLink(). self::logoutLink();
+  }
+
   static function accountLink()
   {
     return "<p><a href=\"". Config::$kikiPrefix. "/account/\">Jouw Account</a></p>\n";
+  }
+
+  static function logoutLink()
+  {
+    
+    return "<p><a href=\"". Config::$kikiPrefix. "/account/logout.php\">Logout</a></p>\n";
   }
 
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )
@@ -52,9 +63,10 @@ class Boilerplate
     if ( !$user )
       return null;
 
-    list( $type, $name, $pic ) = $user->socialData();
-    if ( !$type )
-      return null;
+    $name = $user->name();
+    $pic = $user->picture();
+    // @fixme support this type in socialImage
+    $type = 'kiki';
 
     $content = "<div class=\"comment\" style=\"min-height: 0px;\">\n";
     $content .= Boilerplate::socialImage( $type, $name, $pic );
@@ -129,32 +141,48 @@ class Boilerplate
   {
     $content = "";
 
-    $content .= "<ul>\n";
-
-    if ( $user->fbUser->authenticated )
+    foreach( $user->connections() as $connection )
     {
-      $content .= "<li>Je bent ingelogd als <strong>". $user->fbUser->name. "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
-
-      $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang", 'create_event' => "event rechten" );
-      foreach( $actions as $action => $desc )
+      if ( $connection->serviceName() == 'Twitter' )
       {
-        $permission = $user->fbUser->hasPerm( $action );
-        if ( $permission )
+        $content .="<h2>Twitter</h2>\n";
+
+        $content .="<ul>\n";
+        $content .="<li>Je bent ingelogd als <strong>". $connection->screenName(). "</strong> (". $connection->name(). ") (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>\n";
+        $content .="<li>Deze site heeft schrijfrechten. (<a href=\"/proclaimer.php#twitter\">waarom?</a>)</li>\n";
+        $content .="<li>Deze site heeft offline toegang. (<a href=\"/proclaimer.php#twitter\">waarom?</a>)</li>\n";
+
+        $content .="</ul>\n";
+      }
+      else if ( $connection->serviceName() == 'Facebook' )
+      {
+        $content .= "<h2>Facebook</h2>\n";
+
+        $content .= "<ul>\n";
+
+        $content .= "<li>Je bent ingelogd als <strong>". $connection->name(). "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
+
+        $actions = array( 'publish_stream' => "schrijfrechten", 'offline_access' => "offline toegang", 'create_event' => "event rechten" );
+        foreach( $actions as $action => $desc )
         {
-          $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?permission=$action";
-          $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
+          $permission = $connection->hasPerm( $action );
+          if ( $permission )
+          {
+            $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?permission=$action";
+            $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
+          }
+          else
+          {
+            $permissionUrl = $connection->getLoginUrl( array( 'req_perms' => $action ) );
+            $content .= "<li>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</li>\n";
+          }
         }
-        else
-        {
-          $permissionUrl = $user->fbUser->fb->getLoginUrl( $params = array( 'req_perms' => $action ) );
-          $content .= "<li>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</li>\n";
-        }
+
+        $content .= "</ul>\n";
+
       }
     }
-    else
-      $content .= "<li>Je bent niet ingelogd.</li>\n";
 
-    $content .= "</ul>\n";
 
     return $content;
   }

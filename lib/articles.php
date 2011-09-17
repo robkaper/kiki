@@ -113,8 +113,8 @@ class Articles
     $date = $o->ctime;
     $uAuthor = new User( $o->user_id );
 
-    list( $type, $name, $pic ) = $uAuthor->socialData();
-    $author = $name;
+    $author = $uAuthor->name();
+    $pic = $uAuthor->picture();
     $relTime = Misc::relativeTime($date);
     $dateTime = date("c", strtotime($date));
 
@@ -199,6 +199,7 @@ class Articles
     $myUrl = Articles::url( $db, $qSection, $cname );
     $tinyUrl = TinyUrl::get( $myUrl );
 
+    // @fixme port to connections
     if ( isset($_POST['fbPublish']) && $_POST['fbPublish'] == 'on' )
     {
       global $fb;

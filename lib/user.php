@@ -11,27 +11,14 @@ class User
   public $mailAuthToken;
   private $isAdmin;
 
-  private $connections = null;
+  private $connections = array();
   private $identifiedConnections = null;
-
-  public $fbUser, $twUser;
-  private $connectServices;
 
   public function __construct( $id = null )
   {
     $this->db = $GLOBALS['db'];
 
     $this->reset();
-
-    $this->fbUser = new FacebookUser();
-    $this->twUser = new TwitterUser();
-
-    // @fixme Move these configurations to the database, to be filled in by
-    // an administrator account.
-    if ( Config::$facebookApp )
-      $this->connectServices[] = 'User_Facebook';
-    if ( Config::$twitterApp )
-      $this->connectServices[] = 'User_Twitter';
 
     $this->load( $id );
   }
@@ -44,8 +31,27 @@ class User
     $this->authToken = "";
     $this->mailAuthToken = "";
     $this->isAdmin = false;
-    $this->fbUser = null;
-    $this->twUser = null;
+  }
+
+  public function id()
+  {
+    return $this->id;
+  }
+
+  public function name()
+  {
+    if ( isset($this->connections[0]) )
+      return $this->connections[0]->name();
+    else
+      return "User ". $this->id;
+  }
+
+  public function picture()
+  {
+    if ( isset($this->connections[0]) )
+      return $this->connections[0]->picture();
+    else
+      return null;
   }
 
   public function isAdmin()
@@ -75,12 +81,12 @@ class User
   {
     $connections = array();
 
-    $q = $this->db->buildQuery( "select external_id, service from users_connections where user_id=%d", $this->id );
+    $q = $this->db->buildQuery( "select external_id, service from users_connections where user_id=%d order by ctime asc", $this->id );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numRows($rs) )
       while( $o = $this->db->fetchObject($rs) )
       {
-        $user = UserFactory::getInstance( $o->service, $o->external_id, $this->id );
+        $user = Factory_User::getInstance( $o->service, $o->external_id, $this->id );
         $connections[$user->uniqId()] = $user;
       }
 
@@ -97,10 +103,9 @@ class User
 
     // Identify third party users
     $this->identifiedConnections = array();
-    foreach( $this->connectServices as $service )
+    foreach( Config::$connectionServices as $service )
     {
-      Log::debug( "starting identification for service $service" );
-      $user = UserFactory::getInstance($service);
+      $user = Factory_User::getInstance( 'User_'. $service );
       if ( !$user || !$user->id() )
         continue;
 
@@ -128,17 +133,20 @@ class User
     if ( $this->id )
     {
       $this->connections = $this->getStoredConnections();
-      Log::debug( "connections (stored): ". print_r($this->connections, true) );
+      // Log::debug( "connections (stored): ". print_r($this->connections, true) );
       foreach( $this->identifiedConnections as $id => $user )
       {
         if ( isset($this->connections[$id]) )
         {
           Log::debug( "identified $id, already linked in store" );
+          // @todo compare connections and only load remote data if old is missing
+          // $storedConnection = $this->connections[$id];
 
           // Identified user, no need to connect before link?
           $user->loadRemoteData();
 
           // Re-link connection to ensure the latest data is used (especially access token)
+          // @todo compare connections and only relink when token changed or remote data was loaded
           $user->unlink( $this->id );
           $user->link($this->id );
 
@@ -200,8 +208,8 @@ class User
     }
 
     Log::debug( "id: ". $this->id );
-    Log::debug( "identifiedConnections: ". print_r($this->identifiedConnections, true) );
-    Log::debug( "connections: ". print_r($this->connections, true) );
+    // Log::debug( "identifiedConnections: ". print_r($this->identifiedConnections, true) );
+    // Log::debug( "connections: ". print_r($this->connections, true) );
 
     $this->load( $this->id );
   }
@@ -224,22 +232,27 @@ class User
     Auth::setCookie($this->id);
   }
 
-  // Returns type, name and picture URL
-  public function socialData( $type = null )
-  {
-    if ( (!$type || $type=='facebook') && $this->fbUser->id )
-      return array( 'facebook', $this->fbUser->name, "http://graph.facebook.com/". $this->fbUser->id. "/picture" );
-    else if ( (!$type || $type=='twitter') && $this->twUser->id )
-      return array( 'twitter', $this->twUser->name, $this->twUser->picture );
-    else if ( isset($_SERVER['HTTP_USER_AGENT']) && preg_match( "/^Googlebot/", $_SERVER['HTTP_USER_AGENT'] ) )
-      return array( null, "Googlebot", null );
-    else
-      return array( null, null, null );
-  }
-
   public function anyUser()
   {
     return count($this->connections);
+  }
+
+  public function connections()
+  {
+    return $this->connections;
+  }
+
+  public function connectionIds()
+  {
+    $ids = array();
+    foreach( $this->connections as $connection )
+      $ids[] = $connection->uniqId();
+    return $ids;
+  }
+
+  public function getConnection( $id )
+  {
+    return isset($this->connections[$id]) ? $this->connections[$id] : null;
   }
 }
 

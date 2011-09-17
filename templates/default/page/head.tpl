@@ -12,8 +12,6 @@
 var boilerplates = new Array();
 boilerplates['jsonLoad'] = '<?= Boilerplate::jsonLoad(true); ?>';
 boilerplates['jsonSave'] = '<?= Boilerplate::jsonSave(true); ?>';
-var fbUser = '<?= $user->fbUser->authenticated ? $user->fbUser->id : 0; ?>';
-var twUser = '<?= $user->twUser->authenticated ? $user->twUser->id : 0; ?>';
 var kikiPrefix = '<?= Config::$kikiPrefix; ?>';
 var requestUri = '<?= $_SERVER['REQUEST_URI']; ?>';
 </script>

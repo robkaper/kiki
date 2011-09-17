@@ -49,6 +49,7 @@ class Config
 	public static $googleAnalytics = null;
 	public static $googleAdSense = null;
 
+	public static $connectionServices = array();
 	public static $facebookApp = null;
 	public static $facebookSecret = null;
 	public static $twitterApp = null;
@@ -108,6 +109,15 @@ class Config
 		self::$iconPrefix = self::$kikiPrefix. "/img/iconic/". Config::$iconSetColor;
         
 		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
+	}
+
+	public static function loadDbConfig( &$db )
+	{
+		// @todo Actually get these from the database
+		if ( self::$facebookApp )
+			self::$connectionServices[] = 'Facebook';
+		if ( self::$twitterApp )
+			self::$connectionServices[] = 'Twitter';
 	}
 
 	/**

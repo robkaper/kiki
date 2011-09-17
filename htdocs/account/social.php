@@ -13,32 +13,30 @@
   {
     if ( $msg = $_POST['msg'] )
     {
-      if ( isset($_POST['postFb']) && $_POST['postFb'] == 'on' )
+      foreach( $_POST['connections'] as $id => $value )
       {
-        // TODO: use SocialUpdate::postStatus
-        $fbRs = $user->fbUser->post( $msg );
-        if ( isset($fbRs->id) )
-          echo "<p>Facebook status geupdate: <a target=\"_blank\" href=\"". $fbRs->url. "\">". $fbRs->url. "</a></p>\n";
-        else
-          echo "<p>\nEr is een fout opgetreden bij het updaten van je Facebook status:</p>\n<pre>". print_r( $fbRs->error, true ). "</pre>\n";
-      }
-    
-      if ( isset($_POST['postTw']) && $_POST['postTw'] == 'on' )
-      {
-        $twRs = $user->twUser->post( $msg );
-        if ( isset($twRs->id) )
-          echo "<p>Twitter status geupdate: <a target=\"_blank\" href=\"". $twRs->url. "\">". $twRs->url. "</a></p>\n";
-        else if ( $twRs->error == 'Read-only application cannot POST' )
+        if ( $value != 'on' )
+         continue;
+
+        $connection = $user->getConnection($id);
+        if ( $connection )
         {
-          // FIXME: temporary, either make app RW from the start or have two apps (one RO, one RW)
-          echo "<p>\nJe hebt deze site alleen leesrechten gegeven en geen schrijfrechten. Helaas laat Twitter je deze rechten niet eenvoudig uitbreiden, je moet hiervoor twee stappen ondernemen:</p>\n";
-          echo "<ol>\n";
-          echo "<li>Verwijder de toegang van <b>robkaper.nl</b> bij je <a target=\"_blank\" href=\"http://twitter.com/settings/connections\">Twitter connection settings</a> (<q>Revoke access</q>)</li>\n";
-          echo "<li><a href=\"/twitter-redirect.php\">Log opnieuw in</a>. Twitter geeft deze site dan lees- en schrijfrechten.</li>\n";
-          echo "</ol>\n";
+          $rs = $connection->post($msg);
+          if ( isset($rs->id) )
+            echo "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
+          else if ( $twRs->error == 'Read-only application cannot POST' )
+          {
+            // FIXME: temporary, either make app RW from the start or have two apps (one RO, one RW)
+            echo "<p>\nJe hebt deze site alleen leesrechten gegeven en geen schrijfrechten. Helaas laat Twitter je deze rechten niet eenvoudig uitbreiden, je moet hiervoor twee stappen ondernemen:</p>\n";
+            echo "<ol>\n";
+            echo "<li>Verwijder de toegang van <b>robkaper.nl</b> bij je <a target=\"_blank\" href=\"http://twitter.com/settings/connections\">Twitter connection settings</a> (<q>Revoke access</q>)</li>\n";
+            echo "<li><a href=\"/twitter-redirect.php\">Log opnieuw in</a>. Twitter geeft deze site dan lees- en schrijfrechten.</li>\n";
+            echo "</ol>\n";
+          }
+          else
+            echo "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
+          // echo "<p>\nEr is een fout opgetreden bij het updaten van je Twitter status:</p>\n<pre>". print_r( $twRs, true ). print_r( $user->twUser, true). "</pre>\n";
         }
-        else
-          echo "<p>\nEr is een fout opgetreden bij het updaten van je Twitter status:</p>\n<pre>". print_r( $twRs, true ). print_r( $user->twUser, true). "</pre>\n";
       }
     }
     else
@@ -49,10 +47,21 @@
   {
     echo Form::open( "socialForm" );
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
-    if ( $user->fbUser && $user->fbUser->hasPerm('publish_stream') )
-      echo Form::checkbox( "postFb", false, "Facebook", "Update Facebook status" );
-    if ( $user->twUser )
-      echo Form::checkbox( "postTw", false, "Twitter", "Update Twitter status" );
+    foreach ( $user->connections() as $connection )
+    {
+      if ( $connection->serviceName() == 'Facebook' )
+      {
+        // @todo inform user that, and why, these are required (offline
+        // access is required because Kiki doesn't store or use the
+        // short-lived login sessions)
+        if ( !$connection->hasPerm('publish_stream') )
+         continue;
+        if ( !$connection->hasPerm('offline_access') )
+         continue;
+      }
+      echo Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+    }
+
     echo Form::button( "submit", "submit", "Update status" );
   }
   else

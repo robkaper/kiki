@@ -14,7 +14,8 @@ abstract class User_External
   protected $name = null;
   protected $screenName = null;
   protected $picture = null;
-  
+
+  protected $connected = false;
   protected $authenticated = false;
 
   public function __construct( $id=0, $kikiUserId = 0 )
@@ -26,6 +27,7 @@ abstract class User_External
       Log::debug( get_class($this). " constructed with id $id for user $kikiUserId, loading.." );
       $this->load($kikiUserId);
       
+      // @fixme don't connect until connection is actually needed
       $this->connect();
     }
     else
@@ -40,15 +42,36 @@ abstract class User_External
   abstract public function connect();
   abstract public function identify();
   abstract public function authenticate();
+  // abstract public function getLoginUrl();
 
   public function id()
   {
     return $this->id;
   }
 
+  public function serviceName()
+  {
+    return preg_replace( "/^User_/", "", get_class($this) );
+  }
+  
   public function uniqId()
   {
     return get_class($this). '_'. $this->id;
+  }
+
+  public function name()
+  {
+    return $this->name;
+  }
+
+  public function screenName()
+  {
+    return $this->screenName;
+  }
+
+  public function picture()
+  {
+    return $this->picture;
   }
 
   public function token()

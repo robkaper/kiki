@@ -1,5 +1,7 @@
 <?
 
+// @deprecated, port remaining stuff here to where it User_Facebook
+
 class FacebookUser
 {
   private $db;
@@ -9,184 +11,8 @@ class FacebookUser
 
   public function __construct( $id = null )
   {
-    $this->db = $GLOBALS['db'];
-    if ( Config::$facebookApp && extension_loaded('curl') )
-    {
-      $this->fb = new Facebook( array(
-        'appId'  => Config::$facebookApp,
-        'secret' => Config::$facebookSecret,
-        'cookie' => true
-        ) );
-    }
-
-    $this->reset();
-
-    if ( $id )
-      $this->load( $id );
   }
 
-  public function reset()
-  {
-    $this->id = 0;
-    $this->accessToken = "";
-    $this->name = "";
-    $this->authenticated = null;
-  }
-
-  public function load( $id )
-  {
-    $qId = $this->db->escape( $id );
-    $q = "select access_token, name from facebook_users where id='$qId'";
-    $o = $this->db->getSingle($q);
-    if ( !$o )
-      return;
-
-    $this->id = $id;
-    $this->accessToken = @unserialize($o->access_token);
-    $this->name = $o->name;
-  }
-
-  // @deprecated
-  public function identify() {}
-
-  public function authenticate()
-  {
-    if ( !$this->id )
-      return;
-
-    if ( !$this->fb )
-      return;
-
-    Log::debug( "FacebookUser::authenticate" );
-
-    $fbSession = $this->fb->getSession();
-    if ( !isset($fbSession['uid']) && $this->accessToken )
-    {
-      Log::debug( "FacebookUser->authenticate setSession" );
-      $this->fb->setSession( $this->accessToken );
-    }
-
-    $fbSession = $this->fb->getSession();
-    if ( $fbSession )
-    {
-      try
-      {
-        $this->id = $this->fb->getUser();
-        if ( !$this->id )
-          return;
-
-        Log::debug( "FacebookUser->authenticate: authenticated" );
-        $this->authenticated = true;
-
-        if ( !$this->accessToken || $this->accessToken != $fbSession )
-          $this->registerAuth();
-
-        if ( array_key_exists( 'session', $_GET ) )
-        {
-          $this->registerAuth();
-
-          // Redirect to avoid ?session= request to appear in Analytics etc
-          header( "Location: ". $_SERVER['SCRIPT_URL'], true, 301 );
-          exit();
-        }
-      }
-      catch ( FacebookApiException $e )
-      {
-        Log::debug( "FacebookUser->authenticate error: $e" );
-        error_log($e);
-      }
-    }
-
-  }
-
-  // @deprecated
-  public function cookie() {}
-
-  private function registerAuth()
-  {
-    if ( !$this->fb )
-      return;
-
-    $fbUser = $this->fb->api('/me');
-    if ( !$fbUser )
-    {
-      Log::debug( "SNH: fbRegisterAuth failed, no fbUser" );
-      return;
-    }
-
-    $fbSession = $this->fb->getSession();
-    if ( $fbSession && $fbSession['expires'] == 0 )
-      $qAccessToken = $this->db->escape( serialize($fbSession) );
-    else
-      $qAccessToken = $this->accessToken;
-
-    $qId = $this->db->escape( $fbUser['id'] );
-    $qName = $this->db->escape( $fbUser['name'] );
-    $q = "insert into facebook_users (id,ctime,mtime,access_token,name) values( $qId, now(), now(), '$qAccessToken', '$qName') on duplicate key update access_token='$qAccessToken', name='$qName'";
-    Log::debug( "FacebookUser->registerAuth q: $q" );
-    $this->db->query($q);
-
-    $perms = explode(",", $_GET['perms'] );
-    foreach( $perms as $perm )
-      self::storePerm($perm);
-  }
-  
-  public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
-  {
-    $result = new stdClass;
-    $result->id = null;
-    $result->url = null;
-    $result->error = null;
-
-    if ( !$this->authenticated || !$this->fb )
-    {
-      $result->error = "Facebook user not authenticated.";
-      return $result;
-    }
-
-    $attachment = array(
-      'message' => $msg,
-      'link' => $link, 
-      'name' => $name,
-      'caption' => $caption,
-      'description' => $description,
-      'picture' => $picture,
-      'privacy' => json_encode( array('value' => 'ALL_FRIENDS') )
-
-      // @todo allow choice of EVERYONE, CUSTOM, ALL_FRIENDS, NETWORKS_FRIENDS, FRIENDS_OF_FRIENDS, SELF.
-    );
-
-    Log::debug( "FacebookUser->post: ". print_r( $attachment, true ) );
-    try
-    {
-      $fbRs = $this->fb->api('/me/feed', 'post', $attachment);
-
-      $qPost = $this->db->escape( serialize($attachment) );
-      $qResponse = $this->db->escape( serialize($fbRs) );
-      $q = "insert into social_updates (ctime,network,post,response) values (now(), 'facebook', '$qPost', '$qResponse')";
-      $this->db->query($q);
-    }
-    catch ( FacebookApiException $e )
-    {
-      $result->error = $e;
-      Log::debug( "fbPost error: $result->error" );
-      return $result;
-    }
-
-    if ( isset($fbRs['id']) )
-    {
-      $result->id = $fbRs['id'];
-      list( $uid, $postId ) = explode( "_", $fbRs['id']);
-      $result->url = "http://www.facebook.com/$uid/posts/$postId";
-    }
-    else
-    {
-      $result->error = $fbRs;
-      Log::debug( "fbPost error: $result->error" );
-    }
-    
-    return $result;
-  }
 
   public function createEvent( $title, $start, $end, $location, $description )
   {
@@ -263,22 +89,6 @@ class FacebookUser
     setcookie( $cookieId, "", time()-3600, "/", $_SERVER['SERVER_NAME'] );
   }
 
-  public function hasPerm( $perm )
-  {
-    if ( !$this->fb || !$this->authenticated )
-      return false;
-
-    try {
-      $perm = $this->fb->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
-      return $perm;
-    }
-    catch( FacebookApiException $e )
-    {
-      Log::debug( "error in fb api call for hasPerm, guessing user doesn't have it then" );
-      // @todo should then be unlinked for this user..
-      return false;
-    }
-  }
 }
 
 ?>
