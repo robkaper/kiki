@@ -24,7 +24,7 @@ class User_Facebook extends User_External
     if ( $this->id && $this->token )
     {
       Log::debug( "connecting facebook api with stored token" );
-      $this->token = @unserialize($o->token);
+      $this->token = @unserialize($this->token);
       $this->api->setSession($this->token);
     }
     else if ( isset($_GET['session']) )
@@ -215,7 +215,7 @@ class User_Facebook extends User_External
     }
     catch( FacebookApiException $e )
     {
-      Log::debug( "error in fb api call for hasPerm, guessing user doesn't have it then" );
+      Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
       // @todo should then be unlinked for this user..
       return false;
     }
