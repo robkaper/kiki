@@ -40,18 +40,20 @@ class User
 
   public function name()
   {
-    if ( isset($this->connections[0]) )
-      return $this->connections[0]->name();
-    else
+    if ( !count($this->connections) )
       return "User ". $this->id;
+
+    reset($this->connections);
+    return $this->connections[key($this->connections)]->name();
   }
 
   public function picture()
   {
-    if ( isset($this->connections[0]) )
-      return $this->connections[0]->picture();
-    else
+    if ( !count($this->connections) )
       return null;
+
+    reset($this->connections);
+    return $this->connections[key($this->connections)]->picture();
   }
 
   public function isAdmin()
