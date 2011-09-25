@@ -7,7 +7,7 @@ class User_Twitter extends User_External
   private $oAuthToken = null;
   // private $oAuthVerifier = null;
 
-  public function connect()
+  protected function connect()
   {
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     // @fixme this connects based on _SESSION, adjust to also allow connection based on stored token
@@ -18,8 +18,14 @@ class User_Twitter extends User_External
       $this->token = $_SESSION['oauth_token'];
       $this->secret = $_SESSION['oauth_token_secret'];
 
+  // Remove no longer needed request tokens
+    unset($_SESSION['oauth_token']);
+      unset($_SESSION['oauth_token_secret']);
+
       Log::debug( "connecting twitter api with session token and secret" );
       $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
+
+      
 
       Log::debug( "getting access token and secret from request verifier ". $_REQUEST['oauth_verifier'] );
       $this->oAuthToken = $this->api->getAccessToken( $_REQUEST['oauth_verifier'] );
@@ -55,11 +61,15 @@ class User_Twitter extends User_External
   {
   }
 
-  private function detectLoginSession()
+  protected function detectLoginSession()
   {
-    if ( !isset($_REQUEST['oauth_token']) || !isset($_SESSION['oauth_token']) || !isset($_SESSION['oauth_token_secret']) )
+    if ( !isset($_REQUEST['oauth_token']) )
       return 0;
-
+      
+    session_start();
+    if ( !isset($_SESSION['oauth_token']) || !isset($_SESSION['oauth_token_secret']) )
+      return 0;
+      
     if ( $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
     {
       Log::error( "SNH: twitter oauth token mismatch" );
@@ -68,6 +78,8 @@ class User_Twitter extends User_External
 
     $this->token = $_SESSION['oauth_token'];
     $this->secret = $_SESSION['oauth_token_secret'];
+    unset($_SESSION['oauth_token']);
+    unset($_SESSION['oauth_token_secret']);
 
     Log::debug( "connecting twitter api with session token and secret" );
     $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
@@ -83,7 +95,7 @@ class User_Twitter extends User_External
     return $this->oAuthToken['user_id'];
   }
 
-  private function cookie()
+  protected function cookie()
   {
     if ( array_key_exists( 'twitter_anywhere_identity', $_COOKIE ) )
     {

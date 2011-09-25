@@ -10,7 +10,7 @@
   
 class User_Facebook extends User_External
 {
-  public function connect()
+  protected function connect()
   {
     if ( Config::$facebookApp && extension_loaded('curl') )
     {
@@ -62,7 +62,7 @@ class User_Facebook extends User_External
   {
   }
 
-  public function detectLoginSession()
+  protected function detectLoginSession()
   {
     // Only detect a session when a login request has been made explicitely.
     // Otherwise, the Facebook API will still recognise the session even
@@ -96,7 +96,7 @@ class User_Facebook extends User_External
   }
 
   // Returns entire verified cookie as array, or null if not valid or no cookie present
-  private function cookie()
+  protected function cookie()
   {
     $args = array();
 

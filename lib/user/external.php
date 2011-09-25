@@ -39,9 +39,11 @@ abstract class User_External
     }
   }
 
-  abstract public function connect();
+  abstract protected function connect();
   abstract public function identify();
   abstract public function authenticate();
+  abstract protected function cookie();
+  abstract protected function detectLoginSession();
   // abstract public function getLoginUrl();
 
   public function id()
