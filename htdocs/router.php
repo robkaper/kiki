@@ -68,7 +68,7 @@
   // @todo test missing directoryindices (most notably / when moving content to database)
 
   $controller->exec();
-  Log::debug( print_r($controller, true) );
+  // Log::debug( print_r($controller, true) );
 
   if ( $controller->status() == 301 )
     Router::redirect($controller->content(), true) && exit();

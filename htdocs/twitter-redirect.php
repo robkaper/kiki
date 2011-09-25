@@ -1,12 +1,13 @@
 <?
 
 /**
-* @file htdocs/twitter-redirect.php
-* Builds a Twitter authorisation URL and redirects to it.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Builds a Twitter authorisation URL using the generic application token
+ * and referer as callback URL, then redirects to it.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 include_once "../lib/init.php";
 
