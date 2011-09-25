@@ -39,7 +39,7 @@ class Config
 	public static $staticPrefix = "/static";
 
 	public static $template = 'default';
-	public static $headerLogo = null;
+	public static $siteLogo = null;
 	public static $customCss = null;
 
     	public static $iconSetColor = "black";
@@ -54,7 +54,6 @@ class Config
 	public static $facebookSecret = null;
 	public static $twitterApp = null;
 	public static $twitterSecret = null;
-	public static $twitterCallback = null;
 	public static $twitterAnywhere = false;
 	public static $flickrApp = null;
 	public static $flickrSecret = null;
@@ -104,11 +103,9 @@ class Config
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
 
-		self::$headerLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
+		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 
 		self::$iconPrefix = self::$kikiPrefix. "/img/iconic/". Config::$iconSetColor;
-        
-		self::$twitterCallback = 'http://'. $_SERVER['SERVER_NAME']. self::$kikiPrefix. '/twitter-callback.php';
 	}
 
 	public static function loadDbConfig( &$db )
