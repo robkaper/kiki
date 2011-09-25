@@ -28,6 +28,10 @@ class Controller_Thumbnails extends Controller
         return;
     }
 
+    // @warning Exits execution. static files need not fall through to a
+    // template.
+    exit( file_get_contents($scaleFile) );
+
     $this->status = 200;
     $this->content = file_get_contents($scaleFile);
   }
