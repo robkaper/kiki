@@ -19,13 +19,13 @@ tt {
 #sw, #cw, #fw {
 	margin: 0 auto;
 	-moz-margin: 0 auto;
-	max-width: 850px;
+	width: 960px;
 }
 
 #content {
 	font-size: 0.875em; /* 0.875*16=14 */
         max-width: 800px;
-        margin: 0.5em 0 0.5em 160px;
+        margin: 10px 0 10px 160px;
 }
 
 #cw.noaside #content {
@@ -87,7 +87,7 @@ blockquote {
 
 .footer {
         clear: both;
-        max-width: 800px;
+       	xwidth: 960px;
         margin: 0.5em 0 0.5em 160px;
         border-radius: 5px;
         background: #deb;
