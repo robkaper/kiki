@@ -31,10 +31,30 @@ class Articles
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
-    if ( !$facebookUrl )
-      $content .= Form::checkbox( "fbPublish", false, "Facebook", "Publish on Facebook" );
-    if ( !$twitterUrl )
-      $content .= Form::checkbox( "twPublish", false, "Twitter", "Publish on Twitter" );
+
+    // @todo Make this generic, difference with social update is the check
+    // against an already stored external URL.
+    foreach ( $user->connections() as $connection )
+    {
+      if ( $connection->serviceName() == 'Facebook' )
+      {
+        // @todo inform user that, and why, these are required (offline
+        // access is required because Kiki doesn't store or use the
+        // short-lived login sessions)
+        if ( !$connection->hasPerm('publish_stream') )
+         continue;
+        if ( !$connection->hasPerm('offline_access') )
+         continue;
+
+        if ( !$facebookUrl )
+          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+      }
+      else if (  $connection->serviceName() == 'Twitter' )
+      {
+        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+      }
+    }
+
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
 
@@ -164,80 +184,6 @@ class Articles
        $content .= "</article>\n";
 
     return $content;
-  }
-
-  public static function save( &$db, &$user )
-  {
-    global $errors;
-    $errors = array();
-    if ( !$user->id )
-      $errors[] = "Je bent niet ingelogd.";
-
-    $articleId = (int)$_POST['articleId'];
-    $qId = $db->escape( $articleId );
-    $qSection = $db->escape( (int)$_POST['sectionId'] );
-    $qUserId = $db->escape( $user->id );
-
-    list( $date, $time ) = explode( " ", $_POST['ctime'] );
-    list( $day, $month, $year ) = explode( "-", $date );
-
-    $ctime = "$year-$month-$day $time";
-    $qCtime = $db->escape( $ctime );
-    $qIp = $db->escape( $_SERVER['REMOTE_ADDR'] );
-    $qTitle = $db->escape( $title = $_POST['title'] );
-    $qCname = $db->escape( $cname = Misc::uriSafe($title) );
-    $qBody = $db->escape( $_POST['body'] );
-    $qVisible = (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0;
-    $qFacebookUrl = $db->escape( $_POST['facebookUrl'] );
-    $qTwitterUrl = $db->escape( $_POST['twitterUrl'] );
-    
-    if ( !$qBody )
-      $errors[] = "Je kunt geen leeg artikel opslaan!";
-
-    if ( sizeof($errors) )
-      return $articleId;
-
-    // TODO: use SocialUpdate::postLink
-    $myUrl = Articles::url( $db, $qSection, $cname );
-    $tinyUrl = TinyUrl::get( $myUrl );
-
-    // @fixme port to connections
-    if ( isset($_POST['fbPublish']) && $_POST['fbPublish'] == 'on' )
-    {
-      global $fb;
-      $msg = '';
-      $link = $myUrl;
-      $caption = $_SERVER['SERVER_NAME'];
-      $description = Misc::textSummary( $_POST['body'], 400 );
-      $picture = $picture ? $picture : Config::$siteLogo;
-      Log::debug( "Article::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
-      $fbRs = $user->fbUser->post( $msg, $link, $title, $caption, $description, $picture );
-      $qFacebookUrl = $fbRs->url;
-    }
-
-    if ( isset($_POST['twPublish']) && $_POST['twPublish'] == 'on' )
-    {
-      $msg = "$title $tinyUrl";
-      Log::debug( "Article::twPublish( $msg );" );
-      $twRs = $user->twUser->post( $msg );
-      $qTwitterUrl = $twRs->url;
-    }
-
-    $q = "select id from articles where id=$qId";
-    $rs = $db->query($q);
-    if ( $rs && $db->numRows($rs) )
-    {
-      $q = "update articles set ctime='$qCtime', mtime=now(), ip_addr='$qIp', section_id=$qSection, user_id=$qUserId, title='$qTitle', cname='$qCname', body='$qBody', visible=$qVisible, facebook_url='$qFacebookUrl', twitter_url='$qTwitterUrl' where id=$qId";
-      $db->query($q);
-    }
-    else
-    {
-      $q = "insert into articles (ctime, mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url) values ('$qCtime', now(), '$qIp', $qSection, $qUserId, '$qTitle', '$qCname', '$qBody', $qVisible, '$qFacebookUrl', '$qTwitterUrl')";
-      $rs = $db->query($q);
-      $articleId = $db->lastInsertId($rs);
-    }
-
-    return $articleId;
   }
 }
 
