@@ -199,7 +199,7 @@ create table router_base_uris (
 drop table if exists users_connections;
 create table users_connections (
   user_id int unsigned not null,
-  external_id int unsigned not null,
+  external_id bigint unsigned not null,
   service varchar(32) not null,
   ctime datetime not null,
   mtime datetime not null,
