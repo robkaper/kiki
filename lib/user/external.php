@@ -4,7 +4,8 @@ abstract class User_External
 {
   protected $db;
 
-  protected $api = null;
+  // protected $api = null;
+  public $api = null;
   protected $token = null;
   protected $secret = null;
   
@@ -45,6 +46,9 @@ abstract class User_External
   abstract protected function cookie();
   abstract protected function detectLoginSession();
   // abstract public function getLoginUrl();
+  abstract protected function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' );
+  abstract protected function postArticle( &$article );
+  abstract protected function createEvent( $title, $start, $end, $location, $description, $picture=null );
 
   public function id()
   {

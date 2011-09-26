@@ -120,7 +120,7 @@ class User_Twitter extends User_External
     $this->picture = $data->profile_image_url;
   }
 
-  public function post( $msg )
+  public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
     $result = new stdClass;
     $result->id = null;
@@ -163,6 +163,20 @@ class User_Twitter extends User_External
     return $result;
   }
 
+  public function postArticle( &$article )
+  {
+    $tinyUrl = TinyUrl::get( $article->url() );
+
+    $msg = $article->title(). " $tinyUrl";
+    $result = $this->post( $msg );
+    return $result;
+  }
+
+  public function createEvent( $title, $start, $end, $location, $description, $picture=null )
+  {
+    return null;
+  }
+  
 }
 
 ?>
