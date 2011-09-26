@@ -133,7 +133,9 @@ class Articles
       $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
     }
     else
+    {
       $content .= "<span class=\"body\">$body</span>";
+    }
 
     $content .= "<footer>\n";
     $content .= "<ul>\n";
@@ -207,7 +209,7 @@ class Articles
       $link = $myUrl;
       $caption = $_SERVER['SERVER_NAME'];
       $description = Misc::textSummary( $_POST['body'], 400 );
-      $picture = $picture ? $picture : Config::$headerLogo;
+      $picture = $picture ? $picture : Config::$siteLogo;
       Log::debug( "Article::fbPublish( $msg, $link, $title, $caption, $description, $picture );" );
       $fbRs = $user->fbUser->post( $msg, $link, $title, $caption, $description, $picture );
       $qFacebookUrl = $fbRs->url;
