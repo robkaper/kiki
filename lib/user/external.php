@@ -1,10 +1,24 @@
 <?
 
+/**
+ * Abstract class to deal with users from external sources.
+ *
+ * This class has to be extended to specify each external platform's
+ * specific identification, authentication and communication services. 
+ * Local functionality such as storage is standardised and the abstract
+ * methods ensure a unified local interface against external users.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+ 
 abstract class User_External
 {
   protected $db;
 
   // protected $api = null;
+  // @todo temporarily public to test calls not implemented in the class yet.
   public $api = null;
   protected $token = null;
   protected $secret = null;
