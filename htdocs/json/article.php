@@ -31,7 +31,7 @@
 
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
-    $article->setVisible( isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
+    $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setFacebookUrl( $_POST['facebookUrl'] );
     $article->setTwitterUrl( $_POST['twitterUrl'] );
     
@@ -60,25 +60,8 @@
       }
     }
 
-    $q = "select id from articles where id=$qId";
-    $rs = $db->query($q);
-    if ( $rs && $db->numRows($rs) )
-    {
-      $q = "update articles set ctime='$qCtime', mtime=now(), ip_addr='$qIp', section_id=$qSection, user_id=$qUserId, title='$qTitle', cname='$qCname', body='$qBody', visible=$qVisible, facebook_url='$qFacebookUrl', twitter_url='$qTwitterUrl' where id=$qId";
-      $db->query($q);
-    }
-    else
-    {
-      $q = "insert into articles (ctime, mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url) values ('$qCtime', now(), '$qIp', $qSection, $qUserId, '$qTitle', '$qCname', '$qBody', $qVisible, '$qFacebookUrl', '$qTwitterUrl')";
-      $rs = $db->query($q);
-      $articleId = $db->lastInsertId($rs);
-    }
-
-    return $articleId;
-      $article->save();
-
-      
-    }
+    // @fixme twitter/facebook URLs are not being saved currently
+    $article->save();
     
     if ( isset($_POST['json']) )
     {
