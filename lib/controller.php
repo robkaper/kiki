@@ -24,16 +24,11 @@ class Controller
   public static function factory($type)
   {
     $classFile = "controller/".  strtolower($type). ".php";
-    Log::debug( "factory $type, file: $classFile" );
     if ( include_once($classFile) )
     {
-      Log::debug( "included $classFile" );
-      // include_once "$classFile";
       $classname = "Controller_". ucfirst($type);
       return new $classname;
     }
-
-    Log::debug( "returning standard controller" );
     return new Controller();
   }
 

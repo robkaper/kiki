@@ -92,7 +92,6 @@ class Auth
     $key = hash_hmac( 'md5', $id. $expires, Config::$authCookiePepper );
     $hash = hash_hmac( 'md5', $id. $expires, $key );
 
-    // Log::debug( "Auth::validateCookie: hmac($hmac), hash($hash)" );
     $valid = ($hmac==$hash);
     if ( $valid )
     {

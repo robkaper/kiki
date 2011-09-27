@@ -17,9 +17,7 @@ abstract class User_External
 {
   protected $db;
 
-  // protected $api = null;
-  // TODO: temporarily public to test calls not implemented in the class yet.
-  public $api = null;
+  protected $api = null;
   protected $token = null;
   protected $secret = null;
   
@@ -47,7 +45,6 @@ abstract class User_External
     }
     else
     {
-      Log::debug( get_class($this). " constructed without id, identifying..." );
       $this->connect();
       $this->identify();
       $this->loadKikiUserIds();
