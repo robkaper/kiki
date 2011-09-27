@@ -1,5 +1,19 @@
 <?
 
+/**
+ * Class providing the Article object.
+ *
+ * Articles are blog posts, news items, etc.
+ *
+ * @todo decide how to merge/polymorph/integrate this with Pages/Posts which
+ * are nearly identical.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 class Article extends Object
 {
   private $ipAddr = null;
@@ -80,14 +94,24 @@ class Article extends Object
     return $this->id;
   }
 
+  public function setIpAddr( $ipAddr ) { $this->ipAddr = $ipAddr; }
+  public function ipAddr() { return $this->ipAddr; }
   public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
   public function sectionId() { return $this->sectionId; }
+  public function setUserId( $userId ) { $this->userId = $userId; }
+  public function userId() { return $this->userId; }
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
   public function setCname( $cname ) { $this->cname = $cname; }
   public function cname() { return $this->cname; }
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
+  public function setVisible( $visible ) { $this->visible = $visible; }
+  public function visible() { return $this->visible; }
+  public function setFacebookUrl( $facebookUrl ) { $this->facebookUrl = $facebookUrl; }
+  public function facebookUrl() { return $this->facebookUrl; }
+  public function setTwitterUrl( $twitterUrl ) { $this->twitterUrl = $twitterUrl; }
+  public function twitterUrl() { return $this->twitterUrl; }
 
   public function url()
   {

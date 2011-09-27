@@ -23,6 +23,11 @@ abstract class Object
   protected $ctime = null;
   protected $mtime = null;
 
+  // TODO: add more common properties, such as:
+  // protected $alias = null; // currently incorrectly stored as cname: the url friendly alias
+  // protected $name = null;  // the proper name of the object
+  // TODO: join the name vs title debate, decide on something and stick with it
+
   public function __construct( $id = 0 )
   {
     $this->db = $GLOBALS['db'];
@@ -82,6 +87,8 @@ abstract class Object
   final public function id() { return $this->id; }
   final public function setObjectId( $objectId ) { $this->objectId = $objectId; }
   final public function objectId() { return $this->objectId; }
+  final public function setCtime( $ctime ) { $this->ctime = $ctime; }
+  final public function ctime() { return $this->ctime; }
 
   abstract public function url();
 }

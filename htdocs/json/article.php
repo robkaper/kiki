@@ -17,7 +17,7 @@
     $article = new Article( $_POST['articleId'] );
 
     $errors = array();
-    if ( !$user->id )
+    if ( !$user->id() )
       $errors[] = "Je bent niet ingelogd.";
 
     $article->setSectionId( $_POST['sectionId'] );
@@ -52,13 +52,17 @@
         $connection = $user->getConnection($id);
         if ( $connection )
         {
-          $rs = $connection->postArticle( $user, $this );
+          $rs = $connection->postArticle( $article );
           if ( isset($rs->id) )
           {
-            echo "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
+            $errors[] = "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
+            if ( $connection->serviceName() == 'Facebook' )
+              $article->setFacebookUrl( $rs->url );
+            else if ( $connection->serviceName() == 'Twitter' )
+              $article->setTwitterUrl( $rs->url );
           }
           else
-            echo "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
+            $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
         }
       }
     }

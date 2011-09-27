@@ -78,7 +78,7 @@ class Articles
       $o->title = "...";
       $o->body = "...";
       $o->date = time();
-      $o->user_id = $user->id;
+      $o->user_id = $user->id();
     }
 
     return $o ? Articles::showArticle( $user, $o, $json ) : null;
