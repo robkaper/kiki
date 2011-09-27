@@ -64,7 +64,6 @@ class Config
 
 	public static $mailToSocialAddress = null;
 
-	public static $singleUser = 0;
 	public static $adminUsers = array();
 
 	// @fixme Add check in setup, pepper *must* be changed from the

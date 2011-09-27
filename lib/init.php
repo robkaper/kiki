@@ -70,10 +70,7 @@
       Config::$adminUsers[] = $o->id;
 
   $user = $GLOBALS['user'] = new User();
-  if ( Config::$singleUser )
-    $user->load(Config::$singleUser);
-  else
-    $user->authenticate();
+  $user->authenticate();
 
   if ( Config::$mailerQueue )
     MailerQueue::init();
