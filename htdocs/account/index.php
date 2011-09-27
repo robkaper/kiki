@@ -27,8 +27,8 @@
       {
         // Not the most secure hash, but it doesn't matter because it
         // doesn't lead to a password.
-        $user->mailAuthToken = sha1( uniqid(). $user->id );
-        $db->query( "update users set mail_auth_token='$user->mailAuthToken' where id=$user->id" );
+        $user->mailAuthToken = sha1( uniqid(). $user->id() );
+        $db->query( "update users set mail_auth_token='$user->mailAuthToken' where id=". $user->id() );
       } 
 
       list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );

@@ -144,7 +144,7 @@
     echo "no admin exists, offer user to create and become admin\n";
     include Template::file('parts/forms/create-admin-user');
   }
-  else if ( $user->id )
+  else if ( $user->id() )
   {
     echo "<p>\nYour account has no administration privileges.</p>\n";
   }

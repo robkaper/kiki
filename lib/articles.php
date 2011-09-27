@@ -1,4 +1,4 @@
-<?
+
 
 class Articles
 {
@@ -66,7 +66,7 @@ class Articles
     if ( $articleId )
     {
       $qId = $db->escape($articleId);
-      $qUserId = $db->escape( $user->id );
+      $qUserId = $db->escape( $user->id() );
       $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
       $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
       $o = $db->getSingle($q);
@@ -101,7 +101,7 @@ class Articles
   {
     $content = "";
 
-    $qUserId = $db->escape( $user->id );
+    $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
     $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and (visible=1 or user_id=$qUserId) and ctime<=now() order by ctime desc";
     $rs = $db->query($q);
@@ -166,7 +166,7 @@ class Articles
       $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/User_Twitter_16.png\" alt=\"[Twitter]\" /></a></li>\n";
 
     // FIXME: doesn't degrade without js
-    if ( !$maxLength && $user->id == $o->user_id )
+    if ( !$maxLength && $user->id() == $o->user_id )
       $content .= "<li><a href=\"javascript:showArticleForm($o->id);\">Wijzigen</a></li>\n";
 
     // $content .= "<li><a href=\"javascript:showArticleComments($o->id);\">Reacties</a></li>\n";
