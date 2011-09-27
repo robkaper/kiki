@@ -219,7 +219,6 @@ create table objects (
   primary key(object_id),
   type varchar(32) not null,
   ctime datetime not null,
-  mtime datetime not null,
-  
+  mtime datetime not null
 );
    
