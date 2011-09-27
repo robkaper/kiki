@@ -87,6 +87,8 @@ drop table if exists articles;
 create table articles (
   id bigint unsigned not null auto_increment,
   primary key(id),
+  object_id bigint unsigned not null,
+  unique key(object_id),
   ctime datetime not null,
   mtime datetime not null,
   ip_addr varchar(15),
@@ -209,3 +211,14 @@ create table users_connections (
   screenname varchar(255) default null,
   picture varchar(255) default null
 );
+
+drop table if exists objects;
+create table objects (
+  object_id bigint unsigned not null auto_increment,
+  primary key(object_id),
+  type varchar(32) not null,
+  ctime datetime not null,
+  mtime datetime not null,
+  
+);
+   

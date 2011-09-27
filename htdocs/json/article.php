@@ -30,7 +30,6 @@
     $article->setCtime( $ctime );
 
     $article->setTitle( $_POST['title'] );
-    $article->setCname( Misc::uriSafe($article->title()) );
     $article->setBody( $_POST['body'] );
     $article->setVisible( isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setFacebookUrl( $_POST['facebookUrl'] );

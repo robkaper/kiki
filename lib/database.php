@@ -103,6 +103,7 @@ class Database
 				return null;
 		}
 
+		echo "[$q]\n";
 		$rs = mysql_query( $q, $this->dbh );
 		if ( $rs === FALSE )
 			Log::error( "no rs for query [$q]" );

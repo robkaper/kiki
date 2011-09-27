@@ -1,12 +1,7 @@
 <?
 
-class Article
+class Article extends Object
 {
-  private $db = null;
-
-  private $id = 0;
-  private $ctime = null;
-  private $mtime = null;
   private $ipAddr = null;
   private $sectionId = null;
   private $userId = null;
@@ -17,29 +12,32 @@ class Article
   private $facebookUrl = null;
   private $twitterUrl = null;
 
-  public function __construct( $id=0 )
-  {
-    $this->db = $GLOBALS['db'];
-
-    if ( $this->id = $id )
-      $this->load();
-  }
-
   public function reset()
   {
+    parent::reset();
+
+    $this->ipAddr = null;
+    $this->sectionId = null;
+    $this->userId = null;
+    $this->title = null;
+    $this->cname = null;
+    $this->body = null;
+    $this->visible = null;
+    $this->facebookUrl = null;
+    $this->twitterUrl = null;
   }
 
   public function load()
   {
-    $q = $this->db->buildQuery( "SELECT id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url FROM articles where id=%d", $this->id );
+    // @fixme provide an upgrade path removing ctime/atime from articles, using objects only
+    $q = $this->db->buildQuery( "SELECT id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d", $this->id );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
   public function setFromObject( &$o )
   {
-    $this->id = $o->id;
-    $this->ctime = $o->ctime;
-    $this->mtime = $o->mtime;
+    parent::setFromObject($o);
+
     $this->ipAddr = $o->ip_addr;
     $this->sectionId = $o->section_id;
     $this->userId = $o->user_id;
@@ -51,26 +49,28 @@ class Article
     $this->twitterUrl = $o->twitter_url;
   }
 
-  public function save()
-  {
-    $this->id ? $this->dbUpdate() : $this->dbInsert();
-  }
-  
   public function dbUpdate()
   {
+    parent::dbUpdate();
+
     $q = $this->db->buildQuery(
-      "UPDATE articles SET ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', visible=%d, facebook_url='%s', twitter_url='%s' where id=%d",
-      $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->id
+      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', visible=%d, facebook_url='%s', twitter_url='%s' where id=%d",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->id
     );
 
-    $this->db->query();
+    $this->db->query($q);
   }
   
   public function dbInsert()
   {
+    if ( !$this->cname )
+      $this->cname = Misc::uriSafe($this->title);
+    if ( !$this->ctime )
+      $this->ctime = date("Y-m-d H:i:s");
+
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (ctime, mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url) VALUES ('%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, '%s', '%s')",
-      $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->visible, $this->facebookUrl, $this->twitterUrl
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, '%s', '%s')",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->visible, $this->facebookUrl, $this->twitterUrl
     );
     
     $rs = $this->db->query($q);
