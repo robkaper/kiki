@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.6' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.8' );
 
 drop table if exists twitter_users;
 create table twitter_users (
