@@ -51,7 +51,7 @@
     {
       if ( $connection->serviceName() == 'Facebook' )
       {
-        // @todo inform user that, and why, these are required (offline
+        // TODO: inform user that, and why, these are required (offline
         // access is required because Kiki doesn't store or use the
         // short-lived login sessions)
         if ( !$connection->hasPerm('publish_stream') )

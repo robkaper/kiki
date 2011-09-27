@@ -32,13 +32,13 @@ class Articles
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
 
-    // @todo Make this generic, difference with social update is the check
+    // TODO: Make this generic, difference with social update is the check
     // against an already stored external URL.
     foreach ( $user->connections() as $connection )
     {
       if ( $connection->serviceName() == 'Facebook' )
       {
-        // @todo inform user that, and why, these are required (offline
+        // TODO: inform user that, and why, these are required (offline
         // access is required because Kiki doesn't store or use the
         // short-lived login sessions)
         if ( !$connection->hasPerm('publish_stream') )

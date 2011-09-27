@@ -12,7 +12,7 @@ class Controller_Articles extends Controller
     else
       $this->title = Articles::sectionTitle( $db, $user, $this->instanceId );
 
-    // @fixme Page doesn't exist yet at this moment, but we need to handle this..
+    // FIXME: Page doesn't exist yet at this moment, but we need to handle this..
     // $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $this->objectId )
@@ -26,7 +26,7 @@ class Controller_Articles extends Controller
       else
       {
         Log::debug("article404");
-        // @todo set custom 404 template
+        // TODO: set custom 404 template
         return false;
       }
     }

@@ -11,13 +11,13 @@
 <?
   if ( Config::$facebookApp )
   {
-    // @todo consider re-enabling, although we prefer explicit logins
+    // TODO: consider re-enabling, although we prefer explicit logins
     // include Template::file('facebook/connect');
   }
 
   if ( Config::$twitterApp && Config::$twitterAnywhere )
   {
-    // @todo consider re-enabling, although we prefer explicit logins
+    // TODO: consider re-enabling, although we prefer explicit logins
     // include Template::file('twitter/anywhere');
   }
 

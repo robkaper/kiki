@@ -18,7 +18,7 @@ abstract class User_External
   protected $db;
 
   // protected $api = null;
-  // @todo temporarily public to test calls not implemented in the class yet.
+  // TODO: temporarily public to test calls not implemented in the class yet.
   public $api = null;
   protected $token = null;
   protected $secret = null;
@@ -42,7 +42,7 @@ abstract class User_External
       Log::debug( get_class($this). " constructed with id $id for user $kikiUserId, loading.." );
       $this->load($kikiUserId);
       
-      // @fixme don't connect until connection is actually needed
+      // FIXME: don't connect until connection is actually needed
       $this->connect();
     }
     else

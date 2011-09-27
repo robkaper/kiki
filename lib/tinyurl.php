@@ -62,7 +62,7 @@ class TinyUrl
     if ( !$id )
       $id = TinyUrl::insert($url);
 
-    // @todo support an alternative domain to be used here (for now do however assume that domain points to the same virtual host)
+    // TODO: support an alternative domain to be used here (for now do however assume that domain points to the same virtual host)
     return sprintf( "http://%s/%03s", $_SERVER['SERVER_NAME'], Base62::encode($id) );
   }
 }

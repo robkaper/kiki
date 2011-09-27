@@ -4,7 +4,7 @@ class Controller_Kiki extends Controller
 {
   public function exec()
   {
-    // @todo support DirectoryIndex equivalent, or else simply rely on
+    // TODO: support DirectoryIndex equivalent, or else simply rely on
     // mod_rewrite and remove this
     $kikiFile = $GLOBALS['kiki']. "/htdocs/". $matches[1];
     if ( file_exists($kikiFile) )

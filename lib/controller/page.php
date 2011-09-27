@@ -9,7 +9,7 @@ class Controller_Page extends Controller
 
     $this->title = Articles::title( $db, $user, $this->instanceId );
 
-    // @fixme Page doesn't exist yet at this moment, but we need to handle this..
+    // FIXME: Page doesn't exist yet at this moment, but we need to handle this..
     // $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $this->title )

@@ -1,11 +1,16 @@
-/// @file default.js
-/// Core Javascript functionality for Kiki.
-/// @author Rob Kaper <http://robkaper.nl/>
-/// @section license_sec License
-/// Released under the terms of the MIT license.
+/**
+ * Core Javascript functionality for Kiki.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
-/// @note Required to queue button.hide() on focusout so .submit() can
-///   trigger first.
+/**
+ * @var object $submitTimer Required to queue button.hide() on focusout so
+ * .submit() can trigger first.
+ */
 var submitTimer = null;
 
 /// Updates each element with class .jsonupdate through JSON.
@@ -14,8 +19,7 @@ function jsonUpdate()
   var ids = new Array();
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
-    /// @todo Add a class to manage the opacity so it can be configured in
-    ///   the stylesheet.
+    // TODO: Add a class to manage the opacity so it can be configured in the stylesheet.
     $(this).css( 'opacity', '0.7' );
     ids[ids.length] = $(this).attr('id');
   } );
@@ -31,8 +35,10 @@ function jsonUpdate()
   } );
 }
 
-/// Expands a specific comment form.
-/// @param $id string full ID of the comment form outer div element (e.g. commentForm_1)
+/**
+ * Expands a specific comment form.
+ * @param string $id full ID of the comment form outer div element (e.g. commentForm_1)
+ */
 function growCommentForm( id )
 {
   $('#' + id).removeClass( 'shrunk' );
@@ -64,8 +70,8 @@ function showArticleComments( articleId )
 
 function fbLogin()
 {
-  // @todo perhaps we can use a jsonLoggingIn boilerplate or similar for here and twLogin?
-  // @todo don't we need FB.init here?
+  // TODO: perhaps we can use a jsonLoggingIn boilerplate or similar for here and twLogin?
+  // TODO: don't we need FB.init here?
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   FB.login( function(response) { onFbResponse(response); }, { perms: '' } );
   return false;

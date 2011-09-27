@@ -45,14 +45,14 @@
   else if ( $handler = Router::findHandler($reqUri) )
   {
     // Ensure trailing slash for all content except pages
-    // @fixme Find only collection controllers here, to keep baseURI matching simple, move page controller downwards
+    // FIXME: Find only collection controllers here, to keep baseURI matching simple, move page controller downwards
     if ( !$handler->trailingSlash && $handler->type != 'page' )
     {
       $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
       Router::redirect($url, true) && exit();
     }
        
-    // @todo this is nearly one on one, might as well let findHandler return the right controller..
+    // TODO: this is nearly one on one, might as well let findHandler return the right controller..
     $controller = Controller::factory($handler->type);
     $controller->setInstanceId($handler->instanceId);
     $controller->setObjectId($handler->remainder);
@@ -62,11 +62,11 @@
   else
     $controller = new Controller();
 
-  // @todo /kiki/album/
+  // TODO: /kiki/album/
   //RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]
   //RewriteRule ^/kiki/album/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,L]
   //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
-  // @todo test missing directoryindices (most notably / when moving content to database)
+  // TODO: test missing directoryindices (most notably / when moving content to database)
 
   $controller->exec();
   // Log::debug( print_r($controller, true) );

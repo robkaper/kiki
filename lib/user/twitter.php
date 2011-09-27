@@ -10,7 +10,7 @@ class User_Twitter extends User_External
   protected function connect()
   {
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
-    // @fixme this connects based on _SESSION, adjust to also allow connection based on stored token
+    // FIXME: this connects based on _SESSION, adjust to also allow connection based on stored token
 
     if ( 0 && isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret']) )
     {

@@ -1,7 +1,7 @@
 <?
   include_once "../../lib/init.php";
 
-  // @fixme currently not in use, router.php doesn't support albums yet (not
+  // FIXME: currently not in use, router.php doesn't support albums yet (not
   // a serious issue as albums weren't finished let alone integrated nyway)
 
   $page = new Page();

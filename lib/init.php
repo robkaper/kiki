@@ -62,7 +62,7 @@
   $db = $GLOBALS['db'] = new Database( Config::$db );
   Config::loadDbConfig($db);
 
-  // @fixme is this where we want this..
+  // FIXME: is this where we want this..
   $q = "select id from users where admin=1"; // and verified=1
   $rs = $db->query($q);
   if ( $rs && $db->numRows($rs) )

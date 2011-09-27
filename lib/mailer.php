@@ -18,7 +18,7 @@ class Mailer
 {
   public static function send( &$email, $priority = 10 )
   {
-    /// @warning MailerQueue requires a mail sending daemon/script, which isn't included in this repository yet.
+    // WARNING: MailerQueue requires a mail sending daemon/script, which isn't included in this repository yet.
     if ( Config::$mailerQueue )
       self::queue( $email, $priority );
     else
@@ -27,7 +27,7 @@ class Mailer
 
   private static function queue( &$email, $priority )
   {
-    /// @todo Merge MailerQueue back into Mailer class, queuing is an integrated feature.
+    // TODO: Merge MailerQueue back into Mailer class, queuing is an integrated feature.
     MailerQueue::store( $email, $priority=10 );
   }
   

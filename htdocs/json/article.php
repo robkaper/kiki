@@ -22,7 +22,7 @@
 
     $article->setSectionId( $_POST['sectionId'] );
 
-    // @fixme only set it, don't update if use id exists in case of multiple
+    // FIXME: only set it, don't update if use id exists in case of multiple
     // authors who can amend/edit/proofread each other's work.
     $article->setUserId( $user->id() );
     $article->setIpAddr( $_SERVER['REMOTE_ADDR'] );
@@ -63,7 +63,7 @@
       }
     }
 
-    // @fixme twitter/facebook URLs are not being saved currently
+    // FIXME: twitter/facebook URLs are not being saved currently
     $article->save();
     
     if ( isset($_POST['json']) )

@@ -66,14 +66,14 @@ class Config
 
 	public static $adminUsers = array();
 
-	// @fixme Add check in setup, pepper *must* be changed from the
+	// FIXME: Add check in setup, pepper *must* be changed from the
 	// defaults to avoid rainbow table lookups.
-	// @warning Changing these values will invalidate all user
+	// WARNING: Changing these values will invalidate all user
 	// passwords already stored as hash.
 	public static $passwordHashPepper = '';
 	public static $passwordHashIterations = 5;
 
-	// @fixme Add check in setup, pepper *must* be changed from the
+	// FIXME: Add check in setup, pepper *must* be changed from the
 	// defaults to avoid rainbow table lookups.
 	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
@@ -113,7 +113,7 @@ class Config
 
 	public static function loadDbConfig( &$db )
 	{
-		// @todo Actually get these from the database
+		// TODO: Actually get these from the database
 		if ( self::$facebookApp )
 			self::$connectionServices[] = 'Facebook';
 		if ( self::$twitterApp )

@@ -38,7 +38,7 @@ abstract class Daemon
     openlog( "$name", LOG_PID, $this->logFacility );
   }
 
-  /// @warning Historically implemented a loop itself, but this class should handle that itself.
+  // WARNING: Historically implemented a loop itself, but this class should handle that itself.
   abstract protected function main();
   abstract protected function cleanup( $pid );
     
@@ -146,7 +146,7 @@ abstract class Daemon
           else
           {
             Log::error( "error with child $pid" );
-            /// @todo cleanup() here?
+            // TODO: cleanup() here?
           }
 
           array_splice( $this->childPids, $i, 1 );

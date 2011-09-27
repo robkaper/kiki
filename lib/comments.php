@@ -23,7 +23,7 @@ class Comments
     return $content;
   }
 
-  // @fixme port to users_connections
+  // FIXME: port to users_connections
   public static function show( &$db, &$user, $objectId, $jsonLast=null )
   {
     $comments = array();

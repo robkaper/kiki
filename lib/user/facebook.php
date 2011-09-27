@@ -38,7 +38,7 @@ class User_Facebook extends User_External
       }
     }
 
-    // @fixme debug and re-enable
+    // FIXME: debug and re-enable
     return;
 
     $perms = explode(",", $_GET['perms'] );
@@ -69,7 +69,7 @@ class User_Facebook extends User_External
     // after clearing the local cookie, effectively making it impossible to
     // logout.
 
-    // @warning This might break permission updates, as those probably do
+    // // WARNING: This might break permission updates, as those probably do
     // require fetching the new sesion token.
     if ( !isset($_GET['session']) )
       return;
@@ -117,7 +117,7 @@ class User_Facebook extends User_External
     return $args;
   }
 
-  // @todo load user_id, external_id, service, ctime, mtime, accesstoken, secret, name, screen, picture
+  // TODO: load user_id, external_id, service, ctime, mtime, accesstoken, secret, name, screen, picture
   public function loadRemoteData()
   {
     $data = null;
@@ -166,7 +166,7 @@ class User_Facebook extends User_External
       'picture' => $picture,
       'privacy' => json_encode( array('value' => 'ALL_FRIENDS') )
 
-      // @todo allow choice of EVERYONE, CUSTOM, ALL_FRIENDS, NETWORKS_FRIENDS, FRIENDS_OF_FRIENDS, SELF.
+      // TODO: allow choice of EVERYONE, CUSTOM, ALL_FRIENDS, NETWORKS_FRIENDS, FRIENDS_OF_FRIENDS, SELF.
     );
 
     Log::debug( "attachment: ". print_r( $attachment, true ) );
@@ -208,7 +208,7 @@ class User_Facebook extends User_External
     $title = $article->title();
     $caption = $_SERVER['SERVER_NAME'];
     $description = Misc::textSummary( $article->body(), 400 );
-    $picture = null; // @todo $article->picture();
+    $picture = null; // TODO: $article->picture();
     $picture = $picture ? $picture : Config::$siteLogo;
 
     $result = $this->post( $msg, $link, $title, $caption, $description, $picture );
@@ -256,7 +256,7 @@ class User_Facebook extends User_External
 
     try 
     {
-      // @todo support pages (page Id instead of "me")
+      // TODO: support pages (page Id instead of "me")
       $rs = $this->api->api('me/events', 'post', $attachment);
       return $rs;
     }
@@ -266,7 +266,7 @@ class User_Facebook extends User_External
       return null;
     }
 
-    // @todo invites
+    // TODO: invites
     // $fb->api( array(
     //   'method' => 'events.invite',
     //   'eid' => $event_id,
@@ -287,7 +287,7 @@ class User_Facebook extends User_External
     if ( !$this->api )
       return false;
 
-    // @fixme this is awfully slow (as expected from remote calls),
+    // TODO: this is awfully slow (as expected from remote calls),
     // implement verify and only do a remote check prior to posting.  Or
     // just catch the error and always check the local store.
     try {
@@ -297,12 +297,12 @@ class User_Facebook extends User_External
     catch( FacebookApiException $e )
     {
       Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
-      // @todo should then be unlinked for this user..
+      // TODO: should then be unlinked for this user..
       return false;
     }
   }
 
-  // @fixme port
+  // FIXME: port
   public function storePerm( $perm )
   {
     $qPerm = $this->db->escape( $perm );
@@ -310,7 +310,7 @@ class User_Facebook extends User_External
     $this->db->query($q);
   }
 
-  // @fixme port
+  // FIXME: port
   public function revokePerm( $perm )
   {
     if ( !$this->fb )

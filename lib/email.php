@@ -1,16 +1,17 @@
 <?
 
 /**
-* @file lib/email.php
-* Provides the Email class.
-* @class Email
-* Constructs an e-mail message to be used by Mailer. Supports a HTML alternative part,
-* MIME attachments as well as RFC-3636 compliant signatures.
-* @see http://tools.ietf.org/html/rfc3676#section-4.3
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Constructs an e-mail message to be used by Mailer. Supports a HTML
+ * alternative part, MIME attachments as well as RFC-3636 compliant
+ * signatures.
+ *
+ * @url http://tools.ietf.org/html/rfc3676#section-4.3
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Email
 {
@@ -114,10 +115,13 @@ class Email
     $this->signature = $signature;
   }
 
-  /// Sets a HTML alternative part.
-  /// @param $html [string] the HTML alternative
-  /// @warning Setting this results in a multipart MIME message with an
-  ///   empty plain text alternative if setPlain() is not called explicitely.
+  /**
+   * Sets a HTML alternative part.
+   *
+   * @param string $html the HTML alternative
+   * @warning Setting this results in a multipart MIME message with an
+   * empty plain text alternative if setPlain() is not called explicitely.
+   */
   public function setHtml( $html )
   {
     $this->htmlMessage = $html;
@@ -280,9 +284,12 @@ class Email
     return $this->headers(). $this->body();
   }
 
-  /// Sends the e-mail message uing the Mailer class, provided for convenience.
-  /// @param $priority [int] (optional) queue priority when Config::$mailQueue is enabled
-  /// @see Mailer::send()
+  /**
+   * Sends this e-mail message using the Mailer class, provided for convenience.
+   *
+   * @param int $priority (optional) queue priority when Config::$mailQueue is enabled
+   * @see Mailer::send()
+   */
   public function send( $priority = 10 )
   {
     Mailer::send( $this, $priority );

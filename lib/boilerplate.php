@@ -77,7 +77,7 @@ class Boilerplate
 
     $name = $user->name();
     $pic = $user->picture();
-    // @fixme support this type in socialImage
+    // FIXME: support this type in socialImage
     $type = 'kiki';
 
     $content = "<div class=\"comment\" style=\"min-height: 0px;\">\n";

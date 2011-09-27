@@ -67,7 +67,7 @@ class Router
       return false;
 
     // No trailing slash
-    // @todo accept pages, otherwise add and 301
+    // TODO: accept pages, otherwise add and 301
     $trailingSlash = false;
     $result = self::matchBaseUri($uri);
     if ( $result )

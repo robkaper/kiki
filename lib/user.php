@@ -51,12 +51,12 @@ class User extends Object
     if ( $id )
       $this->id = $id;
 
-    // @fixme provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    // @todo email
+    // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
+    // TODO: todo email
     $q = $this->db->buildQuery( "select id, o.object_id, u.ctime, u.mtime, email, auth_token, mail_auth_token, admin from users u LEFT JOIN objects o on o.object_id=u.object_id where id=%d", $this->id );
     $this->setFromObject( $this->db->getSingle($q) );
 
-    // @todo make sure this doesn't load remote data
+    // TODO: make sure this doesn't load remote data
     $this->getStoredConnections();
   }
 
@@ -159,14 +159,14 @@ class User extends Object
         if ( isset($this->connections[$id]) )
         {
           Log::debug( "identified $id, already linked in store" );
-          // @todo compare connections and only load remote data if old is missing
+          // TODO: compare connections and only load remote data if old is missing
           // $storedConnection = $this->connections[$id];
 
           // Identified user, no need to connect before link?
           $user->loadRemoteData();
 
           // Re-link connection to ensure the latest data is used (especially access token)
-          // @todo compare connections and only relink when token changed or remote data was loaded
+          // TODO: compare connections and only relink when token changed or remote data was loaded
           $user->unlink( $this->id );
           $user->link($this->id );
 
@@ -234,13 +234,13 @@ class User extends Object
     $this->load();
   }
 
-  // @deprecated
+  // WARNING: deprecated
   public function authenticate()
   {
     $this->identify();
   }
 
-  // @todo deprecate, or refactor
+  // TODO: deprecate, or refactor
   public function storeNew( $email, $password, $admin = false )
   {
     $this->email = $email;
