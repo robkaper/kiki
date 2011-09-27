@@ -51,7 +51,8 @@ class Articles
       }
       else if (  $connection->serviceName() == 'Twitter' )
       {
-        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+        if ( !$twitterUrl )
+          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
       }
     }
 
