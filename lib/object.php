@@ -43,8 +43,11 @@ abstract class Object
 
   abstract public function load();
 
-  protected function setFromObject($o)
+  protected function setFromObject( &$o )
   {
+    if ( !$o )
+      return;
+
     $this->id = $o->id;
     $this->objectId = $o->object_id;
     $this->ctime = $o->ctime;

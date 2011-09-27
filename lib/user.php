@@ -2,11 +2,11 @@
 
 include_once( $GLOBALS['kiki']. '/lib/twitteroauth/twitteroauth.php');
 
-class User
+class User extends Object
 {
-  private $db;
+  private $email = null;
+  private $password = null;
 
-  public $id, $ctime, $mtime;
   private $authToken;
   public $mailAuthToken;
   private $isAdmin;
@@ -14,28 +14,13 @@ class User
   private $connections = array();
   private $identifiedConnections = null;
 
-  public function __construct( $id = null )
-  {
-    $this->db = $GLOBALS['db'];
-
-    $this->reset();
-
-    $this->load( $id );
-  }
-
   public function reset()
   {
-    $this->id = 0;
-    $this->ctime = time();
-    $this->mtime = time();
+    parent::reset();
+
     $this->authToken = "";
     $this->mailAuthToken = "";
     $this->isAdmin = false;
-  }
-
-  public function id()
-  {
-    return $this->id;
   }
 
   public function name()
@@ -61,25 +46,54 @@ class User
     return $this->isAdmin;
   }
 
-  public function load( $id = 0 )
+  public function load()
   {
-    if ( !$id )
-      return;
-
-    $q = $this->db->buildQuery( "select id,mail_auth_token,admin from users where id=%d", $id );
-    $o = $this->db->getSingle($q);
-    if ( !$o )
-    {
-      $this->id = 0;
-      return;
-    }
-
-    $this->id = $o->id;
-    $this->mailAuthToken = $o->mail_auth_token;
-    $this->isAdmin = $o->admin;
+    // @fixme provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
+    // @todo email
+    $q = $this->db->buildQuery( "select id, o.object_id, u.ctime, u.mtime, email, auth_token, mail_auth_token, admin from users u LEFT JOIN objects o on o.object_id=u.object_id where id=%d", $this->id );
+    $this->setFromObject( $this->db->getSingle($q) );
 
     // @todo make sure this doesn't load remote data
     $this->getStoredConnections();
+  }
+
+  public function setFromObject( &$o )
+  {
+    parent::setFromObject($o);
+
+    if ( !$o )
+      return;
+
+    $this->email = $o->email;
+    $this->authToken = $o->auth_token;
+    $this->mailAuthToken = $o->mail_auth_token;
+    $this->isAdmin = $o->admin;
+  }
+
+  public function dbUpdate()
+  {
+    parent::dbUpdate();
+
+    $q = $this->db->buildQuery(
+      "UPDATE users SET object_id=%d, ctime='%s', mtime=now(), email='%s', auth_token='%s', admin=%d where id=%d",
+      $this->objectId, $this->ctime, $this->email, $this->authToken, $this->isAdmin, $this->id
+    );
+
+    $this->db->query($q);
+  }
+  
+  public function dbInsert()
+  {
+    $q = $this->db->buildQuery(
+      "INSERT INTO users(object_id, ctime, mtime, email, auth_token, admin) values (%d, now(), now(), '%s', '%s', %d)",
+      $this->objectId, $this->email, $this->authToken, $this->isAdmin
+    );
+    
+    $rs = $this->db->query($q);
+    if ( $rs )
+      $this->id = $this->db->lastInsertId($rs);
+
+    return $this->id;
   }
 
   public function getStoredConnections()
@@ -214,7 +228,7 @@ class User
     // Log::debug( "identifiedConnections: ". print_r($this->identifiedConnections, true) );
     // Log::debug( "connections: ". print_r($this->connections, true) );
 
-    $this->load( $this->id );
+    $this->load();
   }
 
   // @deprecated
@@ -223,15 +237,16 @@ class User
     $this->identify();
   }
 
+  // @todo deprecate, or refactor
   public function storeNew( $email, $password, $admin = false )
   {
-    $qEmail = $this->db->escape( $email );
-    $qAuthToken = Auth::passwordHash($password);
-    $qAdmin = $this->admin = (int) $admin;
-    $q = "insert into users(ctime, mtime, email, auth_token, admin) values (now(), now(), '$qEmail', '$qAuthToken', $qAdmin)";
-    $rs = $this->db->query($q);
+    $this->email = $email;
+    $this->password = $password;
+    $this->authToken = Auth::passwordHash( $password );
+    $this->admin = (int) $admin;
+    
+    $this->save();
 
-    $this->id = $this->db->lastInsertId($rs);
     Auth::setCookie($this->id);
   }
 
@@ -256,6 +271,11 @@ class User
   public function getConnection( $id )
   {
     return isset($this->connections[$id]) ? $this->connections[$id] : null;
+  }
+
+  public function url()
+  {
+    return "/account/";
   }
 }
 

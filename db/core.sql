@@ -50,6 +50,7 @@ drop table if exists users;
 create table users (
   id bigint unsigned not null auto_increment,
   primary key(id),
+  object_id bigint unsigned default null,
   ctime datetime not null,
   mtime datetime not null,
   name varchar(255) not null default '',
@@ -87,7 +88,7 @@ drop table if exists articles;
 create table articles (
   id bigint unsigned not null auto_increment,
   primary key(id),
-  object_id bigint unsigned not null,
+  object_id bigint unsigned default null,
   unique key(object_id),
   ctime datetime not null,
   mtime datetime not null,

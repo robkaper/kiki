@@ -78,7 +78,7 @@
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
   if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
   {
-    $userTxt = ", user: $user->id";
+    $userTxt = ", user: ". $user->id();
     $connectionsTxt = ", connections: ". join( ", ", $user->connectionIds() );
 
     $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
