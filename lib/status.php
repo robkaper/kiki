@@ -1,5 +1,15 @@
 <?
 
+/**
+ * Class providing various helper functions for checking internal integrity,
+ * such as module requirements and database version.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 class Status
 {
   public static function failedRequirements()

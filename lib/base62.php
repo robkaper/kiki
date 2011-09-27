@@ -1,18 +1,22 @@
 <?
 
 /**
- * Base 62 Encoder / Decoder Class
- * (c) Andy Huang, 2009; All rights reserved
+ * Base 62 encoding and decoding.
  *
- * This code is not distributed under any specific license, 
- * as I do not believe in them, but it is distributed under
- * these terms outlined below:
+ * @package Kiki
+ * @author Andy Huang
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2009 Andy Huang
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ *
+ * @license This code is not distributed under any specific license. The
+ * original author Andy Huang distributed it under the terms outlined below:
  * - You may use these code as part of your application, even if it is a commercial product
  * - You may modify these code to suite your application, even if it is a commercial product
  * - You may sell your commercial product derived from these code
  * - You may donate to me if you are some how able to get a hold of me, but that's not required
  * - You may link back to the original article for reference, but do not hotlink the source file
-  * - This line is intentionally added to differentiate from LGPL, or other similar licensing terms
+ * - This line is intentionally added to differentiate from LGPL, or other similar licensing terms
  * - You must at all time retain this copyright message and terms in your code
  */
 

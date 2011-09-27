@@ -1,16 +1,20 @@
 <?
 
 /**
-* @file lib/config.php
-* Provides the Config class.
-* @class Config
-* Ensures availability of core configuration values with reasonable defaults.
-* Values can be overriden in config.php, although the intention id to move
-* most of these to the config table in the database.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Ensures availability of core configuration properties, with reasonable
+ * defaults.
+ *
+ * Values can be overriden in the config.php file.
+ *
+ * @todo Move user/site-specific configuration options to the config table
+ * in the database, this class should solely provide static properties for
+ * core options such as database configuration itself.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Config
 {

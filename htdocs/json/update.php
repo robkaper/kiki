@@ -1,13 +1,18 @@
 <?
-
 /**
-* @file htdocs/json/update.php
-* Handles updateable page snippets requested by jsonUpdate() from htdocs/scripts/default.js.
-* @todo This is quite a mess (mostly because Boilerplate handling is awkward).
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Returns updateable page parts in JSON format as required by jsonUpdate from htdocs/scripts/default.js
+ *
+ * @fixme This is quite a mess. Mostly because Boilerplate handling is
+ * akward, but the entire idea of updating page parts and content by JSON
+ * needs to be rethought.  It was originally intended for fluid
+ * Javascript-based Facebook logins, but thosde are disabled pending a good
+ * review of the multiple authentication methods.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
   include_once "../../lib/init.php";
 

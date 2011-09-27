@@ -1,12 +1,16 @@
 <?
 
 /**
-* @file htdocs/json/comment.php
-* Handles Ajax updates of comment posts.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Handles creation requests (POSTS) for comments. Returns all comments
+ * inserted since the one specified by client as last known.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ *
+ * @todo verify backwards compatibility (should be a See Other redirect?)
+ */
 
   include_once "../../lib/init.php";
 

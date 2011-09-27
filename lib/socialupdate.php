@@ -1,20 +1,21 @@
 <?
 
 /**
-* @file lib/socialupdate.php
-* Provides the SocialUpdate class.
-* @class SocialUpdate
-* Utility class to post updates to social networks.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-* @todo Allow selection of which networks to post to, currently this class
-*   posts to all networks available.
-*/
+ * Utility class to post updates to social networks.
+ *
+ * @deprecated Not currently in use by other Kiki internal classes, will be removed shortly or refactored to some sort of generic publication class.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ *
+ * @todo Allow selection of which networks to post to, currently this class
+ * posts to all networks available.
+ */
 
 class SocialUpdate
 {
-
   public static $type = null;
   public static $fbRs = null;
   public static $twRs = null;

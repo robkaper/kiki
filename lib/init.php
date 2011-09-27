@@ -1,12 +1,17 @@
 <?
-
 /**
-* @file lib/init.php
-* Initialisation/bootloader script for Kiki.
-* @todo add i18n support for Kiki's base strings (not necessarily a
-*   bootloader issue but I need to document this somewhere...)
-* @todo find a way to properly document a bootloader script in Doxygen
-*/
+ * Initialisation/bootloader script for Kiki.
+ *
+ * This file should be included (in fact, required) on top of all project
+ * files.  It sets paths, provides the autoloader and initialises
+ * configuration settings, logging, the database object and user
+ * authentication.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
   // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
@@ -65,14 +70,14 @@
       Config::$adminUsers[] = $o->id;
 
   $user = $GLOBALS['user'] = new User();
-
-  if ( Config::$mailerQueue )
-    MailerQueue::init();
-
   if ( Config::$singleUser )
+  {
     $user->load(Config::$singleUser);
   else
     $user->authenticate();
+
+  if ( Config::$mailerQueue )
+    MailerQueue::init();
 
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];

@@ -1,5 +1,18 @@
 <?
 
+/**
+ * Class for comments attached to objects.
+ *
+ * @fixme ObjectId's aren't really object ID's yet and reference article
+ * ID's.  Comments should be Objects themselves and the reference should be
+ * done by referenceId or something like that.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 class Comments
 {
   public static function form( &$user, $objectId )

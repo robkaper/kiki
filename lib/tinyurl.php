@@ -1,22 +1,21 @@
 <?
-
 /**
-* @file lib/tinyurl.php
-* Provides the TinyUrl class.
-* @class TinyUrl
-* Creates, stores and resolves local tiny URLs
-* @todo Allow lookups of full URLs
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Creates, stores and resolves local tiny URLs.
+ *
+ * @todo Allow lookup of full URLs (as opposed to IDs)
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class TinyUrl
 {
 
   /**
   * Looks up the full URL for a tinyURL database entry.
-  * @param $id [int] Database ID.
+  * @param int $id Database ID.
   * @return string full URL of the resource
   */
   public static function lookup( $id )
@@ -28,7 +27,7 @@ class TinyUrl
 
   /**
   * Looks up the full URL for a tinyURL ID.
-  * @param $id [string] tinyURL ID (just the local part of the URI, not the full URL with protocol or hostname)
+  * @param string $id tinyURL ID (just the local part of the URI, not the full URL with protocol or hostname)
   * @return string full URL of the resource
   */
   public static function lookup62( $id )
@@ -38,7 +37,7 @@ class TinyUrl
   
   /**
   * Stores a URL resource into the database.
-  * @param $url [string] URL of the resource
+  * @param string $url URL of the resource
   * @return int ID of the database entry
   */
   public static function insert( $url )
@@ -52,7 +51,7 @@ class TinyUrl
 
   /**
   * Retrieves a tinyURL for a full URL. Tries a lookup first and creates a new tinyURL upon failure.
-  * @param $url [string] URL of the resource
+  * @param string $url URL of the resource
   * @return string tinyURL for the resource
   */
   public static function get( $url )

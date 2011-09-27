@@ -1,14 +1,15 @@
 <?
 
 /**
-* @class Controller
-* Controller class. Sort of.
-* @todo Make this a proper abstract to be reimplemented, plus a factory so
-* router can select the correct handler.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Class providing controller factory and base class.
+ *
+ * @todo Split into a proper base class abstract and factory.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Controller
 {

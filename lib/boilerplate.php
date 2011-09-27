@@ -1,8 +1,20 @@
 <?
 
-// TODO: Should be deprecated, load values from database or otherwhise refactored.
-// Was nice to have this class in the simplest revisions of Kiki, but it's
-// not suitable as permanent solution.
+/**
+ * Boilerplates.
+ *
+ * Various methods providing boilerplate framework content such as login and account links.
+ *
+ * @todo Refactor this to use templates and (database) strings that can be
+ * updated by JSON or translated by i18n in a generic fashion.  The static
+ * methods served a purpose in the earliest revisions of Kiki, but are
+ * obviously not suitable as a long term solution.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+*/
 
 class Boilerplate
 {
@@ -182,7 +194,6 @@ class Boilerplate
 
       }
     }
-
 
     return $content;
   }

@@ -1,17 +1,15 @@
 <?
 
 /**
-* @file lib/database.php
-* Provides the Database class.
-* @class Database
-* Utility class for database operations. Offers SQL injection prevention.
-* Use one instance of this class for each separate database connection
-* required.
-* @warning Kiki is purely LAMP and only works with MySQL and MariaDB.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Utility class for database operations. Offers SQL injection prevention.
+ * Use one instance of this class for each separate database connection
+ * required.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2006-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Database
 {
@@ -20,7 +18,7 @@ class Database
 
 	/**
 	* Initialises this instance.
-	* @param $confArray [array] configuration details (host, port, database name, user, password)
+	* @param array $confArray configuration details (host, port, database name, user, password)
 	*/
 	public function __construct( &$confArray )
 	{
@@ -91,7 +89,7 @@ class Database
 	* Executes a query against the active database. Attempts a new
 	* connection first if none is available.  Generates an log error
 	* when the query is invalid.
-	* @param $q [string] SQL query to be executed
+	* @param string $q SQL query to be executed
 	* @return resource the resource (or result set) of the query, null in case of an error or no connection
 	*/
 	function query( $q )
@@ -116,7 +114,7 @@ class Database
 	*   no longer valid and will not return any objects if the
 	*   connection is interrupted between executing the query and
 	*   retrieving the results.
-	* @param $rs [resource] resource/result set
+	* @param resource $rs resource/result set
 	* @return object the retrieved object, or null if none is available.
 	*/
 	function fetchObject( $rs )
@@ -134,7 +132,7 @@ class Database
 	*   no longer valid and will not return anything useful if the
 	*   connection is interrupted between executing the query and
 	*   retrieving the results.
-	* @param $rs [resource] resource/result set
+	* @param resource $rs resource/result set
 	* @return int number of rows/results
 	*/
 	function numRows( $rs )
@@ -154,7 +152,7 @@ class Database
 	*   no longer valid and will not return anything useful if the
 	*   connection is interrupted between executing the query and
 	*   retrieving the results.
-	* @param $rs [resource] resource/result set
+	* @param resource $rs resource/result set
 	* @return int ID of the inserted resource, or zero in case the resource is invalid.
 	*/
 	function lastInsertId( $rs )
@@ -174,7 +172,7 @@ class Database
 	*   no longer valid and will not return anything useful if the
 	*   connection is interrupted between executing the query and
 	*   retrieving the results.
-	* @param $rs [resource] resource/result set
+	* @param resource $rs resource/result set
 	* @return int number of rows affected, zero is the resource is invalid.
 	*/
 	function affectedRows( $rs )
@@ -189,7 +187,7 @@ class Database
 
 	/**
 	* Protects a string against SQL injection. Attempts a new connection first is none is available.
-	* @param $str [string] query parameter
+	* @param string $str query parameter
 	* @return string the protected string, or null if no connection is available
 	*/
 	function escape( $str )
@@ -204,7 +202,7 @@ class Database
 
 	/**
 	* Executes a query an returns a single object
-	* @param $q [string] query
+	* @param string $q query
 	* @return object the first object in the resource/result set
 	*/
 	function getSingle( $q )
@@ -217,7 +215,7 @@ class Database
 
 	/**
 	* Executes a query an returns a single value
-	* @param $q [string] query
+	* @param string $q query
 	* @return string the value of the first column of the first object in the resource/result set
 	*/
 	function getSingleValue( $q )

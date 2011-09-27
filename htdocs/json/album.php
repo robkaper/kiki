@@ -1,12 +1,13 @@
 <?
 
 /**
-* @file htdocs/json/album.php
-* Handles Ajax updates for album views.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Handles Ajax album navigation.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
   include "../../lib/init.php";
 

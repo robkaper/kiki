@@ -1,12 +1,17 @@
 <?
 
 /**
-* @class Google
-* Utility class to load Google HTML/Javascript templates. Slightly overkill, but checks whether Google features (page verification, Adsense, Analytics) have been configured.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Utility class for integration of Google services.
+ *
+ * This class is slightly overkill. Other than checking whether Google
+ * features (page verification, Adsense, Analytics) are configured, all it
+ * does is included the appropriate templates for HTML/Javascript.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Google
 {

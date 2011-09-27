@@ -1,22 +1,21 @@
 <?
 
 /**
-* @file lib/misc.php
-* Provides the Misc class.
-* @class Misc
-* Utility class for common methods. Most do as of yet not fit into Kiki's object model yet.
-* @author Rob Kaper <http://robkaper.nl/>
-* Released under the terms of the MIT license.
-* @todo Move markup related methods to a Markup (or BBcode) class.
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Utility class for various methods that don't fit Kiki's object model (yet).
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ *
+ * @todo refactor markup related methods to a Markup (or BBcode) class.
+ */
 
 class Misc
 {
   /**
   * Provides a description of the difference between a timestamp and the current time.
-  * @param $time [int] the time to compare the current time to
+  * @param int $time the time to compare the current time to
   * @return string description of the difference in time
   * @warning Only supports comparison to times in the past.
   * @bug rjkcust: returns strings in Dutch.
@@ -47,9 +46,9 @@ class Misc
 
   /**
   * Converts text (plain or with BBcode markup into formatted HTML.
-  * @param $text [string] input text
-  * @param $authorMode [bool] (optional) whether to allow images, blockquotes and lists
-  * @param $fullURLs [bool] (optional) whether to allow the use of relative URLs
+  * @param string $text input text
+  * @param boolean $authorMode (optional) whether to allow images, blockquotes and lists
+  * @param boolean $fullURLs (optional) whether to allow the use of relative URLs
   * @return string the HTML formatted text
   */
   public static function markup( $text, $authorMode = true, $fullURLs = false )
@@ -124,7 +123,7 @@ class Misc
 
   /**
   * Converts a string into a version safe for use in URIs.
-  * @param $str [string] input string
+  * @param string $str input string
   * @return string the URI-safe string
   */
   public static function uriSafe( $str )
@@ -144,7 +143,7 @@ class Misc
 
   /**
   * Removes BBcode markup from a text.
-  * @param $str [string] input text
+  * @param string $str input text
   * @return string plain text version of the text
   */
   public static function textStrip( $str )
@@ -159,8 +158,9 @@ class Misc
 
   /**
   * Provides a summary of a larger text.
-  * @param $str [string] input text
-  * @param $maxLength [int] maximum output length
+  * @param string $str input text
+  * @param int $maxLength maximum output length
+  * @param bool $lengthInParagraphs whether the specified length means paragraphs or characters
   * @return string plain text version of the string
   * @todo keep for phrases that need to be shortened for Twitter/SMS/etc,
   *   but deprecate in article overviews and write teaster/cutoff

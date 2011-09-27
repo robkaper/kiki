@@ -1,10 +1,11 @@
 <?
 
 /**
- * Router class. Sort of.
+ * Class providing routing functionalities such as redirection and base URI detection.
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 

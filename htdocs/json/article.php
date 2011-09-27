@@ -1,12 +1,15 @@
 <?
-
 /**
-* @file htdocs/json/article.php
-* Handles Ajax saves of Article forms.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Handles creation and modification requests (POSTS) for articles.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ *
+ * @todo verify backwards compatibility (should be a See Other redirect?)
+ */
+
   include_once "../../lib/init.php";
 
   if ($_POST)

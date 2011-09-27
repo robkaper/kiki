@@ -1,14 +1,13 @@
 <?
 
 /**
-* @file lib/log.php
-* Provides the Log class.
-* @class Log
-* Facilitates error and debug logging.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/ 
+ * Facilitates debug and error logging.
+ * 
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2008-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Log
 {
@@ -38,8 +37,8 @@ class Log
 
 	/**
 	* Logs a message (plus request URI) to Apache's error_log.
-	* @param $msg [string] message to log
-	* @param $alsoDebug [bool] (optional) whether to also record the message in the debug log
+	* @param string $msg message to log
+	* @param boolean $alsoDebug (optional) whether to also record the message in the debug log
 	*/
 	public static function error( $msg, $alsoDebug = true )
 	{
@@ -51,7 +50,7 @@ class Log
 	/**
 	* Logs a message to Kiki's debug log file, including request method,
 	* URI and execution times since init() and previous log entry.
-	* @param $msg [string] message to log
+	* @param string $msg message to log
 	*/
 	public static function debug( $msg )
 	{

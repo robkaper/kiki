@@ -1,13 +1,19 @@
 <?
 
 /**
-* @file htdocs/index.php
-* Kiki status page. Checks required modules and extensions and also the
-* database version (installing/upgrading when possible and necessary).
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Kiki status page. Checks required modules and extensions and also the
+ * database version (installing/upgrading when possible and necessary). 
+ * Works fine for backwards compatible updates.
+ *
+ * @fixme Breaks when new columns are added to tables used to generate this
+ * page, mostly notable users (to recognise administration rights or new
+ * setup) and config (to check database version).
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
   include_once "../lib/init.php";
 
@@ -152,8 +158,6 @@
   {
     echo "<p>\nPlease login.</p>\n";
     include Template::file('parts/forms/login');
-?>
-<?
   }
 
   $page->footer();
