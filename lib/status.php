@@ -12,6 +12,10 @@
 
 class Status
 {
+  /**
+   * Checks required function, include files and extension.
+   * @return array the requirements that failed.
+   */
   public static function failedRequirements()
   {
     $requirements = array();
@@ -41,6 +45,9 @@ class Status
     return count($failures) ? $failures : false;
   }
 
+  /**
+   * @return string database version or null when no value could be retrieved from the database.
+   */
   public static function dbVersion()
   {
     $db = $GLOBALS['db'];
