@@ -17,8 +17,11 @@ session_start();
 // Build TwitterOAuth object with client credentials.
 $connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret );
  
-// Get temporary credentials.
-$request_token = $connection->getRequestToken( $_SERVER['HTTP_REFERER'] );
+// Get temporary credentials. Even though a callback URL is specified here,
+// it must be set in your Twitter application settings as well to avoid a
+// PIN request.
+$callbackUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+$request_token = $connection->getRequestToken( $callbackUrl );
 
 // Save temporary credentials to session.
 $_SESSION['oauth_token'] = $token = $request_token['oauth_token'];
