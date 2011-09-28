@@ -41,6 +41,15 @@ class User extends Object
     return $this->connections[key($this->connections)]->picture();
   }
 
+  public function serviceName()
+  {
+    if ( !count($this->connections) )
+      return null;
+
+    reset($this->connections);
+    return $this->connections[key($this->connections)]->serviceName();
+  }
+
   public function isAdmin()
   {
     return $this->isAdmin;
