@@ -60,8 +60,8 @@ class Auth
   public static function setCookie( $id )
   {
     // TODO: make cookie length configurable (preferably by end user, with
-    // available options configurable by site administrator) $expires = time()
-    // + ( 7 * 86400 );
+    // available options configurable by site administrator)
+    $expires = time() + ( 7 * 86400 );
 
     $cookie = self::generateCookie( $id, $expires );
     Log::debug( "setting cookie: id($id), expires($expires), cookie($cookie)" );
