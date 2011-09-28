@@ -28,11 +28,13 @@ abstract class Object
   // protected $name = null;  // the proper name of the object
   // TODO: join the name vs title debate, decide on something and stick with it
 
-  public function __construct( $id = 0 )
+  public function __construct( $id = 0, $objectId = 0 )
   {
     $this->db = $GLOBALS['db'];
 
-    if ( $this->id = $id )
+    $this->id = $id;
+    $this->objectId = $objectId;
+    if ( $this->id || $this->objectId )
       $this->load();
     else
       $this->reset();
@@ -83,6 +85,7 @@ abstract class Object
     $this->db->query($q);
   }
 
+  final public function type() { return get_class($this); }
   final public function setId( $id ) { $this->id = $id; }
   final public function id() { return $this->id; }
   final public function setObjectId( $objectId ) { $this->objectId = $objectId; }

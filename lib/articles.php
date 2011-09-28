@@ -132,8 +132,8 @@ class Articles
       $title .= " (unpublished)";
     $body = Misc::markup( $o->body );
     $date = $o->ctime;
-    $uAuthor = new User( $o->user_id );
 
+    $uAuthor = ObjectCache::getByType( 'User', $o->user_id );
     $author = $uAuthor->name();
     $pic = $uAuthor->picture();
     $relTime = Misc::relativeTime($date);

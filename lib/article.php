@@ -44,13 +44,17 @@ class Article extends Object
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $q = $this->db->buildQuery( "SELECT id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d", $this->id );
+    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, visible, facebook_url, twitter_url";
+    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
   public function setFromObject( &$o )
   {
     parent::setFromObject($o);
+
+    if ( !$o )
+      return;
 
     $this->ipAddr = $o->ip_addr;
     $this->sectionId = $o->section_id;
