@@ -27,6 +27,7 @@ class Controller
     if ( include_once($classFile) )
     {
       $classname = "Controller_". ucfirst($type);
+      // FIXME: class_exists
       return new $classname;
     }
     return new Controller();
