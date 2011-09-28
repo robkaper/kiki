@@ -162,9 +162,9 @@ class Articles
     $content .= "<ul>\n";
     
     if ( $o->facebook_url )
-      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/User_Facebook_16.png\" alt=\"[Facebook]\" /></a></li>\n";
+      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/Facebook_16.png\" alt=\"[Facebook]\" /></a></li>\n";
     if ( $o->twitter_url )
-      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/User_Twitter_16.png\" alt=\"[Twitter]\" /></a></li>\n";
+      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/Twitter_16.png\" alt=\"[Twitter]\" /></a></li>\n";
 
     // FIXME: doesn't degrade without js
     if ( !$maxLength && $user->id() == $o->user_id )
