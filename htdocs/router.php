@@ -22,6 +22,8 @@
 
   // TODO: This should be done in the bootstrap already, it has little do to
   // (if anything) with routing.
+  // TODO: support locale setting by TLD or subdomain.
+  // TODO: adjust language attributes based on chosen locale.
   if ( preg_match('#^/([a-zA-Z]{2})/#', $reqUri, $matches) )
   {
     $locale = $matches[1];
