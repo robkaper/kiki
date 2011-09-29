@@ -16,6 +16,15 @@
   // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
 
+  // Prepare gettext i18n.
+
+  // FIXME: Add to requirements check and safeguard core use of this (but
+  // also database) against missing requirements to make sure the status
+  // page works even when all requirements fail.
+
+  bindtextdomain('messages', $GLOBALS['kiki']. '/locale/'). PHP_EOL;
+  textdomain('messages'). PHP_EOL;
+
   // FIXME: rjkcust, we shouldn't assume /www/server_name/ as site root. 
   // Perhaps parent of $_SERVER['DOCUMENT_ROOT'], still an assumption but
   // less specific.  We should also support having the root for these inside

@@ -1,7 +1,7 @@
 <?
   include_once "../../lib/init.php";
 
-  $page = new Page( "Jouw Account" );
+  $page = new Page( _("Your Account") );
   $page->header();
 
   foreach( $user->connections() as $connectedUser )

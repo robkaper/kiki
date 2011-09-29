@@ -55,7 +55,7 @@ class Boilerplate
 
   static function accountLink()
   {
-    return "<p><a href=\"". Config::$kikiPrefix. "/account/\">Jouw Account</a></p>\n";
+    return "<p><a href=\"". Config::$kikiPrefix. "/account/\">". _("Your Account"). "</a></p>\n";
   }
 
   static function logoutLink()
