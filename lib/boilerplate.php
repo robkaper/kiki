@@ -70,28 +70,12 @@ class Boilerplate
     return "<img class=\"social $extraClasses\" style=\"background-image: url('$pictureUrl'); $extraStyles\" src=\"". Config::$kikiPrefix. "$img\" alt=\"[$name]\" />\n";
   }
 
-  static function commentForm( &$user, $objectId )
+  static function commentForm( $objectId )
   {
-    if ( !$user )
-      return null;
-
-    $name = $user->name();
-    $pic = $user->picture();
-    $type = $user->serviceName();
-
-    $content = "<div class=\"comment\" style=\"min-height: 0px;\">\n";
-    $content .= Boilerplate::socialImage( $type, $name, $pic );
-    $content .= "<div class=\"commentTxt\">\n";
-
-    $content .= Form::open( null, Config::$kikiPrefix. "/json/comment.php", "POST" ); // PORT: name="form"
-    $content .= Form::hidden( "objectId", $objectId ); // PORT: id=
-    $content .= Form::textarea( "comment", null, null, "Schrijf een reactie..." ); // PORT: id=
-    $content .= Form::button( "submit", "submit", "Plaats reactie" );
-    $content .= Form::close();
-
-    $content .= "</div>\n";
-    $content .= "</div>\n";
-
+    ob_start();
+    include Template::file('comments/form');
+    $content = ob_get_contents();
+    ob_end_clean();
     return $content;
   }
 

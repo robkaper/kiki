@@ -37,7 +37,7 @@ function jsonUpdate()
 
 /**
  * Expands a specific comment form.
- * @param string $id full ID of the comment form outer div element (e.g. commentForm_1)
+ * @param string $id full ID of the comment form outer div element (e.g. commentFormWrapper_1)
  */
 function growCommentForm( id )
 {
@@ -48,8 +48,8 @@ function growCommentForm( id )
 /// Shrinks all comment forms on a page.
 function shrinkCommentForms()
 {
-  $('[id^=comments_] [id^=commentForm_]').addClass( 'shrunk' );
-  $('[id^=comments_] [id^=commentForm_] img.social').hide();
+  $('[id^=comments_] [id^=commentFormWrapper_]').addClass( 'shrunk' );
+  $('[id^=comments_] [id^=commentFormWrapper_] img.social').hide();
 }
 
 function showArticleForm( articleId )
@@ -181,7 +181,7 @@ function onReady() {
 
   $('input[placeholder], textarea[placeholder]').placeholder();
            
-  $('[id^=comments_] [id^=commentForm_]').live( 'focusin', function() {
+  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusin', function() {
   if ( submitTimer )
     clearTimeout( submitTimer );
 
@@ -189,7 +189,7 @@ function onReady() {
     growCommentForm( $(this).attr('id') );
   } );
 
-  $('[id^=comments_] [id^=commentForm_]').live( 'focusout', function() {
+  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusout', function() {
     // HACK: queue hide() so .submit() can trigger
     submitTimer = setTimeout( function() {
       shrinkCommentForms()
@@ -250,7 +250,7 @@ function onReady() {
     
   } );
 
-  $('[id^=comments_] div[id^=commentForm_]').live( 'submit', function() {
+  $('[id^=comments_] div[id^=commentFormWrapper_]').live( 'submit', function() {
     $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' );
     $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
     $('#' + $(this).attr('id') + ' button').hide();

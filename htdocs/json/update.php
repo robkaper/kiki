@@ -38,10 +38,10 @@
       $data = Boilerplate::facebookPermissions($user);
       break;
     default:
-      if ( preg_match( '/^commentForm_/', $id ) )
+      if ( preg_match( '/^commentFormWrapper_/', $id ) )
       {
         list( $dummy, $objectId ) = explode( '_', $id );
-        $data = $user->anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
+        $data = $user->id() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
       }
       else if ( preg_match( '/^navMenu-/', $id) )
       {

@@ -17,8 +17,8 @@ class Comments
 {
   public static function form( &$user, $objectId )
   {
-    $content = "<div id=\"commentForm_$objectId\" class=\"jsonupdate shrunk\">\n";
-    $content .= $user->anyUser() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
+    $content = "<div id=\"commentFormWrapper_$objectId\" class=\"jsonupdate shrunk\">\n";
+    $content .= $user->id() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::commentLogin();
     $content .= "</div>\n";
     return $content;
   }
