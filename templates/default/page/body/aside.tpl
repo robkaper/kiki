@@ -24,11 +24,17 @@
   }
   else
   {
+?>
+<div id="login" class="box">
+<?
     foreach( Config::$connectionServices as $name )
     {
       $service = Factory_ConnectionService::getInstance($name);
       include Template::file( 'parts/connectionservices/login-box' );
     }
+?>
+</div>
+<?
   }
 ?>
 <div class="box">

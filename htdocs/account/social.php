@@ -62,6 +62,7 @@
     }
 
     echo Form::button( "submit", "submit", "Update status" );
+    echo Form::close();
   }
   else
     echo Boilerplate::login();
