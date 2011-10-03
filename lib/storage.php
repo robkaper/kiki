@@ -1,33 +1,40 @@
 <?
 
 /**
-* @file lib/storage.php
-* Provides the Storage class.
-* @class Storage
-* Stores and retrieves local filesystem data offering database and URI references.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/ 
+ * @class Storage
+ *
+ * Stores and retrieves local filesystem resources offering uniform database
+ * and URI references.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Storage
 {
 
   /**
-  * Looks up the local filename of a stored resource.
-  * @param $id [int] ID of the database entry
-  * @return string full path of the resource
-  */
+   * Looks up the local filename of a stored resource.
+   *
+   * @param int $id ID of the database entry
+   * @return string full path of the resource
+   */
   public static function localFile( $id )
   {
     return sprintf( "%s/storage/%s", $GLOBALS['root'], self::uri($id) );
   }
 
   /**
-  * Looks up the local URI a stored resource.
-  * @param $id [int] ID or hash of the database entry
-  * @return string local URI of the resource
-  */
+   * Looks up the local URI a stored resource.
+   *
+   * URI uses a stored hash instead of the ID to prevent resources from
+   * being discovered by simply incrementing the reference.
+   *
+   * @param int $id ID or hash of the database entry
+   * @return string local URI of the resource
+   */
   public static function uri( $id )
   {
     $db = $GLOBALS['db'];
@@ -38,10 +45,11 @@ class Storage
   }
 
   /**
-  * Splits a filename into a base part and extension.
-  * @param $name [string] name of the file (should not contain a path)
-  * @return array base name and extension of the file
-  */
+   * Splits a filename into a base part and extension.
+   *
+   * @param string $name name of the file (should not contain a path)
+   * @return array base name and extension of the file
+   */
   public static function splitExtension( $name )
   {
     $pos = strrpos( $name, '.' );
@@ -54,10 +62,11 @@ class Storage
   }
 
   /**
-  * Retrieve the base part of a filename.
-  * @param $name [string] name of the file (should not contain a path)
-  * @return string base name of the file
-  */
+   * Retrieve the base part of a filename.
+   *
+   * @param string $name name of the file (should not contain a path)
+   * @return string base name of the file
+   */
   public static function getBase( $name )
   {
     list( $base ) = self::splitExtension($name);
@@ -65,10 +74,11 @@ class Storage
   }
 
   /**
-  * Retrieve the extension part of a filename.
-  * @param $name [string] name of the file
-  * @return string extension of the file
-  */
+   * Retrieve the extension part of a filename.
+   *
+   * @param string $name name of the file
+   * @return string extension of the file
+   */
   public static function getExtension( $name )
   {
     list( $base, $ext ) = self::splitExtension($name);
@@ -76,10 +86,13 @@ class Storage
   }
 
   /**
-  * Returns a mimetype based on a filename's extension.
-  * @param $ext [string] extension
-  * return string mimetype
-  */
+   * Returns a mimetype based on a filename's extension.
+   *
+   * @warning Supports only those mimetypes internally used by Kiki.
+   *
+   * @param string $ext extension
+   * return string mimetype
+   */
   public static function getMimeType( $ext )
   {
     switch($ext)
@@ -101,31 +114,35 @@ class Storage
   }
     
   /**
-  * Retrieves the raw data of a stored resource.
-  * @param $id [int] database ID of the resource
-  * @return string raw data of the resource
-  */
+   * Retrieves the raw data of a stored resource.
+   *
+   * @param int [int] database ID of the resource
+   * @return string raw data of the resource
+   */
   public static function data( $id )
   {
     return file_get_contents( self::localFile($id) );
   }
 
   /**
-  * Generates a URL for a stored resource.
-  * @param $id [int] database ID of the resource
-  * @return string Full URL (protocol, host, local URI) of the resource
-  */
+   * Returns the full URL for a stored resource.
+   *
+   * @param int $id database ID of the resource
+   * @param boolean $secure Return a HTTPS resource instead of HTTP
+   * @return string Full URL (protocol, host, local URI) of the resource
+   */
   public static function url( $id )
   {
-    return "http://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id);
+    return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id);
   }
 
   /**
-  * Stores a resource.
-  * @param $fileName [string] original filename
-  * @param $data [string] file data
-  * @return int ID of the database entry created
-  */
+   * Stores a resource.
+   *
+   * @param string $fileName original filename
+   * @param string $data file data
+   * @return int ID of the database entry created
+   */
   public static function save( $fileName, $data )
   {
     $db = $GLOBALS['db'];
@@ -230,9 +247,18 @@ class Storage
   }
 
   /**
-   * Calculates the dimensions of a scaled image, maintaining aspect ration. 
-   * Returns the maximum size fitting within the given dimensions, or a
-   * larger one in case pan and scan is true.
+   * Calculates dimensions for scaling an image.
+   * 
+   * Maintains aspect ratio. Returns the maximum size fitting within the
+   * given dimensions, or a larger one in case pan and scan is true.
+   *
+   * @param int $w Original width.
+   * @param int $h Original height.
+   * @param int $newW Available width for the scaled image.
+   * @param int $newH Available height for the scaled image.
+   * @param boolean $panAndScan Whether the scaled image will be used in a pan and scan scenario, as opposed to letterbox.
+   *
+   * @return array Array containing the calculated width, height and scale factor.
    */
   public static function calculateScaleSize( $w, $h, $newW, $newH, $panAndScan=false )
   {
@@ -240,17 +266,17 @@ class Storage
     $hScale = $h / $newH;
 
     if ( $panAndScan )
-        $ratio = max( $wScale, $hScale );
+        $scaleFactor = max( $wScale, $hScale );
       else
-        $ratio = min( $wScale, $hScale );
+        $scaleFactor = min( $wScale, $hScale );
 
-    if ( $ratio != 0 )
+    if ( $scaleFactor != 0 )
     {
-      $w = $w / $ratio;
-      $h = $h / $ratio;
+      $w = $w / $scaleFactor;
+      $h = $h / $scaleFactor;
     }
 
-    return array( (int)$w, (int)$h, $ratio );
+    return array( (int)$w, (int)$h, $scaleFactor );
   }
 
 }

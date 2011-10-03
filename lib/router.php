@@ -29,6 +29,13 @@ class Router
     return true;
   }
 
+  /**
+   * Returns base URIs linked to a specific controller type and instance.
+   *
+   * @param string $type Filter by this controller type.
+   * @param boolean $sort Sort URIs alphabetically.
+   * @return array Base URI configurations indexed by base URI.
+   */
   public static function getBaseURIs( $type = null, $sort = false )
   {
     $db = $GLOBALS['db'];
@@ -50,6 +57,13 @@ class Router
     return $baseUris;
   }
 
+  /**
+   * Returns the base URI for a specific controller type and instance.
+   *
+   * @param string $type Controller type.
+   * @param int $instanceId Controller instance.
+   * @return string Base URI.
+   */
   public static function getBaseUri( $type, $instanceId )
   {
     $db = $GLOBALS['db'];

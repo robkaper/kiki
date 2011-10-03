@@ -86,7 +86,9 @@ class Log
 
 	/**
 	* @deprecated Still referenced by the Daemon class which expects a
-	*   syslog compatible Log class, which Kiki currently doesn't provide.
+	* syslog compatible Log class, which Kiki currently doesn't provide.
+	*
+	* @param string $msg message to log
 	*/
 	public static function info( $msg )
 	{
