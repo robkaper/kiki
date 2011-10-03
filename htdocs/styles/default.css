@@ -227,11 +227,109 @@ div.commentTxt > form > textarea {
 	overflow: auto;
 }
 
+button, a.button {
+  line-height: 16px;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 12px;
+
+  height: 16px;
+  margin: 5px;
+  padding: 3px;
+  -webkit-padding: 3px;
+
+  color: #fff;
+  background: #463;
+  background: -webkit-gradient(linear, left top, left bottom, from(#9c6), to(#463)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #9c6,  #463); /* for firefox 3.6+ */
+  border: 1px solid #463;
+  border-radius: 5px;
+}
+
 button {
-	background: #463;
-	border-radius: 5px;
- 	color: #fff;
-	font-weight: bold;
+  height: 24px;
+  line-height: 16px;
+  padding: 1px 0px 3px 0px;
+}
+
+button:hover, a.button:hover {
+  background: -webkit-gradient(linear, left top, left bottom, from(#9c6), to(#000));
+  background: -moz-linear-gradient(top,  #9c6,  #000);
+  color: #fff;
+  cursor: pointer;
+}
+
+button.disabled, button.disabled:hover {
+  color: #999;
+  background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#333));
+  background: -moz-linear-gradient(top, #999, #333);
+    
+  border: 1px solid #666;
+  cursor: not-allowed;
+}
+
+button span.buttonImg, a.button span.buttonImg {
+  float: left;
+  width: 16px;
+  height: 16px;
+  padding: 0px;
+  margin: 0px 3px 0px 0px;
+  background-size: cover;
+}
+
+a.button.large {
+  line-height: 32px;
+  height: 32px;
+  padding: 3px;
+}
+
+button.large {
+  height: 40px;
+  line-height: 32px;
+  padding: 1px 0px 3px 0px;
+}
+
+button.large span.buttonImg, a.button.large span.buttonImg {
+  width: 32px;
+  height: 32px;
+}
+
+button.Facebook span.buttonImg, a.button span.buttonImg.Facebook {
+  background: url('/kiki/img/komodo/social_networking_iconpack/facebook_16.png') no-repeat 0px 0px;
+}
+button.Facebook.large span.buttonImg, a.button.large span.buttonImg.Facebook {
+  background: url('/kiki/img/komodo/social_networking_iconpack/facebook_32.png') no-repeat 0px 0px;
+}
+
+button.Twitter span.buttonImg, a.button span.buttonImg.Twitter {
+  background: url('/kiki/img/komodo/social_networking_iconpack/twitter_16.png') no-repeat 0px 0px;
+}
+button.Twitter.large span.buttonImg, a.button.large span.buttonImg.Twitter {
+  background: url('/kiki/img/komodo/social_networking_iconpack/twitter_32.png') no-repeat 0px 0px;
+}
+
+button span.buttonImg.GooglePlus, a.button span.buttonImg.GooglePlus {
+  background: url('/kiki/img/komodo/social_networking_iconpack/google_plus_16.png') no-repeat 0px 0px;
+}
+button.large span.buttonImg.GooglePlus, a.button.large span.buttonImg.GooglePlus {
+  background: url('/kiki/img/komodo/social_networking_iconpack/google_plus_32.png') no-repeat 0px 0px;
+}
+
+button span.buttonImg.Email, a.button span.buttonImg.Email {
+  background: url('/kiki/img/komodo/social_networking_iconpack/email_16.png') no-repeat 0px 0px;
+}
+button.large span.buttonImg.Email, a.button.large span.buttonImg.Email {
+  background: url('/kiki/img/komodo/social_networking_iconpack/email_32.png') no-repeat 0px 0px;
+}
+
+aside a.button {
+	display: block;
+	font-size: 1em;
+	margin: 3px 0px;
 }
 
 form button {
@@ -241,10 +339,6 @@ form button {
 	min-height: 32px;
 	text-align:center;
 	line-height: 2em;
-}
-
-button.disabled {
-	background: #666;
 }
 
 form.hidden {

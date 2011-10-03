@@ -151,7 +151,8 @@ class Articles
     if ( $maxLength )
     {
       $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
-      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). " <a href=\"$myUrl\">Lees verder</a></p>\n";
+      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs );
+      $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\"><span class=\"buttonImg Google\"></span>Lees verder</a></p>\n";
     }
     else
     {

@@ -55,13 +55,13 @@ class Boilerplate
 
   static function accountLink()
   {
-    return "<p><a href=\"". Config::$kikiPrefix. "/account/\">". _("Your Account"). "</a></p>\n";
+    return "<a class=\"button\" href=\"". Config::$kikiPrefix. "/account/\">". _("Your Account"). "</a>\n";
   }
 
   static function logoutLink()
   {
     
-    return "<p><a href=\"". Config::$kikiPrefix. "/account/logout.php\">Logout</a></p>\n";
+    return "<a class=\"button\" href=\"". Config::$kikiPrefix. "/account/logout.php\">Logout</a>\n";
   }
 
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )
