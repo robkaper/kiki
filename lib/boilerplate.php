@@ -61,7 +61,7 @@ class Boilerplate
   static function logoutLink()
   {
     
-    return "<a class=\"button\" href=\"". Config::$kikiPrefix. "/account/logout.php\">Logout</a>\n";
+    return "<a class=\"button\" href=\"". Config::$kikiPrefix. "/account/logout.php\">". _("Logout"). "</a>\n";
   }
 
   static function socialImage( $type, $name, $pictureUrl, $extraClasses="", $extraStyles="" )

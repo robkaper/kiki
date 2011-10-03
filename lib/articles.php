@@ -152,7 +152,7 @@ class Articles
     {
       $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
       $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs );
-      $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">Lees verder</a></p>\n";
+      $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
     }
     else
     {
