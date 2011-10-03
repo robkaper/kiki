@@ -104,7 +104,7 @@ class Articles
 
     $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
-    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and (visible=1 or user_id=$qUserId) and ctime<=now() order by ctime desc";
+    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
