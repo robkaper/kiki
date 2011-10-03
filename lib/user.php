@@ -162,8 +162,6 @@ class User extends Object
 
     if ( $this->id )
     {
-      $this->getStoredConnections();
-      // Log::debug( "connections (stored): ". print_r($this->connections, true) );
       foreach( $this->identifiedConnections as $id => $user )
       {
         if ( isset($this->connections[$id]) )
@@ -221,6 +219,7 @@ class User extends Object
         case 1:
           // deducted user, rerun self so unknown connections can be stored
           $this->id = $possibleUsers[0];
+          $this->load();
           Log::debug( "deducted user ". $this->id. " recalling identify to check for unstored connections" );
           Auth::setCookie($this->id);
           $this->identify();
@@ -238,10 +237,6 @@ class User extends Object
     }
 
     Log::debug( "id: ". $this->id );
-    // Log::debug( "identifiedConnections: ". print_r($this->identifiedConnections, true) );
-    // Log::debug( "connections: ". print_r($this->connections, true) );
-
-    $this->load();
   }
 
   // WARNING: deprecated
