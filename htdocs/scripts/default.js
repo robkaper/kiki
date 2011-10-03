@@ -251,9 +251,9 @@ function onReady() {
   } );
 
   $('[id^=comments_] div[id^=commentFormWrapper_]').live( 'submit', function() {
-    $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' );
-    $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
-    $('#' + $(this).attr('id') + ' button').hide();
+    $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' ).addClass('disabled');
+    // $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
+    $('#' + $(this).attr('id') + ' button').attr( 'disabled', 'disabled' ).addClass('disabled');
     $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
 
     var last = $('#' + $(this).parent().attr('id') + ' [id^=comment_]:last').attr('id');
@@ -273,8 +273,8 @@ function onReady() {
       } );
 
       $('div[id^=comments_] #comment').val( '' );
-      $('div[id^=comments_] button').attr( 'disabled', '' );
-      $('div[id^=comments_] textarea').attr( 'disabled', '' );
+      $('div[id^=comments_] button').attr( 'disabled', '' ).removeClass('disabled');
+      $('div[id^=comments_] textarea').attr( 'disabled', '' ).removeClass('disabled');;
 
       shrinkCommentForms();
 

@@ -83,7 +83,7 @@ class Comments
     return $content;
   }
 
-  public static function save( &$db, &$user )
+  public static function save( &$db, &$user, $objectId )
   {
     $errors = array();
 
@@ -96,7 +96,7 @@ class Comments
     {
       $q = $db->buildQuery(
         "INSERT INTO comments (ctime, mtime, ip_addr, object_id, user_id, body) values (now(), now(), '%s', %d, %d, '%s')",
-        $_SERVER['REMOTE_ADDR'], $_POST['objectId'], $user->id(), $comment
+        $_SERVER['REMOTE_ADDR'], $objectId, $user->id(), $comment
       );
 
       $db->query($q);

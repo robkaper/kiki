@@ -16,12 +16,11 @@
 
   if ($_POST)
   {
-    $errors = Comments::save( $db, $user );
+    list( $dummy, $objectId, $last ) = explode( "_", $_POST['last'] );
+    $errors = Comments::save( $db, $user, $objectId );
     
     if ( $_POST['json'] )
     {
-      list( $dummy, $objectId, $last ) = explode( "_", $_POST['last'] );
-
       $response = array();
       $response['formId'] = $_POST['formId'];
       $response['objectId'] = $objectId;
