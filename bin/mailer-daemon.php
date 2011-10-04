@@ -25,7 +25,6 @@
 
     protected function main()
     {
-      Log::debug( "main for $this->pid" );
       $o = $this->mailerQueue->getNext( "lock_". $this->pid );
       if ( !$o )
         return 5000000;
@@ -36,8 +35,6 @@
 
       Mailer::smtp( $email );
       $this->mailerQueue->markSent( $o->id );
-
-      Log::debug( "end main for $this->pid" );
       return 0;
     }
     
