@@ -54,6 +54,9 @@ class Log
 	*/
 	public static function debug( $msg )
 	{
+		if ( !Config::$debug )
+			return;
+
 		$logFile = $GLOBALS['root']. "/debug.txt";
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )

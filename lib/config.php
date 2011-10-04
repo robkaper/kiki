@@ -18,6 +18,8 @@
 
 class Config
 {
+	public static $debug = false;
+
 	public static $siteName = null;
 	public static $copyOwner = "Kiki website framework";
 	public static $copySince = null;
