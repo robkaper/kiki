@@ -25,10 +25,10 @@ class Mailer
       self::smtp( $email );
   }
 
-  private static function queue( &$email, $priority )
+  private static function queue( &$email, $priority = 10 )
   {
     // TODO: Merge MailerQueue back into Mailer class, queuing is an integrated feature.
-    MailerQueue::store( $email, $priority=10 );
+    MailerQueue::store( $email, $priority );
   }
   
   public static function smtp( &$email )
