@@ -9,9 +9,6 @@
     exit();
   }
 
-  // FIXME: check if already running, only clean up database when we're not running..
-  $db->query( "update mail_queue set lock_id=null" );
-
   class MailDaemon extends Daemon
   {
     private $mailerQueue = null;
@@ -47,11 +44,11 @@
     protected function cleanup($pid)
     {
       echo "cleaning up pid $pid\n";
+      $q = $this->db->buildQuery( "update mail_queue set lock_id=null where lock_id='lock_%d'", $pid );
+      $this->db->query($q);  
     }
   }
 
   $maild = new MailDaemon();
   $maild->start(1);
-
-  // $db->query( "update mail_queue set sent=0,lock_id=null" );    
 ?>

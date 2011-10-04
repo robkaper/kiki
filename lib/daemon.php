@@ -28,7 +28,7 @@ abstract class Daemon
 
   public function __construct( $name, $logFacility=LOG_DAEMON )
   {
-    $this->db = null;
+    $this->db = $GLOBALS['db'];
     
     $this->name = $name;
     $this->logFacility = $logFacility;
