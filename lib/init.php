@@ -16,15 +16,6 @@
   // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
 
-  // Prepare gettext i18n.
-
-  // FIXME: Add to requirements check and safeguard core use of this (but
-  // also database) against missing requirements to make sure the status
-  // page works even when all requirements fail.
-
-  bindtextdomain('messages', $GLOBALS['kiki']. '/locale/'). PHP_EOL;
-  textdomain('messages'). PHP_EOL;
-
   // FIXME: rjkcust, we shouldn't assume /www/server_name/ as site root. 
   // Perhaps parent of $_SERVER['DOCUMENT_ROOT'], still an assumption but
   // less specific.  We should also support having the root for these inside
@@ -52,8 +43,23 @@
 
   Log::init();
   Config::init();
+  I18n::init();
 
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
+
+  // Set locale when URI starts with a two-letter country code.
+  // TODO: support locale setting by TLD or subdomain.
+  // TODO: adjust element lang attributes based on chosen locale.
+  if ( preg_match('#^/([a-zA-Z]{2})/#', $reqUri, $matches) )
+  {
+    I18n::setLocale( $matches[1] );
+
+    // TODO: finish the Kiki controller and/or let the rewrite rule take
+    // locale URIs into account.  Also, rewrite Config::kikiPrefix based on
+    // locale.
+    $reqUri = substr( $reqUri, 3 );
+  }
+
   if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
   {
     $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';

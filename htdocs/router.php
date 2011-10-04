@@ -20,34 +20,6 @@
 
   $controller = null;
 
-  // TODO: This should be done in the bootstrap already, it has little do to
-  // (if anything) with routing.
-  // TODO: support locale setting by TLD or subdomain.
-  // TODO: adjust language attributes based on chosen locale.
-  if ( preg_match('#^/([a-zA-Z]{2})/#', $reqUri, $matches) )
-  {
-    $locale = $matches[1];
-
-    // HACK: PHP locales and gettext are horribly specific about the exact
-    // name which must precisely match an actually installed locale.  This
-    // switch solves it for me, but it's equally horrible because all
-    // variations here are hardcoded.  Also, while this works for me,
-    // there's no guarantee it will work for anyone else.
-
-    // TODO: finish the Kiki controller and/or let the rewrite rule take
-    // translations into account.  Also, rewrite Config::kikiPrefix based on
-    // locale.
-
-    switch( $locale )
-    {
-      case "nl":
-        setlocale( LC_ALL, "nl", "nl_NL", "nl_NL.utf8", "nl_NL.UTF-8" );
-        break;
-      default:;
-    }
-    $reqUri = substr( $reqUri, 3 );
-  }
-
   // TinyURLs
   if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $reqUri) )
   {

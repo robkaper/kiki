@@ -5,6 +5,8 @@
  * Use one instance of this class for each separate database connection
  * required.
  *
+ * @fixme Add requirements check to status page.
+ *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2006-2011 Rob Kaper <http://robkaper.nl/>
