@@ -87,9 +87,6 @@
   $user = $GLOBALS['user'] = new User();
   $user->authenticate();
 
-  if ( Config::$mailerQueue )
-    MailerQueue::init();
-
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
   if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
