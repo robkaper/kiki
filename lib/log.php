@@ -44,7 +44,8 @@ class Log
 	{
 		if ( $alsoDebug )
 			Log::debug($msg);
-		error_log( $_SERVER['REQUEST_URI']. ": ". $msg );
+		$reqUri = isset( $_SERVER['REQUEST_URI'] ) ?  $_SERVER['REQUEST_URI'] : null;
+		error_log( $reqUri. ": ". $msg );
 	}
 
 	/**
