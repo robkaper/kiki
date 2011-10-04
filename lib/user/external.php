@@ -61,6 +61,11 @@ abstract class User_External
   abstract protected function postArticle( &$article );
   abstract protected function createEvent( $title, $start, $end, $location, $description, $picture=null );
 
+  public function api()
+  {
+    return $this->api;
+  }
+
   public function id()
   {
     return $this->id;
