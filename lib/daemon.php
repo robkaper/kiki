@@ -44,11 +44,15 @@ abstract class Daemon
     
   public function start( $numChildren=3 )
   {
+    $this->closeFileHandles();
+
+    // Prior to forking children, otherwise they end up as orphans.
+    $this->toBackground();
+
     $this->setHandlers();
+    $this->detach();
+
     Log::info( "started" );
-    
-    /// Prior to forking children, otherwise they end up as orphans.
-    // $this->gotoBg();
 
     for( $i=0 ; $i<$numChildren ; $i++ )
     {
@@ -60,9 +64,28 @@ abstract class Daemon
     $this->run();
   }
 
+  private function closeFileHandles()
+  {
+    fclose(STDIN);
+    fclose(STDOUT);
+    fclose(STDERR);
+  }
+
+  private function detach()
+  {
+    if (posix_setsid() === -1)
+    {
+      die();
+    }
+  }
+
   private function setHandlers()
   {
     pcntl_signal( SIGTERM, array(&$this, "signalHandler") );
+    pcntl_signal(SIGTSTP, SIG_IGN);
+    pcntl_signal(SIGTTOU, SIG_IGN);
+    pcntl_signal(SIGTTIN, SIG_IGN);
+    pcntl_signal(SIGHUP, SIG_IGN);
   }
 
   public function signalHandler( $signal )
@@ -104,27 +127,29 @@ abstract class Daemon
     }
   }
 
-  private function gotoBg()
+  private function toBackground()
   {
     // Fork a child and exit parent process: this is a daemon. Child continues.
     $pid = pcntl_fork();
-    if ( $pid == -1)
+    switch( $pid )
     {
-      Log::error( "fork to background failed" );
-      exit(1);
-    }
-    else if ( $pid )
-    {
-      $fp = fopen( "/var/run/$this->name.pid", "w" );
-      if ( $fp )
-      {
-        fwrite( $fp, "$pid\n" );
-        fclose( $fp );
-      }
-      else
-        Log::info( "could not write PID file!" );
-
-      exit(0);
+      case -1:
+        // Error
+        Log::error( "fork to background failed" );
+        die();
+      case 0:
+        // Parent
+        exit;
+      default:
+        // Child
+        $fp = fopen( "/var/run/$this->name.pid", "w" );
+        if ( $fp )
+        {
+          fwrite( $fp, "$pid\n" );
+          fclose( $fp );
+        }
+        else
+          Log::info( "could not write PID file!" );
     }
   }
 
