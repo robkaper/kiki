@@ -245,12 +245,12 @@ abstract class Daemon
 
       for( ;; )
       {
-        $this->main();
+        $usleep = (int) $this->main();
 
         if ( $this->shutdown )
           exit();
 
-        sleep(1);
+        usleep($usleep);
       }
       exit();
     }
