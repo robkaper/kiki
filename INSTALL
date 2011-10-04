@@ -1,0 +1,86 @@
+!!! WARNING !!!
+
+Although open source, Kiki's development is currently a single-developer
+effort.  There is only a single branch (master) and any backwards
+incompatible changes are usually fixed directly in my own sites instead of
+being avoid alltogether.
+
+Potential users are advised to update in a development or staging
+environment prior to deployment.
+
+!!! WARNING !!!
+
+Kiki does not yet offer an easy-to-use and user-friendly installation,
+although any LAMP administrator should be able to figure it out with these
+instructions.
+
+Install source files
+--------------------
+
+Place the Kiki source tree somewhere on your filesystem. Any location is
+fine, as long as your Apache user (usually www-data) has read access.
+
+Create required files and directories
+-------------------------------------
+
+* Required: document root
+
+Kiki assumes a domain-based site root under /www, create it with read access
+for your Apache user.
+
+mkdir -p /www/example.com
+chgrp www-data /www/example.com && chmod g+r 
+
+* Required: configuration file
+
+Directly in your site root, create a file called config.php with read access
+for your Apache user and configure your database settings.
+
+cd /www/example.com
+touch config.php
+chgrp www-data config.php && chmod g+r config.php
+
+See: config/config.php-sample
+
+* Recommended: storage directory
+
+Directly in your site root, create a file storage directory with write
+access for your Apache user.
+
+cd /www/example.com
+mkdir storage
+chgrp www-data storage && chmod g+w 
+
+* Optional: debug file
+
+Directly in your site root, create a file called debug.txt with write access
+for your Apache user.
+
+cd /www/example.com
+touch debug.txt
+chgrp www-data debug.txt && chmod g+w debug.txt
+
+Configure your virtual host
+---------------------------
+
+Edit config/htaccess and adjust to match your Kiki install path and site
+root. Then place the contents in your VirtualHost directive.
+
+Note: this setup has only been tested within the Apache configuration
+itself, not as .htaccess file.
+
+Install required modules and database schema
+--------------------------------------------
+
+Kiki offers a status page, available as http://example.com/kiki/ 
+
+This page lists (and checks) required PHP modules and extensions, tests your
+database configuration, and installs or updates your data model.
+
+Callback URLs
+-------------
+
+If you're going to use the Twitter connection, you must configure a callback
+URL in your Twitter application to avoid PIN requests.  You can set it to
+any value: it is not actually being used as Kiki sets the callback URL
+itself in all requests.  You just cannot leave it empty.
