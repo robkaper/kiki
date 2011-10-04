@@ -3,22 +3,21 @@
 declare( ticks = 1 );
 
 /**
-* @file lib/daemon.php
-* Provides the Daemon class.
-* @class Daemon
-* Extendable base class for daemon processess.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-* @todo Document class.
-* @bug Mixed use of syslog and Log class, choose or merge syslog functionality into Log class.
-* @bug Uses PID file, but doesn't check it... also, requires root.
-* @warning Taken from my general code collection and not thoroughly integrated into Kiki yet.
-*/
-  
+ * @class Daemon
+ * Abstract class for daemon processes.
+ *
+ * @bug Mixed use of syslog and Log class, choose or merge syslog functionality into Log class.
+ * @bug Uses PID file, but doesn't check it... also, requires root.
+ *
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 abstract class Daemon
 {
-  private $db;
+  protected $db = null;
   private $name;
   private $logFacility;
   protected $pid = 0;
@@ -29,7 +28,8 @@ abstract class Daemon
 
   public function __construct( $name, $logFacility=LOG_DAEMON )
   {
-    $this->db = $GLOBALS['db'];
+    $this->db = null;
+    
     $this->name = $name;
     $this->logFacility = $logFacility;
 
@@ -38,7 +38,7 @@ abstract class Daemon
     openlog( "$name", LOG_PID, $this->logFacility );
   }
 
-  // WARNING: Historically implemented a loop itself, but this class should handle that itself.
+  abstract protected function childInit();
   abstract protected function main();
   abstract protected function cleanup( $pid );
     
@@ -208,6 +208,11 @@ abstract class Daemon
     {
       // Forked child starts execution here.
       $this->pid = getmypid();
+
+      // Explicitly give each child its own database instance, using the
+      // same object gives headahes for forked processes.
+      $this->db = new Database( Config::$db, true );
+      $this->childInit();
 
       // Reset list of children, as a child we have none.
       if ( count($this->childPids) )
