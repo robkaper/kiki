@@ -168,22 +168,26 @@ class Misc
   */
   public static function textSummary( $str, $maxLength = 250, $lengthInParagraphs=false )
   {
+    $postfix = " ...";
+
     $str = Misc::textStrip( $str );
+
     if ( $lengthInParagraphs )
     {
       $paragraphs = explode( "\n\n", $str );
       $keep = array_chunk( $paragraphs, $maxLength );
       $str = join( "\n\n", array_values($keep[0]) );
+      if ( count($paragraphs) > $maxLength )
+        $str .= $postfix;
     }
     else if ( strlen($str) > $maxLength )
     {
-      $postfix = " ...";
       $maxLength -= strlen($postfix);
       $str = substr( $str, 0, $maxLength );
       $pos = strrpos( $str, " " );
       if ( $pos !== NULL )
         $str = substr( $str, 0, $pos );
-        $str .= $postfix;
+      $str .= $postfix;
     }
 
     // Substitute breaks for newlines.
