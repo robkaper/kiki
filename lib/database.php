@@ -16,15 +16,18 @@
 class Database
 {
 	private $host, $port, $user, $pass, $name;
+	private $newLink = false;
 	private $dbh;
 
 	/**
 	* Initialises this instance.
 	* @param array $confArray configuration details (host, port, database name, user, password)
 	*/
-	public function __construct( &$confArray )
+	public function __construct( &$confArray, $newLink = false )
 	{
 		list( $this->host, $this->port, $this->name, $this->user, $this->pass ) = array_values($confArray);
+		$this->newLink = $newLink;
+		$this->connect();
 	}
 
 	/**
@@ -32,7 +35,11 @@ class Database
 	*/
 	function connect()
 	{
-		$this->dbh = @mysql_pconnect( "$this->host:$this->port", $this->user, $this->pass );
+		if ( $this->newLink )
+			$this->dbh = mysql_connect( "$this->host:$this->port", $this->user, $this->pass, true );
+		else
+			$this->dbh = @mysql_pconnect( "$this->host:$this->port", $this->user, $this->pass );
+
 		if ( $this->dbh )
 			@mysql_select_db( $this->name, $this->dbh );
 	}
