@@ -142,14 +142,6 @@ abstract class Daemon
         exit;
       default:
         // Child
-        $fp = fopen( "/var/run/$this->name.pid", "w" );
-        if ( $fp )
-        {
-          fwrite( $fp, "$pid\n" );
-          fclose( $fp );
-        }
-        else
-          Log::info( "could not write PID file!" );
     }
   }
 
@@ -212,7 +204,6 @@ abstract class Daemon
           Log::info( "cleaning up for pid=[$pid]" );
           $this->cleanup( $pid );
         }
-        unlink( "/var/run/$this->name.pid" );
         return;
       }
     }
