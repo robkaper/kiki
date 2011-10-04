@@ -65,10 +65,8 @@
             $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
         }
       }
+      $article->save();
     }
-
-    // FIXME: twitter/facebook URLs are not being saved currently
-    $article->save();
     
     if ( isset($_POST['json']) )
     {
