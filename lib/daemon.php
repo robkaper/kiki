@@ -150,48 +150,59 @@ abstract class Daemon
     $timeToKill = -1;
     for(;;)
     {
+      // Check up on children
       for( $i=0 ; $i<count($this->childPids) ; ++$i )
       {
         $pid = $this->childPids[$i];
 
+        // Check child status
         $rv = pcntl_waitpid( $pid, $status, WNOHANG );
         if ( $rv == -1 )
         {
+          // Child disappeared
           $ok = pcntl_wifexited( $status );
           if ( $ok )
+          {
+            // Normal exit
             Log::info( "child $pid exited" );
+            $this->cleanup($pid);
+          }
           else
           {
+            // Unforeseen exit
             Log::error( "error with child $pid" );
-            // TODO: cleanup() here?
+            $this->cleanup($pid);
           }
 
           array_splice( $this->childPids, $i, 1 );
           if ( !$this->shutdown )
           {
+            // Start a new child to keep the desired number intact
             $pid = $this->createChild();
             if ( $pid > 0 )
               $this->childPids[] = $pid;
           }
+
+          // Child was removed from array, so decrement index
           --$i; continue;
         }
       }
-        
+
       $count = count($this->childPids);
       if ( $count )
       {
         if ( $this->shutdown )
         {
           $newTimeToKill = $this->killTime - time();
-          Log::info( "ttk: $timeToKill, nttk: $newTimeToKill, kt: $this->killTime" );
           if ( $newTimeToKill > 0 && $newTimeToKill != $timeToKill )
           {
+            // Wait for children to exit
             $timeToKill = $newTimeToKill;
             Log::info( "waiting $timeToKill seconds for $count children to exit" );
           }
           else if ( $newTimeToKill == 0 )
           {
-            $this->reapChildren( 1 );
+            $this->reapChildren(true);
           }
         }
         sleep(1);
