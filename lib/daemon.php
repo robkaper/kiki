@@ -45,13 +45,12 @@ abstract class Daemon
   public function start( $numChildren=3 )
   {
     $this->closeFileHandles();
+    $this->setHandlers();
 
     // Prior to forking children, otherwise they end up as orphans.
     $this->toBackground();
-
-    $this->setHandlers();
     $this->detach();
-
+    
     Log::info( "started" );
 
     for( $i=0 ; $i<$numChildren ; $i++ )
@@ -73,8 +72,10 @@ abstract class Daemon
 
   private function detach()
   {
-    if (posix_setsid() === -1)
+    $rv = posix_setsid();
+    if ( $rv === -1 )
     {
+      Log::error( "detach failed" );
       die();
     }
   }
@@ -131,6 +132,7 @@ abstract class Daemon
   {
     // Fork a child and exit parent process: this is a daemon. Child continues.
     $pid = pcntl_fork();
+    $this->pid = getmypid();
     switch( $pid )
     {
       case -1:
@@ -138,10 +140,11 @@ abstract class Daemon
         Log::error( "fork to background failed" );
         die();
       case 0:
+        // Child
+        break;
+      default:
         // Parent
         exit;
-      default:
-        // Child
     }
   }
 
