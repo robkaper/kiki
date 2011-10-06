@@ -1,5 +1,5 @@
 <?
-  include_once "../../lib/init.php";
+  require_once "../../lib/init.php";
 
   // TODO: finalise error handling for twitter post with insufficient permissions
   // TODO: add follow me/friend me buttons/links to external social sites

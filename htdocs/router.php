@@ -14,7 +14,7 @@
  * @warning album URLs currently broken
  */
 
-  include_once "../lib/init.php";
+  require_once "../lib/init.php";
 
   Log::debug( "router.php: $reqUri" );
 

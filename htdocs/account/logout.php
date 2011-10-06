@@ -1,5 +1,5 @@
 <?
-  include_once "../../lib/init.php";
+  require_once "../../lib/init.php";
 
   Auth::setCookie(0);
   Router::redirect( "/kiki/account/", false );

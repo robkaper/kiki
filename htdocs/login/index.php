@@ -1,5 +1,5 @@
 <?
-  include_once "../../lib/init.php";
+  require_once "../../lib/init.php";
 
   $errors = array();
 

@@ -9,7 +9,7 @@
  * @license Released under the terms of the MIT license.
  */
 
-  include_once "../lib/init.php";
+  require_once "../lib/init.php";
 
   $user->fbUser->revokePerm( $_GET['permission'] );
 

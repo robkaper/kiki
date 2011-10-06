@@ -1,5 +1,5 @@
 <?
-  include_once "../../lib/init.php";
+  require_once "../../lib/init.php";
 
   // FIXME: currently not in use, router.php doesn't support albums yet (not
   // a serious issue as albums weren't finished let alone integrated nyway)
