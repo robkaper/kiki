@@ -1,7 +1,26 @@
 <?
 
+/**
+ * Utility class for displaying article collections.
+ *
+ * @class Articles Utility class for displaying article collections.
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+            
 class Articles
 {
+  /**
+   * Creates an article edit form.
+   *
+   * @fixme Should be integrated into the Article class and a template.
+   *
+   * @param User $user User object, used to show the proper connection links for publications.
+   * @param object $o Database object of the Article, or null for a new article.
+   * @return string The form HTML.
+   */
   public static function form( &$user, &$o = null )
   {
     $section = $o ? $o->section_id : 0;

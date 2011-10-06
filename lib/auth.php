@@ -1,13 +1,13 @@
 <?
 
 /**
- * @class Auth
  * Utility class to assist authentication. Provides cookie creation and
  * verification as well as password hashing with multiple pepper and salt
  * iterations.
  *
  * @see http://raza.narfum.org/post/1/user-authentication-with-a-secure-cookie-protocol-in-php/
  *
+ * @class Auth
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>

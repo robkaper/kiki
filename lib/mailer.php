@@ -1,21 +1,26 @@
 <?
 
 /**
-* @file lib/mailer.php
-* Provides the Mailer class.
-* @class Mailer
-* Sends e-mails (using Email objects) over SMTP.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-* @todo Document members and methods.
-*/
+ * Sends e-mails using Net_SMTP.
+ *
+ * @class Mailer
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 require_once "Mail/RFC822.php";
 require_once "Net/SMTP.php";
 
 class Mailer
 {
+  /**
+   * Send an e-mail. Adds it to the mail queue if enabled, otherwise directly uses SMTP.
+   *
+   * @param Email $email
+   * @param int $priority
+   */
   public static function send( &$email, $priority = 10 )
   {
     if ( Config::$mailerQueue )
