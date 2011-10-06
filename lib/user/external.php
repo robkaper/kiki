@@ -39,7 +39,9 @@ abstract class User_External
     {
       Log::debug( get_class($this). " constructed with id $id for user $kikiUserId, loading.." );
       $this->load($kikiUserId);
-      
+      if ( !$kikiUserId )
+        $this->loadKikiUserIds();
+
       // FIXME: don't connect until connection is actually needed
       $this->connect();
     }
@@ -81,6 +83,8 @@ abstract class User_External
     return get_class($this). '_'. $this->id;
   }
 
+  public function setName( $name ) { $this->name = $name; }
+
   public function name()
   {
     return $this->name;
@@ -90,6 +94,8 @@ abstract class User_External
   {
     return $this->screenName;
   }
+
+  public function setPicture( $picture ) { $this->picture = $picture; }
 
   public function picture()
   {
