@@ -2,7 +2,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="description" content="<?= $this->description; ?>" />
-<? Google::siteVerification(); ?>
+<? if ( Config::$geoLocation ): ?>
+<meta name="ICBM" content="<?= Config::$geoLocation; ?>" />
+<meta name="geo.position" content="<?= str_replace( ",", ";", Config::$geoLocation ); ?>" />
+<? endif;
+   Google::siteVerification(); ?>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="<?= Config::$kikiPrefix ?>/styles/default.css" title="Kiki CMS Default" />
 <? foreach( $this->stylesheets as $stylesheet ): ?>

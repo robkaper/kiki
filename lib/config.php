@@ -24,6 +24,9 @@ class Config
 	public static $copyOwner = "Kiki website framework";
 	public static $copySince = null;
 	public static $address = null;
+
+	public static $geoLocation = null;
+
 	public static $language = "en";
 
 	public static $dbHost = "localhost";
