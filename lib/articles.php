@@ -195,7 +195,7 @@ class Articles
     $content .= "</ul>\n";
     $content .= "</footer>\n";
 
-    if ( !$maxLength )
+    if ( !$maxLength && $user->id() == $o->user_id )
       $content .= Articles::form( $user, $o );
     // FIXME: page/filter comments in embedded view
     if  ( !$maxLength )
