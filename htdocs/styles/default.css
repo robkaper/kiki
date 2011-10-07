@@ -372,9 +372,39 @@ iframe.#ajaxFileUploadTarget {
 	display: none;
 }
 
+div.banner {
+  width: 780px;
+  height: 250px;
+  clear: all;
+  padding: 0px 0px 10px 0px;
+}
+
+div.bannerItem {
+  height: 250px;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+div.bannerItem a {
+  display: block;
+  padding: 5px;
+  background: #000;
+  opacity: 0.7;
+  font-size: 1.5em;
+
+  color: #deb;
+  text-decoration: none;
+}      
+
+div.bannerItem a:hover {
+  background: #9c6;
+  opacity: 1;
+  color: #fff;
+}
+
 article {
   margin: 0 0 1em 0;
-  padding: 0px 0.25em;
+  padding: 0px;
 }
 article .author, article .relTime {
   margin: 0px;
@@ -393,11 +423,24 @@ article h2 span {
   padding: 0 5px;
   border-radius: 5px 5px 0 0;
 }
+article h2 a {
+  text-decoration: none;
+}
 article header, article footer {
   margin: 0px;
   background: #deb;
   border-radius: 5px;
 }
+
+article footer {
+  clear: both;
+  padding: 5px;
+}
+
+article > img {
+  width: 100%;
+}
+
 article footer {
   padding: 0px 0.25em;
   font-size: 0.875em;
@@ -663,7 +706,7 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 	-moz-margin: 10px 0;
 	border: 1px solid #deb;
 	border-radius: 10px;
-	padding: 10px;
+	padding: 9px;
 	margin-right: 160px;
 }
 
@@ -674,7 +717,7 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 	padding: 0;
 }
 
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-device-width: 540px) {
 
 	#sw, #cw, #fw, #title, body > nav ul, .footer {
 	        max-width: auto;
