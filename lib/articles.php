@@ -41,7 +41,7 @@ class Articles
       while( $oSection = $db->fetchObject($rs) )
         $sections[$oSection->id] = $oSection->title;
 
-    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class );
+    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "articleId", $articleId );
     $content .= Form::hidden( "twitterUrl", $twitterUrl );
     $content .= Form::hidden( "facebookUrl", $facebookUrl );
@@ -49,6 +49,7 @@ class Articles
     $content .= Form::text( "title", $title, "Title" );
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
+    $content .= Form::file( "headerImage", "Header image" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
 
     // TODO: Make this generic, difference with social update is the check
@@ -88,7 +89,7 @@ class Articles
       $qId = $db->escape($articleId);
       $qUserId = $db->escape( $user->id() );
       $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
-      $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
+      $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
       $o = $db->getSingle($q);
     }
     else
@@ -97,6 +98,7 @@ class Articles
       $o->id = 0;
       $o->title = "...";
       $o->body = "...";
+      $o->header_image = 0;
       $o->date = time();
       $o->user_id = $user->id();
     }
@@ -123,7 +125,7 @@ class Articles
 
     $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
-    $q = "select id,ctime,section_id,user_id,title,cname,body,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
+    $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
@@ -166,6 +168,7 @@ class Articles
     $content .= "<span class=\"author\">$author</span>\n";
     $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
     $content .= "</header>\n";
+    
 
     if ( $maxLength )
     {

@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.8' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.9' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -99,6 +99,7 @@ create table articles (
   cname varchar(255) not null,
   unique key(cname),
   body text not null,
+  header_image bigint unsigned not null,
   visible boolean not null default false,
   facebook_url varchar(255) default null,
   twitter_url varchar(255) default null

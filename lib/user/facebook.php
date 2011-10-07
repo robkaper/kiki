@@ -208,9 +208,10 @@ class User_Facebook extends User_External
     $title = $article->title();
     $caption = $_SERVER['SERVER_NAME'];
     $description = Misc::textSummary( $article->body(), 400 );
-    $picture = null; // TODO: $article->picture();
-    $picture = $picture ? $picture : Config::$siteLogo;
+    $storageId = $article->headerImage();
+    $picture = $storageId ? Storage::url( $storageId ) : Config::siteLogo;
 
+    Log::debug( "posting article link $link" );
     $result = $this->post( $msg, $link, $title, $caption, $description, $picture );
     return $result;
   }

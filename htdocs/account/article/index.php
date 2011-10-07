@@ -16,7 +16,7 @@
 <?
   // echo Articles::showSingle( $db, $user, 0 );
   echo Articles::form( $user );
-  echo Form::ajaxFileUpload();
+  // echo Form::ajaxFileUpload();
 ?>
 <?
   $page->footer();

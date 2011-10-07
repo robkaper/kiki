@@ -209,6 +209,9 @@ function onReady() {
 */
 
   $('[id^=articleForm_]').live( 'submit', function() {
+    // TODO: re-enable JSON posting when embedded file upload is remove for
+    // a storage item selection
+    return true;
 
     var $submit = $('#' + $(this).attr('id') + ' button[name=submit]');
     if ( $submit.hasClass('disabled') )

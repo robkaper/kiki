@@ -34,6 +34,17 @@
 
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
+
+    if ( isset($_FILES['headerImage']) )
+    {
+      $tmpFile = $_FILES['headerImage']['tmp_name'];
+      $name = $_FILES['headerImage']['name'];
+      $size = $_FILES['headerImage']['size'];
+
+      $storageId = $tmpFile ? Storage::save( $name, file_get_contents($tmpFile) ) : 0;
+      $article->setHeaderImage( $storageId );
+    }
+
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setFacebookUrl( $_POST['facebookUrl'] );
     $article->setTwitterUrl( $_POST['twitterUrl'] );
