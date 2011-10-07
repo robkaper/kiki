@@ -44,6 +44,8 @@ class Config
 	public static $smtpPass = null;
 	public static $smtpAuthType = 'plain';
 
+	public static $tinyHost = null;
+
 	public static $kikiPrefix = "/kiki";
 	public static $staticPrefix = "/static";
 
