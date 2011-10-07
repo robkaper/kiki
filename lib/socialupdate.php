@@ -21,21 +21,6 @@ class SocialUpdate
   public static $twRs = null;
 
   /**
-  * Posts a simple status update.
-  * @param $user [User] user to post as
-  * @param $msg [string] message to post
-  */
-  public static function postStatus( &$user, $msg )
-  {
-    if ( !$msg )
-      return;
-
-    self::$type = 'status';
-    self::$fbRs = $user->fbUser->post( $msg );
-    self::$twRs = $user->twUser->post( $msg );
-  }
-
-  /**
   * Posts a single picture (link).
   * @param $user [User] user to post as
   * @param $storageId [int] database ID of the picture's Storage entry

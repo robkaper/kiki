@@ -13,16 +13,14 @@ require_once "Net/SMTP.php";
  * @license Released under the terms of the MIT license.
  */
 
-require_once "Mail/RFC822.php";
-require_once "Net/SMTP.php";
-
 class Mailer
 {
   /**
-   * Send an e-mail. Adds it to the mail queue if enabled, otherwise directly uses SMTP.
+   * Send an e-mail. Adds it to the mail queue if enabled, otherwise directly calls the SMTP method.
    *
    * @param Email $email
    * @param int $priority
+   * @return void
    */
   public static function send( &$email, $priority = 10 )
   {
@@ -32,6 +30,12 @@ class Mailer
       self::smtp( $email );
   }
 
+  /**
+   * Sends and e-mail using Net_SMTP.
+   *
+   * @param Email $email
+   * @return string Error message, or null upon success.
+   */
   public static function smtp( &$email )
   {
     Log::debug( "Mailer: subject:[". $email->subject(). "], from:[". $email->from(). "], to:". print_r($email->recipients(), true) );
@@ -102,6 +106,8 @@ class Mailer
     Log::debug( "Mailer: sent: ". $smtp->_arguments[0] );
 
     $smtp->disconnect();
+
+    return null;
   }
 }
 

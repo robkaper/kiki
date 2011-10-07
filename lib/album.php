@@ -1,16 +1,17 @@
 <?
 
 /**
-* @file lib/album.php
-* Provides the Album class.
-* @class Album
-* Provides a picture album.
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-* @todo Support more media types (template assumes resources are can be used
-*   in an img-element).
-*/
+ * (Photo) album.
+ *
+ * @todo Support more media types (template currently assumes resources can
+ * be used in an img element).
+ *
+ * @class Album
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Album
 {
@@ -19,9 +20,10 @@ class Album
   public $id, $title;
 
   /**
-  * Initialises an album.
-  * @param $id [int] (optional) ID of the album, for quick loading
-  */
+   * Initialises an album.
+   *
+   * @param int $id ID of the album, for quick loading
+   */
   public function __construct( $id = null )
   {
     $this->db = $GLOBALS['db'];
@@ -33,8 +35,8 @@ class Album
   }
 
   /**
-  * Resets member variables to their pristine state.
-  */
+   * Resets member variables to their pristine state.
+   */
   public function reset()
   {
     $this->id = 0;
@@ -42,9 +44,10 @@ class Album
   }
 
   /**
-  * Loads an album from the database.
-  * @param $id [int] ID of the album
-  */
+   * Loads an album from the database.
+   *
+   * @param int $id ID of the album
+   */
   public function load( $id )
   {
     $qId = $this->db->escape( $id );
@@ -58,29 +61,35 @@ class Album
   }
 
   /**
-  * Provides the full URL of the album to be used in external references.
-  * @param $pictureId [int] (optional) ID of the picture to start with, if none is given the most recent picture will be used
-  * @return string full URL of the album
-  */
+   * Provides the full URL of the album to be used in external references.
+   *
+   * @param int $pictureId ID of the picture to start with, if none is given
+   * the most recent picture will be used
+   * @return string full URL of the album
+   */
   public function url( $pictureId=0 )
   {
     return "http://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
   }
 
   /**
-  * Provides the local URI part of the album.
-  * @param $pictureId [int] (optional) ID of the picture to start with, if none is given the most recent picture will be used
-  * @return string local URI part of the album
-  */
+   * Provides the local URI part of the album.
+   *
+   * @param int $pictureId ID of the picture to start with, if none is given
+   * the most recent picture will be used
+   * @return string local URI part of the album
+   */
   public function uri( $pictureId=0 )
   {
     return Config::$kikiPrefix. "/album/$this->id/". ($pictureId ? "$pictureId/" : null);
   }
 
   /**
-  * Generates the HTML for the album viewer.
-  * @param $pictureId [int] (optional) ID of the picture to start with, if none is given the most recent picture will be used
-  */
+   * Generates the HTML for the album viewer.
+   *
+   * @param int $pictureId ID of the picture to start with, if none is given
+   * the most recent picture will be used
+   */
   public function show( $pictureId=0 )
   {
     $photos = array();
@@ -114,14 +123,19 @@ class Album
   }
 
   /**
-  * Adds pictures to the album. All pictures get the same title/description, if this is not desired this method must be called separately for each picture.
-  * @param $title [string] title of the picture(s)
-  * @param $description [string] decription of the picture(s)
-  * @param $storageIds [array] list of Storage IDs of the picture(s)
-  * @return array the pictures (themselves an array: id, title, decription) inserted
-  * @todo don't use storage IDs but create an actual Picture class, this
-  *   method should only link the pictures into the album.
-  */
+   * Adds pictures to the album. All pictures get the same title/description,
+   * if this is not desired this method must be called separately for each
+   * picture.
+   *
+   * @todo don't use storage IDs but create an actual Picture class, this
+   * method should only link the pictures into the album.
+   *
+   * @param string $title title of the picture(s)
+   * @param string $description decription of the picture(s)
+   * @param array $storageIds list of Storage IDs of the picture(s)
+   * @return array the pictures (themselves an array: id, title, decription)
+   * inserted
+   */
   public function addPictures( $title, $description, $storageIds )
   {
     // Stores pictures into the database
@@ -147,11 +161,13 @@ class Album
   }
 
   /**
-  * Finds the previous picture in an album.
-  * @param $albumId [int] ID of the album
-  * @param $pictureId [int] ID of the current picture
-  * @return ID of the previous picture (null if none)
-  */
+   * Finds the previous picture in an album.
+   *
+   * @param int $albumId ID of the album
+   * @param int $pictureId ID of the current picture
+   *
+   * @return ID of the previous picture (null if none)
+   */
   public static function findPrevious( $albumId, $pictureId )
   {
     $db = $GLOBALS['db'];
@@ -161,11 +177,13 @@ class Album
   }
 
   /**
-  * Finds the nexts picture in an album.
-  * @param $albumId [int] ID of the album
-  * @param $pictureId [int] ID of the current picture
-  * @return ID of the next picture (null if none)
-  */
+   * Finds the nexts picture in an album.
+   *
+   * @param int $albumId ID of the album
+   * @param int $pictureId ID of the current picture
+   *
+   * @return ID of the next picture (null if none)
+   */
   public static function findNext( $albumId, $pictureId )
   {
     $db = $GLOBALS['db'];
@@ -175,13 +193,19 @@ class Album
   }
 
   /**
-  * Finds an album by title. Optionally creates a new album if none exists
-  * by that title.
-  * @param $title [string] title of the album
-  * @param $create [boolean] (optional) create a new album if none found, defaults to false
-  * @return Album loaded instance when found/created, otherwise a bare instance
-  * @bug Only allows one album by title globally, this should be (at least) on a per-user basis.
-  */
+   * Finds an album by title. Optionally creates a new album if none exists
+   * by that title.
+   *
+   * @bug Only allows one album by title globally, this should be (at least)
+   * on a per-user basis.
+   *
+   * @param string $title title of the album
+   * @param boolean $create (optional) create a new album if none found,
+   * defaults to false
+   *
+   * @return Album loaded instance when found/created, otherwise a bare
+   * instance
+   */
   public static function findByTitle( $title, $create=false )
   {
     $db = $GLOBALS['db'];

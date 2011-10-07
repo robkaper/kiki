@@ -7,6 +7,7 @@
  *
  * @url http://tools.ietf.org/html/rfc3676#section-4.3
  *
+ * @class Email
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
@@ -34,16 +35,16 @@ class Email
   private $attachments = array();
 
   /**
-  * Initialises the class for use with Mailer::send(). No other action is
-  * required (for an empty message), but obviously it is advised to add
-  * least set a body text with setPlain().
-  * @param $from [string] e-mail address of the sender
-  * @param $to [string] e-mail address of the (primary) recipient
-  * @param $subject [string] subject of the e-mail
-  * @bug No Cc: or Bcc: support, untested multiple To: support (addRecipient).
-  * @bug Document class.
-  * @bug reset() resets way too little.
-  */
+   * Initialises the class for use with Mailer::send(). No other action is
+   * required (for an empty message), but obviously it is advised to add a
+   * body text.
+   *
+   * @todo No Cc: or Bcc: support, untested multiple To: support (addRecipient).
+   *
+   * @param string $from e-mail address of the sender
+   * @param string $to e-mail address of the (primary) recipient
+   * @param string $subject subject of the e-mail
+   */
   public function __construct( $from, $to, $subject )
   {
     $this->reset();
@@ -56,6 +57,11 @@ class Email
     $this->setDefaultHeaders();
   }
 
+  /**
+   * Resets members.
+   *
+   * @bug Resets way too little.
+   */
   private function reset()
   {
     $this->msgId = "<". sha1(uniqid()). "@". $_SERVER['SERVER_NAME']. ">";
@@ -65,6 +71,19 @@ class Email
     $this->body = null;
   }
 
+  /*
+   * Sets members from a database object.
+   *
+   * @param object Database object.
+   */
+  public function setFromObject( &$o )
+  {
+  }
+
+  /*
+   * Creates a number of basic headers that should be present in all
+   * e-mails.
+   */
   private function setDefaultHeaders()
   {
     $this->createHeader( 'Return-Path', $this->from );
@@ -74,11 +93,22 @@ class Email
     $this->createHeader( 'Message-ID', $this->msgId );
   }
 
+  /**
+   * Creates a header from two name and key entities.
+   *
+   * @param string $name
+   * @param string $value
+   */
   public function createHeader( $name, $value )
   {
     $this->addHeader( "$name: $value" );
   }
 
+  /**
+   * Adds a header to the internal array.
+   *
+   * @param string $header Should be in "key: value" format already.
+   */
   public function addHeader( $header )
   {
     $this->headerList[] = $header;

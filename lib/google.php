@@ -7,6 +7,7 @@
  * features (page verification, Adsense, Analytics) are configured, all it
  * does is included the appropriate templates for HTML/Javascript.
  *
+ * @class Google
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
@@ -16,8 +17,9 @@
 class Google
 {
   /**
-  * Includes the meta tag template for Google's site verification, if configured.
-  */
+   * Includes the meta tag template for Google's site verification, if
+   * configured.
+   */
   public static function siteVerification()
   {
     if ( !Config::$googleSiteVerification )
@@ -27,8 +29,8 @@ class Google
   }
 
   /**
-  * Includes the template for Google Analytics, if configured.
-  */
+   * Includes the template for Google Analytics, if configured.
+   */
   public static function analytics()
   {
     if ( !Config::$googleAnalytics )
@@ -38,9 +40,10 @@ class Google
   }
 
   /**
-  * Includes the template for Google Adsense, if configured.
-  * @param $slot [string] (optional) ID of an alternative Adsense slot.
-  */
+   * Includes the template for Google Adsense, if configured.
+   *
+   * @param string $slot Optional ID of an alternative Adsense slot.
+   */
   public static function adSense( $slot = null )
   {
     if ( !Config::$googleAdsense )

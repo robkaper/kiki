@@ -1,14 +1,14 @@
 <?
 
 /**
-* @file lib/page.php
-* Provides the Page class.
-* @class Page
-* Creates a HTML page
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Creates an HTML page.
+ *
+ * @class Page
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Page
 {

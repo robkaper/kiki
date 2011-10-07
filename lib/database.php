@@ -7,6 +7,7 @@
  *
  * @fixme Add requirements check to status page.
  *
+ * @class Database
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2006-2011 Rob Kaper <http://robkaper.nl/>

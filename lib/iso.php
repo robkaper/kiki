@@ -3,6 +3,7 @@
 /**
  * Utility class for commonly used ISO definitions and lists.
  *
+ * @class ISO
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
@@ -14,14 +15,15 @@ class ISO
   /**
    * Retrieves an ISO country name or full list including abbreviations.
    *
-   * @param string $key two letter country code to lookup (optional)
-   * @return string,array full country name corresponding to provided key (null if none found), or the full list of keys/codes and names if no key is provided
-   *
    * @link http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+   *
+   * @param string $key two letter country code to lookup (optional)
+   * @return mixed full country name corresponding to provided key (null if
+   * none found), or the full list of keys/codes and names if no key is
+   * provided
    */
   public static function countries( $key=null )
   {
-    // List taken from ISO-3166 
     $countries = array(
       'AF' => "Afghanistan",
       'AX' => "Aland Islands",

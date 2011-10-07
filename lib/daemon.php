@@ -3,12 +3,12 @@
 declare( ticks = 1 );
 
 /**
- * @class Daemon
  * Abstract class for daemon processes.
  *
  * @bug Mixed use of syslog and Log class, choose or merge syslog functionality into Log class.
  * @bug Uses PID file, but doesn't check it... also, requires root.
  *
+ * @class Daemon
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>

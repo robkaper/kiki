@@ -1,21 +1,27 @@
 <?
 
 /**
-* @file lib/template.php
-* Provides the Template class.
-* @class Template
-* Resolves template file locations to be included.  Does NOT offer any language constructs (PHP is a fine templating language itself).
-* @todo Add variable assignments so that templaters do not need to rely on a
-*   specific scope, or at least a way for templaters to easily see what
-*   variables and objects are available in the present scope.
-* @bug Does not offer any parsing (such as htmlspecialchars), which means
-*   developers need to be careful about input that can inject unwanted
-*   HTML/CSS leading to potential XSS vulnerabilities.  Perhaps htmlentities
-*   is even better, @see http://stackoverflow.com/questions/3623236/htmlspecialchars-vs-htmlentities-when-concerned-with-xss/3623297#3623297
-* @author Rob Kaper <http://robkaper.nl/>
-* @section license_sec License
-* Released under the terms of the MIT license.
-*/
+ * Rudimentary template class.
+ *
+ * Resolves template file locations to be included.  Does NOT offer any language constructs (PHP is a fine templating language itself).
+ *
+ * @todo Add variable assignments so that templaters do not need to rely on
+ * a specific scope, or at least a way for templaters to easily see what
+ * variables and objects are available in the present scope.
+ *
+ * @bug Does not offer any parsing (such as htmlspecialchars), which means
+ * developers need to be careful about input that can inject unwanted
+ * HTML/CSS leading to potential XSS vulnerabilities.  Perhaps htmlentities
+ * is even better.
+ *
+ * @see http://stackoverflow.com/questions/3623236/htmlspecialchars-vs-htmlentities-when-concerned-with-xss/3623297#3623297
+ *
+ * @class Template
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
 
 class Template
 {

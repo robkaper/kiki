@@ -131,7 +131,7 @@ class Storage
    * @param boolean $secure Return a HTTPS resource instead of HTTP
    * @return string Full URL (protocol, host, local URI) of the resource
    */
-  public static function url( $id )
+  public static function url( $id, $secure = false )
   {
     return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id);
   }

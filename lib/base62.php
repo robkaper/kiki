@@ -3,6 +3,7 @@
 /**
  * Base 62 encoding and decoding.
  *
+ * @class Base64
  * @package Kiki
  * @author Andy Huang
  * @author Rob Kaper <http://robkaper.nl/>
