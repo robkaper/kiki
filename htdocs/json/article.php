@@ -54,29 +54,38 @@
 
     if ( !sizeof($errors) )
     {
-      // Publish article.
-      foreach( $_POST['connections'] as $id => $value )
-      {
-        if ( $value != 'on' )
-          continue;
-
-        $connection = $user->getConnection($id);
-        if ( $connection )
-        {
-          $rs = $connection->postArticle( $article );
-          if ( isset($rs->id) )
-          {
-            $errors[] = "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
-            if ( $connection->serviceName() == 'Facebook' )
-              $article->setFacebookUrl( $rs->url );
-            else if ( $connection->serviceName() == 'Twitter' )
-              $article->setTwitterUrl( $rs->url );
-          }
-          else
-            $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
-        }
-      }
+      // Save article prior to publishing to create cname. 
       $article->save();
+      
+      // Publish article.
+      if ( $_POST['connections'] )
+      {
+        foreach( $_POST['connections'] as $id => $value )
+        {
+          if ( $value != 'on' )
+            continue;
+
+          $connection = $user->getConnection($id);
+          if ( $connection )
+          {
+            $rs = $connection->postArticle( $article );
+            if ( isset($rs->id) )
+            {
+              $errors[] = "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
+              if ( $connection->serviceName() == 'Facebook' )
+                $article->setFacebookUrl( $rs->url );
+              else if ( $connection->serviceName() == 'Twitter' )
+                $article->setTwitterUrl( $rs->url );
+            }
+            else
+              $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
+          }
+        }
+
+        // Save article again, to store connection URLs.        
+        $article->save();
+              
+      }
     }
     
     if ( isset($_POST['json']) )
