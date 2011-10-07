@@ -121,7 +121,7 @@ class Articles
         
   public static function showMulti( &$db, &$user, $sectionId, $maxLength=1, $lengthInParagraphs=true )
   {
-    $content = "";
+    $content = MultiBanner::articles( $sectionId );
 
     $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
