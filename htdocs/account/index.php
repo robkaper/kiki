@@ -14,6 +14,13 @@
 <?= Boilerplate::facebookPermissions( $user ); ?>
 </div>
 <?
+  if ( $user->isAdmin() )
+  {
+    echo "<h2>Articles</h2>\n";
+    echo "<ul>\n";
+    echo "<li><a href=\"article/\">Write a new article</a></li>\n";
+    echo "</ul>\n";
+  }
 
   if ( $user->anyUser() )
   {
