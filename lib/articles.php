@@ -151,6 +151,7 @@ class Articles
     $title = $o->title;
     if ( !$o->visible )
       $title .= " (unpublished)";
+    $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
     $body = Misc::markup( $o->body );
     $date = $o->ctime;
 
@@ -164,7 +165,15 @@ class Articles
       $content .= "<article id=\"article_". $o->id. "\">\n";
 
     $content .= "<header>\n";
-    $content .= "<h2><span>$title</span></h2>\n";
+    $content .= "<h2><span><a href=\"$myUrl\">$title</a></span></h2>\n";
+
+    if ( !$maxLength && $o->header_image )
+    {
+      $img = Storage::url( $o->header_image );
+      list ($base, $ext) = Storage::splitExtension( $img );
+      $img = "${base}.780x400.c.${ext}";
+      $content .= "<img src=\"$img\" />\n";
+    }
     $content .= "<span class=\"author\">$author</span>\n";
     $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
     $content .= "</header>\n";
@@ -172,7 +181,6 @@ class Articles
 
     if ( $maxLength )
     {
-      $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
       $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs );
       $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
     }
