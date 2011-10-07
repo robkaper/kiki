@@ -54,6 +54,41 @@ class Status
     $q = "select value from config where `key`='dbVersion'";
     return $db->getSingleValue($q);
   }
+
+  /**
+   * Loads and executes queries from a local file.
+   *
+   * @fixme Returns immediately in case of an error, without rolling back
+   * previous changes: implement transactions.
+   * @param Database $db Database object.
+   * @param string $fileName Filename of the file with SQL statements.
+   *
+   * @return boolean True on error, false in case of success.
+   */
+  public static function sourceSqlFile( &$db, $fileName )
+  {
+    if ( !file_exists($fileName) )
+      return true;
+
+    $output = null;
+    $script = file_get_contents($fileName);
+    $queries = preg_split( "/;\n/", $script );
+    foreach( $queries as $q )
+    {
+      if ( !trim($q) )
+        continue;
+
+      echo "<blockquote>$q;</blockquote>\n";
+
+      $rs = $db->query($q);
+      if ( !$rs )
+      {
+        echo "<p><strong>Error</strong>: <tt>". mysql_error($db->dbh()). "</tt>.</p>";
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 ?>

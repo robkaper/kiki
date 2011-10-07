@@ -20,30 +20,6 @@
   $page = new Page( "Kiki Status" );
   $page->header();
 
-  function sourceSqlFile( &$db, $fileName )
-  {
-    if ( !file_exists($fileName) )
-      return true;
-
-    $script = file_get_contents($fileName);
-    $queries = preg_split( "/;\n/", $script );
-    foreach( $queries as $q )
-    {
-      if ( !trim($q) )
-        continue;
-
-      echo "<blockquote>$q;</blockquote>\n";
-
-      $rs = $db->query($q);
-      if ( !$rs )
-      {
-        echo "<p><strong>Error</strong>: <tt>". mysql_error($db->dbh()). "</tt>.</p>";
-        return true;
-      }
-    }
-    return false;
-  }
-
   $adminsExist = count(Config::$adminUsers);
   $dbVersion = Status::dbVersion();
   Log::debug( "adminUsers: ". print_r( Config::$adminUsers, true) );
@@ -96,7 +72,7 @@
           $file = $GLOBALS['kiki']. "/db/update-${version}.sql";
           echo "<li>Running update script <tt>$file</tt>:\n";
 
-          $error = sourceSqlFile($db, $file);
+          $error = Status::sourceSqlFile($db, $file);
           if ( $error )
           {
             echo "<p>Please upgrade manually.</p>\n";
