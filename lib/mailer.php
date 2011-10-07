@@ -24,17 +24,11 @@ class Mailer
   public static function send( &$email, $priority = 10 )
   {
     if ( Config::$mailerQueue )
-      self::queue( $email, $priority );
+      MailerQueue::store( $email, $priority );
     else
       self::smtp( $email );
   }
 
-  private static function queue( &$email, $priority = 10 )
-  {
-    // TODO: Merge MailerQueue back into Mailer class, queuing is an integrated feature.
-    MailerQueue::store( $email, $priority );
-  }
-  
   public static function smtp( &$email )
   {
     Log::debug( "Mailer: subject:[". $email->subject(). "], from:[". $email->from(). "], to:". print_r($email->recipients(), true) );
