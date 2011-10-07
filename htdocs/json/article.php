@@ -42,7 +42,8 @@
       $size = $_FILES['headerImage']['size'];
 
       $storageId = $tmpFile ? Storage::save( $name, file_get_contents($tmpFile) ) : 0;
-      $article->setHeaderImage( $storageId );
+      if ( $storageId )
+        $article->setHeaderImage( $storageId );
     }
 
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
