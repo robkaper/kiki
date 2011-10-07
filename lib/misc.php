@@ -153,6 +153,9 @@ class Misc
     // Twice, because of [ul][li] nests (and possibly others)
     $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
 
+    // Remove carriage returns.
+    $str = preg_replace( "(\r)", "", $str );
+
     return $str;
   }
 

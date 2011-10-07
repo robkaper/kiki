@@ -178,7 +178,6 @@ class Articles
     $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
     $content .= "</header>\n";
     
-
     if ( $maxLength )
     {
       $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs );
