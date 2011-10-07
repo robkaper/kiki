@@ -1,7 +1,7 @@
-#!/usr/bin/php
+#!/usr/bin/php -q
 <?
   $_SERVER['SERVER_NAME'] = $argv[1];
-  include_once str_replace( "bin/mailer-daemon.php", "lib/init.php", __FILE__ );
+  require_once str_replace( "bin/mailer-daemon.php", "lib/init.php", __FILE__ );
 
   if ( !Config::$mailerQueue )
   {

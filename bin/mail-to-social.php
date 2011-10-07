@@ -12,7 +12,7 @@
 */
 
   $_SERVER['SERVER_NAME'] = $argv[1];
-  include_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
+  require_once str_replace( "bin/mail-to-social.php", "lib/init.php", __FILE__ );
 
   /**
   * Sends a report of the parsing and social update.
