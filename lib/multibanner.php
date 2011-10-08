@@ -18,6 +18,8 @@ class MultiBanner
         $articles[] = $article;
       }
     }
+    else
+      return $content;
 
     $widths = array();
     $widths[1] = array( 780 );

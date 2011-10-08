@@ -1,6 +1,6 @@
 <?
   Config::$dbHost = "localhost";
-  Config::$dbPost = 3306;
+  Config::$dbPort = 3306;
   Config::$dbName = "example_com";
   Config::$dbUser = "user";
   Config::$dbPass = "password";

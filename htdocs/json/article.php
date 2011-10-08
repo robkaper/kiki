@@ -60,7 +60,7 @@
       $article->save();
       
       // Publish article.
-      if ( $_POST['connections'] )
+      if ( isset($_POST['connections']) )
       {
         foreach( $_POST['connections'] as $id => $value )
         {

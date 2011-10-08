@@ -10,16 +10,21 @@
   
 class User_Facebook extends User_External
 {
+  private function enabled()
+  {
+    return ( extension_loaded('curl') && Config::$facebookApp );
+  }
+
   protected function connect()
   {
-    if ( Config::$facebookApp && extension_loaded('curl') )
-    {
-      $this->api = new Facebook( array(
-        'appId'  => Config::$facebookApp,
-        'secret' => Config::$facebookSecret,
-        'cookie' => true
-        ) );
-    }
+    if ( !$this->enabled() )
+      return;
+
+    $this->api = new Facebook( array(
+      'appId'  => Config::$facebookApp,
+      'secret' => Config::$facebookSecret,
+      'cookie' => true
+      ) );
 
     if ( $this->id && $this->token )
     {
@@ -72,6 +77,9 @@ class User_Facebook extends User_External
     // // WARNING: This might break permission updates, as those probably do
     // require fetching the new sesion token.
     if ( !isset($_GET['session']) )
+      return;
+
+    if ( !$this->enabled() )
       return;
 
     if ( !$this->api )
@@ -334,7 +342,7 @@ class User_Facebook extends User_External
   
   public function getLoginUrl( $params )
   {
-    return $this->api->getLoginUrl( $params );
+    return $this->api ? $this->api->getLoginUrl( $params ) : null;
   }
               
 }

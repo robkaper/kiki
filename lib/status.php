@@ -20,6 +20,7 @@ class Status
   {
     $requirements = array();
     $requirements[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php5-curl' );
+    $requirements[] = array( 'name' => 'GD', 'function' => 'imagecreatefromjpeg', 'remedy' => 'apt-get install php5-gd' );
     $requirements[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php5-mysql' );
     $requirements[] = array( 'name' => 'PEAR', 'include' => 'PEAR.php', 'remedy' => 'apt-get install php-pear' );
     $requirements[] = array( 'name' => 'Mail_RFC822 (PEAR)', 'include' => 'Mail/RFC822.php', 'remedy' => 'pear install -a Mail' );
