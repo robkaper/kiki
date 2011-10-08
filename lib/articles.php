@@ -30,6 +30,7 @@ class Articles
     $title = $o ? $o->title : "";
     $body = $o ? htmlspecialchars( $o->body ) : "";
     $date = date( "d-m-Y H:i", $o ? strtotime($o->ctime) : time() );
+    $featured = ($o && $o->featured);
     $visible = ($o && $o->visible);
     $class = $o ? "hidden" : "";
 
@@ -50,6 +51,7 @@ class Articles
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", $body, "Body" );
     $content .= Form::file( "headerImage", "Header image" );
+    $content .= Form::checkbox( "featured", $featured, "Featured" );
     $content .= Form::checkbox( "visible", $visible, "Visible" );
 
     // TODO: Make this generic, difference with social update is the check
@@ -89,7 +91,7 @@ class Articles
       $qId = $db->escape($articleId);
       $qUserId = $db->escape( $user->id() );
       $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
-      $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
+      $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
       $o = $db->getSingle($q);
     }
     else
@@ -99,6 +101,7 @@ class Articles
       $o->title = "...";
       $o->body = "...";
       $o->header_image = 0;
+      $o->featured = false;
       $o->date = time();
       $o->user_id = $user->id();
     }
@@ -125,7 +128,7 @@ class Articles
 
     $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
-    $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
+    $q = "select id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )

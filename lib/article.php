@@ -23,6 +23,7 @@ class Article extends Object
   private $cname = null;
   private $body = null;
   private $headerImage = null;
+  private $featured = false;
   private $visible = false;
   private $facebookUrl = null;
   private $twitterUrl = null;
@@ -38,7 +39,8 @@ class Article extends Object
     $this->cname = null;
     $this->body = null;
     $this->headerImage = null;
-    $this->visible = null;
+    $this->featured = false;
+    $this->visible = false;
     $this->facebookUrl = null;
     $this->twitterUrl = null;
   }
@@ -46,7 +48,7 @@ class Article extends Object
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, visible, facebook_url, twitter_url";
+    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -65,6 +67,7 @@ class Article extends Object
     $this->cname = $o->cname;
     $this->body = $o->body;
     $this->headerImage = $o->header_image;
+    $this->featured = $o->featured;
     $this->visible = $o->visible;
     $this->facebookUrl = $o->facebook_url;
     $this->twitterUrl = $o->twitter_url;
@@ -75,8 +78,8 @@ class Article extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, visible=%d, facebook_url='%s', twitter_url='%s' where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->id
+      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s' where id=%d",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->id
     );
     Log::debug($q);
 
@@ -91,8 +94,8 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s')",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->visible, $this->facebookUrl, $this->twitterUrl
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s')",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl
     );
     Log::debug($q);
 
@@ -117,6 +120,8 @@ class Article extends Object
   public function body() { return $this->body; }
   public function setHeaderImage( $headerImage ) { $this->headerImage = $headerImage; }
   public function headerImage() { return $this->headerImage; }
+  public function setFeatured( $featured ) { $this->featured = $featured; }
+  public function featured() { return $this->featured; }
   public function setVisible( $visible ) { $this->visible = $visible; }
   public function visible() { return $this->visible; }
   public function setFacebookUrl( $facebookUrl ) { $this->facebookUrl = $facebookUrl; }

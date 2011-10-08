@@ -46,6 +46,7 @@
         $article->setHeaderImage( $storageId );
     }
 
+    $article->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setFacebookUrl( $_POST['facebookUrl'] );
     $article->setTwitterUrl( $_POST['twitterUrl'] );
