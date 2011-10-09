@@ -103,6 +103,6 @@
       exit();
     }
 
-    header( 'Location: '. $_SERVER['HTTP_REFERER'], true, 301 );
+    Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
   }
 ?>

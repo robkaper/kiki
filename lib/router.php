@@ -20,12 +20,12 @@ class Router
    *
    * @todo add header to (new) Http object instead of sending it here
    */
-  public static function redirect( $url, $permanent = true )
+  public static function redirect( $url, $statusCode = 302 )
   {
     if ( !$url )
       return false;
 
-    header( "Location: $url", true, $permanent ? 301 : 302 );
+    header( "Location: $url", true, $statusCode );
     return true;
   }
 

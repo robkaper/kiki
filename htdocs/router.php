@@ -49,7 +49,7 @@
     if ( !$handler->trailingSlash && $handler->type != 'page' )
     {
       $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
-      Router::redirect($url, true) && exit();
+      Router::redirect($url, 301) && exit();
     }
        
     // TODO: this is nearly one on one, might as well let findHandler return the right controller..
@@ -72,7 +72,7 @@
   // Log::debug( print_r($controller, true) );
 
   if ( $controller->status() == 301 )
-    Router::redirect($controller->content(), true) && exit();
+    Router::redirect($controller->content(), $controller->status()) && exit();
 
   $page = new Page();
   $page->setHttpStatus( $controller->status() );

@@ -68,10 +68,10 @@
   }
 
   // HACK: fb_xd_fragment parameter bug: sets display:none on body, so redirect without it (also, we don't want it to appear in analytics)
+  // FIXME: do the same for ?session=
   if ( array_key_exists( 'fb_xd_fragment', $_GET ) )
   {
-    header( "Location: ". $_SERVER['SCRIPT_URL'], true, 301 );
-    exit();
+    Router::redirect( $_SERVER['SCRIPT_URL'], 301 ) && exit();
   }
 
   $db = $GLOBALS['db'] = new Database( Config::$db );

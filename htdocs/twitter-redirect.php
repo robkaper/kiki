@@ -32,9 +32,7 @@ switch ($connection->http_code)
 {
   case 200:
     // Build authorize URL and redirect user to Twitter.
-    $url = $connection->getAuthorizeURL($token);
-    Log::debug( "twitter-redirect: $url" );
-    header('Location: ' . $url); 
+    Router::redirect( $connection->getAuthorizeURL($token) );
     break;
   default:
     // Show notification if something went wrong.
