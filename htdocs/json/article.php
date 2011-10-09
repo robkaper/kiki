@@ -20,9 +20,10 @@
 
     $article->setSectionId( $_POST['sectionId'] );
 
-    // FIXME: only set it, don't update if use id exists in case of multiple
-    // authors who can amend/edit/proofread each other's work.
-    $article->setUserId( $user->id() );
+    // In case of multiple authors who can proofread, amend: don't update unless empty.
+    if ( !$article->userId() )
+      $article->setUserId( $user->id() );
+
     $article->setIpAddr( $_SERVER['REMOTE_ADDR'] );
 
     list( $date, $time ) = explode( " ", $_POST['ctime'] );
