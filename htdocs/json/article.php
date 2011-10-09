@@ -6,8 +6,6 @@
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
- *
- * @todo verify backwards compatibility (should be a See Other redirect?)
  */
 
   require_once "../../lib/init.php";
