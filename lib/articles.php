@@ -168,7 +168,8 @@ class Articles
       $content .= "<article id=\"article_". $o->id. "\">\n";
 
     $content .= "<header>\n";
-    $content .= "<h2><span><a href=\"$myUrl\">$title</a></span></h2>\n";
+    if ( $maxLength )
+      $content .= "<h2><span><a href=\"$myUrl\">$title</a></span></h2>\n";
 
     if ( !$maxLength && $o->header_image )
     {
@@ -183,8 +184,8 @@ class Articles
     
     if ( $maxLength )
     {
-      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs );
-      $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
+      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). "</p>\n";
+      // $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
     }
     else
     {
@@ -193,15 +194,19 @@ class Articles
 
     $content .= "<footer>\n";
     $content .= "<ul>\n";
-    
+
     if ( $o->facebook_url )
-      $content .= "<li><a href=\"$o->facebook_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/Facebook_16.png\" alt=\"[Facebook]\" /></a></li>\n";
+      $content .= "<li><a href=\"$o->facebook_url\" class=\"button\"><span class=\"buttonImg Facebook\"></span>Facebook</a></li>\n";
+
     if ( $o->twitter_url )
-      $content .= "<li><a href=\"$o->twitter_url\"><img src=\"". Config::$kikiPrefix. "/img/komodo/Twitter_16.png\" alt=\"[Twitter]\" /></a></li>\n";
+      $content .= "<li><a href=\"$o->twitter_url\" class=\"button\"><span class=\"buttonImg Twitter\"></span>Twitter</a></li>\n";
+
+    if ( $maxLength )
+      $content .= "<li><a href=\"$myUrl\" class=\"button\">". _("Read more"). "</a></li>\n";
 
     // FIXME: doesn't degrade without js
     if ( !$maxLength && $user->id() == $o->user_id )
-      $content .= "<li><a href=\"javascript:showArticleForm($o->id);\">Wijzigen</a></li>\n";
+      $content .= "<li><a href=\"javascript:showArticleForm($o->id);\" class=\"button\">Wijzigen</a></li>\n";
 
     // $content .= "<li><a href=\"javascript:showArticleComments($o->id);\">Reacties</a></li>\n";
 
