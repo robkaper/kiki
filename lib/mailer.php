@@ -38,10 +38,11 @@ class Mailer
    */
   public static function smtp( &$email )
   {
+/*
     if ( isset($GLOBALS['phpmail']) && $GLOBALS['phpmail'] )
     {
       $rfc = new Mail_RFC822();
-      $pureAddresses = $rfc->parseAddressList($email->from());
+      $pureAddresses = $rfc->parseAddressList($email->to());
       foreach( $pureAddresses as $address )
       {
         $to = $address->mailbox. "@". $address->host;
@@ -49,6 +50,7 @@ class Mailer
       }
       return;
     }
+*/
 
     Log::debug( "Mailer: subject:[". $email->subject(). "], from:[". $email->from(). "], to:". print_r($email->recipients(), true) );
 
