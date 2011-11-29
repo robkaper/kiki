@@ -193,7 +193,7 @@ class Email
   {
     if ( !$this->mimeHeadersCreated && ($this->htmlMessage || count($this->attachments)) )
     {
-      $this->addHeader( $this->multipartHeader($this->mimeBoundary, 'mixed', true) );
+      $this->addHeader( $this->multipartHeader($this->mimeBoundary, $this->htmlMesage ? 'related' : 'mixed', true) );
       $this->mimeHeadersCreated = true;
     }
   }
@@ -215,7 +215,7 @@ class Email
         $this->textPart($altBoundary).
         $this->htmlPart($altBoundary).
         $this->mimePart($altBoundary).
-        $this->AttachmentParts().
+        $this->attachmentParts().
         $this->mimePart($this->mimeBoundary);
     }
     else if ( count($this->attachments) )
@@ -277,7 +277,8 @@ class Email
           continue;
           
         $dataStr = chunk_split( base64_encode($data) );
-        $attachmentPart .= $this->mimePart( $this->mimeBoundary, "Content-Type: ". $attachment['type']. "; name=". basename($attachment['name']). "\nContent-disposition: attachment\nContent-Transfer-Encoding: base64", $dataStr );
+        $cid = basename($attachment['name']). "@". $_SERVER['SERVER_NAME'];
+        $attachmentPart .= $this->mimePart( $this->mimeBoundary, "Content-Type: ". $attachment['type']. "; name=". basename($attachment['name']). "\nContent-disposition: attachment\nContent-Transfer-Encoding: base64\nContent-ID: <$cid>", $dataStr );
       }
     }
     return $attachmentPart;
