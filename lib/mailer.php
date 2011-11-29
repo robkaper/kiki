@@ -38,11 +38,23 @@ class Mailer
    */
   public static function smtp( &$email )
   {
+    if ( isset($GLOBALS['phpmail']) && $GLOBALS['phpmail'] )
+    {
+      $rfc = new Mail_RFC822();
+      $pureAddresses = $rfc->parseAddressList($email->from());
+      foreach( $pureAddresses as $address )
+      {
+        $to = $address->mailbox. "@". $address->host;
+        mail( $to, $email->subject(), $email->body(), $email->headers() );
+      }
+      return;
+    }
+
     Log::debug( "Mailer: subject:[". $email->subject(). "], from:[". $email->from(). "], to:". print_r($email->recipients(), true) );
 
-    if ( !Config::$smtpHost && !Config::$smtpUser && !Config::$smtpPass )
+    if ( !Config::$smtpHost )
     {
-      $error = "Mailer: no SMTP credentials supplied";
+      $error = "Mailer: no SMTP host supplied";
       Log::debug($error);
       return $error;
     }
@@ -55,14 +67,15 @@ class Mailer
     }
     // $smtp->setDebug(true);
 
-    if ( PEAR::isError($e = $smtp->connect()) )
+    $pear = new PEAR();
+    if ( $pear->isError($e = $smtp->connect()) )
     {
       $error = "Mailer: connect error: ". $e->getMessage();
       Log::debug($error);
       return $error;
     }
 
-    if ( PEAR::isError($e = $smtp->auth(Config::$smtpUser, Config::$smtpPass, Config::$smtpAuthType)) )
+    if ( Config::$smtpUser && $pear->isError($e = $smtp->auth(Config::$smtpUser, Config::$smtpPass, Config::$smtpAuthType)) )
     {
       $error = "Mailer: authentication error: ". $e->getMessage();
       Log::debug($error);
@@ -73,7 +86,7 @@ class Mailer
     $pureAddresses = $rfc->parseAddressList($email->from());
     $from = $pureAddresses[0]->mailbox. "@". $pureAddresses[0]->host;
 
-    if ( PEAR::isError($e = $smtp->mailFrom($from)))
+    if ( $pear->isError($e = $smtp->mailFrom($from)))
     {
       $error = "Unable to set sender to [$from]: ". $e->getMessage();
       Log::debug($error);
@@ -87,7 +100,7 @@ class Mailer
       {
         $to = $address->mailbox. "@". $address->host;
 
-        if ( PEAR::isError($e = $smtp->rcptTo($to)) )
+        if ( $pear->isError($e = $smtp->rcptTo($to)) )
         {
           $error = "Unable to set recipient to [$to]: ". $e->getMessage();
           Log::debug($error);
@@ -96,7 +109,7 @@ class Mailer
       }
     }
 
-    if ( PEAR::isError($e = $smtp->data( $email->data() )) )
+    if ( $pear->isError($e = $smtp->data( $email->data() )) )
     {
       $error = "Unable to set data: ". $e->getMessage();
       Log::debug($error);
