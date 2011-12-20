@@ -16,7 +16,7 @@ tt {
 	font-size: 1em;
 }
 
-#sw, #cw, #fw {
+#hw, #sw, #cw, #fw {
 	margin: 0 auto;
 	-moz-margin: 0 auto;
 	width: 960px;
@@ -24,7 +24,7 @@ tt {
 
 #content {
 	font-size: 0.875em; /* 0.875*16=14 */
-	max-width: 800px;
+	width: 780px;
 	margin: 10px 0 10px 160px;
 	text-align: justify;
 }
@@ -36,6 +36,12 @@ tt {
 #cw.noaside #content {
 	margin: 0.5em 0 0.5em 0;
 	-moz-margin: 0.5em 0 0.5em 0;
+}
+
+#cw.twosides #content {
+	width: 620px;
+	margin: 10px 160px 10px 160px;
+	-moz-margin: 10px 160px 10px 160px;
 }
 
 aside {
@@ -205,6 +211,16 @@ form input[type="checkbox"] {
 
 form textarea {
 	height: 10em;
+}
+
+.cleditorMain textarea {
+	float: none;
+	width: auto;
+}
+
+.cleditorMain {
+        width: 70%;
+        float: left;
 }
 
 form label span.remaining {
@@ -585,6 +601,36 @@ aside img.social {
 	padding: 5px 0;
 }
 
+table {
+	width: 100%;
+	border: 1px solid #463;
+	background: #9c6;
+}
+
+xthead {
+	border: 1px solid green;
+	background: blue;
+}
+xtbody {
+	border: 1px solid purple;
+	background: pink;
+}
+
+th {
+	background: #9c6;
+}
+
+xtr {
+	border: 1px solid orange;
+	background: black;
+}
+td {
+	background: #deb;
+}
+tr.disabled {
+	color: #999;
+}
+
 @media print {
 	#content a[href^="http"]:after {
 		content: " (" attr(href) ") ";
@@ -623,6 +669,10 @@ aside {
 	padding: 0px 0px;
 }
 
+#sw.left aside {
+	float: left;
+}
+
 #search {
 	height: 50px;
 	vertical-align: middle;
@@ -643,7 +693,7 @@ body > header {
 
 #title {
 	display: block;
-	max-width: 850px;
+	max-width: 960px;
 	margin: 0 auto;
 }
 
@@ -673,9 +723,10 @@ body > nav.second {
 }
 
 body > nav ul {
-	max-width: 850px;
+	max-width: 960px;
 	margin: 0 auto;
 	padding: 0;
+	clear: both;
 }
 
 body > nav ul li {

@@ -84,6 +84,8 @@ class Boilerplate
     if ( $o->admin && !$user->isAdmin() )
       return null;
 
+    $o->icon = false;
+
     $match = preg_match( "#$o->url#", $_SERVER['REQUEST_URI'] );
     $class = $o->class;
     $class .= ($match ? " active" : null);
@@ -106,6 +108,7 @@ class Boilerplate
     $matches = array();
     $requestUri = isset($_GET['uri']) ? $_GET['uri'] : $_SERVER['REQUEST_URI'];
     preg_match( '#(/(.*))/((.*)(\.php)?)#', $requestUri, $matches );
+    
     $active = null;
     if ( count($matches) )
     {
@@ -120,7 +123,7 @@ class Boilerplate
     $qContext = $db->escape( $context );
 
     if ( $context )
-      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and (context like '$qContext%' or context is null) order by sortorder asc";
+      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and ('$qContext' like concat('%', context, '%') or context is null) order by sortorder asc";
     else
       $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and context is null order by sortorder asc";
     $rs = $db->query($q);
@@ -163,7 +166,7 @@ class Boilerplate
           $permission = $connection->hasPerm( $action );
           if ( $permission )
           {
-            $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?permission=$action";
+            $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?id=". $connection->id(). "&permission=$action";
             $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
           }
           else

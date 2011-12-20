@@ -67,13 +67,6 @@
     Log::debug( $log );
   }
 
-  // HACK: fb_xd_fragment parameter bug: sets display:none on body, so redirect without it (also, we don't want it to appear in analytics)
-  // FIXME: do the same for ?session=
-  if ( array_key_exists( 'fb_xd_fragment', $_GET ) )
-  {
-    Router::redirect( $_SERVER['SCRIPT_URL'], 301 ) && exit();
-  }
-
   $db = $GLOBALS['db'] = new Database( Config::$db );
   Config::loadDbConfig($db);
 
@@ -86,6 +79,13 @@
 
   $user = $GLOBALS['user'] = new User();
   $user->authenticate();
+
+  // Redirect requests with parameters we don't want visible for the user or
+  // Analytics.
+  if ( isset($_GET['fb_xd_fragment']) || isset($_GET['session']) )
+  {
+    Router::redirect( $_SERVER['SCRIPT_URL'], 301 ) && exit();
+  }
 
   // Don't log trivial and overly frequent requests like IM updates
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];

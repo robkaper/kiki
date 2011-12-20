@@ -35,7 +35,7 @@ class Controller_Articles extends Controller
       Log::debug( "showMulti ". $this->instanceId );
       $this->status = 200;
       $this->template = 'page/body';
-      $this->content = Articles::showMulti( $db, $user, $this->instanceId, 2 );
+      $this->content = Articles::showMulti( $db, $user, $this->instanceId, 10, 2 );
     }
   }
 }

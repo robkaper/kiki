@@ -167,6 +167,8 @@ function addAttachment( target, id, uri )
 }
 
 function onReady() {
+  $('.cleditor').cleditor();
+
   $('.album .navarrow img').fadeOut();
 
   var prettify = false;
@@ -180,7 +182,14 @@ function onReady() {
   }
 
   $('input[placeholder], textarea[placeholder]').placeholder();
-           
+
+  $('label a.toggleWysiwyg').live('click', function() {
+    var id = $(this).parent().attr('for');
+    $('textarea#' + id ).toggleClass('cleditor').cleditor();
+    return false;
+  } );
+
+
   $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusin', function() {
   if ( submitTimer )
     clearTimeout( submitTimer );

@@ -63,7 +63,11 @@ class User extends Object
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     // TODO: todo email
     $q = $this->db->buildQuery( "select id, o.object_id, u.ctime, u.mtime, email, auth_token, mail_auth_token, admin from users u LEFT JOIN objects o on o.object_id=u.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
-    $this->setFromObject( $this->db->getSingle($q) );
+    $o = $this->db->getSingle($q);
+    if ( !$o )
+      return;
+    
+    $this->setFromObject( $o );
 
     // TODO: make sure this doesn't load remote data
     // TODO: add Cache support for connections, although no longer really urgent as User class itself can be stored in Cache

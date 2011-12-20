@@ -17,7 +17,7 @@ abstract class User_External
 {
   protected $db;
 
-  protected $api = null;
+  public $api = null;
   protected $token = null;
   protected $secret = null;
   

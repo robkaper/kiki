@@ -68,13 +68,17 @@
   //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
   // TODO: test missing directoryindices (most notably / when moving content to database)
 
+  // Paged moved up because some controllers create forms which in turn need
+  // to add stylesheets/scripts.
+  $page = new Page();
+      
   $controller->exec();
   // Log::debug( print_r($controller, true) );
 
   if ( $controller->status() == 301 )
     Router::redirect($controller->content(), $controller->status()) && exit();
 
-  $page = new Page();
+  // $page = new Page();
   $page->setHttpStatus( $controller->status() );
   $page->setTitle( $controller->title() );
   $page->setBodyTemplate( $controller->template() );

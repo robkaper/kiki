@@ -1,3 +1,4 @@
+<pre>
 <?
 
 /**
@@ -11,7 +12,16 @@
 
   require_once "../lib/init.php";
 
-  $user->fbUser->revokePerm( $_GET['permission'] );
+  if ( isset($_GET['id']) && isset($_GET['permission']) )
+  {
+    foreach( $user->connections() as $connection )
+    {
+      if ( $connection->serviceName() == 'Facebook' && $connection->id() == $_GET['id'] )
+      {
+        $connection->revokePerm( $_GET['permission'] );
+      }
+    }
+  }
 
   Router::redirect( $_SERVER['HTTP_REFERER'] );
   exit();

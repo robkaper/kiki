@@ -6,7 +6,7 @@
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 
-  $page = new Page( "Social updates" );
+  $page = new AccountPage( "Social updates" );
   $page->header();
 
   if ( $_POST )

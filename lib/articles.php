@@ -12,78 +12,6 @@
             
 class Articles
 {
-  /**
-   * Creates an article edit form.
-   *
-   * @fixme Should be integrated into the Article class and a template.
-   *
-   * @param User $user User object, used to show the proper connection links for publications.
-   * @param object $o Database object of the Article, or null for a new article.
-   * @return string The form HTML.
-   */
-  public static function form( &$user, &$o = null )
-  {
-    $section = $o ? $o->section_id : 0;
-    $articleId = $o ? $o->id : 0;
-    $twitterUrl = $o ? $o->twitter_url : 0;
-    $facebookUrl = $o ? $o->facebook_url : 0;
-    $title = $o ? $o->title : "";
-    $body = $o ? htmlspecialchars( $o->body ) : "";
-    $date = date( "d-m-Y H:i", $o ? strtotime($o->ctime) : time() );
-    $featured = ($o && $o->featured);
-    $visible = ($o && $o->visible);
-    $class = $o ? "hidden" : "";
-
-    $sections = array();
-    $db = $GLOBALS['db'];
-    $q = "select id,title from sections order by title asc";
-    $rs = $db->query($q);
-    if ( $rs && $db->numRows($rs) )
-      while( $oSection = $db->fetchObject($rs) )
-        $sections[$oSection->id] = $oSection->title;
-
-    $content = Form::open( "articleForm_${articleId}", Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
-    $content .= Form::hidden( "articleId", $articleId );
-    $content .= Form::hidden( "twitterUrl", $twitterUrl );
-    $content .= Form::hidden( "facebookUrl", $facebookUrl );
-    $content .= Form::select( "sectionId", $sections, "Section", $section );
-    $content .= Form::text( "title", $title, "Title" );
-    $content .= Form::datetime( "ctime", $date, "Date" );
-    $content .= Form::textarea( "body", $body, "Body" );
-    $content .= Form::file( "headerImage", "Header image" );
-    $content .= Form::checkbox( "featured", $featured, "Featured" );
-    $content .= Form::checkbox( "visible", $visible, "Visible" );
-
-    // TODO: Make this generic, difference with social update is the check
-    // against an already stored external URL.
-    foreach ( $user->connections() as $connection )
-    {
-      if ( $connection->serviceName() == 'Facebook' )
-      {
-        // TODO: inform user that, and why, these are required (offline
-        // access is required because Kiki doesn't store or use the
-        // short-lived login sessions)
-        if ( !$connection->hasPerm('publish_stream') )
-         continue;
-        if ( !$connection->hasPerm('offline_access') )
-         continue;
-
-        if ( !$facebookUrl )
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-      }
-      else if (  $connection->serviceName() == 'Twitter' )
-      {
-        if ( !$twitterUrl )
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-      }
-    }
-
-    $content .= Form::button( "submit", "submit", "Opslaan" );
-    $content .= Form::close();
-
-    return $content;
-  }
-
   public static function showSingle( &$db, &$user, $articleId, $json = false )
   {
     if ( $articleId )
@@ -122,7 +50,7 @@ class Articles
     return $o ? $o->title : null;
   }
         
-  public static function showMulti( &$db, &$user, $sectionId, $maxLength=1, $lengthInParagraphs=true )
+  public static function showMulti( &$db, &$user, $sectionId, $maxItems=10, $maxLength=1, $lengthInParagraphs=true )
   {
     $content = MultiBanner::articles( $sectionId );
 
@@ -150,6 +78,7 @@ class Articles
   public static function showArticle( &$user, &$o, $json = false, $maxLength=0, $lengthInParagraphs=false )
   {
     $content = "";
+    $article = new Article( $o->id );
 
     $title = $o->title;
     if ( !$o->visible )
@@ -214,7 +143,8 @@ class Articles
     $content .= "</footer>\n";
 
     if ( !$maxLength && $user->id() == $o->user_id )
-      $content .= Articles::form( $user, $o );
+      $content .= $article->form( $user, true );
+
     // FIXME: page/filter comments in embedded view
     if  ( !$maxLength )
       $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );

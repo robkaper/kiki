@@ -43,12 +43,13 @@ class User_Facebook extends User_External
       }
     }
 
-    // FIXME: debug and re-enable
-    return;
-
-    $perms = explode(",", $_GET['perms'] );
-    foreach( $perms as $perm )
-      self::storePerm($perm);
+    if ( isset($_GET['perms']) )
+    {
+      // TODO: check whether this is a list with values, or a list of enabled perms
+      $perms = explode(",", $_GET['perms'] );
+      foreach( $perms as $perm )
+        self::storePerm($perm, true);
+    }
   } 
 
   public function identify()
@@ -299,8 +300,9 @@ class User_Facebook extends User_External
     // implement verify and only do a remote check prior to posting.  Or
     // just catch the error and always check the local store.
     try {
-      $perm = $this->api->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
-      return $perm;
+      $value = $this->api->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+      self::storePerm( $perm, $value );
+      return $value;
     }
     catch( FacebookApiException $e )
     {
@@ -311,21 +313,25 @@ class User_Facebook extends User_External
   }
 
   // FIXME: port
-  public function storePerm( $perm )
+  public function storePerm( $perm, $value=false )
   {
     $qPerm = $this->db->escape( $perm );
-    $q = "insert into facebook_user_perms (facebook_user_id, perm_key, perm_value) values ($this->id, '$qPerm', 1)";
+    $q = $this->db->buildQuery(
+      "INSERT INTO facebook_user_perms (facebook_user_id, perm_key, perm_value) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE perm_value=%d",
+      $this->id, $perm, $value, $value
+      );
+    Log::debug( $q );
     $this->db->query($q);
   }
 
   // FIXME: port
   public function revokePerm( $perm )
   {
-    if ( !$this->fb )
+    if ( !$this->api )
       return;
 
     // Tell Facebook to revoke permission
-    $fbRs = $this->fb->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
+    $fbRs = $this->api->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
 
     // Remove permission from database
     $qPerm = $this->db->escape( $perm );

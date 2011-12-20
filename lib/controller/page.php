@@ -7,13 +7,15 @@ class Controller_Page extends Controller
     $db = $GLOBALS['db'];
     $user = $GLOBALS['user'];
 
-    $this->title = Articles::title( $db, $user, $this->instanceId );
+    $article = new Article( $this->instanceId );
+    $this->title = $article->title();
 
     // FIXME: Page doesn't exist yet at this moment, but we need to handle this..
     // $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
-    if ( $this->title )
+    if ( $article->visible() )
     {
+      $this->title = $article->title();
       $this->status = 200;
       $this->template = 'page/body';
       $this->content = Articles::showSingle( $db, $user, $this->instanceId );

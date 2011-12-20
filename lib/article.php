@@ -83,6 +83,9 @@ class Article extends Object
     );
     Log::debug($q);
 
+    if ( !$this->sectionId )
+      Router::storeBaseUri( $this->cname, 'page', $this->id );
+
     $this->db->query($q);
   }
   
@@ -94,7 +97,7 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s')",
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s')",
       $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl
     );
     Log::debug($q);
@@ -103,6 +106,9 @@ class Article extends Object
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
 
+    if ( !$this->sectionId )
+      Router::storeBaseUri( $this->cname, 'page', $this->id );
+          
     return $this->id;
   }
 
@@ -137,6 +143,70 @@ class Article extends Object
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
     $url = $urlPrefix. $sectionBaseUri. $this->cname;
     return $url;
+  }
+
+  /**
+   * Creates an article edit form.
+   *
+   * @fixme Should be integrated into a template.
+   *
+   * @param User $user User object, used to show the proper connection links for publications.
+   * @return string The form HTML.
+   */
+  public function form( &$user, $hidden=false )
+  {
+    $date = date( "d-m-Y H:i", $this->ctime ? strtotime($this->ctime) : time() );
+    $class = $hidden ? "hidden" : "";
+
+    $sections = array();
+    $db = $GLOBALS['db'];
+    $q = "select id,title from sections order by title asc";
+    $rs = $db->query($q);
+    if ( $rs && $db->numRows($rs) )
+      while( $oSection = $db->fetchObject($rs) )
+        $sections[$oSection->id] = $oSection->title;
+
+    $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
+    $content .= Form::hidden( "articleId", $this->id );
+    $content .= Form::hidden( "twitterUrl", $this->twitterUrl );
+    $content .= Form::hidden( "facebookUrl", $this->facebookUrl );
+    $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
+    $content .= Form::text( "cname", $this->cname, "URL name" );
+    $content .= Form::text( "title", $this->title, "Title" );
+    $content .= Form::datetime( "ctime", $date, "Date" );
+    $content .= Form::textarea( "body", htmlspecialchars($this->body), "Body" );
+    $content .= Form::file( "headerImage", "Header image" );
+    $content .= Form::checkbox( "featured", $this->featured, "Featured" );
+    $content .= Form::checkbox( "visible", $this->visible, "Visible" );
+
+    // TODO: Make this generic, difference with social update is the check
+    // against an already stored external URL.
+    foreach ( $user->connections() as $connection )
+    {
+      if ( $connection->serviceName() == 'Facebook' )
+      {
+        // TODO: inform user that, and why, these are required (offline
+        // access is required because Kiki doesn't store or use the
+        // short-lived login sessions)
+        if ( !$connection->hasPerm('publish_stream') )
+         continue;
+        if ( !$connection->hasPerm('offline_access') )
+         continue;
+
+        if ( !$this->facebookUrl )
+          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+      }
+      else if (  $connection->serviceName() == 'Twitter' )
+      {
+        if ( !$this->twitterUrl )
+          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+      }
+    }
+
+    $content .= Form::button( "submit", "submit", "Opslaan" );
+    $content .= Form::close();
+
+    return $content;
   }
 }
 

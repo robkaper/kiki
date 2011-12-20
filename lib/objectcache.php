@@ -14,7 +14,7 @@
  * and database loading. For most sites, this tradeoff seems to work.
  *
  * @warning Stores references: retrieved and stored objects should not be
- * reinstanced by changed their ID manually or using setFromObject() unless
+ * reinstanced by changing their ID manually or using setFromObject(), unless
  * explicitely cloned first.
  *
  * @package Kiki

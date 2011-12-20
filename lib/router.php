@@ -138,6 +138,21 @@ class Router
 
     return $result;
   }
+
+  public static function storeBaseUri( $baseUri, $type, $instanceId = 0 )
+  {
+      $db = $GLOBALS['db'];
+
+      if ( $baseUri[0] != '/' )
+        $baseUri = '/'. $baseUri;
+
+      $q = $db->buildQuery( "INSERT INTO router_base_uris (base_uri, type, instance_id) VALUES ('%s', '%s', %d) ON DUPLICATE KEY UPDATE type='%s', instance_id=%d",
+        $baseUri, $type, $instanceId, $type, $instanceId
+      );
+
+      $db->query($q);
+  }
+
 }
   
 ?>

@@ -20,13 +20,11 @@ abstract class Object
   protected $id = 0;
   protected $objectId = 0;
 
+  protected $name = null;
+  protected $uriAlias = null;
+  
   protected $ctime = null;
   protected $mtime = null;
-
-  // TODO: add more common properties, such as:
-  // protected $alias = null; // currently incorrectly stored as cname: the url friendly alias
-  // protected $name = null;  // the proper name of the object
-  // TODO: join the name vs title debate, decide on something and stick with it
 
   public function __construct( $id = 0, $objectId = 0 )
   {
@@ -45,6 +43,9 @@ abstract class Object
     $this->id = 0;
     $this->objectId = 0;
 
+    $this->name = null;
+    $this->uriAlias = null;
+
     $this->ctime = null;
     $this->mtime = null;
   }
@@ -58,6 +59,10 @@ abstract class Object
 
     $this->id = $o->id;
     $this->objectId = $o->object_id;
+
+    // $this->name = $o->name;
+    // $this->uriAlias = $o->uriAlias;
+
     $this->ctime = $o->ctime;
     $this->mtime = $o->mtime;
   }

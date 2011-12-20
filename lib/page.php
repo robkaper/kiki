@@ -27,6 +27,8 @@ class Page
   */
   private $stylesheets;
 
+  private $scripts;
+
   /**
   * @var string raw main content of the page, in HTML (excludes navigation, utilities, sidebars, headers/footers and everything else sufficiently templated)
   */
@@ -57,6 +59,7 @@ class Page
     $this->title = $title;
     $this->description = $description;
     $this->stylesheets = array();
+    $this->scripts = array();
     $this->content = null;
     $this->tagLine = $tagLine;
   }
@@ -78,12 +81,21 @@ class Page
   }
 
   /** 
-  * Appends a stylesheet.
+  * Appends a stylesheet to be included.
   * @param $url [string] URL of the stylesheet
   */
   public function addStylesheet( $url )
   {
     $this->stylesheets[] = $url;
+  }
+
+  /** 
+  * Adds a Javascript file to be included.
+  * @param $url [string] URL of the script
+  */
+  public function addScript( $url )
+  {
+    $this->scripts[] = $url;
   }
 
   /**

@@ -1,7 +1,7 @@
 <?
   require_once "../../lib/init.php";
 
-  $page = new Page( _("Your Account") );
+  $page = new AccountPage( _("Your Account") );
   $page->header();
 
   foreach( $user->connections() as $connectedUser )
@@ -14,14 +14,6 @@
 <?= Boilerplate::facebookPermissions( $user ); ?>
 </div>
 <?
-  if ( $user->isAdmin() )
-  {
-    echo "<h2>Articles</h2>\n";
-    echo "<ul>\n";
-    echo "<li><a href=\"article/\">Write a new article</a></li>\n";
-    echo "</ul>\n";
-  }
-
   if ( $user->anyUser() )
   {
     echo "<h2>Sociale hulpmiddelen</h2>\n";
@@ -40,7 +32,7 @@
 
       list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );
       $mailToSocialUserAddress = $localPart. "+". $user->mailAuthToken. "@". $domain;
-      echo "<li>Update je status en foto's door ze te e-mailen naar <a href=\"mailto:$mailToSocialUserAddress\">$mailToSocialUserAddress</a></li>\n";
+      echo "<li>Update je status en foto's door ze te e-mailen naar:<br /><a href=\"mailto:$mailToSocialUserAddress\">$mailToSocialUserAddress</a></li>\n";
     }
 
     echo "</ul>\n";
