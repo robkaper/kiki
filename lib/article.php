@@ -91,7 +91,7 @@ class Article extends Object
   
   public function dbInsert()
   {
-    if ( !$this->cname )
+    if ( !$this->cname || !$this->visible )
       $this->cname = Misc::uriSafe($this->title);
     if ( !$this->ctime )
       $this->ctime = date("Y-m-d H:i:s");
