@@ -173,7 +173,7 @@ class User_Facebook extends User_External
       'caption' => $caption,
       'description' => $description,
       'picture' => $picture,
-      'privacy' => json_encode( array('value' => 'ALL_FRIENDS') )
+      'privacy' => json_encode( array('value' => ($link ? 'EVERYONE' : 'ALL_FRIENDS') ) )
 
       // TODO: allow choice of EVERYONE, CUSTOM, ALL_FRIENDS, NETWORKS_FRIENDS, FRIENDS_OF_FRIENDS, SELF.
     );
