@@ -20,7 +20,7 @@ class AdminPage extends AccountPage
     if ( !$user->isAdmin() )
     {
       echo "<p>\nYou do not have administration privileges.</p>\n";
-      $page->footer();
+      $this->footer();
       exit();
     }
   }
