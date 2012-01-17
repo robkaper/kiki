@@ -167,7 +167,7 @@ class User_Twitter extends User_External
   {
     $tinyUrl = TinyUrl::get( $article->url() );
 
-    $msg = $article->title(). " $tinyUrl";
+    $msg = sprintf( "%s %s %s", $article->title(), $tinyUrl, $article->hashtags() );
     $result = $this->post( $msg );
     return $result;
   }

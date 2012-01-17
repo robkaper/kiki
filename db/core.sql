@@ -103,8 +103,9 @@ create table articles (
   featured boolean not null default false,
   visible boolean not null default false,
   facebook_url varchar(255) default null,
-  twitter_url varchar(255) default null
-);
+  twitter_url varchar(255) default null,
+  hashtags varchar(255) not null
+  );
 
 drop table if exists tinyurl;
 create table tinyurl (

@@ -27,7 +27,8 @@ class Article extends Object
   private $visible = false;
   private $facebookUrl = null;
   private $twitterUrl = null;
-
+  private $hashtags = null;
+  
   public function reset()
   {
     parent::reset();
@@ -36,6 +37,7 @@ class Article extends Object
     $this->sectionId = null;
     $this->userId = null;
     $this->title = null;
+    $this->hashtags = null;
     $this->cname = null;
     $this->body = null;
     $this->headerImage = null;
@@ -48,7 +50,7 @@ class Article extends Object
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url";
+    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url, hashtags";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -78,8 +80,8 @@ class Article extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s' where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->id
+      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s', hashtags='%s' where id=%d",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->id
     );
     Log::debug($q);
 
@@ -97,8 +99,8 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s')",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url, hashtags) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s')",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags
     );
     Log::debug($q);
 
@@ -134,6 +136,8 @@ class Article extends Object
   public function facebookUrl() { return $this->facebookUrl; }
   public function setTwitterUrl( $twitterUrl ) { $this->twitterUrl = $twitterUrl; }
   public function twitterUrl() { return $this->twitterUrl; }
+  public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
+  public function hashtags() { return $this->hashtags; }
 
   public function url()
   {
@@ -199,7 +203,10 @@ class Article extends Object
       else if (  $connection->serviceName() == 'Twitter' )
       {
         if ( !$this->twitterUrl )
+        {
           $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+          $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
+        }
       }
     }
 

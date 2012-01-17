@@ -49,7 +49,8 @@
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setFacebookUrl( $_POST['facebookUrl'] );
     $article->setTwitterUrl( $_POST['twitterUrl'] );
-    
+    $article->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );
+        
     if ( !$article->body() )
       $errors[] = "Je kunt geen leeg artikel opslaan!";
 
