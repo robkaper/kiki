@@ -25,23 +25,25 @@ class Misc
     $now = time();
     $time = strtotime( $time );
     $delta = $now - $time;
+    $absDelta = abs($delta);
 
-    if ( $delta < 60 )
+    echo "$absDelta\n";
+    if ( $absDelta < 60 )
       return "minder dan een minuut";
-    else if ( $delta < 120 )
+    else if ( $absDelta < 120 )
       return "een minuut";
-    else if ( $delta < (4*60) )
+    else if ( $absDelta < (4*60) )
       return "een paar minuten";
-    else if ( $delta < (60*60) )
-      return (int)($delta/60). " minuten";
-    else if ( $delta < (120*60) )
+    else if ( $absDelta < (60*60) )
+      return (int)($absDelta/60). " minuten";
+    else if ( $absDelta < (120*60) )
       return "een uur";
-    else if ( $delta < (24*60*60) )
-      return (int)($delta/3600). " uur";
-    else if ( $delta < (48*60*60) )
+    else if ( $absDelta < (24*60*60) )
+      return (int)($absDelta/3600). " uur";
+    else if ( $absDelta < (48*60*60) )
       return "een dag";
     else
-      return (int)($delta/86400). " dagen";
+      return (int)($absDelta/86400). " dagen";
   }
 
   /**

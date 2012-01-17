@@ -167,7 +167,7 @@ function addAttachment( target, id, uri )
 }
 
 function onReady() {
-  $('.cleditor').cleditor();
+  // $('.cleditor').cleditor();
 
   $('.album .navarrow img').fadeOut();
 
@@ -185,7 +185,7 @@ function onReady() {
 
   $('label a.toggleWysiwyg').live('click', function() {
     var id = $(this).parent().attr('for');
-    $('textarea#' + id ).toggleClass('cleditor').cleditor();
+    // $('textarea#' + id ).toggleClass('cleditor').cleditor();
     return false;
   } );
 
