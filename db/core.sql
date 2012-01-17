@@ -41,7 +41,7 @@ create table facebook_users (
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
-  facebook_user_id int unsigned not null,
+  facebook_user_id bigint unsigned not null,
   perm_key varchar(255) not null,
   perm_value boolean not null default false
 );
