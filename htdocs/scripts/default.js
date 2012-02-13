@@ -8,10 +8,10 @@
  */
 
 /**
- * @var object $submitTimer Required to queue button.hide() on focusout so
- * .submit() can trigger first.
+ * @var boolean $submitClicked Tracks mousedown event to ensure click event
+ * on button triggers before focusout hides it.
  */
-var submitTimer = null;
+var submitClicked = false;
 
 /// Updates each element with class .jsonupdate through JSON.
 function jsonUpdate()
@@ -191,18 +191,22 @@ function onReady() {
 
 
   $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusin', function() {
-  if ( submitTimer )
-    clearTimeout( submitTimer );
+  if ( submitClicked )
+    submitClicked = false;
 
     shrinkCommentForms();
     growCommentForm( $(this).attr('id') );
   } );
 
+  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'mousedown', function() {
+    submitClicked = true;
+  } );
+    
   $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusout', function() {
-    // HACK: queue hide() so .submit() can trigger
-    submitTimer = setTimeout( function() {
-      shrinkCommentForms()
-    }, 10 );
+    if ( !submitClicked )
+     shrinkCommentForms();
+    else
+      submitClicked = false;
   } );
 
 /* TODO: partially rjkcust, not practical needs rewriting to manual Preview button
