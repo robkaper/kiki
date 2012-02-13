@@ -12,23 +12,23 @@
   }
   else
   {
+    echo "<table>\n";
+    echo "<thead>\n";
+
+    echo "<tr>\n"; 
+    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
+    echo "<td colspan=\"2\">". _("Create a new article"). "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr><th></th><th></th><th></th><th>URL</th><th>Title</th></tr>\n";
+
+    echo "</thead>\n";
+    echo "<tbody>\n";
+
     $q = "SELECT id from articles WHERE section_id!=0 ORDER BY ctime desc LIMIT 25";
     $rs = $db->query($q);
     if ( $db->numRows($rs) )
     {
-      echo "<table>\n";
-      echo "<thead>\n";
-
-      echo "<tr>\n"; 
-      echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
-      echo "<td colspan=\"2\">". _("Create a new article"). "</td>\n";
-      echo "</tr>\n";
-
-      echo "<tr><th></th><th></th><th></th><th>URL</th><th>Title</th></tr>\n";
-
-      echo "</thead>\n";
-      echo "<tbody>\n";
-
       while( $o = $db->fetchObject($rs) )
       {
         $article = new Article( $o->id );
@@ -41,9 +41,9 @@
         echo "<td>". $article->title(). "</td>\n";
         echo "</tr>\n";
       }
-      echo "</tbody>\n";
-      echo "</table>\n";
     }
+    echo "</tbody>\n";
+    echo "</table>\n";
   }
 
   $page->footer();
