@@ -79,6 +79,9 @@ class Article extends Object
   {
     parent::dbUpdate();
 
+    if ( !$this->cname || !$this->visible )
+      $this->cname = Misc::uriSafe($this->title);
+
     $q = $this->db->buildQuery(
       "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s', hashtags='%s' where id=%d",
       $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->id
