@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-04 01:10+0200\n"
+"POT-Creation-Date: 2012-02-13 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../htdocs/account/articles/index.php:20
+msgid "Create a new article"
+msgstr ""
+
 #: ../htdocs/account/index.php:4 ../lib/boilerplate.php:58
 msgid "Your Account"
 msgstr ""
 
-#: ../lib/articles.php:155
+#: ../htdocs/account/pages/index.php:23
+msgid "Create a new page"
+msgstr ""
+
+#: ../lib/articles.php:134
 msgid "Read more"
 msgstr ""
 
