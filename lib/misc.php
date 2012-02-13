@@ -27,7 +27,6 @@ class Misc
     $delta = $now - $time;
     $absDelta = abs($delta);
 
-    echo "$absDelta\n";
     if ( $absDelta < 60 )
       return "minder dan een minuut";
     else if ( $absDelta < 120 )
