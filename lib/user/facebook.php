@@ -34,11 +34,17 @@ class User_Facebook extends User_External
     if ( $this->id && $this->token )
     {
       Log::debug( "connecting facebook api with stored token" );
-      $this->token = @unserialize($this->token);
-      $this->api->setAccessToken($this->token['access_token']);
+
+      // Support both old storage (serialized) as new (unserialized)
+      $token = @unserialize($this->token);
+      if ( $token !== false )
+        $this->api->setAccessToken($token['access_token']);
+      else
+        $this->api->setAccessToken($this->token);
     }
     else if ( isset($_GET['session']) )
     {
+      // DEPRECATED
       Log::debug( "connecting facebook api with session" );
       $session = $this->api->getAccessToken();
       if ( $session && $session['expires'] == 0 )
@@ -82,7 +88,7 @@ class User_Facebook extends User_External
 
     // // WARNING: This might break permission updates, as those probably do
     // require fetching the new sesion token.
-    if ( !isset($_GET['session']) )
+    if ( !isset($_GET['state'], $_GET['code']) )
       return;
 
     if ( !$this->enabled() )
@@ -97,16 +103,10 @@ class User_Facebook extends User_External
         ) );
     }
 
-    $session = $this->api->getAccessToken();
-    if ( !$session )
-      return 0;
+    $this->id = $this->api->getUser();
+    $this->token = $this->api->getAccessToken();
 
-    if ( !isset($session['uid']) )
-      return 0;
-
-    $this->id = $session['uid'];
-    $this->token = serialize($session);
-    return $session['uid'];
+    return $this->id;
   }
 
   // Returns entire verified cookie as array, or null if not valid or no cookie present
@@ -325,7 +325,6 @@ class User_Facebook extends User_External
       "INSERT INTO facebook_user_perms (facebook_user_id, perm_key, perm_value) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE perm_value=%d",
       $this->id, $perm, $value, $value
       );
-    Log::debug( $q );
     $this->db->query($q);
   }
 
