@@ -7,12 +7,17 @@
  * @author Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
-  
+
+if ( isset(Config::$facebookSdkPath) )
+{
+  require_once Config::$facebookSdkPath. "/src/facebook.php"; 
+}
+ 
 class User_Facebook extends User_External
 {
   private function enabled()
   {
-    return ( extension_loaded('curl') && Config::$facebookApp );
+    return ( extension_loaded('curl') && class_exists('Facebook') && Config::$facebookApp );
   }
 
   protected function connect()
@@ -30,12 +35,12 @@ class User_Facebook extends User_External
     {
       Log::debug( "connecting facebook api with stored token" );
       $this->token = @unserialize($this->token);
-      $this->api->setSession($this->token);
+      $this->api->setAccessToken($this->token['access_token']);
     }
     else if ( isset($_GET['session']) )
     {
       Log::debug( "connecting facebook api with session" );
-      $session = $this->api->getSession();
+      $session = $this->api->getAccessToken();
       if ( $session && $session['expires'] == 0 )
       {
         Log::debug( "endless token from session, need to link/store?" );
@@ -92,7 +97,7 @@ class User_Facebook extends User_External
         ) );
     }
 
-    $session = $this->api->getSession();
+    $session = $this->api->getAccessToken();
     if ( !$session )
       return 0;
 

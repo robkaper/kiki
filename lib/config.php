@@ -61,6 +61,7 @@ class Config
 	public static $googleAdSense = null;
 
 	public static $connectionServices = array();
+	public static $facebookSdkPath = null;
 	public static $facebookApp = null;
 	public static $facebookSecret = null;
 	public static $twitterApp = null;

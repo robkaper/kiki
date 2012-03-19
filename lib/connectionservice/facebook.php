@@ -1,5 +1,10 @@
 <?
 
+if ( isset(Config::$facebookSdkPath) )
+{
+  require_once Config::$facebookSdkPath. "/src/facebook.php"; 
+}
+
 class ConnectionService_Facebook
 {
   private $api;
