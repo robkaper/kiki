@@ -1,0 +1,8 @@
+Facebook PHP SDK 3.1.1
+https://github.com/facebook/facebook-php-sdk
+
+Optional, but required for Facebook logins and connectivity.
+
+Install path must be configured as: Config::$facebookSdkPath
+
+----------------------------------------------------------------------------
