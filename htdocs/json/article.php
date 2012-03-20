@@ -34,6 +34,7 @@
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
 
+    // DEPRECATED
     if ( isset($_FILES['headerImage']) )
     {
       $tmpFile = $_FILES['headerImage']['tmp_name'];
@@ -43,6 +44,11 @@
       $storageId = $tmpFile ? Storage::save( $name, file_get_contents($tmpFile) ) : 0;
       if ( $storageId )
         $article->setHeaderImage( $storageId );
+    }
+    // NEW STYLE
+    else if ( isset($_POST['headerImage']) )
+    {
+      $article->setHeaderImage( $_POST['headerImage'] );
     }
 
     $article->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );

@@ -7,8 +7,28 @@
   if ( isset($_GET['id']) )
   {
     $id = isset($_GET['id']) ? $_GET['id'] : 0;
+
     $article = new Article( $id );
+    $album = new Album( $article->albumId() );
+
+    // Create album for this article if it doesn't exist yet.
+    if ( !$album->id() )
+    {
+      $album->save();
+      Log::debug( "article had no album, created one: ". $album->id() );
+      $article->setAlbumId($album->id());
+      $article->save();
+    }
+
+    if ( $article->headerImage() )
+    {
+      // TODO: add header image to album
+      $pictures = $album->addPictures( null, null, array($article->headerImage()) );
+      Log::debug( "article had headerImage (". $article->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
+    }
+
     echo $article->form( $user );
+    echo $album->form( $user );
   }
   else
   {

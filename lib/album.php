@@ -60,6 +60,24 @@ class Album
     $this->title = $o->title;
   }
 
+  public function save()
+  {
+    $this->id ? $this->update() : $this->insert();
+  }
+
+  public function insert()
+  {
+    $q = $this->db->buildQuery( "insert into albums (title) values ('%s')", $this->title );
+    $rs = $this->db->query($q);
+    $this->id = $this->db->lastInsertId($rs);
+  }
+  
+  public function update()
+  {
+    $q = $this->db->buildQuery( "UPDATE albums set title='%s' WHERE id=%d", $this->title, $this->id );
+    $rs = $this->db->query($q);
+  }
+
   /**
    * Provides the full URL of the album to be used in external references.
    *
@@ -218,14 +236,71 @@ class Album
     // Create if it doesn't exist
     if ( !$id && $create )
     {
-      $q = "insert into albums (title) values ('$qTitle')";
-      $rs = $db->query($q);
-      $id = $db->lastInsertId($rs);
+      $album = new Album();
+      $album->setTitle($title);
+      $album->save();
+      return $album;
     }
 
     return new Album($id);
   }
 
+  public function formItem( $pictureId )
+  {
+    // Picture details
+    $qPictureId = $this->db->escape($pictureId);
+    $q = "select storage_id from pictures where id=$qPictureId";
+    $o = $this->db->getSingle($q);
+    $storageId = $o->storage_id;
+    $imgUrl = Storage::url($storageId);
+
+    return "<a href=\"#\"><img id=\"picture_$storageId\" src=\"$imgUrl\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
+    
+    ob_start();
+    include Template::file( 'parts/forms/album-editpicture' );
+    $content = ob_get_contents();
+    ob_end_clean();
+    return $content;
+  }
+
+  public function form()
+  {
+    $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id asc";
+    $rs = $this->db->query($q);
+
+    echo "<div id=\"albumForm_". $this->id. "\">";
+    echo "<h2>Album</h2>";
+    if ( $rs && $this->db->numRowS($rs) )
+    {
+      while( $o = $this->db->fetchObject($rs) )
+      {
+        // include Template::file('parts/forms/album-editpicture' );
+        echo $this->formItem($o->id);
+      }
+    }
+
+    echo "</div>";
+
+    include Template::file('parts/forms/album-newpicture' );
+    return;
+
+    // UNUSED
+    $q = "select hash,extension from storage where id not in (select storage_id from pictures)";
+    $rs = $this->db->query($q);
+    if ( $rs && $this->db->numRowS($rs) )
+    {
+      while( $o = $this->db->fetchObject($rs) )
+      {
+        echo "<pre>". print_r($o, true). "</pre>". PHP_EOL;
+        echo "<img src=\"/storage/". $o->hash. ".100x100.c.". $o->extension. "\" style=\"width: 100px; height: 100px; float: left;\" />";
+      }
+      echo "<br style=\"clear: left;\" />";
+    }
+  }
+
+  public function id() { return $this->id; }
+  public function setTitle( $title ) { $this->title = $title; }
+  public function title() { return $this->title; }
 }
 
 ?>

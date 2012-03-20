@@ -140,18 +140,39 @@ $( function() {
 
   public static function file( $id, $label=null )
   {
+    if ( Misc::isMobileSafari() )
+    {
+      $label .= "<br /><span class=\"small\">Warning: Mobile Safari does not support file uploads.</span>";
+      global $user;
+      // if ( $emailUploadAddress = $user->emailUploadAddress() )
+      //  $label .= "<br /><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
+    }
+
     $content = "<p><label>${label}</label>\n";
     $content .= "<input type=\"file\" name=\"${id}\" /></p>\n";
     return $content;
   }
 
+  public static function albumImage( $id, $label, $albumId, $selected=0 )
+  {
+    ob_start();
+
+    include Template::file('parts/forms/album-selectimage');
+
+    $content = ob_get_contents();
+    ob_end_clean();
+
+    return $content;
+  }
+
   // TODO: allow to be used inside a form instead of prior/afterwards
-  public static function ajaxFileUpload( $label=null, $target=null )
+  public static function ajaxFileUpload( $label=null, $target=null, $albumId = 0 )
   {
     $content = Form::open( "ajaxFileUpload", Config::$kikiPrefix. "/file-upload.php", 'POST', null, "multipart/form-data", "ajaxFileUploadTarget" );
     $content .= Form::hidden( "target", $target );
+    $content .= Form::hidden( "albumId", $albumId );
     $content .= Form::file( "attachment", $label );
-    $content .= Form::button( "submitAttachment", "submit", "Attach file" );
+    $content .= Form::button( "submitAttachment", "submit", "Upload file" );
     $content .= "<iframe id=\"ajaxFileUploadTarget\" name=\"ajaxFileUploadTarget\" src=\"\"></iframe>\n";
     $content .= Form::close();
     return $content;

@@ -395,7 +395,7 @@ form.hidden {
 	color: #aaa;
 }
 
-iframe.#ajaxFileUploadTarget {
+iframe#ajaxFileUploadTarget {
 	width: 0;
 	height: 0;
 	display: none;

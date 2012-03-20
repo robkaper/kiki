@@ -152,14 +152,28 @@ function onTwLogout( user )
       $('.youUnknown').show();
 }
 
-function addAttachment( target, id, uri )
+function fileUploadHandler( target, id, uri, html )
 {
   $('#jsonUpdate').empty().fadeOut();
 
-  if ( $('#' + target).is("textarea") )
-    $('#' + target).append( '[attachment]' + uri + '[/attachment]' );
+  if ( !target || !id )
+    return;
+
+  if ( $target = $('#' + target) )
+  {
+    var re = /^albumForm_/;
+    if ( re.test(target) )
+    {
+      $('.albumSelectImage > .imageList').append(html);
+      $target.append(html);
+      $('.albumSelectImage > .imageList > .noImages').remove();
+    }
+    else if ( $target.is("textarea") )
+      $target.append( '[attachment]' + uri + '[/attachment]' );
+  }
   else
   {
+    return;
     var val = $('input[name=' + target + ']').val();
     val += ( ";" + uri );
     $('input[name=' + target + ']').val(val);

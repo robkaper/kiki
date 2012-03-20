@@ -203,6 +203,10 @@ class Misc
     return $str;
   }
 
+  public static function isMobileSafari()
+  {
+    return preg_match( '/(iPod|iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT'] );
+  }
 }
 
 ?>
