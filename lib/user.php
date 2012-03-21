@@ -232,6 +232,7 @@ class User extends Object
 
         default:
           Log::debug( "cannot detect user, multiple candidates" );
+          Log::debug( print_r( $this->identifiedConnections, true ) );
           // cannot detect user, multiple candidates
       }
     }
@@ -250,8 +251,10 @@ class User extends Object
   }
 
   // TODO: deprecate, or refactor
-  public function storeNew( $email, $password, $admin = false )
+  public function storeNew( $email, $password, $admin = false, $verified = false )
   {
+    // TODO: implement verification of email
+
     $this->email = $email;
     $this->password = $password;
     $this->authToken = Auth::passwordHash( $password );

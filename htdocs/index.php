@@ -115,24 +115,9 @@
     echo "</ul>\n";
   }
 
-  echo "<h2>Administration</h2>\n";
-
-  if ( $user->isAdmin() )
+  if ( !$checkStatus )
   {
-    echo "admin\n";
-  }
-  else if ( !$adminsExist )
-  {
-    echo "no admin exists, offer user to create and become admin\n";
-    include Template::file('parts/forms/create-admin-user');
-  }
-  else if ( $user->id() )
-  {
-    echo "<p>\nYour account has no administration privileges.</p>\n";
-  }
-  else
-  {
-    echo "<p>\nPlease login.</p>\n";
+    echo "<p>\nPlease login as administrator.</p>\n";
     include Template::file('parts/forms/login');
   }
 

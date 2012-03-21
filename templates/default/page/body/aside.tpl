@@ -13,7 +13,7 @@
       if ( !in_array( $name, $connectedServices ) )
       {
         $service = Factory_ConnectionService::getInstance($name);
-        include Template::file( 'parts/connectionservices/login-box' );
+        include Template::file( 'parts/connectionservices/connect-box' );
       }
     }
 ?>
@@ -32,6 +32,7 @@
       $service = Factory_ConnectionService::getInstance($name);
       include Template::file( 'parts/connectionservices/login-box' );
     }
+    include Template::file( 'parts/newaccount-box' );
 ?>
 </div>
 <?
