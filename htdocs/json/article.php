@@ -34,22 +34,8 @@
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
 
-    // DEPRECATED
-    if ( isset($_FILES['headerImage']) )
-    {
-      $tmpFile = $_FILES['headerImage']['tmp_name'];
-      $name = $_FILES['headerImage']['name'];
-      $size = $_FILES['headerImage']['size'];
-
-      $storageId = $tmpFile ? Storage::save( $name, file_get_contents($tmpFile) ) : 0;
-      if ( $storageId )
-        $article->setHeaderImage( $storageId );
-    }
-    // NEW STYLE
-    else if ( isset($_POST['headerImage']) )
-    {
+    if ( isset($_POST['headerImage']) )
       $article->setHeaderImage( $_POST['headerImage'] );
-    }
 
     $article->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
@@ -114,6 +100,15 @@
       exit();
     }
 
-    Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
+    if ( !count($errors) )
+      Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
+
+    $page = new AdminPage();
+    $page->header();
+    echo "fouten bij opslaan:";
+    echo "<pre>";
+    print_r($errors);
+    echo "</pre>";
+    $page->footer();
   }
 ?>
