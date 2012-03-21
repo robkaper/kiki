@@ -89,7 +89,7 @@
   list( $localPart, $domain ) = explode( "@", $recipient );
   $mailAuthToken = null;
   if ( strstr($localPart, "+") )
-    list( $target, $mailAuthToken ) = explode( "+", $localPart );
+    list( $prefix, $mailAuthToken, $target ) = explode( "+", $localPart );
 
   // Get user
   $userId = 0;
@@ -171,18 +171,32 @@
   $albumUrl = null;
   if ( count($pictureAttachments) )
   {
-    // Find album (and create if not exists)
-    $album = Album::findByTitle('Mobile uploads', true );
+    if ( isset($target) && $user->isAdmin() )
+    {
+      $matches = array();
+      if (preg_match('#^album_([0-9])$#', $target, $matches) )
+        $album = new Album( $matches[1] );
+    }
+
+    if ( !$album )
+    {
+      // Find album (and create if not exists)
+      $album = Album::findByTitle('Mobile uploads', true );
+    }
 
     $pictures = $album->addPictures( $subject, $body, $pictureAttachments );
 
     $requestType = "album update";
-    $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+
+    if ( !$target )
+    {
+      $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+    }
+
     $notices[] = "Album URL:\n$albumUrl";
   }
-  else
-  {
-    $requestType = "status update";
+  else if ( !isset($target) )
+  {    $requestType = "status update";
     SocialUpdate::postStatus( $user, $body );
   }
 
