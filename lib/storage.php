@@ -35,13 +35,15 @@ class Storage
    * @param int $id ID or hash of the database entry
    * @return string local URI of the resource
    */
-  public static function uri( $id )
+  public static function uri( $id, $w=0, $h=0, $crop=false )
   {
     $db = $GLOBALS['db'];
     $qId = (int)$id;
     $qHash = $db->escape($id);
     $o = $db->getSingle( "select hash,extension from storage where id=$qId or hash='$qHash'" );
-    return $o ? sprintf( "%s.%s", $o->hash, $o->extension ) : null;
+
+    $extra = ($w && $h) ? ( ".${w}x${h}". ($crop ? ".c" : null) ) : null;
+    return $o ? sprintf( "%s%s.%s", $o->hash, $extra, $o->extension ) : null;
   }
 
   /**
@@ -95,6 +97,7 @@ class Storage
    */
   public static function getMimeType( $ext )
   {
+    $ext = strtolower($ext);
     switch($ext)
     {
       case 'css':
@@ -131,9 +134,9 @@ class Storage
    * @param boolean $secure Return a HTTPS resource instead of HTTP
    * @return string Full URL (protocol, host, local URI) of the resource
    */
-  public static function url( $id, $secure = false )
+  public static function url( $id, $w=0, $h=0, $crop=false, $secure = false )
   {
-    return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id);
+    return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id,$w,$h,$crop);
   }
 
   /**
@@ -147,6 +150,7 @@ class Storage
   {
     $db = $GLOBALS['db'];
 
+    $fileName = strtolower($fileName);
     $extension = self::getExtension( $fileName );
     $hash = sha1( uniqid(). $data );
 

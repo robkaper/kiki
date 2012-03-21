@@ -1,6 +1,6 @@
 <p><label><?= $label; ?></label>
 <?
-  $imgUrl = $selected ? Storage::url($selected) : "/kiki/img/blank.gif";
+  $imgUrl = $selected ? Storage::url($selected, 75, 75, true) : "/kiki/img/blank.gif";
 ?>
 <a href="#" class="albumSelectImageToggle"><img class="selectedImage" src="<?= $imgUrl; ?>" style="width: 75px; height: 75px; margin-top: 0.5em;" /></a>
 <div class="albumSelectImage" style="display: none;">
@@ -29,7 +29,7 @@ if ( $rs && $db->numRows($rs) )
 {
   while( $o = $db->fetchObject($rs) )
   {
-    $url = Storage::url($o->storage_id);
+    $url = Storage::url($o->storage_id, 75, 75, true);
     echo "<a href=\"#\"><img id=\"picture_". $o->storage_id. "\" src=\"$url\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
   }
 }

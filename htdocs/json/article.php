@@ -56,6 +56,7 @@
     $article->setFacebookUrl( $_POST['facebookUrl'] );
     $article->setTwitterUrl( $_POST['twitterUrl'] );
     $article->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );
+    $article->setAlbumId( isset($_POST['albumId']) ? $_POST['albumId'] : null );
         
     if ( !$article->body() )
       $errors[] = "Je kunt geen leeg artikel opslaan!";
@@ -92,7 +93,11 @@
 
         // Save article again, to store connection URLs.        
         $article->save();
-              
+
+        // Update title of corresponding album
+        $album = new Album( $article->albumId() );
+        $album->setTitle( $article->title() );
+        $album->save();              
       }
     }
     

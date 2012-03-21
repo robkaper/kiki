@@ -252,7 +252,7 @@ class Album
     $q = "select storage_id from pictures where id=$qPictureId";
     $o = $this->db->getSingle($q);
     $storageId = $o->storage_id;
-    $imgUrl = Storage::url($storageId);
+    $imgUrl = Storage::url($storageId, 75, 75, true);
 
     return "<a href=\"#\"><img id=\"picture_$storageId\" src=\"$imgUrl\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
     

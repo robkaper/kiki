@@ -15,12 +15,12 @@
     if ( !$album->id() )
     {
       $album->save();
-      Log::debug( "article had no album, created one: ". $album->id() );
       $article->setAlbumId($album->id());
-      $article->save();
+      if ( $article->id() )
+        $article->save();
     }
 
-    if ( $article->headerImage() )
+    if ( $album->id() && $article->headerImage() )
     {
       // TODO: add header image to album
       $pictures = $album->addPictures( null, null, array($article->headerImage()) );
@@ -28,7 +28,10 @@
     }
 
     echo $article->form( $user );
-    echo $album->form( $user );
+    if ( $album->id() )
+    {
+      echo $album->form( $user );
+    }
   }
   else
   {
