@@ -291,6 +291,24 @@ class User extends Object
     // conroller with configurable base URI and not hardcoded inside Kiki htdocs.
     return Config::$kikiPrefix. "/users/". $this->id;
   }
+  
+  public function emailUploadAddress()
+  {
+    if ( Config::$mailToSocialAddress )
+    {
+      if ( !$this->mailAuthToken )
+      {
+        // Not the most secure hash, but it doesn't matter because it
+        // doesn't lead to a password.
+        $this->mailAuthToken = sha1( uniqid(). $this->id );
+        $db->query( "update users set mail_auth_token='$this->mailAuthToken' where id=". $this->id );
+      } 
+
+      list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );
+      return $localPart. "+". $this->mailAuthToken. "@". $domain;
+    }
+    return false;
+  }
 }
 
 ?>

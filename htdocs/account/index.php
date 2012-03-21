@@ -20,19 +20,9 @@
     echo "<ul>\n";
     echo "<li><a href=\"social.php\">Update status</a></li>\n";
 
-    if ( Config::$mailToSocialAddress )
+    if ( $emailUploadAddress = $user->emailUploadAddress() )
     {
-      if ( !$user->mailAuthToken )
-      {
-        // Not the most secure hash, but it doesn't matter because it
-        // doesn't lead to a password.
-        $user->mailAuthToken = sha1( uniqid(). $user->id() );
-        $db->query( "update users set mail_auth_token='$user->mailAuthToken' where id=". $user->id() );
-      } 
-
-      list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );
-      $mailToSocialUserAddress = $localPart. "+". $user->mailAuthToken. "@". $domain;
-      echo "<li>Update je status en foto's door ze te e-mailen naar:<br /><a href=\"mailto:$mailToSocialUserAddress\">$mailToSocialUserAddress</a></li>\n";
+      echo "<li>Update je status en foto's door ze te e-mailen naar:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></li>\n";
     }
 
     echo "</ul>\n";
