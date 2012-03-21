@@ -138,14 +138,14 @@ $( function() {
     return "<p>\n<button name=\"${id}\" id=\"${id}\" type=\"${type}\"${style}>${label}</button></p>\n";
   }
 
-  public static function file( $id, $label=null )
+  public static function file( $id, $label=null, $target = null )
   {
     if ( Misc::isMobileSafari() )
     {
       $label .= "<br /><span class=\"small\">Warning: Mobile Safari does not support file uploads.</span>";
       global $user;
-      // if ( $emailUploadAddress = $user->emailUploadAddress() )
-      //  $label .= "<br /><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
+      if ( $emailUploadAddress = $user->emailUploadAddress($target) )
+        $label .= "<br /><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
     }
 
     $content = "<p><label>${label}</label>\n";
@@ -171,7 +171,7 @@ $( function() {
     $content = Form::open( "ajaxFileUpload", Config::$kikiPrefix. "/file-upload.php", 'POST', null, "multipart/form-data", "ajaxFileUploadTarget" );
     $content .= Form::hidden( "target", $target );
     $content .= Form::hidden( "albumId", $albumId );
-    $content .= Form::file( "attachment", $label );
+    $content .= Form::file( "attachment", $label, $albumId ? "album_$albumId" : null );
     $content .= Form::button( "submitAttachment", "submit", "Upload file" );
     $content .= "<iframe id=\"ajaxFileUploadTarget\" name=\"ajaxFileUploadTarget\" src=\"\"></iframe>\n";
     $content .= Form::close();

@@ -295,7 +295,7 @@ class User extends Object
     return Config::$kikiPrefix. "/users/". $this->id;
   }
   
-  public function emailUploadAddress()
+  public function emailUploadAddress( $target = null )
   {
     if ( Config::$mailToSocialAddress )
     {
@@ -308,7 +308,8 @@ class User extends Object
       } 
 
       list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );
-      return $localPart. "+". $this->mailAuthToken. "@". $domain;
+      $targetPart = $target ? "+$target" : null;
+      return $localPart. "+". $this->mailAuthToken. $targetPart. "@". $domain;
     }
     return false;
   }
