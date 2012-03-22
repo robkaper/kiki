@@ -304,7 +304,7 @@ class User extends Object
         // Not the most secure hash, but it doesn't matter because it
         // doesn't lead to a password.
         $this->mailAuthToken = sha1( uniqid(). $this->id );
-        $db->query( "update users set mail_auth_token='$this->mailAuthToken' where id=". $this->id );
+        $this->db->query( "update users set mail_auth_token='$this->mailAuthToken' where id=". $this->id );
       } 
 
       list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );

@@ -173,6 +173,7 @@ class Storage
   public static function generateThumb( $fileName, $w, $h, $crop=false )
   {
     list( $base, $ext ) = self::splitExtension($fileName);
+    $image = null;
     switch($ext)
     {
       case "gif":

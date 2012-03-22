@@ -65,8 +65,10 @@ class User_Twitter extends User_External
   {
     if ( !isset($_REQUEST['oauth_token']) )
       return 0;
-      
-    session_start();
+
+    if ( !isset($_SESSION) )
+      session_start();
+
     if ( !isset($_SESSION['oauth_token']) || !isset($_SESSION['oauth_token_secret']) )
       return 0;
       
