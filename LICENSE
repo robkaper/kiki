@@ -20,15 +20,6 @@ IN THE SOFTWARE.
 
 ----------------------------------------------------------------------------
 
-lib/facebook.php: Facebook SDK
-
-Copyright (c) 2011 Facebook, Inc
-
-Included under the terms of the Apache License 2.0.
-(http://www.apache.org/licenses/LICENSE-2.0)
-
-----------------------------------------------------------------------------
-
 lib/twitteroauth: TwitterOAuth SDK
 
 Copyright (c) 2009 Abraham Williams (http://abrah.am)
