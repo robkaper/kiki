@@ -101,7 +101,10 @@
     }
 
     if ( !count($errors) )
+    {
       Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
+      exit();
+    }
 
     $page = new AdminPage();
     $page->header();
