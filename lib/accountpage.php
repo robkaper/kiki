@@ -18,7 +18,7 @@ class AccountPage extends Page
 
     $user = $GLOBALS['user'];
     if ( $user->isAdmin() )
-      $this->setBodyTemplate( 'page/body-admin' );
+      $this->setBodyTemplate( 'pages/admin' );
   }
 }
 

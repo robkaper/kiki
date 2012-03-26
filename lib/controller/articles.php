@@ -20,7 +20,7 @@ class Controller_Articles extends Controller
       if ( $this->title )
       {
         $this->status = 200;
-        $this->template = 'page/body';
+        $this->template = 'pages/default';
         $this->content = Articles::showSingle( $db, $user, $this->objectId );
       }
       else
@@ -34,7 +34,7 @@ class Controller_Articles extends Controller
     {
       Log::debug( "showMulti ". $this->instanceId );
       $this->status = 200;
-      $this->template = 'page/body';
+      $this->template = 'pages/default';
       $this->content = Articles::showMulti( $db, $user, $this->instanceId, 10, 2 );
     }
   }

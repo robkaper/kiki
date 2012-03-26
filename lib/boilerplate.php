@@ -73,7 +73,7 @@ class Boilerplate
   static function commentForm( $objectId )
   {
     ob_start();
-    include Template::file('comments/form');
+    include Template::file('forms/comment');
     $content = ob_get_contents();
     ob_end_clean();
     return $content;

@@ -72,7 +72,7 @@
   else
   {
     $adminsExist = count(Config::$adminUsers);
-    include Template::file('parts/forms/create-user');
+    include Template::file('forms/user-create');
   }
 
   $page->footer();

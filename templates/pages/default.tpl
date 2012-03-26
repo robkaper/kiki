@@ -1,8 +1,8 @@
 <body>
 <?
-  include Template::file('page/body/header');
-  include Template::file('page/body/nav');
-  include Template::file('page/body/aside');
+  include Template::file('parts/header');
+  include Template::file('parts/nav');
+  include Template::file('parts/aside');
 ?>
 <div id="cw"><div id="content">
   <h1><?= $this->title; ?></h1>
@@ -21,7 +21,7 @@
     // include Template::file('twitter/anywhere');
   }
 
-  include Template::file('page/body/footer');
+  include Template::file('parts/footer');
 ?>
 <div id="jsonUpdate"></div>
 </body>

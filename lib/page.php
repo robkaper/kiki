@@ -44,7 +44,7 @@ class Page
   */
   private $httpStatus = 200;
 
-  private $bodyTemplate = 'page/body';
+  private $bodyTemplate = 'pages/default';
 
   /**
   * Initialises the page.
@@ -164,7 +164,7 @@ class Page
       $title .= " - $this->tagLine";
 
     $this->httpHeaders();
-    include Template::file('page/html');
+    include Template::file('html');
   }
 
   public function setBodyTemplate( $bodyTemplate )

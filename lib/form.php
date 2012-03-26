@@ -157,7 +157,7 @@ $( function() {
   {
     ob_start();
 
-    include Template::file('parts/forms/album-selectimage');
+    include Template::file('forms/album-selectimage');
 
     $content = ob_get_contents();
     ob_end_clean();

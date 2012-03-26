@@ -1,6 +1,6 @@
 <body>
 <?
-  include Template::file('page/body/header');
+  include Template::file('parts/header');
 ?>
 <div id="cw" class="noaside"><div id="content" lang="en">
 
@@ -62,7 +62,7 @@ could not find it.</p>
     // include Template::file('twitter/anywhere');
   }
 
-  include Template::file('page/body/footer');
+  include Template::file('parts/footer');
 ?>
 <div id="jsonUpdate"></div>
 </body>

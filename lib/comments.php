@@ -59,7 +59,7 @@ class Comments
       return $comments;
 
     ob_start();
-    include Template::file( 'comments/show' );
+    include Template::file( 'parts/comments' );
     $content = ob_get_contents();
     ob_end_clean();
     return $content;
@@ -68,7 +68,7 @@ class Comments
   private static function showDummy( $objectId )
   {
     ob_start();
-    include Template::file('comments/show-dummy');
+    include Template::file('parts/comments-dummy');
     $content = ob_get_contents();
     ob_end_clean();
     return $content;
@@ -77,7 +77,7 @@ class Comments
   public static function showSingle( $objectId, $id, $name, $pic, $type, $body, $ctime )
   {
     ob_start();
-    include Template::file('comments/show-single');
+    include Template::file('parts/comments-single');
     $content = ob_get_contents();
     ob_end_clean();
     return $content;

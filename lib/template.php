@@ -30,28 +30,29 @@ class Template
   * @param $template [string] name of the template
   * @return string filename of the template
   */
-  static function file( $template )
+  public static function file( $template )
   {
-    if ( Config::$template != 'default' )
-    {
-      // Try site-specific version of chosen template
-      $file = $GLOBALS['root']. '/templates/'. Config::$template. '/'. $template. '.tpl';
-      if ( file_exists($file) )
-        return $file;
-
-      // Try Kiki base version of chosen template
-      $file = $GLOBALS['root']. '/templates/'. Config::$template. '/'. $template. '.tpl';
-      if ( file_exists($file) )
-        return $file;
-    }
-
-    // Try site-specific version of default template
-    $file = $GLOBALS['root']. '/templates/default/'. $template. '.tpl';
+    // Try site-specific version of template
+    $file = $GLOBALS['root']. '/templates/'. $template. '.tpl';
     if ( file_exists($file) )
       return $file;
 
-    // Fallback to Kiki base version default template
-    return $GLOBALS['kiki']. '/templates/default/'. $template. '.tpl';
+    // Fallback to Kiki base version of template
+    return $GLOBALS['kiki']. '/templates/'. $template. '.tpl';
+  }
+
+  private $mainTemplate = null;
+
+  public function __construct( $mainTemplate )
+  {
+    $this->mainTemplate = $mainTemplate;
+  }
+
+  public function fetch()
+  {
+    $content = "useless template engine content";
+    
+    return $content;
   }
 }
 

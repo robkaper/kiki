@@ -25,7 +25,7 @@ class Google
     if ( !Config::$googleSiteVerification )
       return;
 
-    include Template::file('external/google/meta-site-verification');
+    include Template::file('parts/google/meta-site-verification');
   }
 
   /**
@@ -36,7 +36,7 @@ class Google
     if ( !Config::$googleAnalytics )
       return;
 
-    include Template::file('external/google/analytics');
+    include Template::file('parts/google/analytics');
   }
 
   /**
@@ -49,7 +49,7 @@ class Google
     if ( !Config::$googleAdsense )
       return;
 
-    include Template::file('external/google/adsense');
+    include Template::file('parts/google/adsense');
   }
 
 }

@@ -118,7 +118,7 @@
   if ( !$checkStatus )
   {
     echo "<p>\nPlease login as administrator.</p>\n";
-    include Template::file('parts/forms/login');
+    include Template::file('forms/user-login');
   }
 
   $page->footer();

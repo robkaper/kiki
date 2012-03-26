@@ -18,7 +18,7 @@ class Controller
 
   protected $status = 404;
   protected $title = '404 Not found';
-  protected $template = 'page/body-404';
+  protected $template = 'pages/404';
   protected $content = null;
 
   public static function factory($type)

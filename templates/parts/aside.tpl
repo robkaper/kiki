@@ -6,14 +6,14 @@
     foreach( $user->connections() as $connection )
     {
       $connectedServices[] = $connection->serviceName();
-      include Template::file( 'parts/connections/account-box' );
+      include Template::file( 'parts/user-account' );
     }
     foreach( Config::$connectionServices as $name )
     {
       if ( !in_array( $name, $connectedServices ) )
       {
         $service = Factory_ConnectionService::getInstance($name);
-        include Template::file( 'parts/connectionservices/connect-box' );
+        include Template::file( 'buttons/user-connect' );
       }
     }
 ?>
@@ -30,9 +30,9 @@
     foreach( Config::$connectionServices as $name )
     {
       $service = Factory_ConnectionService::getInstance($name);
-      include Template::file( 'parts/connectionservices/login-box' );
+      include Template::file( 'buttons/user-login' );
     }
-    include Template::file( 'parts/newaccount-box' );
+    include Template::file( 'buttons/user-newaccount' );
 ?>
 </div>
 <?

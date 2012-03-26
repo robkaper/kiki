@@ -121,7 +121,7 @@ class Album
 
     if ( !$pictureId )
     {
-      include Template::file( 'album/show-empty' );
+      include Template::file( 'parts/album-empty' );
       return;
     }
 
@@ -137,7 +137,7 @@ class Album
     $leftClass = self::findPrevious( $this->id, $imgId ) ? null : " disabled";
     $rightClass = self::findNext( $this->id, $imgId ) ? null : " disabled";
 
-    include Template::file( 'album/show' );
+    include Template::file( 'parts/album' );
   }
 
   /**
@@ -257,7 +257,7 @@ class Album
     return "<a href=\"#\"><img id=\"picture_$storageId\" src=\"$imgUrl\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
     
     ob_start();
-    include Template::file( 'parts/forms/album-editpicture' );
+    include Template::file( 'forms/album-editpicture' );
     $content = ob_get_contents();
     ob_end_clean();
     return $content;
@@ -274,14 +274,14 @@ class Album
     {
       while( $o = $this->db->fetchObject($rs) )
       {
-        // include Template::file('parts/forms/album-editpicture' );
+        // include Template::file('forms/album-editpicture' );
         echo $this->formItem($o->id);
       }
     }
 
     echo "</div>";
 
-    include Template::file('parts/forms/album-newpicture' );
+    include Template::file('forms/album-newpicture' );
     return;
 
     // UNUSED
