@@ -207,6 +207,31 @@ class Misc
   {
     return preg_match( '/(iPod|iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT'] );
   }
+
+  // $dates = array( '2012' => '2012-08-06' );
+  public static function countdown( $datesPerYear )
+  {
+    $year = date("Y");
+    $day = date("z");
+
+    // Find date
+    $dayTarget = isset($datesPerYear[$year]) ? strtotime($datesPerYear[$year]) : false;
+    $yearDiff = 0;
+
+    // Find date next year
+    if ( $dayTarget === false )
+    {
+      $dayTarget = isset($datesPerYear[$year+1]) ? strtotime($datesPerYear[$year+1]) : false;
+      $yearDiff = date("z", mktime(0,0,0,12,31,$year)) + 1;
+    }
+
+    Log::debug( "$dayTarget, $day, $yearDiff, ". date("z", $dayTarget) );
+    if ( $dayTarget !== false )
+      return date("z", $dayTarget) - $day + $yearDiff;
+    
+    return false;
+  }
+
 }
 
 ?>
