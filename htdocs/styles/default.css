@@ -700,7 +700,7 @@ body > header {
 
 #title {
 	display: block;
-	max-width: 960px;
+	width: 960px;
 	margin: 0 auto;
 }
 
@@ -730,7 +730,7 @@ body > nav.second {
 }
 
 body > nav ul {
-	max-width: 960px;
+	width: 960px;
 	margin: 0 auto;
 	padding: 0;
 	clear: both;
@@ -771,7 +771,7 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 }
 
 #content {
-	max-width: 838px;
+	width: 785px;
 	margin: 10px 0;
 	-moz-margin: 10px 0;
 	border: 1px solid #deb;
@@ -781,12 +781,13 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 }
 
 .footer {
-	max-width: 800px;
+	width: 800px;
 	margin: 0;
 	-moz-margin: 0;
 	padding: 0;
 }
 
+/*
 @media only screen and (max-device-width: 540px) {
 
 	#sw, #cw, #fw, #title, body > nav ul, .footer {
@@ -840,3 +841,4 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
                 border-radius: 5px 5px 0 0;
 	}
 }
+*/

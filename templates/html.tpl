@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?= Config::$language; ?>">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<? /* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> */ ?>
 <meta name="description" content="<?= $this->description; ?>" />
 <? if ( Config::$geoLocation ): ?>
 <meta name="ICBM" content="<?= Config::$geoLocation; ?>" />
