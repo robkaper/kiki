@@ -25,6 +25,20 @@
   }
   echo "done.</li>";
 
+  // Update title of albums linked to events
+  echo "<li>Update title of albums linked to events... ";
+  $q = "select a.id,e.title, e.id as event_id from albums a, events e where a.id=e.album_id";
+  $rs = $db->query($q);
+  if ( $rs && $db->numRowS($rs) )
+  {
+    while( $o = $db->fetchObject($rs) )
+    {
+      $q = $db->buildQuery( "UPDATE albums set title='event %d - %s' WHERE id=%d", $o->event_id, $o->title, $o->id );
+      $db->query($q);
+    }
+  }
+  echo "done.</li>";
+
   // Delete all empty albums not linked to an article or event
   echo "<li>Delete all empty albums not linked to an article or event... ";
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
@@ -54,51 +68,35 @@
   }
   echo "done, $deleteCount files ($deleteSize bytes).</li>";
 
-/*
-  $headerImages = array();
-  $q = "select header_image from articles";
+  $q = "select header_image as id from articles";
+  $articleImages = $db->getArray($q);
+  $q = "select header_image as id from events";
+  $eventImages = $db->getArray($q);
+
+  // Delete orphaned pictures  
+  echo "<li>Delete orphaned pictures... ";
+  $q = "delete from pictures where id not in (select picture_id from album_pictures)";
+  $rs = $db->query($q);
+  echo "done.</li>";
+
+  // Delete orphaned storage items
+  echo "<li>Delete orphaned storage items... ";
+  $q = "select id from storage where id not in (select storage_id from pictures)";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
   {
     while( $o = $db->fetchObject($rs) )
     {
-      $headerImages[] = $o->header_image;
-    }
-  }
-  echo "<pre>". print_r($headerImages,true). "</pre>". PHP_EOL;
-*/
-  
-  echo "<h2>Orphaned storage items (not stored as picture)</h2>\n";
-  
-  $q = "select id, hash,extension from storage where id not in (select storage_id from pictures)";
-  $rs = $db->query($q);
-  if ( $rs && $db->numRowS($rs) )
-  {
-    while( $o = $db->fetchObject($rs) )
-    {
-      if ( in_array($o->id,$headerImages) )
+      if ( in_array($o->id, $articleImages) || in_array($o->id, $eventImages) )
         continue;
 
-//      echo "<pre>". print_r($o,true). "</pre>". PHP_EOL;
-      echo "<img src=\"/storage/". $o->hash. ".100x100.c.". $o->extension. "\" style=\"width: 100px; height: 100px; float: left;\" />";
+      $fileName = Storage::localFile( $o->id );
+      unlink($fileName);
+      $q = "delete from storage where id=". $o->id;
+      $db->query($q);
     }
-    echo "<br style=\"clear: left;\" />";
   }
-
-  echo "<h2>Orphaned pictures (not stored in any album)</h2>\n";
-  
-  $q = "select id,storage_id from pictures where id not in (select picture_id from album_pictures)";
-  $rs = $db->query($q);
-  if ( $rs && $db->numRowS($rs) )
-  {
-    while( $o = $db->fetchObject($rs) )
-    {
-      $uri = Storage::uri( $o->storage_id );
-      echo "<img src=\"$uri\" style=\"width: 100px; height: 100px; float: left;\" />";
-    }
-    echo "<br style=\"clear: left;\" />";
-  }
-
+  echo "done.</li>";
 
   $page->footer();
 ?>
