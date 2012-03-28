@@ -240,6 +240,32 @@ class Database
 	}
 
 	/**
+	* Executes a query and returns an array of all objects
+	* @param string $q query
+	* @return array an array of database objects
+	*/
+	public function getArray( $q )
+	{
+		$ret = array();
+		$rs = $this->query($q);
+		if ( $rs && $this->numRows($rs) )
+			while( $o = $this->fetchObject($rs) )
+				$ret[] = isset($o->id) ? $o->id : 0;
+
+		return array_values($ret);
+	}
+
+	/**
+	 * Implodes an array of IDs for use in "WHERE IN ()" parts of queries
+	 * @param array an array of IDs
+	 * @return string a comma-separated list of IDs, or null if the array was empty
+	 */
+	public function implode( $arrIds )
+	{
+		return count($arrIds) ? implode( ",", $arrIds ) : "null";
+	}
+	
+	/**
 	* Retrieves the currently selected database
 	* @return string name of the database
 	*/
