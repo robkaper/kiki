@@ -1,6 +1,4 @@
 <?
-  require_once "../../lib/init.php";
-
   $page = new AccountPage( _("Your Account") );
   $page->header();
 

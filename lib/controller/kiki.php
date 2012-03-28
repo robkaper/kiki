@@ -6,7 +6,11 @@ class Controller_Kiki extends Controller
   {
     // TODO: support DirectoryIndex equivalent, or else simply rely on
     // mod_rewrite and remove this
-    $kikiFile = $GLOBALS['kiki']. "/htdocs/". $matches[1];
+    $parts = parse_url($this->objectId);
+    if ( !isset($parts['path']) )
+      return false;
+
+    $kikiFile = $GLOBALS['kiki']. "/htdocs/". $parts['path'];
     if ( file_exists($kikiFile) )
     {
       $ext = Storage::getExtension($kikiFile);
@@ -22,10 +26,21 @@ class Controller_Kiki extends Controller
           exit( file_get_contents($kikiFile) );
           break;
         case 'php':
+          $user = $GLOBALS['user'];
+          $db = $GLOBALS['db'];
           Log::debug( "Controller_Kiki EXIT: PHP file $kikiFile" );
           include_once($kikiFile);
           exit();
           break;
+        case '':
+          if ( file_exists($kikiFile. "index.php") )
+          {
+            $user = $GLOBALS['user'];
+            $db = $GLOBALS['db'];
+            Log::debug( "Controller_Kiki EXIT: PHP file $kikiFile". "index.php" );
+            include_once($kikiFile. "index.php");
+            exit();
+          }
         default:;
       }
       Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );

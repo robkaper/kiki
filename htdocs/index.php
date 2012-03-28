@@ -14,9 +14,6 @@
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
-
-  require_once "../lib/init.php";
-
   $page = new Page( "Kiki Status" );
   $page->header();
 

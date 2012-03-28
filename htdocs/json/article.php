@@ -8,7 +8,7 @@
  * @license Released under the terms of the MIT license.
  */
 
-  require_once "../../lib/init.php";
+//  require_once "../../lib/init.php";
 
   if ($_POST)
   {

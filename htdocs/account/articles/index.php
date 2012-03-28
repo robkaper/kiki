@@ -1,6 +1,4 @@
 <?
-  require_once "../../../lib/init.php";
-
   $page = new AdminPage( "Articles" );
   $page->header();
 

@@ -1,6 +1,4 @@
 <?
-
-  require_once "../../lib/init.php";
   Log::debug( print_r($user,true) );
 
   $page = new Page( _("Create account") );

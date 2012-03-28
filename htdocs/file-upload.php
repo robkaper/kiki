@@ -9,8 +9,6 @@
  * @license Released under the terms of the MIT license.
  */
 
-  require_once "../lib/init.php";
-
   $tmpFile = $_FILES['attachment']['tmp_name'];
   $name = $_FILES['attachment']['name'];
   $size = $_FILES['attachment']['size'];

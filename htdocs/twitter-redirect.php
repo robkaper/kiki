@@ -10,8 +10,6 @@
  * @license Released under the terms of the MIT license.
  */
 
-require_once "../lib/init.php";
-
 session_start();
 
 // Build TwitterOAuth object with client credentials.

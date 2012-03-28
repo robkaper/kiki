@@ -5,12 +5,6 @@
 # @todo Consider supporting said option, thus making mod_rewrite optional.
 RewriteEngine On
 
-# Kiki htdocs files.
-# (optional but recommended)
-# Kiki's router can take care of this, but bypassing PHP is advised for
-# performance.
-RewriteRule ^/kiki/(.*)?$ /www/git/kiki/htdocs/$1
-
 # Kiki upload storage.
 # (optional but recommended)
 # It is good practice to separate writeable folders from the DOCUMENT_ROOT.

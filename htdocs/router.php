@@ -30,8 +30,16 @@
   // Kiki base files
   else if ( preg_match('#^/kiki/(.*)#', $reqUri, $matches) )
   {
-    $controller = Controller::factory('Kiki');
-    $controller->setObjectId( $matches[1] );
+    if ( preg_match('#^(album|event)/(.*)#', $matches[1], $moduleMatches) )
+    {
+      $controller = Controller::factory( $moduleMatches[1] );
+      $controller->setObjectId( $moduleMatches[2] );
+    }
+    else
+    {
+      $controller = Controller::factory('Kiki');
+      $controller->setObjectId( $matches[1] );
+    }
   }
 
   // Automatic thumbnails for storage files

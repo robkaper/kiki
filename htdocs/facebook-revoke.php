@@ -10,8 +10,6 @@
  * @license Released under the terms of the MIT license.
  */
 
-  require_once "../lib/init.php";
-
   if ( isset($_GET['id']) && isset($_GET['permission']) )
   {
     foreach( $user->connections() as $connection )
