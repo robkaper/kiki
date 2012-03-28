@@ -23,9 +23,9 @@ class ConnectionService_Facebook
     return "Facebook";
   }
   
-  public function loginUrl()
+  public function loginUrl( $params )
   {
-    return $this->api->getLoginUrl( array('req_perms' => '') );
+    return $this->api->getLoginUrl( $params );
   }
 }
 
