@@ -93,9 +93,6 @@ class Event extends Object
     );
     Log::debug($q);
 
-    if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, 'page', $this->id );
-
     $this->db->query($q);
   }
   
@@ -116,9 +113,6 @@ class Event extends Object
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
 
-    if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, 'page', $this->id );
-          
     return $this->id;
   }
 

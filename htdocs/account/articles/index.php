@@ -19,20 +19,17 @@
       $article->setAlbumId($album->id());
       if ( $article->id() )
         $article->save();
-    }
 
-    if ( $album->id() && $article->headerImage() )
-    {
-      // TODO: add header image to album
-      $pictures = $album->addPictures( null, null, array($article->headerImage()) );
-      Log::debug( "article had headerImage (". $article->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
+      if ( $album->id() && $article->headerImage() )
+      {
+        $pictures = $album->addPictures( null, null, array($article->headerImage()) );
+        Log::debug( "article had headerImage (". $article->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
+      }
     }
 
     echo $article->form( $user );
     if ( $album->id() )
-    {
       echo $album->form( $user );
-    }
   }
   else
   {

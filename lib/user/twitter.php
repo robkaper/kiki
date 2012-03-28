@@ -174,6 +174,14 @@ class User_Twitter extends User_External
     return $result;
   }
 
+  public function postEvent( &$event )
+  {
+    $tinyUrl = TinyUrl::get( $event->url() );
+    $msg = sprintf( "%s %s %s", $event->title(), $tinyUrl, $event->hashtags() );
+    $result = $this->post( $msg );
+    return $result;
+  }
+
   public function createEvent( $title, $start, $end, $location, $description, $picture=null )
   {
     return null;

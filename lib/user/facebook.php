@@ -229,6 +229,11 @@ class User_Facebook extends User_External
     return $result;
   }
 
+  public function postEvent( &$event )
+  {
+    $this->createEvent( $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
+  }
+
   /**
    * Creates an event on Facebook.
    *
