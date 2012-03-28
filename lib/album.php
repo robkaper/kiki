@@ -309,6 +309,8 @@ class Album
   public function id() { return $this->id; }
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
+  public function setSystem( $system ) { $this->system  = $system; }
+  public function system() { return $this->system; }
 }
 
 ?>
