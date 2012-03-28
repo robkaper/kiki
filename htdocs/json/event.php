@@ -85,8 +85,9 @@
 
         // Update title of corresponding album
         $album = new Album( $event->albumId() );
+        $album->setSystem(true);
         $album->setTitle( $event->title() );
-        $album->save();              
+        $album->save();
       }
     }
     

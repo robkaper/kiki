@@ -23,7 +23,7 @@
     echo "</thead>\n";
     echo "<tbody>\n";
 
-    $q = "SELECT id from albums ORDER BY id in (select album_id from articles) asc, id in (select album_id from events) asc, id desc LIMIT 25";
+    $q = "SELECT id from albums where system=false ORDER BY id desc LIMIT 25";
     $rs = $db->query($q);
     if ( $db->numRows($rs) )
     {

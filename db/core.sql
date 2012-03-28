@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.14' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.15' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -144,7 +144,8 @@ drop table if exists albums;
 create table albums (
   id int unsigned not null auto_increment,
   primary key(id),
-  title varchar(255) not null
+  title varchar(255) not null,
+  system boolean default false
 );
 
 drop table if exists pictures;

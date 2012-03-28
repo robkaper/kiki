@@ -84,7 +84,10 @@
     // Create album for this event if it doesn't exist yet.
     if ( !$album->id() )
     {
+      $album->setSystem(true);
+      $album->setTitle( $event->title() );
       $album->save();
+
       $event->setAlbumId($album->id());
       if ( $event->id() )
         $event->save();

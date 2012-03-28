@@ -12,8 +12,10 @@
     // Create album for this article if it doesn't exist yet.
     if ( !$album->id() )
     {
-      $album->setTitle( sprintf( "article %d - %s", $article->id(), $article->title() ) );
+      $album->setSystem(true);
+      $album->setTitle( $article->title() );
       $album->save();
+
       $article->setAlbumId($album->id());
       if ( $article->id() )
         $article->save();

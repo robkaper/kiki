@@ -13,13 +13,13 @@
 
   // Update title of albums linked to articles
   echo "<li>Update title of albums linked to articles... ";
-  $q = "select a.id,ar.title, ar.id as article_id from albums a, articles ar where a.id=ar.album_id";
+  $q = "select a.id,ar.title from albums a, articles ar where a.id=ar.album_id";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
   {
     while( $o = $db->fetchObject($rs) )
     {
-      $q = $db->buildQuery( "UPDATE albums set title='article %d - %s' WHERE id=%d", $o->article_id, $o->title, $o->id );
+      $q = $db->buildQuery( "UPDATE albums set title='%s', system=true WHERE id=%d", $o->title, $o->id );
       $db->query($q);
     }
   }
@@ -27,13 +27,13 @@
 
   // Update title of albums linked to events
   echo "<li>Update title of albums linked to events... ";
-  $q = "select a.id,e.title, e.id as event_id from albums a, events e where a.id=e.album_id";
+  $q = "select a.id,e.title from albums a, events e where a.id=e.album_id";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
   {
     while( $o = $db->fetchObject($rs) )
     {
-      $q = $db->buildQuery( "UPDATE albums set title='event %d - %s' WHERE id=%d", $o->event_id, $o->title, $o->id );
+      $q = $db->buildQuery( "UPDATE albums set title='%s', system=true WHERE id=%d", $o->title, $o->id );
       $db->query($q);
     }
   }

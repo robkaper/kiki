@@ -18,6 +18,7 @@ class Album
   private $db;
 
   public $id, $title;
+  private $system;
 
   /**
    * Initialises an album.
@@ -41,6 +42,7 @@ class Album
   {
     $this->id = 0;
     $this->title = null;
+    $this->system = false;
   }
 
   /**
@@ -51,13 +53,19 @@ class Album
   public function load( $id )
   {
     $qId = $this->db->escape( $id );
-    $q = "select id,title from albums where id=$qId";
+    $q = "select id,title,system from albums where id=$qId";
     $o = $this->db->getSingle($q);
+    $this->setFromObject($o);
+  }
+  
+  public function setFromObject( $o )
+  {
     if ( !$o )
       return;
 
     $this->id = $o->id;
     $this->title = $o->title;
+    $this->system = $o->system;
   }
 
   public function save()
@@ -67,14 +75,14 @@ class Album
 
   public function insert()
   {
-    $q = $this->db->buildQuery( "insert into albums (title) values ('%s')", $this->title );
+    $q = $this->db->buildQuery( "insert into albums (title,system) values ('%s', %d)", $this->title, $this->system );
     $rs = $this->db->query($q);
     $this->id = $this->db->lastInsertId($rs);
   }
   
   public function update()
   {
-    $q = $this->db->buildQuery( "UPDATE albums set title='%s' WHERE id=%d", $this->title, $this->id );
+    $q = $this->db->buildQuery( "UPDATE albums set title='%s',system=%d WHERE id=%d", $this->title, $this->system, $this->id );
     $rs = $this->db->query($q);
   }
 
