@@ -198,6 +198,10 @@ form .small {
 	text-align: right;
 }
 
+p.small {
+	font-size: 0.875em;
+}
+
 form input, form textarea, form select {
 	border: solid 1px #463;
 	width: 70%;

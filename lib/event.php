@@ -223,7 +223,26 @@ class Event extends Object
 
   public function content()
   {
-    return $this->start. ": ". $this->title; // print_r($this,true);
+    // rjkcust
+    setlocale("LC_TIME", "nl_NL.utf8");
+    $start = strftime( "%A %e %B %Y %R", strtotime($this->start) );
+    $end = strftime( "%A %e %B %Y %R", strtotime($this->end) );
+
+    $imgUrl = Storage::url( $this->headerImage, 320, 180, true );
+    $content = "<img src=\"$imgUrl\" style=\"float: right; margin: 0 0 1em 1em;\" />";
+
+    $content .= Misc::markup( $this->description );
+
+    $content .= "<ul>";
+    $content .= "<li>Wanneer?<p class=\"small\">$start (over ". Misc::relativeTime($this->start). ")</p></li>";
+    $content .= "<li>Waar?<p class=\"small\">". $this->location. "</p></li>";
+
+    if ( $this->facebookUrl )
+      $content .= "<li>Wie?<p class=\"small\">". $this->facebookUrl. "</p></li>";
+
+    $content .= "</ul>";
+
+    return $content;
   }
 }
 

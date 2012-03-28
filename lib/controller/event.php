@@ -18,7 +18,7 @@ class Controller_Event extends Controller
         $this->template = 'pages/event';
         $this->status = 200;
         $this->title = "Event: ". $event->title();
-        $this->content = "event content: ". $event->content();
+        $this->content = $event->content();
         
         return true;
       }
