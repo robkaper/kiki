@@ -29,8 +29,6 @@
     {
       while( $o = $db->fetchObject($rs) )
       {
-        echo "<pre>". print_r($o). "</pre>". PHP_EOL;
-
         $album = new Album( $o->id );
         $class = ""; // $album->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
