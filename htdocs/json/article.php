@@ -82,7 +82,7 @@
 
         // Update title of corresponding album
         $album = new Album( $article->albumId() );
-        $album->setTitle( $article->title() );
+        $album->setTitle( sprintf( "article %d - %s", $article->id(), $article->title() ) );
         $album->save();              
       }
     }

@@ -62,12 +62,6 @@
   else
     $controller = new Controller();
 
-  // TODO: /kiki/album/
-  //RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]
-  //RewriteRule ^/kiki/album/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,L]
-  //RewriteRule ^/kiki/album/([^/]+)/([^/]+)(/)?$ /www/git/kiki/htdocs/album/index.php [E=albumId:$1,E=pictureId:$2,L]
-  // TODO: test missing directoryindices (most notably / when moving content to database)
-
   // Paged moved up because some controllers create forms which in turn need
   // to add stylesheets/scripts.
   $page = new Page();

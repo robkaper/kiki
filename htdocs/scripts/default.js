@@ -183,8 +183,6 @@ function fileUploadHandler( target, id, uri, html )
 function onReady() {
   // $('.cleditor').cleditor();
 
-  $('.album .navarrow img').fadeOut();
-
   var prettify = false;
   $("pre code").each(function() {
     $(this).parent().addClass('prettyprint');
@@ -338,15 +336,15 @@ function onReady() {
     return true;
   } );
 
-  $('.album .imgw').live('mouseenter', function() {
+  $('.xalbum .imgw').live('mouseenter', function() {
     var navarrow = $(this).parent().find('.navarrow');
     $(navarrow).each( function() {
       if ( !$(this).hasClass('disabled') )
-        var img = $(this).find('img').fadeIn();
+        $(this).find('img').fadeIn();
     } );
   } );
 
-  $('.album .imgw').live('mouseleave', function() {
+  $('.xalbum .imgw').live('mouseleave', function() {
     $(this).parent().find('.navarrow img').fadeOut();
   } );
 

@@ -577,15 +577,22 @@ aside img.social {
 	position: relative;
 	float: left;
 	top: -480px;
-	width: 32px;
-	height: 32px;
+	width: 36px;
+	height: 36px;
 	z-index: 10;
 	vertical-align: middle;
 }
 
+
 .album .navarroww img {
         background: #9c6;
-        border-radius: 0px 15px 15px 0px; 
+	padding: 2px;
+        border-radius: 0px 16px 16px 0px; 
+`	opacity: 0.8;
+}
+
+.album .navarrow.disabled {
+	display: none;
 }
 
 .album #navrightw {
