@@ -23,8 +23,16 @@ class ConnectionService_Facebook
     return "Facebook";
   }
   
-  public function loginUrl( $params )
+  public function loginUrl( $params = null )
   {
+    if ( !$params )
+      $params = array();
+    else if ( !is_array($params) )
+    {
+      Log::debug( "called with non-array argument" );
+      $params = array();
+    }
+
     return $this->api->getLoginUrl( $params );
   }
 }

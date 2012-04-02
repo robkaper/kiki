@@ -231,7 +231,28 @@ class User_Facebook extends User_External
 
   public function postEvent( &$event )
   {
-    $this->createEvent( $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
+    $rs = $this->createEvent( $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
+
+    // TODO: post a link on the event wall. Disabled because of a bug in Facebook:
+    // https://developers.facebook.com/bugs/225344230889618/
+
+    /*
+    if ( isset($rs['id']) )
+    {
+      $attachment = array(
+        'message' => "Officiële event pagina",
+        'link' => $event->url()
+      );
+      $rsPost = $this->api->api( $rs['id']. "/feed", 'post', $attachment);
+      Log::debug( "rsPost:". print_r($rsPost,true) );
+    }
+    */
+
+    $result = new stdClass;
+    $result->id = isset($rs['id']) ? $rs['id'] : null;
+    $result->url = isset($rs['id']) ? "http://www.facebook.com/". $rs['id'] : null;
+    $result->error = isset($rs['error']) ? $rs['error'] : null;
+    return $result;
   }
 
   /**

@@ -70,7 +70,6 @@ class Event extends Object
     $this->cname = $o->cname;
     $this->description = $o->description;
     $this->location = $o->location;
-    $this->body = $o->body;
     $this->headerImage = $o->header_image;
     $this->featured = $o->featured;
     $this->visible = $o->visible;
