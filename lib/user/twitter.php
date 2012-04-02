@@ -10,29 +10,7 @@ class User_Twitter extends User_External
   protected function connect()
   {
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
-    // FIXME: this connects based on _SESSION, adjust to also allow connection based on stored token
-
-    if ( 0 && isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret']) )
-    {
-      Log::debug( "doing session code, should be duplicate with new identify" );
-      $this->token = $_SESSION['oauth_token'];
-      $this->secret = $_SESSION['oauth_token_secret'];
-
-  // Remove no longer needed request tokens
-    unset($_SESSION['oauth_token']);
-      unset($_SESSION['oauth_token_secret']);
-
-      Log::debug( "connecting twitter api with session token and secret" );
-      $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
-
-      
-
-      Log::debug( "getting access token and secret from request verifier ". $_REQUEST['oauth_verifier'] );
-      $this->oAuthToken = $this->api->getAccessToken( $_REQUEST['oauth_verifier'] );
-      $this->token = $this->oAuthToken['oauth_token'];
-      $this->secret = $this->oAuthToken['oauth_token_secret'];
-    }
-    else if ( $this->token && $this->secret )
+    if ( $this->token && $this->secret )
     {
       Log::debug( "connecting twitter api with stored token and secret" );
       $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
@@ -43,7 +21,6 @@ class User_Twitter extends User_External
       Log::debug( "failed, no connection" );
       return;
     }
-
 
     // $this->id = $this->oAuthToken['user_id'];
     $this->screenName = $this->oAuthToken['screen_name'];

@@ -338,7 +338,7 @@ class User_Facebook extends User_External
     catch( FacebookApiException $e )
     {
       Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
-      // TODO: should then be unlinked for this user..
+      self::storePerm( $perm, false );
       return false;
     }
   }
@@ -364,9 +364,7 @@ class User_Facebook extends User_External
     $fbRs = $this->api->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
 
     // Remove permission from database
-    $qPerm = $this->db->escape( $perm );
-    $q = "update facebook_user_perms set perm_value=0 where perm_key='$qPerm' and facebook_user_id=$this->id";
-    $this->db->query($q);
+    self::storePerm( $perm, false);
 
     // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
     $q = "update facebook_users set access_token=null where id=$this->id";

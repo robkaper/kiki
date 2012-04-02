@@ -205,10 +205,6 @@ class Article extends Object
         if ( !$connection->hasPerm('publish_stream') )
          continue;
 
-        // FIXME: Disabled because Facebook has deprecated offline_access.
-        // if ( !$connection->hasPerm('offline_access') )
-        //   continue;
-
         if ( !$this->facebookUrl )
           $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
       }

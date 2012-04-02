@@ -48,12 +48,8 @@
     {
       if ( $connection->serviceName() == 'Facebook' )
       {
-        // TODO: inform user that, and why, these are required (offline
-        // access is required because Kiki doesn't store or use the
-        // short-lived login sessions)
+        // TODO: inform user that, and why, these are required.
         if ( !$connection->hasPerm('publish_stream') )
-         continue;
-        if ( !$connection->hasPerm('offline_access') )
          continue;
       }
       echo Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
