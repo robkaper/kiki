@@ -37,7 +37,6 @@ abstract class User_External
 
     if ( $this->id = $id )
     {
-      Log::debug( get_class($this). " constructed with id $id for user $kikiUserId, loading.." );
       $this->load($kikiUserId);
       if ( !$kikiUserId )
         $this->loadKikiUserIds();
@@ -157,7 +156,6 @@ abstract class User_External
   {
     $this->kikiUserIds[] = $kikiUserId;
     $q = $this->db->buildQuery( "insert into users_connections( user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->id, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
-    Log::debug( "q:$q" );
     $rs = $this->db->query($q);
   }
   
@@ -168,7 +166,6 @@ abstract class User_External
     else
       $q = $this->db->buildQuery( "delete from users_connections where external_id=%d", $this->id );
 
-    Log::debug( "q:$q" );
     $rs = $this->db->query($q);
   }
 }

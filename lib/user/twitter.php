@@ -12,7 +12,6 @@ class User_Twitter extends User_External
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     if ( $this->token && $this->secret )
     {
-      Log::debug( "connecting twitter api with stored token and secret" );
       $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
     }
     
@@ -30,8 +29,6 @@ class User_Twitter extends User_External
   {
     if ( !$this->id = $this->detectLoginSession() )
       $this->id = $this->cookie();
-
-    Log::debug( "id -> ". $this->id );
   }
   
   public function authenticate()

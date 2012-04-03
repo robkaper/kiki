@@ -33,25 +33,12 @@ class User_Facebook extends User_External
 
     if ( $this->id && $this->token )
     {
-      Log::debug( "connecting facebook api with stored token" );
-
       // Support both old storage (serialized) as new (unserialized)
       $token = @unserialize($this->token);
       if ( $token !== false )
         $this->api->setAccessToken($token['access_token']);
       else
         $this->api->setAccessToken($this->token);
-    }
-    else if ( isset($_GET['session']) )
-    {
-      // DEPRECATED
-      Log::debug( "connecting facebook api with session" );
-      $session = $this->api->getAccessToken();
-      if ( $session && $session['expires'] == 0 )
-      {
-        Log::debug( "endless token from session, need to link/store?" );
-        $this->token = serialize($session);
-      }
     }
 
     if ( isset($_GET['perms']) )
@@ -71,8 +58,6 @@ class User_Facebook extends User_External
       if ( $cookie )
         $this->id = $cookie['uid'];
     }
-
-    Log::debug( "id -> ". $this->id );
   }
 
   public function authenticate()
