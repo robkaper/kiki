@@ -60,13 +60,6 @@
     $reqUri = substr( $reqUri, 3 );
   }
 
-  if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
-  {
-    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
-    $log = sprintf( "%-4s: %s", $reqMethod, $reqUri );
-    Log::debug( $log );
-  }
-
   $db = $GLOBALS['db'] = new Database( Config::$db );
   Config::loadDbConfig($db);
 
@@ -79,23 +72,4 @@
 
   $user = $GLOBALS['user'] = new User();
   $user->authenticate();
-
-  // Redirect requests with parameters we don't want visible for the user or
-  // Analytics.
-  if ( isset($_GET['fb_xd_fragment']) || (isset($_GET['state']) && isset($_GET['code'])) )
-  {
-    Router::redirect( $_SERVER['SCRIPT_URL'], 301 ) && exit();
-  }
-
-  // Don't log trivial and overly frequent requests like IM updates
-  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
-  if ( !preg_match( '#/(im).php(\?)?#', $reqUri ) )
-  {
-    $userTxt = ", user: ". $user->id();
-    $connectionsTxt = ", connections: ". join( ", ", $user->connectionIds() );
-
-    $reqMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CMD';
-    $log = sprintf( "%-4s: %s%s%s", $reqMethod, $reqUri, $userTxt, $connectionsTxt );
-    Log::debug( $log );
-  }
 ?>

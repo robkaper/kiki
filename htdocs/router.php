@@ -18,6 +18,13 @@
 
   Log::debug( "router.php: $reqUri" );
 
+  // Redirect requests with parameters we don't want visible for the user or
+  // Analytics.
+  if ( isset($_GET['fb_xd_fragment']) || (isset($_GET['state']) && isset($_GET['code'])) )
+  {
+    Router::redirect( $_SERVER['SCRIPT_URL'], 301 ) && exit();
+  }
+
   $controller = null;
 
   // TinyURLs
