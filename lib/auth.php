@@ -61,9 +61,10 @@ class Auth
   {
     // TODO: make cookie length configurable (preferably by end user, with
     // available options configurable by site administrator)
-    $expires = time() + ( 7 * 86400 );
 
+    $expires = time() + ( 14 * 86400 );
     $cookie = self::generateCookie( $id, $expires );
+
     Log::debug( "setting cookie: id($id), expires($expires), cookie($cookie)" );
     setcookie( Config::$authCookieName, $cookie, $expires, '/', $_SERVER['HTTP_HOST'] );
   }
