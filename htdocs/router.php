@@ -16,7 +16,7 @@
 
   require_once "../lib/init.php";
 
-  Log::debug( "router.php: $reqUri" );
+  Log::debug( "START router.php: $reqUri" );
 
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
@@ -93,4 +93,6 @@
   $page->setBodyTemplate( $controller->template() );
   $page->setContent( $controller->content() );
   $page->html();
+
+  Log::debug( "END router.php: $reqUri" );
 ?>
