@@ -76,22 +76,6 @@ class User_Facebook extends User_External
     if ( !isset($_GET['state'], $_GET['code']) )
       return;
 
-    // This can be skipped because api() does a connect() ?
-    Log::debug( "skip connect because api() does" );
-/*
-    if ( !$this->enabled() )
-      return;
-
-    if ( !$this->api )
-    {
-      $this->api = new Facebook( array(
-        'appId'  => Config::$facebookApp,
-        'secret' => Config::$facebookSecret,
-        'cookie' => true
-        ) );
-    }
-*/
-
     try
     {
       $this->id = $this->api()->getUser();

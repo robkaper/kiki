@@ -43,15 +43,9 @@ abstract class User_External
       $this->load($kikiUserId);
       if ( !$kikiUserId )
         $this->loadKikiUserIds();
-
-      // FIXME: don't connect until connection is actually needed
-      Log::debug( "skip auto-connect" );
-      // $this->connect();
     }
     else
     {
-      Log::debug( "skip auto-connect" );
-      // $this->connect();
       $this->identify();
       $this->loadKikiUserIds();
     }
