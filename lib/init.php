@@ -59,7 +59,11 @@
     // locale.
     $reqUri = substr( $reqUri, 3 );
   }
-
+  else
+  {
+    I18n::setLocale( Config::$language );
+  }
+    
   $db = $GLOBALS['db'] = new Database( Config::$db );
   Config::loadDbConfig($db);
 
