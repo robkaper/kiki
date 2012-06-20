@@ -159,7 +159,7 @@ class User extends Object
     {
       $this->id = Auth::validateCookie();
       $this->load($this->id);
-      Log::debug( "cookie: ". $this->id );
+      // Log::debug( "cookie: ". $this->id );
     }
 
     $this->identifyConnections();
@@ -238,10 +238,10 @@ class User extends Object
     }
     else
     {
-      Log::debug( "no user, no connections" );
+      // Log::debug( "no user, no connections" );
     }
 
-    Log::debug( "id: ". $this->id );
+    // Log::debug( "id: ". $this->id );
   }
 
   // WARNING: deprecated

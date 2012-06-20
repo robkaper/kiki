@@ -71,11 +71,14 @@ class User_Facebook extends User_External
     // after clearing the local cookie, effectively making it impossible to
     // logout.
 
-    // // WARNING: This might break permission updates, as those probably do
+    // WARNING: This might break permission updates, as those probably do
     // require fetching the new sesion token.
     if ( !isset($_GET['state'], $_GET['code']) )
       return;
 
+    // This can be skipped because api() does a connect() ?
+    Log::debug( "skip connect because api() does" );
+/*
     if ( !$this->enabled() )
       return;
 
@@ -87,9 +90,17 @@ class User_Facebook extends User_External
         'cookie' => true
         ) );
     }
+*/
 
-    $this->id = $this->api->getUser();
-    $this->token = $this->api->getAccessToken();
+    try
+    {
+      $this->id = $this->api()->getUser();
+      $this->token = $this->api()->getAccessToken();
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
 
     return $this->id;
   }
@@ -123,7 +134,11 @@ class User_Facebook extends User_External
 
     try
     {
-      $data = $this->api ? $this->api->api('/me') : null;
+      $data = $this->api()->api('/me');
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
     }
     catch ( FacebookApiException $e )
     {
@@ -177,6 +192,10 @@ class User_Facebook extends User_External
       $qResponse = $this->db->escape( serialize($fbRs) );
       $q = "insert into social_updates (ctime,network,post,response) values (now(), 'facebook', '$qPost', '$qResponse')";
       $this->db->query($q);
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
     }
     catch ( FacebookApiException $e )
     {
@@ -285,6 +304,10 @@ class User_Facebook extends User_External
       $rs = $this->api->api('me/events', 'post', $attachment);
       return $rs;
     }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
     catch ( FacebookApiException $e )
     {
       Log::debug( "FacebookApiException $e, ". print_r($attachment, true). print_r($this, true) );
@@ -309,16 +332,18 @@ class User_Facebook extends User_External
 
   public function hasPerm( $perm, $verify=false )
   {
-    if ( !$this->api )
-      return false;
-
     // TODO: this is awfully slow (as expected from remote calls),
     // implement verify and only do a remote check prior to posting.  Or
     // just catch the error and always check the local store.
-    try {
-      $value = $this->api->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+    try
+    {
+      $value = $this->api()->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
       self::storePerm( $perm, $value );
       return $value;
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
     }
     catch( FacebookApiException $e )
     {
@@ -342,11 +367,15 @@ class User_Facebook extends User_External
   // FIXME: port
   public function revokePerm( $perm )
   {
-    if ( !$this->api )
-      return;
-
     // Tell Facebook to revoke permission
-    $fbRs = $this->api->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
+    try
+    {
+      $fbRs = $this->api()->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
 
     // Remove permission from database
     self::storePerm( $perm, false);

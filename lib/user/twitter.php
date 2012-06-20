@@ -9,17 +9,11 @@ class User_Twitter extends User_External
 
   protected function connect()
   {
-    // Create TwitteroAuth object with app key/secret and token key/secret from default phase
-    if ( $this->token && $this->secret )
-    {
-      $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
-    }
-    
-    if ( !$this->api )
-    {
-      Log::debug( "failed, no connection" );
+    if ( !($this->token && $this->secret) )
       return;
-    }
+
+    // Create TwitteroAuth object with app key/secret and token key/secret from default phase
+    $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
 
     // $this->id = $this->oAuthToken['user_id'];
     $this->screenName = $this->oAuthToken['screen_name'];
@@ -85,7 +79,15 @@ class User_Twitter extends User_External
 
   public function loadRemoteData()
   {
-    $data = $this->api ? $this->api->get('account/verify_credentials') : null;
+    try
+    {
+      $data = $this->api()->get('account/verify_credentials');
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
+
     if ( !$data )
     {
       Log::debug( "failed, no data" );
@@ -112,7 +114,14 @@ class User_Twitter extends User_External
 */
 
     Log::debug( "msg: $msg" );
-    $twRs = $this->api->post( 'statuses/update', array( 'status' => $msg ) );
+    try
+    {
+      $twRs = $this->api()->post( 'statuses/update', array( 'status' => $msg ) );
+    }
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
 
     $qPost = $this->db->escape( $msg );
     $qResponse = $this->db->escape( serialize($twRs) );

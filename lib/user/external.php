@@ -12,12 +12,15 @@
  * @author Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
+
+class UserApiException extends Exception {}
  
 abstract class User_External
 {
   protected $db;
 
-  public $api = null;
+  protected $api = null;
+
   protected $token = null;
   protected $secret = null;
   
@@ -42,11 +45,13 @@ abstract class User_External
         $this->loadKikiUserIds();
 
       // FIXME: don't connect until connection is actually needed
-      $this->connect();
+      Log::debug( "skip auto-connect" );
+      // $this->connect();
     }
     else
     {
-      $this->connect();
+      Log::debug( "skip auto-connect" );
+      // $this->connect();
       $this->identify();
       $this->loadKikiUserIds();
     }
@@ -64,6 +69,14 @@ abstract class User_External
 
   public function api()
   {
+    if ( !$this->api )
+      $this->connect();
+
+    if ( !$this->api )
+    {
+      throw new UserApiException( 'External user API for '. $this->servericeName(). ' called but not available' );
+    }
+
     return $this->api;
   }
 
