@@ -170,7 +170,7 @@ class User_Facebook extends User_External
     Log::debug( "attachment: ". print_r( $attachment, true ) );
     try
     {
-      $fbRs = $this->api->api('/me/feed', 'post', $attachment);
+      $fbRs = $this->api()->api('/me/feed', 'post', $attachment);
 
       $qPost = $this->db->escape( serialize($attachment) );
       $qResponse = $this->db->escape( serialize($fbRs) );
@@ -231,7 +231,7 @@ class User_Facebook extends User_External
         'message' => "Officiële event pagina",
         'link' => $event->url()
       );
-      $rsPost = $this->api->api( $rs['id']. "/feed", 'post', $attachment);
+      $rsPost = $this->api()->api( $rs['id']. "/feed", 'post', $attachment);
       Log::debug( "rsPost:". print_r($rsPost,true) );
     }
     */
@@ -279,13 +279,13 @@ class User_Facebook extends User_External
     if ( $picture )
     {
       $attachment[basename($picture)] = "@". realpath($picture);
-      $this->api->setFileUploadSupport(true);
+      $this->api()->setFileUploadSupport(true);
     }
 
     try 
     {
       // TODO: support pages (page Id instead of "me")
-      $rs = $this->api->api('me/events', 'post', $attachment);
+      $rs = $this->api()->api('me/events', 'post', $attachment);
       return $rs;
     }
     catch ( UserApiException $e )
