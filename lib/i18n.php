@@ -49,8 +49,10 @@ class I18n
         break;
       default:
         setlocale( LC_ALL, $locale );
+        return false;
         break;
     }
+    return true;
   }
 }
 

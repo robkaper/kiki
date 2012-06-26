@@ -52,12 +52,13 @@
   // TODO: adjust element lang attributes based on chosen locale.
   if ( preg_match('#^/([a-zA-Z]{2})/#', $reqUri, $matches) )
   {
-    I18n::setLocale( $matches[1] );
-
-    // TODO: finish the Kiki controller and/or let the rewrite rule take
-    // locale URIs into account.  Also, rewrite Config::kikiPrefix based on
-    // locale.
-    $reqUri = substr( $reqUri, 3 );
+    if ( I18n::setLocale($matches[1]) )
+    {
+      // TODO: finish the Kiki controller and/or let the rewrite rule take
+      // locale URIs into account.  Also, rewrite Config::kikiPrefix based on
+      // locale.
+      $reqUri = substr( $reqUri, 3 );
+    }
   }
   else
   {
