@@ -20,9 +20,10 @@ class Misc
   * @warning Only supports comparison to times in the past.
   * @bug rjkcust: returns strings in Dutch.
   */
-  public static function relativeTime( $time )
+  public static function relativeTime( $time, $now = null )
   {
-    $now = time();
+    if ( $now === null )
+      $now = time();
     $time = strtotime( $time );
     $delta = $now - $time;
     $absDelta = abs($delta);
