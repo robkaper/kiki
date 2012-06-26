@@ -81,7 +81,10 @@ drop table if exists sections;
 create table sections (
   id bigint unsigned not null auto_increment,
   primary key(id),
-  title varchar(255) not null
+  base_uri varchar(255) not null,
+  unique key(base_uri),
+  title varchar(255) not null,
+  type varchar(255) not null
 );
 
 drop table if exists articles;
@@ -192,16 +195,6 @@ create table mail_queue (
   `to` text not null,
   headers text not null,
   body text not null
-);
-
-drop table if exists router_base_uris;
-create table router_base_uris (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  base_uri varchar(255) not null,
-  unique key(base_uri),
-  type varchar(255) not null,
-  instance_id int unsigned not null  
 );
 
 drop table if exists users_connections;

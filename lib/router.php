@@ -43,7 +43,7 @@ class Router
     $baseUris = array();
     $qType = $type ? $db->buildQuery("where type='%s'", $type) : null;
     $qSort = $sort ? "order by base_uri asc" : null;
-    $q = "select id, base_uri, type, instance_id from router_base_uris $qType $qSort";
+    $q = "select id, base_uri, type, title from sections $qType $qSort";
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
       while( $o = $db->fetchObject($rs) )
@@ -64,11 +64,11 @@ class Router
    * @param int $instanceId Controller instance.
    * @return string Base URI.
    */
-  public static function getBaseUri( $type, $instanceId )
+  public static function getBaseUri( $type, $id )
   {
     $db = $GLOBALS['db'];
 
-    $q = $db->buildQuery( "select base_uri from router_base_uris where type='%s' and instance_id=%d", $type, $instanceId );
+    $q = $db->buildQuery( "select base_uri from sections where type='%s' and id=%d", $type, $id );
     return $db->getSingleValue($q);
   }
 
@@ -81,12 +81,12 @@ class Router
       return false;
 
     // No trailing slash
-    // TODO: accept pages, otherwise add and 301
+    // TODO: accept pages, otherwise add and redirect 301
     $trailingSlash = false;
     $result = self::matchBaseUri($uri);
     if ( $result )
     {
-      // Log::debug( "Router-/ $uri, result: $result, accept: pages=show, else=add and 301" );
+      Log::debug( "Router-/ $uri, result: $result, accept: pages=show, else=add and 301" );
     }
     else
     {
@@ -94,7 +94,7 @@ class Router
       $result = self::matchBaseUri($uri,true);
       if ( !$result )
         return false;
-      // Log::debug( "Router+/ $uri, result: $result, accept: albums,articles," );
+      Log::debug( "Router+/ $uri, result: $result, accept: albums,articles," );
     }
     
     list($matchedUri, $remainder, $q ) = explode(":", $result);
@@ -106,12 +106,38 @@ class Router
     $handler = new stdClass;
     $handler->matchedUri = $matchedUri;
     $handler->type = $route->type;
-    $handler->instanceId = $route->instance_id;
+    $handler->instanceId = $route->id;
     $handler->trailingSlash = $trailingSlash;
     $handler->remainder = $remainder;
     $handler->q = $q;
 
-    // Log::debug( "Router::findHandler, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", remainder:". $remainder. ", q:$q" );
+    Log::debug( "found, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", remainder:". $remainder. ", q:$q" );
+
+    return $handler;
+  }
+
+  public static function findPage( $uri, $sectionId = 0 )
+  {
+    $db = $GLOBALS['db'];
+
+    $uri = trim( $uri, '/' );
+
+    $q = $db->buildQuery( "SELECT id FROM articles WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
+    Log::debug( $q );
+    $pageId = $db->getSingleValue($q);
+
+    if ( !$pageId )
+      return false;
+
+    $handler = new stdClass;
+    $handler->matchedUri = $uri;
+    $handler->type = 'page';
+    $handler->instanceId = $pageId;
+    $handler->trailingSlash = false;
+    $handler->remainder = '';
+    $handler->q = $q;
+
+    Log::debug( "found, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", q:$q" );
 
     return $handler;
   }
@@ -139,15 +165,15 @@ class Router
     return $result;
   }
 
-  public static function storeBaseUri( $baseUri, $type, $instanceId = 0 )
+  public static function storeBaseUri( $baseUri, $title, $type, $instanceId = 0 )
   {
       $db = $GLOBALS['db'];
 
       if ( $baseUri[0] != '/' )
         $baseUri = '/'. $baseUri;
 
-      $q = $db->buildQuery( "INSERT INTO router_base_uris (base_uri, type, instance_id) VALUES ('%s', '%s', %d) ON DUPLICATE KEY UPDATE type='%s', instance_id=%d",
-        $baseUri, $type, $instanceId, $type, $instanceId
+      $q = $db->buildQuery( "INSERT INTO sections (id, base_uri, title, type) VALUES (%d, '%s', '%s', '%s') ON DUPLICATE KEY UPDATE type='%s', title='%s'",
+        $instanceId, $baseUri, $title, $type, $type, $title
       );
 
       $db->query($q);

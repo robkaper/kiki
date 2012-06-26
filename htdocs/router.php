@@ -60,17 +60,27 @@
   }
 
   // Check if URI contains a base handled by a dynamic controller
+  else if ( $handler = Router::findPage($reqUri) )
+  {
+    // TODO: decide on what to do with trailing slashes... forbid them? 
+    // require them?  what if there is a page /test AND section /test/ ? 
+    // may they be different?  They are being added below, but I'm leaning
+    // towards *removing* them.
+    $controller = Controller::factory($handler->type);
+    $controller->setInstanceId($handler->instanceId);
+    $controller->setObjectId($handler->remainder);
+  }
   else if ( $handler = Router::findHandler($reqUri) )
   {
-    // Ensure trailing slash for all content except pages
-    // FIXME: Find only collection controllers here, to keep baseURI matching simple, move page controller downwards
-    if ( !$handler->trailingSlash && $handler->type != 'page' )
+    // Ensure trailing slash for all handler indices
+    if ( !$handler->trailingSlash )
     {
       $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
-      Router::redirect($url, 301) && exit();
+      Router::redirect($url, 302) && exit();
     }
-       
-    // TODO: this is nearly one on one, might as well let findHandler return the right controller..
+
+    // TODO: these are nearly one on one, might as well let findPage and
+    // findHandler return the right controller...
     $controller = Controller::factory($handler->type);
     $controller->setInstanceId($handler->instanceId);
     $controller->setObjectId($handler->remainder);
@@ -80,12 +90,13 @@
   else
     $controller = new Controller();
 
-  // Paged moved up because some controllers create forms which in turn need
-  // to add stylesheets/scripts.
+  // Page moved up because some controllers create forms in exec(), which in turn need
+  // to add stylesheets/scripts. Which should be a part of Controller, not Page.
   $page = new Page();
       
   $controller->exec();
   // Log::debug( print_r($controller, true) );
+  // Log::debug( print_r($page, true) );
 
   if ( $controller->status() == 301 )
     Router::redirect($controller->content(), $controller->status()) && exit();

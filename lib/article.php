@@ -29,7 +29,7 @@ class Article extends Object
   private $twitterUrl = null;
   private $hashtags = null;
   private $albumId = 0;
-  
+
   public function reset()
   {
     parent::reset();
@@ -92,9 +92,6 @@ class Article extends Object
     );
     Log::debug($q);
 
-    if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, 'page', $this->id );
-
     $this->db->query($q);
   }
   
@@ -115,9 +112,6 @@ class Article extends Object
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
 
-    if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, 'page', $this->id );
-          
     return $this->id;
   }
 
@@ -172,12 +166,13 @@ class Article extends Object
     $class = $hidden ? "hidden" : "";
 
     $sections = array();
+    $sections[0] = 'top-level page';
     $db = $GLOBALS['db'];
-    $q = "select id,title from sections order by title asc";
+    $q = "select id,title, type from sections order by title asc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $oSection = $db->fetchObject($rs) )
-        $sections[$oSection->id] = $oSection->title;
+        $sections[$oSection->id] = $oSection->title. "(". $oSection->type. ")";
 
     $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "articleId", $this->id );

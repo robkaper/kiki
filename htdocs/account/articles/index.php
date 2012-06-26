@@ -58,7 +58,7 @@
     echo "</thead>\n";
     echo "<tbody>\n";
 
-    $q = "SELECT id from articles WHERE section_id!=0 ORDER BY ctime desc LIMIT 25";
+    $q = "SELECT id FROM articles WHERE section_id in (SELECT id FROM sections where type='articles') ORDER BY ctime desc LIMIT 25";
     $rs = $db->query($q);
     if ( $db->numRows($rs) )
     {

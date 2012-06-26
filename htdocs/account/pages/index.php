@@ -22,7 +22,8 @@
   }
   else
   {
-    $pages = Router::getBaseURIs( 'page', true );
+    $q = "SELECT id FROM articles WHERE section_id in (SELECT id FROM sections where type='pages') ORDER BY ctime desc LIMIT 25";
+    $pages = $db->getArray($q);
     if ( count($pages ) )
     {
       echo "<table>\n";
@@ -37,10 +38,10 @@
 
       echo "</thead>\n";
       echo "<tbody>\n";
-
-      foreach ( $pages as $p )
+      
+      foreach ( $pages as $pageId )
       {
-        $article = new Article( $p->instance_id );
+        $article = new Article( $pageId );
         $class = $article->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
         echo "<td><a href=\"?id=". $article->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\" /></a></td>\n";
