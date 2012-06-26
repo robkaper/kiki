@@ -1,6 +1,18 @@
 <?
-  $page = new AdminPage( "Albums" );
-  $page->header();
+  $template = Template::getInstance();
+
+  if ( !$user->isAdmin() )
+  {
+    $template->load( 'pages/admin-required' );
+    echo $template->content();
+    exit();
+  }
+
+  $template->load( 'pages/admin' );
+
+  $template->assign( 'title', "Albums" );
+
+  ob_start();
 
   if ( isset($_GET['id']) )
   {
@@ -43,5 +55,6 @@
     echo "</table>\n";
   }
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

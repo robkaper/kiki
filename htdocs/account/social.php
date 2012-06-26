@@ -4,9 +4,21 @@
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 
-  $page = new AccountPage( "Social updates" );
-  $page->header();
+  $template = Template::getInstance();
 
+  if ( !$user->id() )
+  {
+    $template->load( 'pages/account-required' );
+    echo $template->content();
+    exit();
+  }
+
+  $template->load( $user->isAdmin() ? 'pages/admin' : 'pages/default' );
+  
+  $template->assign( 'title', _("Social update") );
+
+  ob_start();
+    
   if ( $_POST )
   {
     if ( $msg = $_POST['msg'] )
@@ -61,5 +73,6 @@
   else
     echo Boilerplate::login();
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

@@ -1,5 +1,9 @@
 <?
-  require_once "../../lib/init.php";
+  $template = Template::getInstance();
+
+  $template->assign( 'title', _("Login") );
+
+  ob_start();
 
   $errors = array();
 
@@ -13,9 +17,6 @@
       $errors[] = "Invalid email/password combination";
   }
 
-  $page = new Page( "Login" );
-  $page->header();
-  
   if ( $user->id )
   {
     echo "logged in as user ". $user->id. "\n";
@@ -29,5 +30,6 @@
   }
     echo "this ought to be a post..\n";
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

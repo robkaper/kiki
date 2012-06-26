@@ -1,6 +1,7 @@
+{if $config.googleAnalytics}
 <script type="text/javascript">
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '<?= Config::$googleAnalytics ?>']);
+_gaq.push(['_setAccount', '{$config.googleAnalytics}']);
 _gaq.push(['_trackPageview']);
 
 ( function() {
@@ -9,3 +10,4 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 } )();
 </script>
+{/if}

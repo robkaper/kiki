@@ -18,6 +18,9 @@
 
   Log::debug( "START router.php: $reqUri" );
 
+  $template = Template::getInstance();
+  $template->assign( 'footerText', Boilerplate::copyright() );
+
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
   if ( isset($_GET['fb_xd_fragment']) || (isset($_GET['state']) && isset($_GET['code'])) )
@@ -91,8 +94,35 @@
   $page->setHttpStatus( $controller->status() );
   $page->setTitle( $controller->title() );
   $page->setBodyTemplate( $controller->template() );
-  $page->setContent( $controller->content() );
-  $page->html();
+  $content = $controller->content();
+
+  $user = $GLOBALS['user'];
+
+  if ( Config::$customCss )
+    $page->addStylesheet( Config::$customCss );
+
+  $title = $page->title();
+  if ( $title )
+    $title .= " - ";
+  $title .= Config::$siteName;
+
+  if ( $page->tagLine() )
+    $title .= " - ". $page->tagLine();
+
+  // Log::debug( print_r($page, true) );
+  
+  $page->httpHeaders();
+
+  $template = Template::getInstance();
+  $template->load( $controller->template() );
+
+  $template->assign( 'title', $controller->title() );
+  // $template->assign( 'subTitle', $controller->subTitle() );
+  // $template->assign( 'description', $controller->description() );
+        
+  $template->assign( 'content', $controller->content() );
+
+  echo $template->content();
 
   Log::debug( "END router.php: $reqUri" );
 ?>

@@ -4,8 +4,20 @@
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 
-  $page = new AccountPage( _("Events") );
-  $page->header();
+  $template = Template::getInstance();
+
+  if ( !$user->isAdmin() )
+  {
+    $template->load( 'pages/admin-required' );
+    echo $template->content();
+    exit();
+  }
+
+  $template->load( 'pages/admin' );
+
+  $template->assign( 'title', _("Events") );
+
+  ob_start();
 
   if ( $_POST )
   {
@@ -139,5 +151,6 @@
     echo "</table>\n";
   }
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

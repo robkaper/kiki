@@ -1,7 +1,6 @@
 <body>
-<?
-  include Template::file('parts/header');
-?>
+{include 'parts/header'}
+
 <div id="cw" class="noaside"><div id="content" lang="en">
 
 <h1>Kiki says <q>mea culpa</q>.</h1>
@@ -49,20 +48,8 @@ could not find it.</p>
 </ul>
 
 </div></div>
-<?
-  if ( Config::$facebookApp )
-  {
-    // TODO: consider re-enabling, although we prefer explicit logins
-    // include Template::file('facebook/connect');
-  }
 
-  if ( Config::$twitterApp && Config::$twitterAnywhere )
-  {
-    // TODO: consider re-enabling, although we prefer explicit logins
-    // include Template::file('twitter/anywhere');
-  }
+{include 'parts/footer'}
 
-  include Template::file('parts/footer');
-?>
 <div id="jsonUpdate"></div>
 </body>

@@ -14,8 +14,15 @@
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
-  $page = new Page( "Kiki Status" );
-  $page->header();
+
+  $template = Template::getInstance();
+
+  // FIXME: add accountpage/adminpage checks here or to template
+  $template->load( 'pages/admin' );
+
+  $template->assign( 'title', _("Kiki Status") );
+
+  ob_start();
 
   $adminsExist = count(Config::$adminUsers);
   $dbVersion = Status::dbVersion();
@@ -118,5 +125,6 @@
     include Template::file('forms/user-login');
   }
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

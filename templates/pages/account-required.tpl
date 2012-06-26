@@ -3,9 +3,12 @@
 {include 'parts/nav'}
 {include 'parts/aside'}
 
-<div id="cw"><div id="content">
+<div id="cw" class="twosides"><div id="content">
   <h1>{$title}</h1>
-  {$content}
+
+<p>
+Login first.</p>
+
 </div></div>
 
 {include 'parts/footer'}

@@ -228,6 +228,10 @@ class Page
     $this->html();
   }
 
+  public function title() { return $this->title; }
+  public function description() { return $this->description; }
+  public function tagLine() { return $this->tagLine; }
+
 }
 
 ?>

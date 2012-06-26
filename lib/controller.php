@@ -21,6 +21,16 @@ class Controller
   protected $template = 'pages/404';
   protected $content = null;
 
+  protected $subController = null;
+  protected $extraScripts = null;
+  protected $extraStyles = null;
+
+  public function __construct()
+  {
+    $this->extraScripts = array();
+    $this->extraStyles = array();
+  }
+
   public static function factory($type)
   {
     $classFile = "controller/".  strtolower($type). ".php";
@@ -47,23 +57,24 @@ class Controller
 
   public function status()
   {
-    return $this->status;
+    return isset($this->subController) ? $this->subController->status() : $this->status;
   }
 
   public function title()
   {
-    return $this->title;
+    return isset($this->subController) ? $this->subController->title() : $this->title;
   }
 
   public function template()
   {
-    return $this->template;
+    return isset($this->subController) ? $this->subController->template() : $this->template;
   }
 
   public function content()
   {
-    return $this->content;
+    return isset($this->subController) ? $this->subController->content() : $this->content;
   }
+
 }
   
 ?>

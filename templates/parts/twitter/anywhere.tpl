@@ -1,4 +1,4 @@
-<script src="http://platform.twitter.com/anywhere.js?id=<?= Config::$twitterApp ?>&v=1" type="text/javascript"></script>
+<script src="http://platform.twitter.com/anywhere.js?id={$config.twitterApp}&v=1" type="text/javascript"></script>
 <script>
 twttr.anywhere( function (T) {
   T.bind("authComplete", function (e, user) { onTwLogin(e, user); } );

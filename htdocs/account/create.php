@@ -1,8 +1,11 @@
 <?
-  Log::debug( print_r($user,true) );
+  $template = Template::getInstance();
 
-  $page = new Page( _("Create account") );
-  $page->header();
+  $template->assign( 'title', _("Create account") );
+
+  ob_start();
+
+  Log::debug( print_r($user,true) );
 
   if ( $user->id() )
   {
@@ -73,5 +76,6 @@
     include Template::file('forms/user-create');
   }
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

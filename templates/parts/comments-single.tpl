@@ -1,3 +1,4 @@
+<? echo "[// FIXME: Boilerplate::socialImage]"; return; ?>
 <div class="comment" id="comment_<?= $objectId; ?>_<?= $id; ?>">
 <?= Boilerplate::socialImage( $type, $name, $pic ); ?>
 <div class="commentTxt">

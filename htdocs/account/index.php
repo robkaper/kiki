@@ -1,6 +1,11 @@
 <?
-  $page = new AccountPage( _("Your Account") );
-  $page->header();
+  $template = Template::getInstance();
+
+  $template->load( $user->isAdmin() ? 'pages/admin' : 'pages/default' );
+
+  $template->assign( 'title', _("Your Account") );
+
+  ob_start();
 
   foreach( $user->connections() as $connectedUser )
   {
@@ -30,5 +35,6 @@
     echo "<p>\nLogin first.</p>\n";
   }
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

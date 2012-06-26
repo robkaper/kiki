@@ -1,3 +1,3 @@
 <div id="fw">
-  <div class="footer"><?= Boilerplate::copyright(); ?></div>
+  <div class="footer">{$footerText}</div>
 </div>

@@ -1,1 +1,1 @@
-<a class="button" href="<?= htmlspecialchars($service->loginUrl()); ?>" rel="nofollow"><span class="buttonImg <?= $service->name(); ?>"></span> Login with  <?= $service->name(); ?></a>
+<a class="button" href="{$connection.loginUrl|escape}" rel="nofollow"><span class="buttonImg {$connection.serviceName}"></span> Login with {$connection.serviceName}</a>

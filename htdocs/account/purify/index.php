@@ -1,6 +1,18 @@
 <?
-  $page = new AdminPage( "Cleanup" );
-  $page->header();
+  $template = Template::getInstance();
+
+  if ( !$user->isAdmin() )
+  {
+    $template->load( 'pages/admin-required' );
+    echo $template->content();
+    exit();
+  }
+
+  $template->load( 'pages/admin' );
+
+  $template->assign( 'title', "Purify structure" );
+
+  ob_start();
 
   echo "<ul>";
 
@@ -98,5 +110,6 @@
   }
   echo "done.</li>";
 
-  $page->footer();
+  $template->assign( 'content', ob_get_clean() );
+  echo $template->content();
 ?>

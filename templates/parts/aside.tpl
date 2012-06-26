@@ -1,52 +1,31 @@
 <div id="sw"><aside>
-<?
-  if ( $user->id() )
-  {
-    $connectedServices = array();
-    foreach( $user->connections() as $connection )
-    {
-      $connectedServices[] = $connection->serviceName();
-      include Template::file( 'parts/user-account' );
-    }
-    foreach( Config::$connectionServices as $name )
-    {
-      if ( !in_array( $name, $connectedServices ) )
-      {
-        $service = Factory_ConnectionService::getInstance($name);
-        include Template::file( 'buttons/user-connect' );
-      }
-    }
-?>
-<div class="box">
-<?= Boilerplate::accountLinks(); ?>
-</div>
-<?
-  }
-  else
-  {
-?>
-<div id="login" class="box">
-<?
-    foreach( Config::$connectionServices as $name )
-    {
-      $service = Factory_ConnectionService::getInstance($name);
-      include Template::file( 'buttons/user-login' );
-    }
-    include Template::file( 'buttons/user-newaccount' );
-?>
-</div>
-<?
-  }
-?>
-<div class="box">
-<?
-  // FIXME: make conditional based on Config::privacyUrl or something similar, even though I
-  // think every site should have a proclaimer and privacy policy...
-  echo "<p><a href=\"/proclaimer.php#privacy\">Privacybeleid</a></p>\n";
 
-  // FIXME: rjkcust
-  if ( 0 && $user->isAdmin() )
-    Google::adSense( "4246395131" );
-?>
+{if $user.id}
+  {foreach $activeConnections as $connection}
+    {include 'parts/user-account'}
+  {/foreach}
+
+  {foreach $inactiveConnections as $connection}
+    {include 'buttons/user-connect'}
+  {/foreach}
+  <div class="box">
+  <a class="button" href="{$config.kikiPrefix}/account/">{"Your Account"|i18n}</a>
+  <a class="button" href="{$config.kikiPrefix}/account/logout.php">{"Logout"|i18n}</a>
+  </div>
+{/if}
+{if !$user.id}
+  <div id="login" class="box">
+  {foreach $inactiveConnections as $connection}
+    {include 'buttons/user-login'}
+  {/foreach}
+  {include 'buttons/user-newaccount'}
+  </div>
+{/if}
+
+<div class="box">
+{* // FIXME: make conditional based on Config::privacyUrl or something similar, even though I think every site should have a proclaimer and privacy policy... }
+<p><a href="/proclaimer.php#privacy">Privacybeleid</a></p>
+{include 'parts/google/adsense'}
 </div>
+
 </aside></div>

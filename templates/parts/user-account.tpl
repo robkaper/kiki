@@ -1,6 +1,6 @@
 <div class="box">
-<?= Boilerplate::socialImage( $connection->serviceName(), $connection->name(), $connection->picture() ); ?>
+<img class="social" style="background-image: url({$connection.pictureUrl})" src="/kiki/img/komodo/{$connection.serviceName}_16.png" alt="[{$connection.userName}]" />
 <p>
-<b><?= $connection->name(); ?></b><br /><?= $connection->serviceName(); ?></p>
+<b>{$connection.userName}</b><br />{$connection.serviceName}</p>
 <br class="spacer"/>
 </div>
