@@ -54,7 +54,7 @@ class Boilerplate
 
     $o->icon = false;
 
-    $match = preg_match( "#$o->url#", $_SERVER['REQUEST_URI'] );
+    $match = preg_match( "#$o->url#", isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null );
     $class = $o->class;
     $class .= ($match ? " active" : null);
     $class .= ($o->icon ? " icon" : null);
@@ -75,7 +75,7 @@ class Boilerplate
     $context = null;
 
     $matches = array();
-    $requestUri = isset($_GET['uri']) ? $_GET['uri'] : $_SERVER['REQUEST_URI'];
+    $requestUri = isset($_GET['uri']) ? $_GET['uri'] : isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
     preg_match( '#(/(.*))/((.*)(\.php)?)#', $requestUri, $matches );
     
     $active = null;
