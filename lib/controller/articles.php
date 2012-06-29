@@ -21,6 +21,14 @@ class Controller_Articles extends Controller
       {
         $this->status = 200;
         $this->template = 'pages/default';
+
+        $template = new Template( 'content/articles-single' );
+
+        $article = new Articles($this->objectId);
+        // $template->assign( 'article', $article->data() );
+
+        $this->content = $template->fetch();
+
         $this->content = Articles::showSingle( $db, $user, $this->objectId );
       }
       else

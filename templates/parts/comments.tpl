@@ -1,4 +1,6 @@
-<div id="comments_<?= $objectId; ?>" class="comments">
-<?= join( "\n", $comments ); ?>
-<?= Comments::form( $user, $objectId ); ?>
+<div id="comments_{$objectId}" class="comments">
+{foreach $comments as $comment}
+  {include 'parts/comments-single'}
+{/foreach}
+{include 'forms/comment'}
 </div>

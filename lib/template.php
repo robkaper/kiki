@@ -55,7 +55,7 @@ class Template
 {
   private static $instance;
 
-  private $template;
+  private $template = null;
   private $data = array();
   private $content = null;
 
@@ -65,10 +65,12 @@ class Template
   private $user;
   private $db;
 
-  private function __construct()
+  public function __construct( $template = null )
   {
     $this->user = $GLOBALS['user'];
     $this->db = $GLOBALS['db'];
+
+    $this->template = $template;
   }
   
   private function loadData()
@@ -225,21 +227,32 @@ class Template
     $this->content = preg_replace( '~([\r\n]{2,})~', "\n", $this->content );
   }
 
-  public function content()
+  public function fetch()
+  {
+    return $this->content( false );
+  }
+
+  public function content( $fullHTML = true )
   {
     Log::debug( "begin template engine" );
     $this->loadData();
 
     // TODO: don't always auto-include html framework, desired template
     // output could just as well be another format (json, xml, ...)
-    $this->content = "{include 'html'}". PHP_EOL;
-    $this->content .= "{include 'head'}". PHP_EOL;
+    if ( $fullHTML )
+    {
+      $this->content = "{include 'html'}". PHP_EOL;
+      $this->content .= "{include 'head'}". PHP_EOL;
+    }
 
     if ( !$this->template )
       $this->template = 'pages/default';
     $this->content .= file_get_contents($this->file($this->template)). PHP_EOL;
 
-    $this->content .= "{include 'html-end'}";
+    if ( $fullHTML )
+    {
+      $this->content .= "{include 'html-end'}";
+    }
 
     // Log::debug( "content: ". $this->content );
 

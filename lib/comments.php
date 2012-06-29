@@ -49,7 +49,17 @@ class Comments
           $pic = null;
         }
 
-        $comments[] = Comments::showSingle( $objectId, $o->id, $name, $pic, $serviceName, $o->body, $o->ctime );
+        $comment = array(
+          'objectId' => $objectId,
+          'id' => $o->id,
+          'name' => $name,
+          'pic' => $pic,
+          'type' => $serviceName,
+          'body' => $o->body,
+          'ctime' => $o->ctime,
+          'relTime' => Misc::relativeTime($o->ctime)
+        );
+        $comments[] = $comment;
       }
     }
     else if ( $jsonLast===null )
@@ -58,29 +68,36 @@ class Comments
     if ( $jsonLast!==null )
       return $comments;
 
-    ob_start();
-    include Template::file( 'parts/comments' );
-    $content = ob_get_contents();
-    ob_end_clean();
-    return $content;
+    $template = new Template( 'parts/comments' );
+    $template->assign( 'objectId', $objectId );
+    $template->assign( 'comments', $comments );
+    return $template->fetch();
   }
 
   private static function showDummy( $objectId )
   {
-    ob_start();
-    include Template::file('parts/comments-dummy');
-    $content = ob_get_contents();
-    ob_end_clean();
-    return $content;
+    $template = new Template( 'parts/comments-dummy' );
+    $template->assign( 'objectId', $objectId );
+    return $template->fetch();
   }
 
   public static function showSingle( $objectId, $id, $name, $pic, $type, $body, $ctime )
   {
-    ob_start();
-    include Template::file('parts/comments-single');
-    $content = ob_get_contents();
-    ob_end_clean();
-    return $content;
+    $comment = array(
+      'objectId' => $objectId,
+      'id' => $id,
+      'name' => $name,
+      'pic' => $pic,
+      'type' => $type,
+      'body' => $body,
+      'ctime' => $ctime,
+      'relTime' => Misc::relativeTime($ctime)
+    );
+      
+    $template = new Template( 'parts/comments-single' );
+    $template->assign( 'comment', $comment );
+    $template->assign( 'objectId', $objectId );
+    return $template->fetch();
   }
 
   public static function save( &$db, &$user, $objectId )

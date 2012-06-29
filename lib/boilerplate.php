@@ -40,11 +40,9 @@ class Boilerplate
 
   static function commentForm( $objectId )
   {
-    ob_start();
-    include Template::file('forms/comment');
-    $content = ob_get_contents();
-    ob_end_clean();
-    return $content;
+    $template = new Template( 'forms/comment' );
+    $template->assign( 'objectId', $objectId );
+    return $template->fetch();
   }
 
   public static function navMenuItem( &$user, $o )
