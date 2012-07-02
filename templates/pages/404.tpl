@@ -18,24 +18,6 @@ could not find it.</p>
 <li>Or something is misconfigured..</li>
 </ul>
 
-<h2>Try one of these</h2>
-
-<ul>
-<li><a href="/">Homepage</a></li>
-</ul>
-
-<?
-  $articles = Router::getBaseUris( 'articles', true );
-  if ( count($articles) )
-  {
-    echo "<h3>News, blog and article collections</h3>\n";
-    echo "<ul>";
-    foreach( $articles as $baseUri => $article )
-      echo "<li><a href=\"$baseUri/\">". substr( $baseUri, 1 ). "</a></li>\n";
-    echo "</ul>";
-  }
-?>
-
 <h2>Expecting a number?</h2>
 
 <ul>
