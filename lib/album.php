@@ -155,7 +155,7 @@ class Album
       
     $template->assign( 'album', $album );
     $template->assign( 'objectId', 0 );
-    $template->assign( 'comments', ... );
+    $template->assign( 'comments', array() );
 
     return $template->fetch();
   }
