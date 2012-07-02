@@ -137,15 +137,27 @@ class Album
     $qPictureId = $this->db->escape($pictureId);
     $q = "select title, storage_id from pictures where id=$qPictureId";
     $o = $this->db->getSingle($q);
-    $pictureTitle = $o->title;
-    $storageId = $o->storage_id;
 
-    $imgId = $pictureId;
-    $imgUrl = Storage::url($storageId);
-    $leftClass = self::findPrevious( $this->id, $imgId ) ? null : " disabled";
-    $rightClass = self::findNext( $this->id, $imgId ) ? null : " disabled";
+    $picture = array(
+      'id' => $pictureId,
+      'title' => $o->title,
+      'url' => Storage::url($o->storage_id)
+    );
 
-    include Template::file( 'parts/album' );
+    $template = new Template( 'parts/album' );
+
+    $album = array(
+      'id' => $this->id,
+      'title' => $this->title,
+      'prev' => self::findPrevious($this->id, $pictureId),
+      'next' => self::findNext($this->id, $pictureId),
+    );
+      
+    $template->assign( 'album', $album );
+    $template->assign( 'objectId', 0 );
+    $template->assign( 'comments', ... );
+
+    return $template->fetch();
   }
 
   /**

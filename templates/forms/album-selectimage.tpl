@@ -1,8 +1,5 @@
-<p><label><?= $label; ?></label>
-<?
-  $imgUrl = $selected ? Storage::url($selected, 75, 75, true) : "/kiki/img/blank.gif";
-?>
-<a href="#" class="albumSelectImageToggle"><img class="selectedImage" src="<?= $imgUrl; ?>" style="width: 75px; height: 75px; margin-top: 0.5em;" /></a>
+<p><label>{$label}</label>
+<a href="#" class="albumSelectImageToggle"><img class="selectedImage" src="{$imgUrl}" style="width: 75px; height: 75px; margin-top: 0.5em;" /></a>
 <div class="albumSelectImage" style="display: none;">
 
 <script type="text/javascript">
@@ -20,23 +17,13 @@ $('.albumSelectImageToggle').live('click', function() {
 } );
 </script>
 <div class="imageList">
-<?
-
-global $db;
-$q = $db->buildQuery( "select p.storage_id from pictures p, album_pictures ap where ap.picture_id=p.id AND ap.album_id=%d", $albumId );
-$rs = $db->query($q);
-if ( $rs && $db->numRows($rs) )
-{
-  while( $o = $db->fetchObject($rs) )
-  {
-    $url = Storage::url($o->storage_id, 75, 75, true);
-    echo "<a href=\"#\"><img id=\"picture_". $o->storage_id. "\" src=\"$url\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
-  }
-}
-else
-  echo "<p class=\"noImages\">Upload eerst een foto in het album.</p>\n";
-?>
-
+{if $images|count}
+  {foreach $images as $image}
+    <a href="#"><img id="{$image.storageId}" src="{$image.url}" style="float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;" /></a>
+  {/foreach}
+{else}
+  <p class="noImages">Upload eerst een foto in het album.</p>
+{/if}
 </div>
 <br style="clear: left"/>
 </div>

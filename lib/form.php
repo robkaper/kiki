@@ -155,14 +155,29 @@ $( function() {
 
   public static function albumImage( $id, $label, $albumId, $selected=0 )
   {
-    ob_start();
+    $db = $GLOBALS['db'];
 
-    include Template::file('forms/album-selectimage');
+    $template = new Template('forms/album-selectimage');
 
-    $content = ob_get_contents();
-    ob_end_clean();
+    $imgUrl = $selected ? Storage::url($selected, 75, 75, true) : "/kiki/img/blank.gif";
 
-    return $content;
+    $template->assign( 'label', $label );
+    $template->assign( 'imgUrl', $imgUrl );
+
+    $images = array();
+    $q = $db->buildQuery( "select p.storage_id from pictures p, album_pictures ap where ap.picture_id=p.id AND ap.album_id=%d", $albumId );
+    $rs = $db->query($q);
+    if ( $rs && $db->numRows($rs) )
+    {
+      while( $o = $db->fetchObject($rs) )
+      {
+        $url = Storage::url($o->storage_id, 75, 75, true);
+        $images[] = array( 'storageId' => $o->storage_id, 'url' => $url );
+      }
+    }
+    $template->assign( 'images', $images );
+
+    return $template->fetch();
   }
 
   // TODO: allow to be used inside a form instead of prior/afterwards

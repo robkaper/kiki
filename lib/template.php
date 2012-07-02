@@ -437,6 +437,9 @@ class Template
         $this->data[$var] = $value;
     }
 
+    if ( is_array($this->data[$var]) )
+      return count($this->data[$var]);
+
     // Log::debug( "return modify $var -> ". $this->data[$var] );
     return $this->modify( (string) $this->data[$var], $mods );
   }
