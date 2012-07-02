@@ -16,6 +16,7 @@ $('.albumSelectImageToggle').live('click', function() {
   return false;
 } );
 </script>
+
 <div class="imageList">
 {if $images|count}
   {foreach $images as $image}
@@ -26,7 +27,8 @@ $('.albumSelectImageToggle').live('click', function() {
 {/if}
 </div>
 <br style="clear: left"/>
+
 </div>
 </p>
 
-<?= Form::hidden( $id, $selected ); ?>
+<input type="hidden" name="{$id}" value="{$selected}" />

@@ -176,6 +176,8 @@ $( function() {
       }
     }
     $template->assign( 'images', $images );
+    $template->assign( 'id', $id );
+    $template->assign( 'selected', $selected );
 
     return $template->fetch();
   }
