@@ -33,11 +33,6 @@ class Boilerplate
     return "<p>\n<a href=\"#login\">Log in</a> via Facebook of Twitter om deze content te zien.</p>\n";
   }
 
-  static function commentLogin()
-  {
-    return "<p>\n<a href=\"#login\">Log in</a> via Facebook of Twitter om te reageren.</p>\n";
-  }
-
   static function commentForm( $objectId )
   {
     $template = new Template( 'forms/comment' );
