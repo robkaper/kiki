@@ -791,18 +791,24 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 	padding: 0;
 }
 
-/*
-@media only screen and (max-device-width: 540px) {
+@media handheld, only screen and (max-device-width: 540px) {
 
 	#sw, #cw, #fw, #title, body > nav ul, .footer {
 	        max-width: auto;
 		width: auto;
+		margin: 0;
+		padding: 0;
 	}
 
 	aside {
 		display: block;
 		float: none;
 		max-width: auto;
+		width: auto;
+	}
+
+	#cw #content {
+		margin: 0;
 		width: auto;
 	}
 
@@ -845,4 +851,3 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
                 border-radius: 5px 5px 0 0;
 	}
 }
-*/
