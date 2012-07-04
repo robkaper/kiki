@@ -18,7 +18,7 @@
   {foreach $inactiveConnections as $connection}
     {include 'buttons/user-login'}
   {/foreach}
-  {include 'buttons/user-newaccount'}
+  {*include 'buttons/user-newaccount'*}
   </div>
 {/if}
 

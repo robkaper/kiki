@@ -73,9 +73,16 @@
   else
   {
     $adminsExist = count(Config::$adminUsers);
-    include Template::file('forms/user-create');
+    
+    $formTemplate = new Template('forms/user-create');
+    $content = $formTemplate->fetch();
   }
 
-  $template->assign( 'content', ob_get_clean() );
+  if ( !isset($content) )
+    $content = ob_get_clean();
+  else
+    ob_end_clean();
+
+  $template->assign( 'content', $content );
   echo $template->content();
 ?>

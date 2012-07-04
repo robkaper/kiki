@@ -269,6 +269,7 @@ class Template
 
   private function legacy( $input )
   {
+    return eval($input[1]);
     return "[legacy:". htmlspecialchars($input[1]). "]";
   }
 
