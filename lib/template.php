@@ -338,8 +338,8 @@ class Template
 
     foreach( $this->data["$array"] as $key => $$named )
     {
-      $pattern = "~\{\\\$${named}(|[^\}]+)?\}~";
-      $replace = "{\$". $array. ".$key". "\\1}";
+      $pattern = "~\{(if\d\s)?\\\$${named}(|[^\}]+)?\}~";
+      $replace = "{\\1\$". $array. ".$key". "\\2}";
       $content .= preg_replace( $pattern, $replace, $input[3] );
     }
     return $content;
