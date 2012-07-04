@@ -178,7 +178,7 @@ class Template
 
   public function preparse()
   {
-    $reIncludes = '~\{include \'([^}]+)\'\}~';
+    $reIncludes = '~\{include \'([^\']+)\'\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
 
     //echo "<h2>pre preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -319,6 +319,9 @@ class Template
 
   private function includes( $input )
   {
+    $re = '~\{([^}]+)\}~';
+    // $file = preg_replace_callback( $re, array($this, 'replace'), $input[1] );
+    // return trim( file_get_contents($file) );
     return trim( file_get_contents( $this->file($input[1]) ) );
   }
 
