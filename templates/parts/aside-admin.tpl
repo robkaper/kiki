@@ -22,5 +22,4 @@
 
 </div>
 </aside>
-<br class="spacer" />
 </div>
