@@ -21,7 +21,8 @@ class Comments
 
     $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = "select c.id, c.body, c.ctime, c.user_id, u.facebook_user_id, u.twitter_user_id from comments c, users u where c.object_id=$qObjectId and c.user_id=u.id $qLast order by ctime asc";
+    $q = "select c.id, c.body, c.ctime, c.user_id, uc.service, uc.external_id, u.facebook_user_id, u.twitter_user_id from users u, comments c LEFT JOIN users_connections uc ON c.user_connection_id=uc.id WHERE c.object_id=$qObjectId and c.user_id=u.id $qLast order by ctime asc";
+    // echo $q;
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
     {
@@ -30,35 +31,55 @@ class Comments
         $commentAuthor = ObjectCache::getByType( 'User', $o->user_id );
         if ( $commentAuthor )
         {
-          $serviceName = $commentAuthor->serviceName();
-          $name = $commentAuthor->name();
-          $pic = $commentAuthor->picture();
+          if ( $o->external_id )
+          {
+            $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id);
+
+            $serviceName = $connection->serviceName();
+            $name = $commentAuthor->name();
+            $pic = $commentAuthor->picture();            
+          }
+          else
+          {
+            $serviceName = 'None';
+            $name = $commentAuthor->name();
+            $pic = $commentAuthor->picture();
+          }
         }
         else
         {
-          $serviceName = "unknown";
-          $name = "name";
+          $serviceName = "None";
+          $name = "Anonymous";
           $pic = null;
         }
 
-        $comment = array(
-          'objectId' => $objectId,
-          'id' => $o->id,
-          'name' => $name,
-          'pic' => $pic,
-          'type' => $serviceName,
-          'body' => $o->body,
-          'ctime' => $o->ctime,
-          'relTime' => Misc::relativeTime($o->ctime)
-        );
-        $comments[] = $comment;
+        if ( $jsonLast !== null )
+        {
+          $comments[] = Comments::showSingle( $objectId, $o->id, $name, $pic, $serviceName, $o->body, $o->ctime );
+        }
+        else
+        {
+          $comment = array(
+            'objectId' => $objectId,
+            'id' => $o->id,
+            'name' => $name,
+            'pic' => $pic,
+            'type' => $serviceName,
+            'body' => $o->body,
+            'ctime' => $o->ctime,
+            'relTime' => Misc::relativeTime($o->ctime)
+          );
+          $comments[] = $comment;
+        }
       }
     }
     else if ( $jsonLast===null )
       $comments[] = Comments::showDummy( $objectId );
 
     if ( $jsonLast!==null )
+    {
       return $comments;
+    }
 
     $template = new Template( 'parts/comments' );
     $template->assign( 'objectId', $objectId );

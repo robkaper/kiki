@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.15' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.17' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -74,6 +74,7 @@ create table comments (
   ip_addr varchar(15),
   object_id bigint unsigned not null,
   user_id bigint unsigned not null,
+  user_connection_id int unsigned not null,
   body text not null
 );
 
@@ -199,6 +200,8 @@ create table mail_queue (
 
 drop table if exists users_connections;
 create table users_connections (
+  id int unsigned not null auto_increment,
+  primary key(id),
   user_id int unsigned not null,
   external_id bigint unsigned not null,
   service varchar(32) not null,
@@ -243,4 +246,4 @@ create table events (
   twitter_url varchar(255) default null,
   hashtags varchar(255) not null,
   album_id int unsigned not null
-  );
+);
