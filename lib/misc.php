@@ -24,7 +24,8 @@ class Misc
   {
     if ( $now === null )
       $now = time();
-    $time = strtotime( $time );
+    if ( !is_numeric($time) )
+      $time = strtotime( $time );
     $delta = $now - $time;
     $absDelta = abs($delta);
 
