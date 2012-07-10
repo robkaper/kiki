@@ -96,6 +96,8 @@ abstract class User_External
     return $this->name;
   }
 
+  public function setScreenName( $screenName ) { $this->screenName = $screenName; }
+
   public function screenName()
   {
     return $this->screenName;
