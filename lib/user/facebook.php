@@ -366,7 +366,7 @@ class User_Facebook extends User_External
 
     // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
     $q = $this->db->buildQuery(
-      "UPDATE users_connections set token=null where service='%s' and external_id='%s',
+      "UPDATE users_connections set token=null where service='%s' and external_id='%s'",
       get_class($this), $this->id );
     $this->db->query($q);
 
