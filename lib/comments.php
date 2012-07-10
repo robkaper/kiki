@@ -21,7 +21,7 @@ class Comments
 
     $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = "select c.id, c.body, c.ctime, c.user_id, uc.service, uc.external_id, u.facebook_user_id, u.twitter_user_id from users u, comments c LEFT JOIN users_connections uc ON c.user_connection_id=uc.id WHERE c.object_id=$qObjectId and c.user_id=u.id $qLast order by ctime asc";
+    $q = "select c.id, c.body, c.ctime, c.user_id, uc.service, uc.external_id, u.facebook_user_id, u.twitter_user_id from comments c LEFT JOIN users u ON c.user_id=u.id LEFT JOIN users_connections uc ON c.user_connection_id=uc.id WHERE c.object_id=$qObjectId $qLast order by ctime asc";
     // echo $q;
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
@@ -33,22 +33,34 @@ class Comments
         {
           if ( $o->external_id )
           {
+            if ( !$commentAuthor->id() )
+            {
+              $commentAuthor->getStoredConnections();
+            }
             $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id);
-
-            $serviceName = $connection->serviceName();
-            $name = $commentAuthor->name();
-            $pic = $commentAuthor->picture();            
+            if ( $connection )
+            {
+              $serviceName = $connection->serviceName();
+              $name = $commentAuthor->name();
+              $pic = $commentAuthor->picture();
+            }
+            else
+            {
+              $serviceName = 'None'; // SNH
+              $name = $commentAuthor->name();
+              $pic = $commentAuthor->picture();
+            }
           }
           else
           {
-            $serviceName = 'None';
+            $serviceName = 'None'; // Kiki
             $name = $commentAuthor->name();
             $pic = $commentAuthor->picture();
           }
         }
         else
         {
-          $serviceName = "None";
+          $serviceName = 'None';
           $name = "Anonymous";
           $pic = null;
         }

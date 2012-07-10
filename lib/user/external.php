@@ -115,11 +115,16 @@ abstract class User_External
 
   private function loadKikiUserIds()
   {
+    $this->kikiUserIds = array();
+
     $q = $this->db->buildQuery( "select user_id from users_connections where service='%s' and external_id='%s'", get_class($this), $this->id );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numrows($rs) )
       while( $o = $this->db->fetchObject($rs) )
-        $this->kikiUserIds[] = $o->user_id;
+      {
+        if ( $o->user_id )
+          $this->kikiUserIds[] = $o->user_id;
+      }
 
    // $this->kikiUserIds = array_unique( $this->kikiUserIds );
   }
