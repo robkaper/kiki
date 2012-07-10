@@ -365,7 +365,9 @@ class User_Facebook extends User_External
     self::storePerm( $perm, false);
 
     // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
-    $q = "update facebook_users set access_token=null where id=$this->id";
+    $q = $this->db->buildQuery(
+      "UPDATE users_connections set token=null where service='%s' and external_id='%s',
+      get_class($this), $this->id );
     $this->db->query($q);
 
     $cookieId = "fbs_". Config::$facebookApp;

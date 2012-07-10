@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 );
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.17' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.18' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -246,4 +246,15 @@ create table events (
   twitter_url varchar(255) default null,
   hashtags varchar(255) not null,
   album_id int unsigned not null
+);
+
+drop table if exists publications;
+create table publications (
+  publication_id int unsigned not null auto_increment,
+  primary key(publication_id),
+  object_id bigint unsigned not null,
+  external_id bigint unsigned not null,
+  service varchar(32) not null,
+  body text not null,
+  response text not null
 );
