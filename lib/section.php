@@ -70,8 +70,7 @@ class Section
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s', hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId, $this->id
+      "UPDATE sections SET ..."
     );
     Log::debug($q);
 
@@ -86,8 +85,7 @@ class Section
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d)",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId
+      "INSERT INTO sections (...) values (...)"
     );
     Log::debug($q);
 

@@ -117,7 +117,7 @@ class User extends Object
   {
     $connections = array();
 
-    $q = $this->db->buildQuery( "select external_id, service from users_connections where user_id=%d order by ctime asc", $this->id );
+    $q = $this->db->buildQuery( "select external_id, service from connections where user_id=%d order by ctime asc", $this->id );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numRows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -140,7 +140,7 @@ class User extends Object
     foreach( Config::$connectionServices as $service )
     {
       $user = Factory_User::getInstance( 'User_'. $service );
-      if ( !$user || !$user->id() )
+      if ( !$user || !$user->externalId() )
         continue;
 
       if ( !$user->token() )

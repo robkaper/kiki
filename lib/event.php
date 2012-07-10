@@ -23,8 +23,6 @@ class Event extends Object
   private $headerImage = null;
   private $featured = null;
   private $visible = false;
-  private $facebookUrl = null;
-  private $twitterUrl = null;
   private $hashtags = null;
   private $albumId = 0;
   
@@ -42,8 +40,6 @@ class Event extends Object
     $this->headerImage = null;
     $this->featured = false;
     $this->visible = false;
-    $this->facebookUrl = null;
-    $this->twitterUrl = null;
     $this->hashtags = null;
     $this->albumId = 0;
   }
@@ -51,7 +47,7 @@ class Event extends Object
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, facebook_url, twitter_url, hashtags, album_id";
+    $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -73,8 +69,6 @@ class Event extends Object
     $this->headerImage = $o->header_image;
     $this->featured = $o->featured;
     $this->visible = $o->visible;
-    $this->facebookUrl = $o->facebook_url;
-    $this->twitterUrl = $o->twitter_url;
     $this->hashtags = $o->hashtags;
     $this->albumId = $o->album_id;
   }
@@ -87,8 +81,8 @@ class Event extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE events SET object_id=%d, ctime='%s', mtime=now(), start='%s', end='%s', user_id=%d, title='%s', cname='%s', description='%s', location='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s', hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId, $this->id
+      "UPDATE events SET object_id=%d, ctime='%s', mtime=now(), start='%s', end='%s', user_id=%d, title='%s', cname='%s', description='%s', location='%s', header_image=%d, featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -103,8 +97,8 @@ class Event extends Object
     $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, facebook_url, twitter_url, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d)",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId
+      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
     Log::debug($q);
 
@@ -135,10 +129,6 @@ class Event extends Object
   public function featured() { return $this->featured; }
   public function setVisible( $visible ) { $this->visible = $visible; }
   public function visible() { return $this->visible; }
-  public function setFacebookUrl( $facebookUrl ) { $this->facebookUrl = $facebookUrl; }
-  public function facebookUrl() { return $this->facebookUrl; }
-  public function setTwitterUrl( $twitterUrl ) { $this->twitterUrl = $twitterUrl; }
-  public function twitterUrl() { return $this->twitterUrl; }
   public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
   public function hashtags() { return $this->hashtags; }
   public function setAlbumId( $albumId ) { $this->albumId = $albumId; }
@@ -169,8 +159,6 @@ class Event extends Object
     $content = Form::open( "eventForm_". $this->id, Config::$kikiPrefix. "/json/event.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "eventId", $this->id );
     $content .= Form::hidden( "albumId", $this->albumId );
-    $content .= Form::hidden( "twitterUrl", $this->twitterUrl );
-    $content .= Form::hidden( "facebookUrl", $this->facebookUrl );
     $content .= Form::text( "cname", $this->cname, "URL name" );
     $content .= Form::text( "title", $this->title, "Title" );
     $content .= Form::datetime( "start", $start, "Start" );
@@ -230,8 +218,11 @@ class Event extends Object
     $content .= "<li>Wanneer?<p class=\"small\">$start (over ". Misc::relativeTime($this->start). ")</p></li>";
     $content .= "<li>Waar?<p class=\"small\">". $this->location. "</p></li>";
 
-    if ( $this->facebookUrl )
-      $content .= "<li>Wie?<p class=\"small\">". $this->facebookUrl. "</p></li>";
+    $this->loadPublications();
+    foreach( $this->publications as $publication )
+    {
+      $content .= "<li><a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a></li>\n";
+    }
 
     $content .= "</ul>";
 

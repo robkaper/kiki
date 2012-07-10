@@ -25,8 +25,6 @@ class Article extends Object
   private $headerImage = null;
   private $featured = false;
   private $visible = false;
-  private $facebookUrl = null;
-  private $twitterUrl = null;
   private $hashtags = null;
   private $albumId = 0;
 
@@ -44,15 +42,13 @@ class Article extends Object
     $this->headerImage = null;
     $this->featured = false;
     $this->visible = false;
-    $this->facebookUrl = null;
-    $this->twitterUrl = null;
     $this->albumId = 0;
   }
 
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url, hashtags, album_id";
+    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -73,8 +69,6 @@ class Article extends Object
     $this->headerImage = $o->header_image;
     $this->featured = $o->featured;
     $this->visible = $o->visible;
-    $this->facebookUrl = $o->facebook_url;
-    $this->twitterUrl = $o->twitter_url;
     $this->hashtags = $o->hashtags;
     $this->albumId = $o->album_id;
   }
@@ -87,8 +81,8 @@ class Article extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, facebook_url='%s', twitter_url='%s', hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId, $this->id
+      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -103,8 +97,8 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, facebook_url, twitter_url, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d)",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->facebookUrl, $this->twitterUrl, $this->hashtags, $this->albumId
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
     Log::debug($q);
 
@@ -133,10 +127,6 @@ class Article extends Object
   public function featured() { return $this->featured; }
   public function setVisible( $visible ) { $this->visible = $visible; }
   public function visible() { return $this->visible; }
-  public function setFacebookUrl( $facebookUrl ) { $this->facebookUrl = $facebookUrl; }
-  public function facebookUrl() { return $this->facebookUrl; }
-  public function setTwitterUrl( $twitterUrl ) { $this->twitterUrl = $twitterUrl; }
-  public function twitterUrl() { return $this->twitterUrl; }
   public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
   public function hashtags() { return $this->hashtags; }
   public function setAlbumId( $albumId ) { $this->albumId = $albumId; }
@@ -177,8 +167,6 @@ class Article extends Object
     $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "articleId", $this->id );
     $content .= Form::hidden( "albumId", $this->albumId );
-    $content .= Form::hidden( "twitterUrl", $this->twitterUrl );
-    $content .= Form::hidden( "facebookUrl", $this->facebookUrl );
     $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
     $content .= Form::text( "cname", $this->cname, "URL name" );
     $content .= Form::text( "title", $this->title, "Title" );
@@ -190,6 +178,9 @@ class Article extends Object
 
     // TODO: Make this generic, difference with social update is the check
     // against an already stored external URL.
+
+    $this->loadPublications();
+
     foreach ( $user->connections() as $connection )
     {
       if ( $connection->serviceName() == 'Facebook' )

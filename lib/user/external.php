@@ -25,6 +25,7 @@ abstract class User_External
   protected $secret = null;
   
   protected $id = 0;
+  protected $externalId = 0;
   protected $kikiUserIds = array();
 
   protected $name = null;
@@ -38,7 +39,7 @@ abstract class User_External
   {
     $this->db = $GLOBALS['db'];	
 
-    if ( $this->id = $id )
+    if ( $this->externalId = $id )
     {
       $this->load($kikiUserId);
       if ( !$kikiUserId )
@@ -79,6 +80,11 @@ abstract class User_External
     return $this->id;
   }
 
+  public function externalId()
+  {
+    return $this->externalId;
+  }
+  
   public function serviceName()
   {
     return preg_replace( "/^User_/", "", get_class($this) );
@@ -86,7 +92,7 @@ abstract class User_External
   
   public function uniqId()
   {
-    return get_class($this). '_'. $this->id;
+    return get_class($this). '_'. $this->externalId;
   }
 
   public function setName( $name ) { $this->name = $name; }
@@ -119,7 +125,7 @@ abstract class User_External
   {
     $this->kikiUserIds = array();
 
-    $q = $this->db->buildQuery( "select user_id from users_connections where service='%s' and external_id='%s'", get_class($this), $this->id );
+    $q = $this->db->buildQuery( "select user_id from connections where service='%s' and external_id='%s'", get_class($this), $this->externalId );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numrows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -152,13 +158,14 @@ abstract class User_External
 
   private function load( $kikiUserId )
   {
-    $q = $this->db->buildQuery( "select token, secret, name, screenname, picture from users_connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->id, $kikiUserId );
+    $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->externalId, $kikiUserId );
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
 
     $this->kikiUserIds[] = $kikiUserId;
 
+    $this->id = $o->id;
     $this->token = $o->token;
     $this->secret = $o->secret;
     $this->name = $o->name;
@@ -168,17 +175,22 @@ abstract class User_External
 
   public function link( $kikiUserId )
   {
+    // If we have a local user to link to, delete anonymous links.
+    // FIXME: update the current connection, don't make a new one. (when comments etc link to our id instead of external_id)
+    if ( $kikiUserId )
+      $this->unlink();
+
     $this->kikiUserIds[] = $kikiUserId;
-    $q = $this->db->buildQuery( "insert into users_connections( user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->id, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
+    $q = $this->db->buildQuery( "insert into connections( user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
     $rs = $this->db->query($q);
   }
   
   public function unlink( $kikiUserId = 0 )
   {
     if ( $kikiUserId )
-      $q = $this->db->buildQuery( "delete from users_connections where user_id=%d and external_id=%d", $kikiUserId, $this->id );
+      $q = $this->db->buildQuery( "delete from connections where user_id=%d and external_id=%d", $kikiUserId, $this->externalId );
     else
-      $q = $this->db->buildQuery( "delete from users_connections where external_id=%d", $this->id );
+      $q = $this->db->buildQuery( "delete from connections where external_id=%d", $this->externalId );
 
     $rs = $this->db->query($q);
   }

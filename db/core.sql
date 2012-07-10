@@ -106,8 +106,6 @@ create table articles (
   header_image bigint unsigned not null,
   featured boolean not null default false,
   visible boolean not null default false,
-  facebook_url varchar(255) default null,
-  twitter_url varchar(255) default null,
   hashtags varchar(255) not null,
   album_id int unsigned not null
   );
@@ -242,8 +240,6 @@ create table events (
   header_image bigint unsigned not null,
   featured boolean not null default false,
   visible boolean not null default false,
-  facebook_url varchar(255) default null,
-  twitter_url varchar(255) default null,
   hashtags varchar(255) not null,
   album_id int unsigned not null
 );
@@ -252,9 +248,10 @@ drop table if exists publications;
 create table publications (
   publication_id int unsigned not null auto_increment,
   primary key(publication_id),
+  ctime datetime not null,
   object_id bigint unsigned not null,
+  connection_id bigint unsigned not null,
   external_id bigint unsigned not null,
-  service varchar(32) not null,
   body text not null,
   response text not null
 );

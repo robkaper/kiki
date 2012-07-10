@@ -26,6 +26,8 @@ abstract class Object
   protected $ctime = null;
   protected $mtime = null;
 
+  protected $publications;
+
   public function __construct( $id = 0, $objectId = 0 )
   {
     $this->db = $GLOBALS['db'];
@@ -48,6 +50,8 @@ abstract class Object
 
     $this->ctime = null;
     $this->mtime = null;
+
+    $this->publications = null;
   }
 
   abstract public function load();
@@ -97,6 +101,28 @@ abstract class Object
   final public function objectId() { return $this->objectId; }
   final public function setCtime( $ctime ) { $this->ctime = $ctime; }
   final public function ctime() { return $this->ctime; }
+
+  final public function loadPublications()
+  {
+    $this->publications = array();
+
+    $q = $this->db->buildQuery( "SELECT publication_id, p.connection_id, p.external_id, c.service FROM publications p LEFT join connections c ON c.external_id=p.connection_id WHERE p.object_id=%d", $this->objectId );
+    $rs = $this->db->query($q);
+    while( $o = $this->db->fetchObject($rs) )
+    {
+      $publication = new Publication();
+      $publication->setFromObject($o);
+      $this->publications[$o->publication_id] = $publication;
+    }    
+  }
+
+  final public function publications()
+  {
+    if ( !isset($this->publications) )
+      $this->loadPublications();
+
+    return $this->publications;
+  }
 
   abstract public function url();
 }

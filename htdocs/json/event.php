@@ -41,8 +41,6 @@
 
     $event->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $event->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
-    $event->setFacebookUrl( $_POST['facebookUrl'] );
-    $event->setTwitterUrl( $_POST['twitterUrl'] );
     $event->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );
     $event->setAlbumId( isset($_POST['albumId']) ? $_POST['albumId'] : null );
         
@@ -70,18 +68,11 @@
             if ( isset($rs->id) )
             {
               $errors[] = "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
-              if ( $connection->serviceName() == 'Facebook' )
-                $event->setFacebookUrl( $rs->url );
-              else if ( $connection->serviceName() == 'Twitter' )
-                $event->setTwitterUrl( $rs->url );
             }
             else
               $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
           }
         }
-
-        // Save event again, to store connection URLs.        
-        $event->save();
 
         // Update title of corresponding album
         $album = new Album( $event->albumId() );
@@ -110,12 +101,10 @@
       exit();
     }
 
-    $page = new AdminPage();
-    $page->header();
-    echo "fouten bij opslaan:";
-    echo "<pre>";
-    print_r($errors);
-    echo "</pre>";
-    $page->footer();
+    $template = Template::getInstance();
+    $template->setTemplate( 'pages/admin' );
+
+    $template->setContent( "fouten bij opslaan:<pre>". print_r($errors,true). "</pre>" );
+    echo $template->content();
   }
 ?>

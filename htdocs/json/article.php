@@ -39,8 +39,6 @@
 
     $article->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
-    $article->setFacebookUrl( $_POST['facebookUrl'] );
-    $article->setTwitterUrl( $_POST['twitterUrl'] );
     $article->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );
     $article->setAlbumId( isset($_POST['albumId']) ? $_POST['albumId'] : null );
         
@@ -67,18 +65,11 @@
             if ( isset($rs->id) )
             {
               $errors[] = "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
-              if ( $connection->serviceName() == 'Facebook' )
-                $article->setFacebookUrl( $rs->url );
-              else if ( $connection->serviceName() == 'Twitter' )
-                $article->setTwitterUrl( $rs->url );
             }
             else
               $errors[] = "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
           }
         }
-
-        // Save article again, to store connection URLs.        
-        $article->save();
 
         // Update title of corresponding album
         $album = new Album( $article->albumId() );

@@ -19,7 +19,7 @@ class Articles
       $qId = $db->escape($articleId);
       $qUserId = $db->escape( $user->id() );
       $qWhere = is_numeric($articleId) ? "id=$qId" : "cname='$qId'";
-      $q = "select object_id,id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible,facebook_url,twitter_url from articles where $qWhere and (visible=1 or user_id=$qUserId)";
+      $q = "select object_id,id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible from articles where $qWhere and (visible=1 or user_id=$qUserId)";
       $o = $db->getSingle($q);
     }
     else
@@ -56,7 +56,7 @@ class Articles
 
     $qUserId = $db->escape( $user->id() );
     $qSection = $db->escape( $sectionId );
-    $q = "select object_id,id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible,facebook_url,twitter_url from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
+    $q = "select object_id,id,ctime,section_id,user_id,title,cname,body,header_image,featured,visible from articles where section_id=$qSection and ( (visible=1 and ctime<=now()) or user_id=$qUserId) order by ctime desc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while ( $o = $db->fetchObject($rs) )
@@ -124,11 +124,11 @@ class Articles
     $content .= "<footer>\n";
     $content .= "<ul>\n";
 
-    if ( $o->facebook_url )
-      $content .= "<li><a href=\"$o->facebook_url\" class=\"button\"><span class=\"buttonImg Facebook\"></span>Facebook</a></li>\n";
-
-    if ( $o->twitter_url )
-      $content .= "<li><a href=\"$o->twitter_url\" class=\"button\"><span class=\"buttonImg Twitter\"></span>Twitter</a></li>\n";
+    $publications = $article->publications();
+    foreach( $publications as $publication )
+    {
+      $content .= "<li><a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a></li>\n";
+    }
 
     if ( $maxLength )
       $content .= "<li><a href=\"$myUrl\" class=\"button\">". _("Read more"). "</a></li>\n";

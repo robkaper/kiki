@@ -31,7 +31,7 @@ class User_Facebook extends User_External
       'cookie' => true
       ) );
 
-    if ( $this->id && $this->token )
+    if ( $this->externalId && $this->token )
     {
       // Support both old storage (serialized) as new (unserialized)
       $token = @unserialize($this->token);
@@ -52,11 +52,11 @@ class User_Facebook extends User_External
 
   public function identify()
   {
-    if ( !$this->id = $this->detectLoginSession() )
+    if ( !$this->externalId = $this->detectLoginSession() )
     {
       $cookie = $this->cookie();
       if ( $cookie )
-        $this->id = $cookie['uid'];
+        $this->externalId = $cookie['uid'];
     }
   }
 
@@ -78,7 +78,7 @@ class User_Facebook extends User_External
 
     try
     {
-      $this->id = $this->api()->getUser();
+      $this->externalId = $this->api()->getUser();
       $this->token = $this->api()->getAccessToken();
     }
     catch ( UserApiException $e )
@@ -86,7 +86,7 @@ class User_Facebook extends User_External
       Log::error( "UserApiException: $e" );
     }
 
-    return $this->id;
+    return $this->externalId;
   }
 
   // Returns entire verified cookie as array, or null if not valid or no cookie present
@@ -112,13 +112,13 @@ class User_Facebook extends User_External
   }
 
   // TODO: load user_id, external_id, service, ctime, mtime, accesstoken, secret, name, screen, picture
-  public function loadRemoteData()
+  public function loadRemoteData( $api = null )
   {
     $data = null;
 
     try
     {
-      $data = $this->api()->api('/me');
+      $data = $api ? $api->api('/'. $this->externalId) : $this->api()->api('/me');
     }
     catch ( UserApiException $e )
     {
@@ -135,9 +135,10 @@ class User_Facebook extends User_External
       return;
     }
 
-    // $this->id = $data['id'];
+    // $this->externalId = $data['id'];
     $this->name = $this->screenName = $data['name'];
-    $this->picture = "http://graph.facebook.com/". $this->id. "/picture";
+    $this->screenName = $data['username'];
+    $this->picture = "http://graph.facebook.com/". $this->externalId. "/picture";
   }
 
   public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
@@ -168,6 +169,12 @@ class User_Facebook extends User_External
     );
 
     Log::debug( "attachment: ". print_r( $attachment, true ) );
+
+    $publication = new Publication();
+    $publication->setObjectId( 0 );
+    $publication->setConnectionId( $this->externalId );
+    $publication->setBody( serialize($attachment) );
+
     try
     {
       $fbRs = $this->api()->api('/me/feed', 'post', $attachment);
@@ -188,17 +195,22 @@ class User_Facebook extends User_External
       return $result;
     }
 
+    $publication->setResponse( serialize($fbRs) );
+
     if ( isset($fbRs['id']) )
     {
       $result->id = $fbRs['id'];
       list( $uid, $postId ) = explode( "_", $fbRs['id']);
       $result->url = "http://www.facebook.com/$uid/posts/$postId";
+      $publication->setExternalId( $postId );
     }
     else
     {
       $result->error = $fbRs;
       Log::debug( "error: $result->error" );
     }
+
+    $publication->save();
     
     return $result;
   }
@@ -208,7 +220,7 @@ class User_Facebook extends User_External
     $msg = '';
     $link = $article->url();
     $title = $article->title();
-    $caption = $_SERVER['SERVER_NAME'];
+    $caption = str_replace( "http://", "", $link );
     $description = Misc::textSummary( $article->body(), 400 );
     $storageId = $article->headerImage();
     $picture = $storageId ? Storage::url( $storageId ) : Config::$siteLogo;
@@ -286,7 +298,6 @@ class User_Facebook extends User_External
     {
       // TODO: support pages (page Id instead of "me")
       $rs = $this->api()->api('me/events', 'post', $attachment);
-      return $rs;
     }
     catch ( UserApiException $e )
     {
@@ -297,6 +308,28 @@ class User_Facebook extends User_External
       Log::debug( "FacebookApiException $e, ". print_r($attachment, true). print_r($this, true) );
       return null;
     }
+
+    $publication = new Publication();
+    $publication->setObjectId( 0 );
+    $publication->setConnectionId( $this->externalId );
+    $publication->setBody( serialize($attachment) );
+
+    $publication->setResponse( serialize($rs) );
+
+    if ( isset($rs['id']) )
+    {
+      list( $uid, $postId ) = explode( "_", $rs['id']);
+      $publication->setExternalId( $postId );
+    }
+    else
+    {
+      $result->error = $rs;
+      Log::debug( "error: $result->error" );
+    }
+
+    $publication->save();
+
+    return $rs;
 
     // TODO: invites
     // $fb->api( array(
@@ -343,7 +376,7 @@ class User_Facebook extends User_External
     $qPerm = $this->db->escape( $perm );
     $q = $this->db->buildQuery(
       "INSERT INTO facebook_user_perms (facebook_user_id, perm_key, perm_value) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE perm_value=%d",
-      $this->id, $perm, $value, $value
+      $this->externalId, $perm, $value, $value
       );
     $this->db->query($q);
   }
@@ -366,8 +399,8 @@ class User_Facebook extends User_External
 
     // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
     $q = $this->db->buildQuery(
-      "UPDATE users_connections set token=null where service='%s' and external_id='%s'",
-      get_class($this), $this->id );
+      "UPDATE connections set token=null where service='%s' and external_id='%s'",
+      get_class($this), $this->externalId );
     $this->db->query($q);
 
     $cookieId = "fbs_". Config::$facebookApp;

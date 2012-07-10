@@ -15,14 +15,14 @@ class User_Twitter extends User_External
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
 
-    // $this->id = $this->oAuthToken['user_id'];
+    // $this->externalId = $this->oAuthToken['user_id'];
     $this->screenName = $this->oAuthToken['screen_name'];
   }
 
   public function identify()
   {
-    if ( !$this->id = $this->detectLoginSession() )
-      $this->id = $this->cookie();
+    if ( !$this->externalId = $this->detectLoginSession() )
+      $this->externalId = $this->cookie();
   }
   
   public function authenticate()
@@ -95,6 +95,7 @@ class User_Twitter extends User_External
     }
 
     $this->name = $data->name;
+    $this->screenName = $data->screen_name;
     $this->picture = $data->profile_image_url;
   }
 
@@ -123,10 +124,13 @@ class User_Twitter extends User_External
       Log::error( "UserApiException: $e" );
     }
 
-    $qPost = $this->db->escape( $msg );
-    $qResponse = $this->db->escape( serialize($twRs) );
-    $q = "insert into social_updates (ctime,network,post,response) values (now(), 'twitter', '$qPost', '$qResponse')";
-    $this->db->query($q);
+    $publication = new Publication();
+    $publication->setObjectId( 0 );
+    $publication->setConnectionId( $this->externalId );
+    $publication->setBody( $msg );
+    $publication->setResponse( serialize($twRs) );
+    $publication->setExternalId( isset($twRs->id) ? $twRs->id : 0 );
+    $publication->save();
 
     if ( !$twRs )
     {
