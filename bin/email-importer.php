@@ -11,8 +11,8 @@
 * Released under the terms of the MIT license.
 */
 
-  $_SERVER['SERVER_NAME'] = $argv[1];
-  require_once str_replace( "bin/email-importer.php", "lib/init.php", __FILE__ );
+  $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
+  require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
   /**
   * Sends a report of the parsing and social update.

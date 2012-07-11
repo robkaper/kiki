@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?
 
-$_SERVER['SERVER_NAME'] = "dev.robkaper.nl";
-include_once "/home/rob/git/kiki/lib/init.php";
+$_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
+require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
 $db->query( "truncate objects" );
 $db->query( "update articles set object_id=null" );
