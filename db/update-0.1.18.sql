@@ -30,3 +30,8 @@ alter table events drop facebook_url;
 alter table events drop twitter_url;
 
 rename table users_connections to connections;
+
+truncate table facebook_user_perms;
+alter table facebook_user_perms add unique key (facebook_user_id, perm_key);
+
+  
