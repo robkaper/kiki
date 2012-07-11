@@ -69,7 +69,7 @@ abstract class User_External
 
     if ( !$this->api )
     {
-      throw new UserApiException( 'External user API for '. $this->servericeName(). ' called but not available' );
+      throw new UserApiException( 'External user API for '. $this->serviceName(). ' called but not available' );
     }
 
     return $this->api;
@@ -158,7 +158,11 @@ abstract class User_External
 
   private function load( $kikiUserId )
   {
-    $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->externalId, $kikiUserId );
+    if ( $kikiUserId )
+      $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->externalId, $kikiUserId );
+    else
+      $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d", get_class($this), $this->externalId );
+    
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;

@@ -178,11 +178,6 @@ class User_Facebook extends User_External
     try
     {
       $fbRs = $this->api()->api('/me/feed', 'post', $attachment);
-
-      $qPost = $this->db->escape( serialize($attachment) );
-      $qResponse = $this->db->escape( serialize($fbRs) );
-      $q = "insert into social_updates (ctime,network,post,response) values (now(), 'facebook', '$qPost', '$qResponse')";
-      $this->db->query($q);
     }
     catch ( UserApiException $e )
     {
