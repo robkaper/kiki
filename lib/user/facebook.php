@@ -404,6 +404,15 @@ class User_Facebook extends User_External
   
   public function getLoginUrl( $params )
   {
+    if ( !$params )
+      $params = array();
+    else if ( !is_array($params) )
+    {
+      Log::debug( "called with non-array argument" );
+      $params = array();
+    }
+    // $params['display'] = "popup";
+
     return $this->api ? $this->api->getLoginUrl( $params ) : null;
   }
               

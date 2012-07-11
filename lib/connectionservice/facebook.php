@@ -32,6 +32,7 @@ class ConnectionService_Facebook
       Log::debug( "called with non-array argument" );
       $params = array();
     }
+    // $params['display'] = "popup";
 
     return $this->api->getLoginUrl( $params );
   }
