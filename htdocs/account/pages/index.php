@@ -22,10 +22,8 @@
   }
   else
   {
-    $q = "SELECT id FROM articles WHERE section_id in (SELECT id FROM sections where type='pages') ORDER BY ctime desc LIMIT 25";
+    $q = "SELECT id FROM articles WHERE section_id=0 OR section_id in (SELECT id FROM sections where type='pages') ORDER BY ctime desc LIMIT 25";
     $pages = $db->getArray($q);
-    if ( count($pages ) )
-    {
       echo "<table>\n";
       echo "<thead>\n";
 
@@ -38,7 +36,9 @@
 
       echo "</thead>\n";
       echo "<tbody>\n";
-      
+
+    if ( count($pages ) )
+    {
       foreach ( $pages as $pageId )
       {
         $article = new Article( $pageId );
@@ -51,9 +51,10 @@
         echo "<td>". $article->title(). "</td>\n";
         echo "</tr>\n";
       }
-      echo "</tbody>\n";
-      echo "</table>\n";
     }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
   }
 
   $template->assign( 'content', ob_get_clean() );
