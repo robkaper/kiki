@@ -163,7 +163,7 @@ status_update			video_upload			xmpp_login
           }
           else
           {
-            $permissionUrl = $connection->getLoginUrl( array( 'scope' => $action ) );
+            $permissionUrl = Config::$kikiPrefix. "/facebook-grant.php?id=". $connection->id(). "&permission=$action";
             $content .= "<li>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</li>\n";
           }
         }

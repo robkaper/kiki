@@ -344,14 +344,22 @@ class User_Facebook extends User_External
 
   public function hasPerm( $perm, $verify=false )
   {
-    // TODO: this is awfully slow (as expected from remote calls),
-    // implement verify and only do a remote check prior to posting.  Or
-    // just catch the error and always check the local store.
+    // TODO: actually use verify prior to api calls that require permissions
+    if ( !$verify )
+    {
+      $q = $this->db->buildQuery( "SELECT perm_value FROM facebook_user_perms WHERE perm_key='%s' AND facebook_user_id=%d", $perm, $this->externalId );
+      $value = $this->db->getSingleValue($q);
+      
+      if ( $value!==null )
+        return $value;
+    }
+
+    $value = false;
+
+    // FIXME: port to /me/permissions
     try
     {
       $value = $this->api()->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
-      self::storePerm( $perm, $value );
-      return $value;
     }
     catch ( UserApiException $e )
     {
@@ -360,28 +368,40 @@ class User_Facebook extends User_External
     catch( FacebookApiException $e )
     {
       Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
-      self::storePerm( $perm, false );
-      return false;
     }
+
+    self::storePerm( $perm, $value );
+    return $value;
   }
 
-  // FIXME: port
-  public function storePerm( $perm, $value=false )
+  public function storePerm( $perm, $value=false, $deleteWhenFalse=false )
   {
     $qPerm = $this->db->escape( $perm );
-    $q = $this->db->buildQuery(
-      "INSERT INTO facebook_user_perms (facebook_user_id, perm_key, perm_value) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE perm_value=%d",
-      $this->externalId, $perm, $value, $value
+
+    if ( $deleteWhenFalse && !$value )
+    {
+      $q = $this->db->buildQuery(
+        "DELETE from facebook_user_perms WHERE facebook_user_id=%d AND perm_key='%s'",
+        $this->externalId, $perm
       );
+    }
+    else
+    {
+      $q = $this->db->buildQuery(
+        "INSERT INTO facebook_user_perms (facebook_user_id, perm_key, perm_value) VALUES (%d, '%s', %d) ON DUPLICATE KEY UPDATE perm_value=%d",
+        $this->externalId, $perm, $value, $value
+      );
+    }
     $this->db->query($q);
   }
 
   // FIXME: port
-  public function revokePerm( $perm )
+  public function revokePerm( $perm, $deleteStoredValue=false )
   {
     // Tell Facebook to revoke permission
     try
     {
+      // FIXME: port to /me/permissions/$perm (HTTP DELETE)
       $fbRs = $this->api()->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
     }
     catch ( UserApiException $e )
@@ -390,7 +410,7 @@ class User_Facebook extends User_External
     }
 
     // Remove permission from database
-    self::storePerm( $perm, false);
+    self::storePerm( $perm, false, $deleteStoredValue );
 
     // Remove user access_token and cookie to force retrieval of a new access token with correct permissions
     $q = $this->db->buildQuery(
@@ -401,8 +421,17 @@ class User_Facebook extends User_External
     $cookieId = "fbs_". Config::$facebookApp;
     setcookie( $cookieId, "", time()-3600, "/", $_SERVER['SERVER_NAME'] );
   }
-  
-  public function getLoginUrl( $params )
+
+  public function clearPermissions()
+  {
+    $q = $this->db->buildQuery(
+      "DELETE from facebook_user_perms WHERE facebook_user_id=%d",
+      $this->externalId
+    );
+    $this->db->query($q);
+  }
+    
+  public function getLoginUrl( $params, $force = false )
   {
     if ( !$params )
       $params = array();
@@ -413,6 +442,15 @@ class User_Facebook extends User_External
     }
     // $params['display'] = "popup";
 
+    // Force a login URL through the app API, not the user connection.
+    // Without first verifying the required permission Facebook otherwise
+    // thinks everything is ok because the user is already logged in.
+    if ( $force )
+    {
+      $connection = Factory_ConnectionService::getInstance('Facebook');
+      return $connection->loginUrl($params);
+    }
+    
     return $this->api ? $this->api->getLoginUrl( $params ) : null;
   }
               
