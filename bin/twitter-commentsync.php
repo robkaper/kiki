@@ -1,6 +1,6 @@
-#!/usr/bin/php
+#!/usr/bin/php -q
 <?
-  $_SERVER['SERVER_NAME'] = isset($argv[1]) || die('SERVER_NAME argument missing'. PHP_EOL);
+  $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
   $q = "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='User_Twitter'";
