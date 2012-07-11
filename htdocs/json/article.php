@@ -31,6 +31,12 @@
     $ctime = "$year-$month-$day $time";
     $article->setCtime( $ctime );
 
+    if ( $_POST['cname'] && !count($article->publications()) )
+    {
+      // TODO: allow changing when publications exist: 301 redirect must be created somewhere in this case.
+      $article->setCname( $_POST['cname'] );
+    }
+
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
 

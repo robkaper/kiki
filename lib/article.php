@@ -168,7 +168,16 @@ class Article extends Object
     $content .= Form::hidden( "articleId", $this->id );
     $content .= Form::hidden( "albumId", $this->albumId );
     $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
-    $content .= Form::text( "cname", $this->cname, "URL name" );
+
+    $this->loadPublications();
+    
+    if ( count($this->publications) )
+    {
+    }
+    else
+    {
+      $content .= Form::text( "cname", $this->cname, "URL name" );
+    }
     $content .= Form::text( "title", $this->title, "Title" );
     $content .= Form::datetime( "ctime", $date, "Date" );
     $content .= Form::textarea( "body", htmlspecialchars($this->body), "Body" );
@@ -176,10 +185,14 @@ class Article extends Object
     $content .= Form::checkbox( "featured", $this->featured, "Featured" );
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
 
+    $content .= "<label>Publications</label>";
+    foreach( $this->publications as $publication )
+    {
+      $content .= "<a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a>\n";
+    }
+
     // TODO: Make this generic, difference with social update is the check
     // against an already stored external URL.
-
-    $this->loadPublications();
 
     foreach ( $user->connections() as $connection )
     {
@@ -191,16 +204,12 @@ class Article extends Object
         if ( !$connection->hasPerm('publish_stream') )
          continue;
 
-        if ( !$this->facebookUrl )
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
       }
       else if (  $connection->serviceName() == 'Twitter' )
       {
-        if ( !$this->twitterUrl )
-        {
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-          $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
-        }
+        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+        $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
       }
     }
 

@@ -169,6 +169,14 @@ class Event extends Object
     $content .= Form::checkbox( "featured", $this->featured, "Featured" );
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
 
+    $this->loadPublications();
+
+    $content .= "<label>Publications</label>";
+    foreach( $this->publications as $publication )
+    {
+      $content .= "<a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a>\n";
+    }
+
     // TODO: Make this generic, difference with social update is the check
     // against an already stored external URL.
     foreach ( $user->connections() as $connection )
@@ -183,16 +191,12 @@ class Event extends Object
         if ( !$connection->hasPerm('create_event') )
          continue;
 
-        if ( !$this->facebookUrl )
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
       }
       else if (  $connection->serviceName() == 'Twitter' )
       {
-        if ( !$this->twitterUrl )
-        {
-          $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-          $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
-        }
+        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
+        $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
       }
     }
 
