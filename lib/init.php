@@ -40,7 +40,9 @@
       include_once "$kiki";
     }
   }
-
+  
+  mb_internal_encoding('utf8');
+  
   Log::init();
   Config::init();
   I18n::init();

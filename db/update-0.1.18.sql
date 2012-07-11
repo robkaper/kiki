@@ -29,5 +29,3 @@ alter table events drop facebook_url;
 alter table events drop twitter_url;
 
 rename table users_connections to connections;
-
-# select p.*,c.id FROM publications p, connections c where p.connection_id=c.external_id

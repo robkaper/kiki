@@ -12,7 +12,7 @@ create table config (
   `key` varchar(255) default null,
   unique key(`key`),
   value varchar(255) default null
-);
+) default charset=utf8;
 
 insert into config (`key`, value) values( 'dbVersion', '0.1.18' );
 
@@ -27,7 +27,7 @@ create table twitter_users (
   name varchar(255) default null,
   screen_name varchar(255) default null,
   picture varchar(255) default null
-);
+) default charset=utf8;
 
 drop table if exists facebook_users;
 create table facebook_users (
@@ -37,14 +37,14 @@ create table facebook_users (
   mtime datetime not null,
   access_token text default null,
   name varchar(255) default null
-);
+) default charset=utf8;
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
   facebook_user_id bigint unsigned not null,
   perm_key varchar(255) not null,
   perm_value boolean not null default false
-);
+) default charset=utf8;
 
 drop table if exists users;
 create table users (
@@ -63,7 +63,7 @@ create table users (
   unique key(email),
   unique key(facebook_user_id),
   unique key(twitter_user_id)
-);
+) default charset=utf8;
 
 drop table if exists comments;
 create table comments (
@@ -76,7 +76,7 @@ create table comments (
   user_id bigint unsigned not null,
   user_connection_id int unsigned not null,
   body text not null
-);
+) default charset=utf8;
 
 drop table if exists sections;
 create table sections (
@@ -86,7 +86,7 @@ create table sections (
   unique key(base_uri),
   title varchar(255) not null,
   type varchar(255) not null
-);
+) default charset=utf8;
 
 drop table if exists articles;
 create table articles (
@@ -108,7 +108,7 @@ create table articles (
   visible boolean not null default false,
   hashtags varchar(255) not null,
   album_id int unsigned not null
-  );
+) default charset=utf8;
 
 drop table if exists tinyurl;
 create table tinyurl (
@@ -116,7 +116,7 @@ create table tinyurl (
   primary key(id),
   url varchar(255) not null,
   unique key(url)
-);
+) default charset=utf8;
 
 drop table if exists menu_items;
 create table menu_items (
@@ -130,7 +130,7 @@ create table menu_items (
   class varchar(255) default null,
   icon varchar(255) default null,
   sortorder tinyint unsigned not null
-);
+) default charset=utf8;
 
 drop table if exists storage;
 create table storage (
@@ -140,7 +140,7 @@ create table storage (
   original_name varchar(255) not null,
   extension varchar(255) not null,
   size int unsigned not null default 0
-);
+) default charset=utf8;
 
 drop table if exists albums;
 create table albums (
@@ -148,7 +148,7 @@ create table albums (
   primary key(id),
   title varchar(255) not null,
   system boolean default false
-);
+) default charset=utf8;
 
 drop table if exists pictures;
 create table pictures (
@@ -157,7 +157,7 @@ create table pictures (
   title varchar(255) not null,
   description text not null,
   storage_id int unsigned not null
-);
+) default charset=utf8;
 
 drop table if exists album_pictures;
 create table album_pictures (
@@ -166,7 +166,7 @@ create table album_pictures (
   key(album_id),
   key(picture_id),
   key(album_id,picture_id)
-);
+) default charset=utf8;
 
 drop table if exists social_updates;
 create table social_updates (
@@ -176,7 +176,7 @@ create table social_updates (
   network varchar(255) not null,
   post text not null,
   response text not null
-);
+) default charset=utf8;
 
 drop table if exists mail_queue;
 create table mail_queue (
@@ -194,7 +194,7 @@ create table mail_queue (
   `to` text not null,
   headers text not null,
   body text not null
-);
+) default charset=utf8;
 
 drop table if exists users_connections;
 create table users_connections (
@@ -210,7 +210,7 @@ create table users_connections (
   name varchar(255) default null,
   screenname varchar(255) default null,
   picture varchar(255) default null
-);
+) default charset=utf8;
 
 drop table if exists objects;
 create table objects (
@@ -219,7 +219,7 @@ create table objects (
   type varchar(32) not null,
   ctime datetime not null,
   mtime datetime not null
-);
+) default charset=utf8;
 
 drop table if exists events;
 create table events (
@@ -242,7 +242,7 @@ create table events (
   visible boolean not null default false,
   hashtags varchar(255) not null,
   album_id int unsigned not null
-);
+) default charset=utf8;
 
 drop table if exists publications;
 create table publications (
@@ -254,4 +254,4 @@ create table publications (
   external_id bigint unsigned not null,
   body text not null,
   response text not null
-);
+) default charset=utf8;

@@ -42,7 +42,11 @@ class Database
 			$this->dbh = @mysql_pconnect( "$this->host:$this->port", $this->user, $this->pass );
 
 		if ( $this->dbh )
+		{
 			@mysql_select_db( $this->name, $this->dbh );
+			@mysql_set_charset('utf8');
+			$this->query("set names 'utf8'" );
+		}
 	}
 
 	/**
