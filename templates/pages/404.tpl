@@ -1,5 +1,7 @@
 <body>
 {include 'parts/header'}
+{include 'parts/nav'}
+{include 'parts/aside'}
 
 <div id="cw" class="noaside"><div id="content" lang="en">
 
@@ -27,6 +29,7 @@ could not find it.</p>
 <li lang="es">cuatrocientoscuatro!</li>
 <li lang="hu">n&eacute;gysz&aacute;mn&eacute;vn&eacute;!</li>
 <li lang="fi">nelj&auml;sataanelj&auml;!</li>
+<li>404!</li>
 </ul>
 
 </div></div>
