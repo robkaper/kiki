@@ -49,12 +49,10 @@
       exit();
     }
 
-    $page = new AdminPage();
-    $page->header();
-    echo "fouten bij opslaan:";
-    echo "<pre>";
-    print_r($errors);
-    echo "</pre>";
-    $page->footer();
+    $template = Template::getInstance();
+    $template->load( 'pages/admin' );
+
+    $template->assign( 'content',  "fouten bij opslaan:<pre>". print_r($errors,true). "</pre>" );
+    echo $template->content();
   }
 ?>

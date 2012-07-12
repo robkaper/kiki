@@ -102,9 +102,9 @@
     }
 
     $template = Template::getInstance();
-    $template->setTemplate( 'pages/admin' );
+    $template->load( 'pages/admin' );
 
-    $template->setContent( "fouten bij opslaan:<pre>". print_r($errors,true). "</pre>" );
+    $template->assign( 'content',  "fouten bij opslaan:<pre>". print_r($errors,true). "</pre>" );
     echo $template->content();
   }
 ?>
