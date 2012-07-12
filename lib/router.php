@@ -121,6 +121,8 @@ class Router
     $db = $GLOBALS['db'];
 
     $uri = trim( $uri, '/' );
+    if ( !$uri )
+      $uri = 'index';
 
     $q = $db->buildQuery( "SELECT id FROM articles WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
     Log::debug( $q );

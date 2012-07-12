@@ -64,8 +64,6 @@ class Section
 
   public function dbUpdate()
   {
-    parent::dbUpdate();
-
     if ( !$this->cname || !$this->visible )
       $this->cname = Misc::uriSafe($this->title);
 
@@ -79,13 +77,12 @@ class Section
   
   public function dbInsert()
   {
-    if ( !$this->cname || !$this->visible )
+    if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
-    if ( !$this->ctime )
-      $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO sections (...) values (...)"
+      "INSERT INTO sections (title,base_uri,type) values ('%s', '%s', '%s')",
+        $this->title, $this->baseURI, $this->type
     );
     Log::debug($q);
 
@@ -93,9 +90,6 @@ class Section
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
 
-    if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, $this->title, 'page', $this->id );
-          
     return $this->id;
   }
 

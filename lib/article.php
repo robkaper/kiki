@@ -77,7 +77,7 @@ class Article extends Object
   {
     parent::dbUpdate();
 
-    if ( !$this->cname || !$this->visible )
+    if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
@@ -91,7 +91,7 @@ class Article extends Object
   
   public function dbInsert()
   {
-    if ( !$this->cname || !$this->visible )
+    if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
     if ( !$this->ctime )
       $this->ctime = date("Y-m-d H:i:s");
@@ -169,7 +169,7 @@ class Article extends Object
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $oSection = $db->fetchObject($rs) )
-        $sections[$oSection->id] = $oSection->title. "(". $oSection->type. ")";
+        $sections[$oSection->id] = $oSection->title;
 
     $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "articleId", $this->id );

@@ -10,12 +10,7 @@ class Controller_Pages extends Controller
     Log::debug( print_r($this,true) );
 
     if ( !$this->objectId )
-    {
-      $this->status = 200;
-      $this->template = 'pages/default';
-      $this->content = '// TODO: Index of ...';
-      return;
-    }
+      $this->objectId = 'index';
 
     // Find page under this section through subcontroller.
     // TODO: also find subsections...
@@ -25,6 +20,15 @@ class Controller_Pages extends Controller
       $this->subController->setInstanceId($handler->instanceId);
       $this->subController->setObjectId($handler->remainder);
       $this->subController->exec();
+    }
+    else if ( $this->objectId == 'index' )
+    {
+/*
+      $this->status = 200;
+      $this->template = 'pages/default';
+      $this->title = 'Index of section '. $this->instanceId;
+      $this->content = "// TODO: show 'index' page or else a generated \"Index of ...\"";
+*/
     }
   }
 }

@@ -39,7 +39,7 @@
       }
     }
 
-    echo $article->form( $user, 'pages' );
+    echo $article->form( $user, false, 'pages' );
     if ( $album->id() )
       echo $album->form( $user );
   }

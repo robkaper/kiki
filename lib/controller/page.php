@@ -18,7 +18,7 @@ class Controller_Page extends Controller
       $this->title = $article->title();
       $this->status = 200;
       $this->template = 'pages/default';
-      $this->content = Articles::showSingle( $db, $user, $this->instanceId );
+      $this->content = Articles::showSingle( $db, $user, $this->instanceId, false, true );
     }
   }
 }

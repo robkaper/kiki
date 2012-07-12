@@ -75,7 +75,8 @@ abstract class Object
   {
     if ( !$this->objectId )
     {
-      $qCtime = isset($this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
+      $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
+
       $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime) values('%s',$qCtime,now())", get_class($this) );
       $rs = $this->db->query($q);
       if ( $rs )

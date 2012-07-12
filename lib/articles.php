@@ -12,7 +12,7 @@
             
 class Articles
 {
-  public static function showSingle( &$db, &$user, $articleId, $json = false )
+  public static function showSingle( &$db, &$user, $articleId, $json = false, $showAsPage = false )
   {
     if ( $articleId )
     {
@@ -34,7 +34,7 @@ class Articles
       $o->user_id = $user->id();
     }
 
-    return $o ? Articles::showArticle( $user, $o, $json ) : null;
+    return $o ? Articles::showArticle( $user, $o, $json, 0, false, $showAsPage ) : null;
   }
 
   public static function title( &$db, &$user, $articleId )
@@ -75,7 +75,7 @@ class Articles
     return $myUrl;
   }
 
-  public static function showArticle( &$user, &$o, $json = false, $maxLength=0, $lengthInParagraphs=false )
+  public static function showArticle( &$user, &$o, $json = false, $maxLength=0, $lengthInParagraphs=false, $showAsPage=false )
   {
     $content = "";
     $article = new Article( $o->id );
@@ -143,7 +143,7 @@ class Articles
     $content .= "</footer>\n";
 
     if ( !$maxLength && $user->id() == $o->user_id )
-      $content .= $article->form( $user, true );
+      $content .= $article->form( $user, true, $showAsPage ? 'pages' : 'articles' );
 
     // FIXME: page/filter comments in embedded view
     if  ( !$maxLength )

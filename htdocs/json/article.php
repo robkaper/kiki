@@ -26,10 +26,15 @@
 
     $article->setIpAddr( $_SERVER['REMOTE_ADDR'] );
 
-    list( $date, $time ) = explode( " ", $_POST['ctime'] );
-    list( $day, $month, $year ) = explode( "-", $date );
-    $ctime = "$year-$month-$day $time";
-    $article->setCtime( $ctime );
+    if ( isset($_POST['ctime']) )
+    {
+      list( $date, $time ) = explode( " ", $_POST['ctime'] );
+      list( $day, $month, $year ) = explode( "-", $date );
+      $ctime = "$year-$month-$day $time";
+      $article->setCtime( $ctime );
+    }
+    else
+      $showAsPage = true;
 
     if ( $_POST['cname'] && !count($article->publications()) )
     {
@@ -90,7 +95,7 @@
       $response = array();
       $response['formId'] = $_POST['formId'];
       $response['articleId'] = $article->id();
-      $response['article'] = Articles::showSingle( $db, $user, $article->id(), true);
+      $response['article'] = Articles::showSingle( $db, $user, $article->id(), true, $showAsPage );
       $response['errors'] = $errors;
 
       header( 'Content-type: application/json' );

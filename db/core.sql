@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.19' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.20' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -101,7 +101,7 @@ create table articles (
   user_id bigint unsigned not null,
   title text not null,
   cname varchar(255) not null,
-  unique key(cname),
+  unique key(section_id, cname),
   body text not null,
   header_image bigint unsigned not null,
   featured boolean not null default false,
