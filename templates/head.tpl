@@ -1,14 +1,13 @@
 <head>
 <meta charset="UTF-8"/>
-{*<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>}
 <meta name="viewport" content="width=device-width" />
 <meta name="description" content="{$description}" />
 {include 'parts/icmb/geo-location'}
 {include 'parts/google/meta-site-verification'}
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="{$config.kikiPrefix}/styles/default.css" title="Kiki CMS Default" />
-<link rel="stylesheet" type="text/css" href="/kiki/styles/default.css" />
-{foreach $page.stylesheets as $url}
+<!-- <link rel="stylesheet" type="text/css" href="{$config.kikiPrefix}/styles/responsive.css" title="Kiki CMS Responsive" /> -->
+{foreach $stylesheets as $url}
 <link rel="stylesheet" type="text/css" href="{$url}" />
 {/foreach}
 <script type="text/javascript">

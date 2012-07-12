@@ -94,7 +94,7 @@ class Section
       $this->id = $this->db->lastInsertId($rs);
 
     if ( !$this->sectionId )
-      Router::storeBaseUri( $this->cname, 'page', $this->id );
+      Router::storeBaseUri( $this->cname, $this->title, 'page', $this->id );
           
     return $this->id;
   }

@@ -75,6 +75,7 @@
         echo "</tr>\n";
       }
     }
+
     echo "</tbody>\n";
     echo "</table>\n";
   }

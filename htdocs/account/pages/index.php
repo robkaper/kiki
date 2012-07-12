@@ -17,25 +17,49 @@
   if ( isset($_GET['id']) )
   {
     $id = isset($_GET['id']) ? $_GET['id'] : 0;
+
     $article = new Article( $id );
-    echo $article->form( $user );
+    $album = new Album( $article->albumId() );
+
+    // Create album for this page if it doesn't exist yet.
+    if ( !$album->id() )
+    {
+      $album->setSystem(true);
+      $album->setTitle( $article->title() );
+      $album->save();
+
+      $article->setAlbumId($album->id());
+      if ( $article->id() )
+        $article->save();
+
+      if ( $album->id() && $article->headerImage() )
+      {
+        $pictures = $album->addPictures( null, null, array($article->headerImage()) );
+        Log::debug( "article had headerImage (". $article->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
+      }
+    }
+
+    echo $article->form( $user, 'pages' );
+    if ( $album->id() )
+      echo $album->form( $user );
   }
   else
   {
     $q = "SELECT id FROM articles WHERE section_id=0 OR section_id in (SELECT id FROM sections where type='pages') ORDER BY ctime desc LIMIT 25";
     $pages = $db->getArray($q);
-      echo "<table>\n";
-      echo "<thead>\n";
 
-      echo "<tr>\n"; 
-      echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
-      echo "<td colspan=\"2\">". _("Create a new page"). "</td>\n";
-      echo "</tr>\n";
+    echo "<table>\n";
+    echo "<thead>\n";
 
-      echo "<tr><th></th><th></th><th></th><th>URL</th><th>Title</th></tr>\n";
+    echo "<tr>\n"; 
+    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
+    echo "<td colspan=\"2\">". _("Create a new page"). "</td>\n";
+    echo "</tr>\n";
 
-      echo "</thead>\n";
-      echo "<tbody>\n";
+    echo "<tr><th></th><th></th><th></th><th>URL</th><th>Title</th></tr>\n";
+
+    echo "</thead>\n";
+    echo "<tbody>\n";
 
     if ( count($pages ) )
     {

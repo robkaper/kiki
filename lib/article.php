@@ -146,19 +146,26 @@ class Article extends Object
    * Creates an article edit form.
    *
    * @fixme Should be integrated into a template.
+   * @todo Traditional Page class is deprecated so we can now remove the $type argument hack and have a Page/Article class both deriving from Post.
    *
    * @param User $user User object, used to show the proper connection links for publications.
+   * @param boolean $hidden Hide the form initially.
+   * @param string $type Defaults to 'articles'. When set to 'page', form treats this article as a page.
+   *
    * @return string The form HTML.
+   *
    */
-  public function form( &$user, $hidden=false )
+  public function form( &$user, $hidden=false, $type='articles' )
   {
     $date = date( "d-m-Y H:i", $this->ctime ? strtotime($this->ctime) : time() );
     $class = $hidden ? "hidden" : "";
 
     $sections = array();
-    $sections[0] = 'top-level page';
+    if ( $type=='pages' )
+      $sections[0] = 'top-level page';
+
     $db = $GLOBALS['db'];
-    $q = "select id,title, type from sections order by title asc";
+    $q = $db->buildQuery( "select id,title from sections where type='%s' order by title asc", $type );
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $oSection = $db->fetchObject($rs) )
@@ -168,21 +175,23 @@ class Article extends Object
     $content .= Form::hidden( "articleId", $this->id );
     $content .= Form::hidden( "albumId", $this->albumId );
     $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
-
+    
     $this->loadPublications();
     
-    if ( count($this->publications) )
-    {
-    }
-    else
-    {
-      $content .= Form::text( "cname", $this->cname, "URL name" );
-    }
     $content .= Form::text( "title", $this->title, "Title" );
-    $content .= Form::datetime( "ctime", $date, "Date" );
+
+    if ( !count($this->publications) )
+      $content .= Form::text( "cname", $this->cname, "URL name" );
+
+    if ( $type!='pages' )
+      $content .= Form::datetime( "ctime", $date, "Date" );
+
     $content .= Form::textarea( "body", htmlspecialchars($this->body), "Body" );
     $content .= Form::albumImage( "headerImage", "Header image", $this->albumId, $this->headerImage );
-    $content .= Form::checkbox( "featured", $this->featured, "Featured" );
+
+    if ( $type!='pages' )
+      $content .= Form::checkbox( "featured", $this->featured, "Featured" );
+
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
 
     $content .= "<label>Publications</label>";

@@ -18,7 +18,6 @@ class Comments
     $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
     $q = "select c.id, c.body, o.ctime, c.user_id, con.service, con.external_id, u.facebook_user_id, u.twitter_user_id from comments c LEFT JOIN objects o ON o.object_id=c.object_id LEFT JOIN users u ON c.user_id=u.id LEFT JOIN connections con ON c.user_connection_id=con.id WHERE c.in_reply_to_id=$qObjectId $qLast order by o.ctime asc";
-    // echo $q;
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
     {
