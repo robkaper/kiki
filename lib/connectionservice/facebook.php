@@ -11,6 +11,9 @@ class ConnectionService_Facebook
 
   public function __construct()
   {
+    if ( !class_exists('Facebook') )
+      return;
+
     $this->api = new Facebook( array(
       'appId'  => Config::$facebookApp,
       'secret' => Config::$facebookSecret,
@@ -34,7 +37,7 @@ class ConnectionService_Facebook
     }
     // $params['display'] = "popup";
 
-    return $this->api->getLoginUrl( $params );
+    return $this->api ? $this->api->getLoginUrl($params) : null;
   }
 }
 
