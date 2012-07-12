@@ -71,9 +71,9 @@ class Form
       $label .= " <span class=\"remaining\">$remaining</span>\n";
     }
 
-    global $page;
-    $page->addStylesheet( Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.css" );
-    $page->addScript( Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.min.js" );
+    $template = Template::getInstance();
+    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.css" );
+    $template->append( 'scripts', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.min.js" );
 
     // $label .= "<a class=\"button toggleWysiwyg\" href=\"#\">Toggle WYSIWYG</a>";
     if ( $label )

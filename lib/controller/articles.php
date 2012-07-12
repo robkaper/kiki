@@ -12,8 +12,8 @@ class Controller_Articles extends Controller
     else
       $this->title = Articles::sectionTitle( $db, $user, $this->instanceId );
 
-    // FIXME: Page doesn't exist yet at this moment, but we need to handle this..
-    // $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
+    $template = Template::getInstance();
+    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $this->objectId )
     {

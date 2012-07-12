@@ -10,8 +10,8 @@ class Controller_Page extends Controller
     $article = new Article( $this->instanceId );
     $this->title = $article->title();
 
-    // FIXME: Page doesn't exist yet at this moment, but we need to handle this..
-    // $page->addStylesheet( Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
+    $template = Template::getInstance();
+    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $article->visible() )
     {

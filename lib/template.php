@@ -165,6 +165,17 @@ class Template
     $this->data[$key] = $value;
   }
 
+  public function append( $key, $value )
+  {
+    if ( !isset($this->data[$key]) )
+      $this->data[$key] = array( $value );
+
+    if ( is_array($this->data[$key]) )
+      $this->data[$key][] = $value;
+    else
+      Log::error( "cannot append value $value to $key, which isn't an array (currently value: $value)" );
+  }
+
   public function normalise( &$data )
   {
     foreach( $data as &$value )

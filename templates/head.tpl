@@ -26,6 +26,9 @@ var requestUri = '{$server.requestUri}';
 <script type="text/javascript" src="{$config.kikiPrefix}/scripts/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="{$config.kikiPrefix}/scripts/jquery.placeholder.js"></script>
 <script type="text/javascript" src="{$config.kikiPrefix}/scripts/default.js"></script>
+{foreach $scripts as $url}
+<script type="text/javascript" src="{$url}"></script>
+{/foreach}
 <title>{$title|strip}</title>
 {include 'parts/google/analytics'}
 </head>

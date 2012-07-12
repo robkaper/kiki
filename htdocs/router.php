@@ -90,42 +90,32 @@
   else
     $controller = new Controller();
 
-  // Page moved up because some controllers create forms in exec(), which in turn need
-  // to add stylesheets/scripts. Which should be a part of Controller, not Page.
-  $page = new Page();
-      
   $controller->exec();
   // Log::debug( print_r($controller, true) );
-  // Log::debug( print_r($page, true) );
 
+  Http::sendHeaders( $controller->status() );
+  
   if ( $controller->status() == 301 )
     Router::redirect($controller->content(), $controller->status()) && exit();
 
-  // $page = new Page();
-  $page->setHttpStatus( $controller->status() );
-  $page->setTitle( $controller->title() );
-  $page->setBodyTemplate( $controller->template() );
   $content = $controller->content();
 
   $user = $GLOBALS['user'];
 
-  if ( Config::$customCss )
-    $page->addStylesheet( Config::$customCss );
-
-  $title = $page->title();
+  $title = $controller->title();
   if ( $title )
     $title .= " - ";
   $title .= Config::$siteName;
 
-  if ( $page->tagLine() )
-    $title .= " - ". $page->tagLine();
-
-  // Log::debug( print_r($page, true) );
-  
-  $page->httpHeaders();
+  // if ( $var = $template->getVar('subTitle') )
+  //  $title .= " - ". $var;
 
   $template = Template::getInstance();
+
   $template->load( $controller->template() );
+
+  if ( Config::$customCss )
+    $template->append( 'stylesheets', Config::$customCss );
 
   $template->assign( 'title', $controller->title() );
   // $template->assign( 'subTitle', $controller->subTitle() );
