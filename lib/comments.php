@@ -3,10 +3,6 @@
 /**
  * Class for comments attached to objects.
  *
- * @fixme ObjectId's aren't really object ID's yet and reference article
- * ID's.  Comments should be Objects themselves and the reference should be
- * done by referenceId or something like that.
- *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
@@ -21,7 +17,7 @@ class Comments
 
     $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = "select c.id, c.body, c.ctime, c.user_id, con.service, con.external_id, u.facebook_user_id, u.twitter_user_id from comments c LEFT JOIN users u ON c.user_id=u.id LEFT JOIN connections con ON c.user_connection_id=con.id WHERE c.object_id=$qObjectId $qLast order by ctime asc";
+    $q = "select c.id, c.body, o.ctime, c.user_id, con.service, con.external_id, u.facebook_user_id, u.twitter_user_id from comments c LEFT JOIN objects o ON o.object_id=c.object_id LEFT JOIN users u ON c.user_id=u.id LEFT JOIN connections con ON c.user_connection_id=con.id WHERE c.in_reply_to_id=$qObjectId $qLast order by o.ctime asc";
     // echo $q;
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
@@ -123,28 +119,6 @@ class Comments
     $template->assign( 'comment', $comment );
     $template->assign( 'objectId', $objectId );
     return $template->fetch();
-  }
-
-  public static function save( &$db, &$user, $objectId )
-  {
-    $errors = array();
-
-    if ( !$user->id() )
-      $errors[] = "Je bent niet ingelogd.";
-    if ( !$comment = $_POST['comment'] )
-      $errors[] = "Je kunt geen leeg berichtje opslaan!";
-
-    if ( !sizeof($errors) )
-    {
-      $q = $db->buildQuery(
-        "INSERT INTO comments (ctime, mtime, ip_addr, object_id, user_id, body) values (now(), now(), '%s', %d, %d, '%s')",
-        $_SERVER['REMOTE_ADDR'], $objectId, $user->id(), $comment
-      );
-
-      $db->query($q);
-    }
-
-    return $errors;
   }
 }
 

@@ -62,26 +62,23 @@
       $q = $db->buildQuery( "SELECT id FROM connections WHERE external_id=%d", $fbUser->externalId() );
       $connectionId = $db->getSingleValue($q);
 
-      // Store comment...
-      $q = $db->buildQuery( "SELECT id from comments where ctime=from_unixtime(%d) and object_id=%d and (user_id=%d or user_connection_id=%d)", $ctime, $objectId, $localUser->id(), $connectionId );
-      // echo $q. PHP_EOL;
+      // Find comment
+      // FIXME: properly store externalId instead of checking timestamp
+      $q = $db->buildQuery( "SELECT c.id from comments c LEFT JOIN objects o ON o.object_id=c.object_id WHERE ctime=from_unixtime(%d) and in_reply_to_id=%d and (user_id=%d or user_connection_id=%d)", $ctime, $objectId, $localUser->id(), $connectionId );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
-      {
-        // echo "this comment is already in the database\n";
         continue;
-      }
-
-      $q = $db->buildQuery(
-        "INSERT INTO comments (ctime, mtime, ip_addr, object_id, user_id, user_connection_id, body) values (from_unixtime(%d), from_unixtime(%d), '%s', %d, %d, %d, '%s')",
-        $ctime, $ctime, '0.0.0.0', $objectId, $localUser->id(), $connectionId, $text
-      );
-
-      echo "[pic:". $fbUser->externalId(). "] $name\n\t$text\n$ctime\n";
-      echo $q. PHP_EOL;
-      echo "-----------------------". PHP_EOL;
-
-      $db->query($q);
+      
+      // Store comment
+      $comment = new Comment();
+      $comment->setInReplyToId( $objectId );
+      $comment->setUserId( $localUser->id() );
+      $comment->setConnectionId( $connectionId );
+      $comment->setBody( $mention->text );
+      $comment->setCtime( $ctime );
+      $comment->save();
+            
+      print_r($comment);
     }
 }
 

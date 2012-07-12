@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.18' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.19' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -70,10 +70,9 @@ drop table if exists comments;
 create table comments (
   id bigint unsigned not null auto_increment,
   primary key(id),
-  ctime datetime not null,
-  mtime datetime not null,
-  ip_addr varchar(15),
   object_id bigint unsigned not null,
+  ip_addr varchar(15),
+  in_reply_to_id bigint unsigned not null,
   user_id bigint unsigned not null,
   user_connection_id int unsigned not null,
   body text not null
