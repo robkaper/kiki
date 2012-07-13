@@ -33,25 +33,12 @@
       list( $uid, $postId ) = explode("_", $comment['post_id']);
 
       $fbUser = Factory_User::getInstance( 'User_Facebook', $comment['fromid'] );
-      $kikiUserIds = $fbUser->kikiUserIds();
-      if ( count($kikiUserIds) )
-      {
-        $localUser = new User($fbUser->kikiUserId());
-        // echo "found for ". $comment['fromid']. ": ". $localUser->id(). "/". $localUser->name(). PHP_EOL;
-      }
-      else if ( $fbUser->id() )
-      {
-        // echo "remote found for ".  $comment['fromid']. ": ". $fbUser->externalId(). "/". $fbUser->name(). PHP_EOL;
-        $localUser = new User();
-      }
-      else
-      {
-        $localUser = new User();
+      $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
 
-        $fbUser->loadRemoteData($apiUser->api());
+      if ( !$fbUser->id() )
+      {
+        $fbUser->loadRemoteData( $apiUser->api() );
         $fbUser->link(0);
-    
-        // echo "created new user ". $fbUser->externalId(). "/". $fbUser->name(). PHP_EOL;
       }
 
       $ctime = $comment['time'];

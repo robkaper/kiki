@@ -42,27 +42,14 @@
           if ( isset($objectIds[$mention->in_reply_to_status_id]) )
           {
             $twUser = Factory_User::getInstance( 'User_Twitter', $mention->user->id );
-            $kikiUserIds = $twUser->kikiUserIds();
-            if ( count($kikiUserIds) )
-            {
-              $localUser = new User( $twUser->kikiUserId() );
-              // echo "local found for ". $mention->user->id. ": ". $localUser->id(). "/". $localUser->name(). PHP_EOL;
-            }
-            else if ( $twUser->id() )
-            {
-              $localUser = new User();
-              // echo "remote found for ". $mention->user->id. ": ". $twUser->externalId(). "/". $twUser->name(). PHP_EOL;
-            }
-            else
-            {
-              $localUser = new User();
+            $localUser = ObjectCache::getByType( 'User', $twUser->kikiUserId() );
 
+            if ( !$twUser->id() )
+            {
               $twUser->setName( $mention->user->name );
               $twUser->setScreenName( $mention->user->screen_name );
               $twUser->setPicture( $mention->user->profile_image_url );
-              $twUser->link(0);
-
-              // echo "created new user ". $twUser->externalId(). "/". $twUser->name(). PHP_EOL;
+              $twUser->link( $localUser->id() );
             }
 
             $ctime = strtotime($mention->created_at);
