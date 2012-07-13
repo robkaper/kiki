@@ -7,28 +7,23 @@ class Controller_Articles extends Controller
     $db = $GLOBALS['db'];
     $user = $GLOBALS['user'];
 
-    if ( $this->objectId )
-      $this->title = Articles::title( $db, $user, $this->objectId );
-    else
-      $this->title = Articles::sectionTitle( $db, $user, $this->instanceId );
-
     $template = Template::getInstance();
     $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $this->objectId )
     {
-      if ( $this->title )
+      $article = new Article($this->objectId);
+      if ( $article->id() )
       {
         $this->status = 200;
+
+        $this->title = $article->title();
+
         $this->template = 'pages/default';
 
-        $template = new Template( 'content/articles-single' );
-
-        $article = new Articles($this->objectId);
+        // $template = new Template( 'content/articles-single' );
         // $template->assign( 'article', $article->data() );
-
-        $this->content = $template->fetch();
-
+        // $this->content = $template->fetch();
         $this->content = Articles::showSingle( $db, $user, $this->objectId );
       }
       else
@@ -40,9 +35,12 @@ class Controller_Articles extends Controller
     }
     else
     {
-      Log::debug( "showMulti ". $this->instanceId );
       $this->status = 200;
+
+      $this->title = Articles::sectionTitle( $db, $user, $this->instanceId );
+
       $this->template = 'pages/default';
+
       $this->content = Articles::showMulti( $db, $user, $this->instanceId, 10, 2 );
     }
   }

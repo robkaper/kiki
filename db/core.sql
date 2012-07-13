@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.20' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.21' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -85,7 +85,8 @@ create table sections (
   base_uri varchar(255) not null,
   unique key(base_uri),
   title varchar(255) not null,
-  type varchar(255) not null
+  type varchar(32) not null,
+  key type_title(type, title)
 ) default charset=utf8;
 
 drop table if exists articles;
@@ -129,7 +130,8 @@ create table menu_items (
   admin boolean default false,
   class varchar(255) default null,
   icon varchar(255) default null,
-  sortorder tinyint unsigned not null
+  sortorder tinyint unsigned not null,
+  key level_context_sortorder(level,context,sortorder)
 ) default charset=utf8;
 
 drop table if exists storage;
@@ -196,8 +198,8 @@ create table mail_queue (
   body text not null
 ) default charset=utf8;
 
-drop table if exists users_connections;
-create table users_connections (
+drop table if exists connections;
+create table connections (
   id int unsigned not null auto_increment,
   primary key(id),
   user_id int unsigned not null,
@@ -209,7 +211,9 @@ create table users_connections (
   secret text default null,
   name varchar(255) default null,
   screenname varchar(255) default null,
-  picture varchar(255) default null
+  picture varchar(255) default null,
+  key(external_id),
+  key(user_id)
 ) default charset=utf8;
 
 drop table if exists objects;
@@ -253,5 +257,6 @@ create table publications (
   connection_id bigint unsigned not null,
   external_id bigint unsigned not null,
   body text not null,
-  response text not null
+  response text not null,
+  key(object_id)
 ) default charset=utf8;

@@ -37,12 +37,6 @@ class Articles
     return $o ? Articles::showArticle( $user, $o, $json, 0, false, $showAsPage ) : null;
   }
 
-  public static function title( &$db, &$user, $articleId )
-  {
-    $qId = $db->escape( $articleId );
-    return $db->getSingleValue( "select title from articles where id='$qId' or cname='$qId'" );
-  }
-
   public static function sectionTitle( &$db, &$user, $sectionId )
   {
     $q = $db->buildQuery( "select id,title from sections where id=%d", $sectionId );

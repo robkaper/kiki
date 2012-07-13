@@ -48,7 +48,7 @@ class Event extends Object
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where e.id=%d or e.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 

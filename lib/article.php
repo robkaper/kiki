@@ -49,7 +49,7 @@ class Article extends Object
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o on o.object_id=a.object_id where id=%d or o.object_id=%d", $this->id, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
