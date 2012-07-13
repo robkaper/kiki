@@ -45,7 +45,7 @@
   }
   else
   {
-    $q = "SELECT id FROM articles WHERE section_id=0 OR section_id in (SELECT id FROM sections where type='pages') ORDER BY ctime desc LIMIT 25";
+    $q = "SELECT a.id FROM articles a LEFT JOIN sections s ON s.id=a.section_id WHERE a.section_id=0 OR s.type='pages' ORDER BY s.base_uri ASC, FIELD(a.cname, 'index') ASC";
     $pages = $db->getArray($q);
 
     echo "<table>\n";
@@ -53,10 +53,10 @@
 
     echo "<tr>\n"; 
     echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
-    echo "<td colspan=\"2\">". _("Create a new page"). "</td>\n";
+    echo "<td colspan=\"3\">". _("Create a new page"). "</td>\n";
     echo "</tr>\n";
 
-    echo "<tr><th></th><th></th><th></th><th>URL</th><th>Title</th></tr>\n";
+    echo "<tr><th></th><th></th><th></th></th><th colspan=\"2\">URL</th><th>Title</th></tr>\n";
 
     echo "</thead>\n";
     echo "<tbody>\n";
@@ -66,12 +66,21 @@
       foreach ( $pages as $pageId )
       {
         $article = new Article( $pageId );
+        $section = new Section( $article->sectionId() );
         $class = $article->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
         echo "<td><a href=\"?id=". $article->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\" /></a></td>\n";
         echo "<td><a href=\"". $article->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\" /></a></td>\n";
         echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\" /></a></td>\n";
-        echo "<td>". $article->cname(). "</td>\n";
+        if ( $section->baseURI() )
+        {
+          echo "<td>". $section->baseURI(). "</td>\n";
+          echo "<td>". $article->cname(). "</td>\n";
+        }
+        else
+        {
+          echo "<td colspan=\"2\">". $article->cname(). "</td>\n";
+        }
         echo "<td>". $article->title(). "</td>\n";
         echo "</tr>\n";
       }
