@@ -56,6 +56,15 @@ class Misc
   */
   public static function markup( $text, $authorMode = true, $fullURLs = false )
   {
+    $matches = array();
+    $htmlTags = preg_match_all( '~</?[^>]+>~', $text, $matches );
+    if ( $htmlTags )
+    {
+      $bbTags = preg_match_all( '~\[/?[^\]]+\]~', $text, $matches );
+      if ( $htmlTags > $bbTags )
+        return $text;
+    }
+
     // Turn ordinary URLs into [url]
     $text = preg_replace( "((\s)(http(s)?\://)([^/\s,]+)?([^ \s,]+)?)", "\\1[url=\\2\\4\\5]\\5[/url] [\\4]", $text );
 
@@ -151,6 +160,8 @@ class Misc
   */
   public static function textStrip( $str )
   {
+    $str = strip_tags($str);
+
     $str = preg_replace( "(\[([^\[\]]+)\]([^\[\]]+)\[/([^\[\]]+)\])", "\\2", $str );
 
     // Twice, because of [ul][li] nests (and possibly others)
