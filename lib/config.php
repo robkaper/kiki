@@ -52,6 +52,8 @@ class Config
 	public static $siteLogo = null;
 	public static $customCss = null;
 
+	public static $clEditor = false;
+
     	public static $iconSetColor = "black";
     	public static $iconPrefix = null;
 

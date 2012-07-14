@@ -59,10 +59,11 @@ class Form
   }
 
   // TODO: remove id=, use textarea[name=...] selector instead
-  public static function textarea( $id, $value=null, $label=null, $placeholder=null, $maxLength=0 )
+  public static function textarea( $id, $value=null, $label=null, $placeholder=null, $maxLength=0, $class=null )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
-    $class = $maxLength ? " class=\"keyup\"" : "";
+    if ( $maxLength )
+      $class .= " keyup";
     $maxlength = $maxLength ? " maxlength=\"$maxLength\"" : "";
 
     if ( $maxLength )
@@ -72,14 +73,17 @@ class Form
     }
 
     $template = Template::getInstance();
-    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.css" );
-    $template->append( 'scripts', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.min.js" );
+    if ( Config::$clEditor )
+    {
+      $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.css" );
+      $template->append( 'scripts', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.min.js" );
+    }
 
     // $label .= "<a class=\"button toggleWysiwyg\" href=\"#\">Toggle WYSIWYG</a>";
     if ( $label )
     {
       $content = "<p><label for=\"${id}\">${label}</label>\n";
-      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}${maxlength}${class}>${value}</textarea></p>\n";
+      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}${maxlength} class=\"${class}\">${value}</textarea></p>\n";
     }
     else
       $content = "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea>\n";

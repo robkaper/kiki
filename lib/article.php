@@ -186,7 +186,8 @@ class Article extends Object
     if ( $type!='pages' )
       $content .= Form::datetime( "ctime", $date, "Date" );
 
-    $content .= Form::textarea( "body", htmlspecialchars($this->body), "Body" );
+    $class = Config::$clEditor ? "cleditor" : null;
+    $content .= Form::textarea( "body", htmlspecialchars($this->body), "Body", null, 0, $class );
     $content .= Form::albumImage( "headerImage", "Header image", $this->albumId, $this->headerImage );
 
     if ( $type!='pages' )
