@@ -181,20 +181,22 @@ function fileUploadHandler( target, id, uri, html )
 }
 
 $( function() { 
-  $('textarea.cleditor').cleditor( {
-    width: "99%",
-    controls: "bold italic underline strikethrough subscript superscript | font size " +
-      "style | color highlight removeformat | bullets numbering | outdent " +
-      "indent | alignleft center alignright justify | undo redo | " +
-      "rule image link unlink | cut copy paste pastetext | print source",
-    styles:
-      [["Paragraph", "<p>"], ["Header 1", "<h1>"], ["Header 2", "<h2>"],
-      ["Header 3", "<h3>"],  ["Header 4","<h4>"],  ["Header 5","<h5>"],
-      ["Header 6","<h6>"]],
-    useCSS: true,
-    docType: '<!DOCTYPE html>'
-
-  } );
+  if ( $().cleditor )
+  {
+    $('textarea.cleditor').cleditor( {
+      width: "99%",
+      controls: "bold italic underline strikethrough subscript superscript | font size " +
+        "style | color highlight removeformat | bullets numbering | outdent " +
+        "indent | alignleft center alignright justify | undo redo | " +
+        "rule image link unlink | cut copy paste pastetext | print source",
+      styles:
+        [["Paragraph", "<p>"], ["Header 1", "<h1>"], ["Header 2", "<h2>"],
+        ["Header 3", "<h3>"],  ["Header 4","<h4>"],  ["Header 5","<h5>"],
+        ["Header 6","<h6>"]],
+      useCSS: true,
+      docType: '<!DOCTYPE html>'
+    } );
+  }
 
   var prettify = false;
   $("pre code").each(function() {
