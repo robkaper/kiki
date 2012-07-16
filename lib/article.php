@@ -49,7 +49,7 @@ class Article extends Object
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d", $this->id, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
@@ -100,7 +100,6 @@ class Article extends Object
       "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
       $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
-    Log::debug($q);
 
     $rs = $this->db->query($q);
     if ( $rs )
