@@ -20,6 +20,7 @@ class Comment extends Object
 
   private $userId = 0;
   private $connectionId = 0;
+  private $externalId = 0;
 
   private $body = null;
 
@@ -33,6 +34,7 @@ class Comment extends Object
 
     $this->userId = 0;
     $this->connectionId = 0;
+    $this->externalId = 0;
     
     $this->body = null;
   }
@@ -40,7 +42,7 @@ class Comment extends Object
   public function load()
   {
     $q = $this->db->buildQuery(
-      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, c.user_id, c.user_connection_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.id=c.object_id WHERE c.id=%d",
+      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, c.user_id, c.user_connection_id, c.external_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.id=c.object_id WHERE c.id=%d",
       $this->id
     );
 
@@ -61,6 +63,7 @@ class Comment extends Object
 
     $this->userId = $o->user_id;
     $this->connectionId = $o->user_connection_id;
+    $this->externalId = $o->external_id;
     
     $this->body = $o->body;
   }
@@ -80,8 +83,8 @@ class Comment extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_id, user_connection_id, body) VALUES (%d, '%s', %d, %d, %d, '%s')",
-      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->body
+      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_id, user_connection_id, external_id, body) VALUES (%d, '%s', %d, %d, %d, %d, '%s')",
+      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->externalId, $this->body
     );
 
     $rs = $this->db->query($q);
@@ -106,6 +109,8 @@ class Comment extends Object
   public function userId() { return $this->userId; }
   public function setConnectionId( $connectionId ) { $this->connectionId = $connectionId; }
   public function connectionId() { return $this->connectionId; }
+  public function setExternalId( $externalId ) { $this->externalId = $externalId; }
+  public function externalId() { return $this->externalId; }
 
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
