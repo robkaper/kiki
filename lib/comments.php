@@ -36,8 +36,8 @@ class Comments
             if ( $connection )
             {
               $serviceName = $connection->serviceName();
-              $name = $commentAuthor->name();
-              $pic = $commentAuthor->picture();
+              $name = $connection->name();
+              $pic = $connection->picture();
             }
             else
             {
