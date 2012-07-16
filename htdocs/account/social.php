@@ -23,6 +23,9 @@
   {
     if ( $msg = $_POST['msg'] )
     {
+      $update = new SocialUpdate();
+      $update->save();
+
       foreach( $_POST['connections'] as $id => $value )
       {
         if ( $value != 'on' )
@@ -31,7 +34,7 @@
         $connection = $user->getConnection($id);
         if ( $connection )
         {
-          $rs = $connection->post($msg);
+          $rs = $connection->post( $update->objectId(), $msg );
           if ( isset($rs->id) )
             echo "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
           else if ( $rs->error == 'Read-only application cannot POST' )

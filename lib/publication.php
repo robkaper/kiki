@@ -1,5 +1,7 @@
 <?
 
+// FIXME: make sure all publications reference an object. This means all social updates must also have their own unique object id.
+
 class Publication
 {
   private $id = 0;
@@ -53,12 +55,13 @@ class Publication
 
   private function dbInsert()
   {
-    $q = $this->db->buildQuery( "INSERT INTO publications (ctime,object_id,connection_id,external_id,body,response) values (now(), %d, %d, %d, '%s', '%s')",
+    $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
+
+    $q = $this->db->buildQuery( "INSERT INTO publications (ctime,object_id,connection_id,external_id,body,response) values ($qCtime, %d, %d, %d, '%s', '%s')",
       $this->objectId, $this->connectionId, $this->externalId, $this->body, $this->response
     );
 
     $rs = $this->db->query($q);
-    Log::debug($q);
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
 
@@ -69,6 +72,7 @@ class Publication
   {
   }
 
+  public function setCtime( $ctime ) { $this->ctime = $ctime; }
   public function setObjectId( $objectId ) { $this->objectId = $objectId; }
   public function setConnectionId( $connectionId ) { $this->connectionId = $connectionId; }
   public function setExternalId( $externalId ) { $this->externalId = $externalId; }

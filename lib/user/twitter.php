@@ -99,7 +99,7 @@ class User_Twitter extends User_External
     $this->picture = $data->profile_image_url;
   }
 
-  public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
+  public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
     $result = new stdClass;
     $result->id = null;
@@ -125,7 +125,7 @@ class User_Twitter extends User_External
     }
 
     $publication = new Publication();
-    $publication->setObjectId( 0 );
+    $publication->setObjectId( $objectId );
     $publication->setConnectionId( $this->externalId );
     $publication->setBody( $msg );
     $publication->setResponse( serialize($twRs) );
@@ -157,7 +157,7 @@ class User_Twitter extends User_External
     $tinyUrl = TinyUrl::get( $article->url() );
 
     $msg = sprintf( "%s %s %s", $article->title(), $tinyUrl, $article->hashtags() );
-    $result = $this->post( $msg );
+    $result = $this->post( $article->objectId(), $msg );
     return $result;
   }
 
@@ -165,11 +165,11 @@ class User_Twitter extends User_External
   {
     $tinyUrl = TinyUrl::get( $event->url() );
     $msg = sprintf( "%s %s %s", $event->title(), $tinyUrl, $event->hashtags() );
-    $result = $this->post( $msg );
+    $result = $this->post( $event->objectId(), $msg );
     return $result;
   }
 
-  public function createEvent( $title, $start, $end, $location, $description, $picture=null )
+  public function createEvent( $objectId, $title, $start, $end, $location, $description, $picture=null )
   {
     return null;
   }

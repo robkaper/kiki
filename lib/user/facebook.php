@@ -141,7 +141,7 @@ class User_Facebook extends User_External
     $this->picture = "http://graph.facebook.com/". $this->externalId. "/picture";
   }
 
-  public function post( $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
+  public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
     $result = new stdClass;
     $result->id = null;
@@ -171,7 +171,7 @@ class User_Facebook extends User_External
     Log::debug( "attachment: ". print_r( $attachment, true ) );
 
     $publication = new Publication();
-    $publication->setObjectId( 0 );
+    $publication->setObjectId( $objectId );
     $publication->setConnectionId( $this->externalId );
     $publication->setBody( serialize($attachment) );
 
@@ -220,13 +220,13 @@ class User_Facebook extends User_External
     $storageId = $article->headerImage();
     $picture = $storageId ? Storage::url( $storageId ) : Config::$siteLogo;
 
-    $result = $this->post( $msg, $link, $title, $caption, $description, $picture );
+    $result = $this->post( $article->objectId(), $msg, $link, $title, $caption, $description, $picture );
     return $result;
   }
 
   public function postEvent( &$event )
   {
-    $rs = $this->createEvent( $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
+    $rs = $this->createEvent( $event->objectId(), $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
 
     // TODO: post a link on the event wall. Disabled because of a bug in Facebook:
     // https://developers.facebook.com/bugs/225344230889618/
@@ -263,7 +263,7 @@ class User_Facebook extends User_External
    * @return array Result set of the Facebook API call.
    * @todo Standardise the result sets of connection API calls.
    */
-  public function createEvent( $title, $start, $end, $location, $description, $picture=null )
+  public function createEvent( $objectId, $title, $start, $end, $location, $description, $picture=null )
   {
     // Privacy types: OPEN, CLOSED, SECRET
 
@@ -305,7 +305,7 @@ class User_Facebook extends User_External
     }
 
     $publication = new Publication();
-    $publication->setObjectId( 0 );
+    $publication->setObjectId( $objectId );
     $publication->setConnectionId( $this->externalId );
     $publication->setBody( serialize($attachment) );
 
