@@ -1,6 +1,5 @@
 drop table twitter_users;
 drop table facebook_users;
-drop table social_updates;
 
 create table publications (
   publication_id int unsigned not null auto_increment,
