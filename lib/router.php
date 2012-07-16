@@ -42,7 +42,8 @@ class Router
 
     $baseUris = array();
     $qType = $type ? $db->buildQuery("where type='%s'", $type) : null;
-    $qSort = $sort ? "order by base_uri asc" : null;
+    // Sort DESC when no sort order is requested for non-greedy matching (e.g. /a/b/ before /a/)
+    $qSort = $sort ? "order by base_uri asc" : "order by base_uri desc";
     $q = "select id, base_uri, type, title from sections $qType $qSort";
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )

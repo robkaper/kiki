@@ -12,8 +12,8 @@ class Controller_Articles extends Controller
 
     if ( $this->objectId )
     {
-      $article = new Article($this->objectId);
-      if ( $article->id() )
+      $article = new Article( 0, $this->objectId);
+      if ( $article->id() && $article->visible() )
       {
         $this->status = 200;
 

@@ -38,9 +38,14 @@ class Storage
   public static function uri( $id, $w=0, $h=0, $crop=false )
   {
     $db = $GLOBALS['db'];
-    $qId = (int)$id;
-    $qHash = $db->escape($id);
-    $o = $db->getSingle( "select hash,extension from storage where id=$qId or hash='$qHash'" );
+
+    $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE hash='%s'", $id );
+    $o = $db->getSingle($q);
+    if ( !$o )
+    {
+      $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE id=%d", $id );
+      $o = $db->getSingle($q);
+    }
 
     $extra = ($w && $h) ? ( ".${w}x${h}". ($crop ? ".c" : null) ) : null;
     return $o ? sprintf( "%s%s.%s", $o->hash, $extra, $o->extension ) : null;

@@ -64,8 +64,8 @@ class Section
 
   public function dbUpdate()
   {
-    if ( !$this->cname || !$this->visible )
-      $this->cname = Misc::uriSafe($this->title);
+    if ( !$this->baseURI || !$this->visible )
+      $this->baseURI = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
       "UPDATE sections SET ..."
@@ -77,8 +77,8 @@ class Section
   
   public function dbInsert()
   {
-    if ( !$this->cname )
-      $this->cname = Misc::uriSafe($this->title);
+    if ( !$this->baseURI )
+      $this->baseURI = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
       "INSERT INTO sections (title,base_uri,type) values ('%s', '%s', '%s')",
@@ -117,7 +117,7 @@ class Section
 
     $content = Form::open( "sectionForm_". $this->id, Config::$kikiPrefix. "/json/section.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "sectionId", $this->id );
-    $content .= Form::text( "baseURI", $this->cname, "URL name" );
+    $content .= Form::text( "baseURI", $this->baseURI, "URL name" );
     $content .= Form::text( "title", $this->title, "Title" );
 
     $types = array();
