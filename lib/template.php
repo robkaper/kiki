@@ -251,7 +251,7 @@ class Template
 
   public function content( $fullHTML = true )
   {
-    Log::debug( "begin template engine" );
+    // Log::debug( "begin template engine" );
     $this->loadData();
 
     // TODO: don't always auto-include html framework, desired template
@@ -285,7 +285,7 @@ class Template
     if ( $this->cleanup )
       $this->cleanup();
 
-    Log::debug( "done parsing" );
+    // Log::debug( "done parsing" );
     // Log::debug( "content: ". $this->content );
     return $this->content;
   }

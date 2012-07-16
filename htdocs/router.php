@@ -114,6 +114,7 @@
 
   $template->load( $controller->template() );
 
+  // FIXME: this is not done for custom PHP files in document root... port index.php as well
   if ( Config::$customCss )
     $template->append( 'stylesheets', Config::$customCss );
 
