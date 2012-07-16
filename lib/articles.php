@@ -78,7 +78,15 @@ class Articles
     if ( !$o->visible )
       $title .= " (unpublished)";
     $myUrl = Articles::url( $GLOBALS['db'], $o->section_id, $o->cname );
-    $body = Misc::markup( $o->body );
+
+    // Expirimental: parse body as template first.
+    // FIXME: for performance reasons, don't do this when no template syntax ({ and }) is used in the body.
+    $template = new Template();
+    $template->setContent($o->body);
+    $body = $template->fetch();
+
+    $body = Misc::markup( $body );
+
     $date = $o->ctime;
 
     $uAuthor = ObjectCache::getByType( 'User', $o->user_id );

@@ -243,6 +243,8 @@ class Template
     return $this->content( false );
   }
 
+  public function setContent( $content ) { $this->content = $content; }
+
   public function content( $fullHTML = true )
   {
     Log::debug( "begin template engine" );
@@ -250,20 +252,25 @@ class Template
 
     // TODO: don't always auto-include html framework, desired template
     // output could just as well be another format (json, xml, ...)
+    $content = null;
     if ( $fullHTML )
     {
-      $this->content = "{include 'html'}". PHP_EOL;
-      $this->content .= "{include 'head'}". PHP_EOL;
+      $content = "{include 'html'}". PHP_EOL;
+      $content .= "{include 'head'}". PHP_EOL;
     }
 
     if ( !$this->template )
       $this->template = 'pages/default';
-    $this->content .= file_get_contents($this->file($this->template)). PHP_EOL;
+
+    // Don't load a template when setContent has been used.
+    $content .= $this->content ? $this->content : file_get_contents($this->file($this->template)). PHP_EOL;
 
     if ( $fullHTML )
     {
-      $this->content .= "{include 'html-end'}";
+      $content .= "{include 'html-end'}";
     }
+
+    $this->content = $content;
 
     // Log::debug( "content: ". $this->content );
 
