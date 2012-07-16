@@ -30,7 +30,8 @@
     $i=0;
     foreach( $rs['data'] as $reply )
     {
-      list( $uid, $postId ) = explode("_", $reply['post_id']);
+      list( $uid, $postId, $partId ) = explode("_", $reply['id']);
+      $externalId = $postId. "_". $partId;
 
       $fbUser = Factory_User::getInstance( 'User_Facebook', $reply['fromid'] );
       $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
@@ -48,7 +49,8 @@
       $connectionId = $db->getSingleValue($q);
 
       // Find comment
-      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id=%d", $connectionId, $postId );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $externalId );
+      echo $q. PHP_EOL;
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
@@ -58,7 +60,7 @@
       $comment->setInReplyToId( $objectId );
       $comment->setUserId( $localUser->id() );
       $comment->setConnectionId( $connectionId );
-      $comment->setExternalId( $postId );
+      $comment->setExternalId( $externalId );
       $comment->setBody( $reply['text'] );
       $comment->setCtime( $ctime );
       $comment->save();

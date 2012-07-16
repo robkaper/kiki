@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.21' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.23' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -75,7 +75,7 @@ create table comments (
   in_reply_to_id bigint unsigned not null,
   user_id bigint unsigned not null,
   user_connection_id int unsigned not null,
-  external_id bigint unsigned not null,
+  external_id varchar(255) not null,
   body text not null
 ) default charset=utf8;
 

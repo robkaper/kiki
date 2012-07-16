@@ -20,7 +20,7 @@ class Comment extends Object
 
   private $userId = 0;
   private $connectionId = 0;
-  private $externalId = 0;
+  private $externalId = null;
 
   private $body = null;
 
@@ -34,7 +34,7 @@ class Comment extends Object
 
     $this->userId = 0;
     $this->connectionId = 0;
-    $this->externalId = 0;
+    $this->externalId = null;
     
     $this->body = null;
   }
@@ -73,8 +73,8 @@ class Comment extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE comments SET object_id=%d, ip_addr='%s', in_reply_to_id=%d, user_id=%d, user_connection_id=%d, body='%s' WHERE id=%d",
-      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->body, $this->id
+      "UPDATE comments SET object_id=%d, ip_addr='%s', in_reply_to_id=%d, user_id=%d, user_connection_id=%d, external_id='%s', body='%s' WHERE id=%d",
+      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->externalId, $this->body, $this->id
     );
 
     $this->db->query($q);
@@ -83,7 +83,7 @@ class Comment extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_id, user_connection_id, external_id, body) VALUES (%d, '%s', %d, %d, %d, %d, '%s')",
+      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_id, user_connection_id, external_id, body) VALUES (%d, '%s', %d, %d, %d, '%s', '%s')",
       $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->externalId, $this->body
     );
 
