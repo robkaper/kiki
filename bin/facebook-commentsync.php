@@ -28,11 +28,11 @@
     $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc LIMIT 5000";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     $i=0;
-    foreach( $rs['data'] as $comment )
+    foreach( $rs['data'] as $reply )
     {
-      list( $uid, $postId ) = explode("_", $comment['post_id']);
+      list( $uid, $postId ) = explode("_", $reply['post_id']);
 
-      $fbUser = Factory_User::getInstance( 'User_Facebook', $comment['fromid'] );
+      $fbUser = Factory_User::getInstance( 'User_Facebook', $reply['fromid'] );
       $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
 
       if ( !$fbUser->id() )
@@ -41,15 +41,14 @@
         $fbUser->link(0);
       }
 
-      $ctime = $comment['time'];
+      $ctime = $reply['time'];
       $objectId = isset($objectIds[$postId]) ? $objectIds[$postId] : 0;
 
       $q = $db->buildQuery( "SELECT id FROM connections WHERE external_id=%d", $fbUser->externalId() );
       $connectionId = $db->getSingleValue($q);
 
       // Find comment
-      // FIXME: properly store externalId instead of checking timestamp
-      $q = $db->buildQuery( "SELECT c.id from comments c LEFT JOIN objects o ON o.object_id=c.object_id WHERE ctime=from_unixtime(%d) and in_reply_to_id=%d and (user_id=%d or user_connection_id=%d)", $ctime, $objectId, $localUser->id(), $connectionId );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id=%d", $connectionId, $postId );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
@@ -59,7 +58,8 @@
       $comment->setInReplyToId( $objectId );
       $comment->setUserId( $localUser->id() );
       $comment->setConnectionId( $connectionId );
-      $comment->setBody( $comment['text'] );
+      $comment->setExternalId( $postId );
+      $comment->setBody( $reply['text'] );
       $comment->setCtime( $ctime );
       $comment->save();
             

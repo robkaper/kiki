@@ -75,6 +75,7 @@ create table comments (
   in_reply_to_id bigint unsigned not null,
   user_id bigint unsigned not null,
   user_connection_id int unsigned not null,
+  external_id bigint unsigned not null,
   body text not null
 ) default charset=utf8;
 
