@@ -1,9 +1,4 @@
 <?
-  // TODO: finalise error handling for twitter post with insufficient permissions
-  // TODO: add follow me/friend me buttons/links to external social sites
-  // FIXME: make jsonable
-  // TODO: error handling when message empty or no social network selected (requires: form validation)
-
   $template = Template::getInstance();
 
   if ( !$user->isAdmin() )
@@ -18,74 +13,6 @@
   $template->assign( 'title', _("Events") );
 
   ob_start();
-
-  if ( $_POST )
-  {
-    $picture = null;
-    if ( isset($_FILES['picture']) )
-    {
-      $tmpFile = $_FILES['picture']['tmp_name'];
-      $name = $_FILES['picture']['name'];
-      $size = $_FILES['picture']['size'];
-
-      $storageId = $tmpFile ? Storage::save( $name, file_get_contents($tmpFile) ) : 0;
-      if ( $storageId )
-      {
-        echo $storageId. "/";
-        $picture = Storage::localFile( $storageId );
-        echo $picture. "/";
-      }
-    }
-
-    $errors = array();
-
-    if ( isset($_POST['title']) )
-      $title = $_POST['title'];
-    else
-      $errors[] = "Geen titel ingevuld.";
-
-    if ( isset($_POST['start']) )
-      $start = strtotime($_POST['start']);
-    else
-      $errors[] = "Geen startdatum ingevuld.";
-
-    $end = !empty($_POST['end']) ? strtotime($_POST['end']) : $start+3600;
-
-    if ( isset($_POST['location']) )
-      $location = $_POST['location'];
-    else
-      $errors[] = "Geen lokatie ingevuld.";
-
-    $description = isset($_POST['description']) ? $_POST['description'] : null;
-
-    if ( !count($errors) )
-    {
-      foreach( $_POST['connections'] as $id => $value )
-      {
-        if ( $value != 'on' )
-          continue;
-
-        $connection = $user->getConnection($id);
-        if ( $connection )
-        {
-          $rs = $connection->createEvent( $title, $start, $end, $location, $description, $picture );
-          if ( isset($rs['id']) )
-          {
-            $url = "https://www.facebook.com/events/". $rd['id']. "/";
-            echo "<p>". $connection->serviceName(). " event aangemaakt: <a target=\"_blank\" href=\"". $url. "\">". $url. "</a></p>\n";
-          }
-          else if ( isset($rs->error) )
-            echo "<p>\nEr is een fout opgetreden bij het aanmaken van je ". $connection->serviceName(). " event:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
-          else
-            echo "<p>\nEr is een fout opgetreden bij het aanmaken van je ". $connection->serviceName(). " event.</p>\n";
-        }
-      }
-    }
-    else
-    {
-      print_r( $errors );
-    }
-  }
 
   if ( isset($_GET['id']) )
   {
