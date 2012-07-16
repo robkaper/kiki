@@ -83,6 +83,7 @@ class Articles
     // FIXME: for performance reasons, don't do this when no template syntax ({ and }) is used in the body.
     $template = new Template();
     $template->setContent($o->body);
+    $template->setCleanup(false);
     $body = $template->fetch();
 
     $body = Misc::markup( $body );

@@ -62,6 +62,8 @@ class Template
   private $ifDepth = 0;
   private $maxIfDepth = 0;
 
+  private $cleanup = true;
+
   private $user;
   private $db;
 
@@ -225,7 +227,7 @@ class Template
 
     for( $i=0; $i<=$this->maxIfDepth; $i++ )
     {
-      $reConditions = '~\n?\{if('. $i. ')([^\}]+)\}\n??(.*)\n?\{\/if'. $i. '\}\n?~sU';
+      $reConditions = '~[\s\r\n]?\{if('. $i. ')([^\}]+)\}\n??(.*)\n?\{\/if'. $i. '\}[\s\r\n]?~sU';
       $this->content = preg_replace_callback( $reConditions, array($this, 'conditions'), $this->content );
     }
     // echo "<h2>post parse/conditions:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -233,9 +235,11 @@ class Template
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
   }
 
+  public function setCleanup( $cleanup ) { $this->cleanup = $cleanup; }
+
   public function cleanup()
   {
-    $this->content = preg_replace( '~([\r\n]{2,})~', "\n", $this->content );
+    $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
   public function fetch()
@@ -278,7 +282,8 @@ class Template
 
     $this->preparse();
     $this->parse();
-    $this->cleanup();
+    if ( $this->cleanup )
+      $this->cleanup();
 
     Log::debug( "done parsing" );
     // Log::debug( "content: ". $this->content );
