@@ -43,8 +43,6 @@
 
       $ctime = $comment['time'];
       $objectId = isset($objectIds[$postId]) ? $objectIds[$postId] : 0;
-      $text = $comment['text'];
-      $name = $fbUser->name();
 
       $q = $db->buildQuery( "SELECT id FROM connections WHERE external_id=%d", $fbUser->externalId() );
       $connectionId = $db->getSingleValue($q);
@@ -61,7 +59,7 @@
       $comment->setInReplyToId( $objectId );
       $comment->setUserId( $localUser->id() );
       $comment->setConnectionId( $connectionId );
-      $comment->setBody( $mention->text );
+      $comment->setBody( $comment['text'] );
       $comment->setCtime( $ctime );
       $comment->save();
             
