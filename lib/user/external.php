@@ -48,6 +48,7 @@ abstract class User_External
     else
     {
       $this->identify();
+      $this->load();
       $this->loadKikiUserIds();
     }
   }
@@ -156,7 +157,7 @@ abstract class User_External
     }
   }
 
-  private function load( $kikiUserId )
+  private function load( $kikiUserId = 0 )
   {
     if ( $kikiUserId )
       $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->externalId, $kikiUserId );
@@ -179,22 +180,17 @@ abstract class User_External
 
   public function link( $kikiUserId )
   {
-    // If we have a local user to link to, delete anonymous links.
-    // FIXME: update the current connection, don't make a new one. (when comments etc link to our id instead of external_id)
-    if ( $kikiUserId )
-      $this->unlink();
-
     $this->kikiUserIds[] = $kikiUserId;
-    $q = $this->db->buildQuery( "insert into connections( user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
-    $rs = $this->db->query($q);
-  }
-  
-  public function unlink( $kikiUserId = 0 )
-  {
-    if ( $kikiUserId )
-      $q = $this->db->buildQuery( "delete from connections where user_id=%d and external_id=%d", $kikiUserId, $this->externalId );
+
+    if ( $this->id )
+    {
+      $q = $this->db->buildQuery(
+        "UPDATE connections set user_id=%d, external_id=%d, service='%s', mtime=now(), token='%s', secret='%s', name='%s', screenname='%s', picture='%s' WHERE id=%d",
+        $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture, $this->id
+      );
+    }
     else
-      $q = $this->db->buildQuery( "delete from connections where external_id=%d", $this->externalId );
+      $q = $this->db->buildQuery( "insert into connections(user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
 
     $rs = $this->db->query($q);
   }

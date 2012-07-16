@@ -178,9 +178,7 @@ class User extends Object
           $user->loadRemoteData();
 
           // Re-link connection to ensure the latest data is used (especially access token)
-          // TODO: compare connections and only relink when token changed or remote data was loaded
-          $user->unlink( $this->id );
-          $user->link($this->id );
+          $user->link( $this->id );
 
           // Use identified connection, it is the latest
           $this->connections[$id] = $user;
