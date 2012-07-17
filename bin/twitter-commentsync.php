@@ -129,7 +129,7 @@
       $connectionId = $db->getSingleValue($q);
 
       // Find comment
-      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id=%d", $connectionId, $tweet->id );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $tweet->id );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
