@@ -408,7 +408,7 @@ class Template
       switch($mod)
       {
         case 'escape':
-          $input = htmlentities($input);
+          $input = htmlentities($input, ENT_COMPAT, mb_internal_encoding());
           break;
         case 'i18n':
           $input = _($input);
