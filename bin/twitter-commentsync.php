@@ -113,7 +113,7 @@
       $ctime = strtotime($tweet->created_at);
 
       // Object ID for publications      
-      $objectId = ($storePublicationsAscomment && isset($objectIds[$tweet->id])) ? $objectIds[$tweet->id] : 0;
+      $objectId = ($storePublicationsAsComment && isset($objectIds[$tweet->id])) ? $objectIds[$tweet->id] : 0;
 
       // Object ID for replies to publications
       if ( !$objectId )

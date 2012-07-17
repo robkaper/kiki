@@ -50,7 +50,6 @@
 
       // Find comment
       $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $externalId );
-      echo $q. PHP_EOL;
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
