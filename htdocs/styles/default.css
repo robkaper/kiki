@@ -145,6 +145,7 @@ div.comment {
 	min-height: 50px;
 	margin-bottom: 1px;
 	background: #deb;
+	padding: 5px;
 }
 
 div.comment:first-child {
