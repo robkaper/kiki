@@ -16,6 +16,8 @@
 
   $tweets = array(); 
 
+  $storePublicationsAsComment = false;
+
   foreach( $connectionIds as $connectionId )
   {
     $q = $db->buildQuery(
@@ -95,8 +97,7 @@
 
   foreach( $tweets as $id => $tweet )
   {
-
-    if ( isset($objectIds[$tweet->id]) || isset($objectIds[$tweet->in_reply_to_status_id]) || isset($replyObjectIds[$tweet->in_reply_to_status_id]) )
+    if ( ($storePublicationsAsComment && isset($objectIds[$tweet->id])) || isset($objectIds[$tweet->in_reply_to_status_id]) || isset($replyObjectIds[$tweet->in_reply_to_status_id]) )
     {
       $twUser = Factory_User::getInstance( 'User_Twitter', $tweet->user->id );
       $localUser = ObjectCache::getByType( 'User', $twUser->kikiUserId() );
@@ -112,7 +113,7 @@
       $ctime = strtotime($tweet->created_at);
 
       // Object ID for publications      
-      $objectId = isset($objectIds[$tweet->id]) ? $objectIds[$tweet->id] : 0;
+      $objectId = ($storePublicationsAscomment && isset($objectIds[$tweet->id])) ? $objectIds[$tweet->id] : 0;
 
       // Object ID for replies to publications
       if ( !$objectId )
