@@ -47,6 +47,8 @@ class I18n
       case "nl":
         setlocale( LC_ALL, "nl", "nl_NL", "nl_NL.utf8", "nl_NL.UTF-8" );
         break;
+      case "en":
+        break;
       default:
         setlocale( LC_ALL, $locale );
         return false;
