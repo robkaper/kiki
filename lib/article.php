@@ -135,9 +135,15 @@ class Article extends Object
   {
     $sectionBaseUri = Router::getBaseUri( 'articles', $this->sectionId );
     if ( !$sectionBaseUri )
+      $sectionBaseUri = Router::getBaseUri( 'pages', $this->sectionId );
+    if ( !$sectionBaseUri )
       $sectionBaseUri = "/";
+
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
-    $url = $urlPrefix. $sectionBaseUri. $this->cname;
+
+    // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page
+    $url = $urlPrefix. $sectionBaseUri. ($this->cname!='index' ? $this->cname : null);
+
     return $url;
   }
 
