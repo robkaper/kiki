@@ -26,7 +26,6 @@ tt {
 	font-size: 0.875em; /* 0.875*16=14 */
 	width: 780px;
 	margin: 10px 0 10px 160px;
-	text-align: justify;
 }
 
 #content li {
@@ -446,7 +445,6 @@ div.bannerItem a:hover {
 article {
   margin: 0 0 1em 0;
   padding: 0px;
-  text-align: justify;
 }
 article .author, article .relTime {
   margin: 0px;
