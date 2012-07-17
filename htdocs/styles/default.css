@@ -63,8 +63,15 @@ aside p {
 	padding: 0.25em;
 }
 
+h1 {
+	color: #deb;
+}
 
-h1, h2, h3, h4 {
+#content > h2:first-child, #content > p:first-child {
+	margin-top: 0;
+}
+
+h2, h3, h4 {
 	color: #463;
 }
 
@@ -470,22 +477,25 @@ article header > img {
   width: 100%;
 }
 
-article footer {
+article footer, footer.pageFooter {
   clear: both;
   padding: 0;
   margin: 0;
   text-align: right;
 }
-article footer ul {
+
+article footer ul, footer.pageFooter ul {
   width: auto;
   padding: 0;
   margin: 0;
 }
-article footer li {
+
+article footer li, footer.pageFooter li  {
   margin: 0;
   padding: 0;
   display: inline;
 }
+
 article .relTime {
   float: right;
 }

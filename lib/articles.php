@@ -96,35 +96,40 @@ class Articles
     $relTime = Misc::relativeTime($date);
     $dateTime = date("c", strtotime($date));
 
-    if ( !$json )
-      $content .= "<article id=\"article_". $o->id. "\">\n";
-
-    $content .= "<header>\n";
-    if ( $maxLength )
-      $content .= "<h2><span><a href=\"$myUrl\">$title</a></span></h2>\n";
-
-    if ( !$maxLength && $o->header_image )
+    if ( !$showAsPage )
     {
-      $img = Storage::url( $o->header_image );
-      list ($base, $ext) = Storage::splitExtension( $img );
-      $img = "${base}.780x400.c.${ext}";
-      $content .= "<img src=\"$img\" />\n";
-    }
-    $content .= "<span class=\"author\">$author</span>\n";
-    $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
-    $content .= "</header>\n";
+      if ( !$json )
+        $content .= "<article id=\"article_". $o->id. "\">\n";
     
-    if ( $maxLength )
-    {
-      $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). "</p>\n";
-      // $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
+      $content .= "<header>\n";
+      if ( $maxLength )
+        $content .= "<h2><span><a href=\"$myUrl\">$title</a></span></h2>\n";
+
+      if ( !$maxLength && $o->header_image )
+      {
+        $img = Storage::url( $o->header_image );
+        list ($base, $ext) = Storage::splitExtension( $img );
+        $img = "${base}.780x400.c.${ext}";
+        $content .= "<img src=\"$img\" />\n";
+      }
+
+      $content .= "<span class=\"author\">$author</span>\n";
+      $content .= "<time class=\"relTime\" datetime=\"$dateTime\">$relTime geleden</time>\n";
+
+      $content .= "</header>\n";
+
+      if ( $maxLength )
+      {
+        $content .= "<p>\n". Misc::textSummary( $o->body, $maxLength, $lengthInParagraphs ). "</p>\n";
+        // $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
+      }
+      else
+        $content .= "<span class=\"body\">$body</span>";
     }
     else
-    {
-      $content .= "<span class=\"body\">$body</span>";
-    }
+      $content .= $body;
 
-    $content .= "<footer>\n";
+    $content .= $showAsPage ? "<footer class=\"pageFooter\">\n" : "<footer>\n";
     $content .= "<ul>\n";
 
     $publications = $article->publications();
@@ -149,13 +154,13 @@ class Articles
       $content .= $article->form( $user, true, $showAsPage ? 'pages' : 'articles' );
 
     // FIXME: page/filter comments in embedded view
-    if  ( !$maxLength )
+    if  ( !$maxLength && !$showAsPage )
     {
       // $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
       $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->object_id );
     }
 
-    if ( !$json )
+    if ( !$json && !$showAsPage )
        $content .= "</article>\n";
 
     return $content;

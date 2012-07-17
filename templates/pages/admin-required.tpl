@@ -4,7 +4,6 @@
 {include 'parts/aside'}
 
 <div id="cw" class="twosides"><div id="content">
-  <h1>{$title}</h1>
 
 <p>
 {if $user.id}

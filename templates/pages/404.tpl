@@ -5,7 +5,7 @@
 
 <div id="cw" class="noaside"><div id="content" lang="en">
 
-<h1>Kiki says <q>mea culpa</q>.</h1>
+<h2>Kiki says <q>mea culpa</q>.</h2>
 
 <img src="/kiki/img/404-circuit.png" style="width: 320px; height: 330px; float: right; margin: 0 0 1em 1em;" alt="" />
 
