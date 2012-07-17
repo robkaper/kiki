@@ -170,7 +170,7 @@ class Template
   public function append( $key, $value )
   {
     if ( !isset($this->data[$key]) )
-      $this->data[$key] = array( $value );
+      $this->data[$key] = array();
 
     if ( is_array($this->data[$key]) )
       $this->data[$key][] = $value;
