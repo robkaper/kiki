@@ -1,16 +1,13 @@
 <?
-  $template = Template::getInstance();
+  $this->title = "Purify structure";
 
   if ( !$user->isAdmin() )
   {
-    $template->load( 'pages/admin-required' );
-    echo $template->content();
-    exit();
+    $this->template = 'pages/admin-required';
+    return;
   }
 
-  $template->load( 'pages/admin' );
-
-  $template->assign( 'title', "Purify structure" );
+  $$this->template = 'pages/admin';
 
   ob_start();
 
@@ -110,6 +107,5 @@
   }
   echo "done.</li>";
 
-  $template->assign( 'content', ob_get_clean() );
-  echo $template->content();
+  $this->content = ob_get_clean();
 ?>

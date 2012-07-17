@@ -1,11 +1,7 @@
 <?
-  $template = Template::getInstance();
-
-  $template->assign( 'title', _("Create account") );
+  $this->title = _("Create account") );
 
   ob_start();
-
-  Log::debug( print_r($user,true) );
 
   if ( $user->id() )
   {
@@ -83,6 +79,4 @@
   else
     ob_end_clean();
 
-  $template->assign( 'content', $content );
-  echo $template->content();
-?>
+  $this->content = $content;

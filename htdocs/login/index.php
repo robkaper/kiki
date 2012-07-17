@@ -1,7 +1,5 @@
 <?
-  $template = Template::getInstance();
-
-  $template->assign( 'title', _("Login") );
+  $this->title = _("Login");
 
   ob_start();
 
@@ -17,9 +15,9 @@
       $errors[] = "Invalid email/password combination";
   }
 
-  if ( $user->id )
+  if ( $user->id() )
   {
-    echo "logged in as user ". $user->id. "\n";
+    echo "logged in as user ". $user->id(). "\n";
   }
   else
   {
@@ -30,6 +28,5 @@
   }
     echo "this ought to be a post..\n";
 
-  $template->assign( 'content', ob_get_clean() );
-  echo $template->content();
+  $this->content = ob_get_clean();
 ?>

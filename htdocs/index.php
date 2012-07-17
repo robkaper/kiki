@@ -15,12 +15,18 @@
  * @license Released under the terms of the MIT license.
  */
 
-  $template = Template::getInstance();
-
   // FIXME: add accountpage/adminpage checks here or to template
-  $template->load( 'pages/admin' );
+  $this->title = _("Kiki Status");
 
-  $template->assign( 'title', _("Kiki Status") );
+/*
+  if ( !$user->isAdmin() )
+  {
+    $this->template = 'pages/admin-required';
+    return;
+  }
+*/
+
+  $this->template = 'pages/admin';
 
   ob_start();
 
@@ -122,9 +128,10 @@
   if ( !$checkStatus )
   {
     echo "<p>\nPlease login as administrator.</p>\n";
-    include Template::file('forms/user-login');
+    
+    $template = new Template( 'forms/user-login' );
+    echo $template->fetch();
   }
 
-  $template->assign( 'content', ob_get_clean() );
-  echo $template->content();
+  $this->content = ob_get_clean();
 ?>

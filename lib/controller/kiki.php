@@ -25,22 +25,36 @@ class Controller_Kiki extends Controller
           header('Content-Type: '. Storage::getMimeType($ext) );
           exit( file_get_contents($kikiFile) );
           break;
+
         case 'php':
           $user = $GLOBALS['user'];
           $db = $GLOBALS['db'];
-          Log::debug( "Controller_Kiki EXIT: PHP file $kikiFile" );
+          Log::debug( "Controller_Kiki: PHP file $kikiFile" );
+
+          $this->status = 200;
+          $this->template = 'pages/default';
+
           include_once($kikiFile);
-          exit();
+
+          return;
           break;
+
         case '':
           if ( file_exists($kikiFile. "index.php") )
           {
             $user = $GLOBALS['user'];
             $db = $GLOBALS['db'];
-            Log::debug( "Controller_Kiki EXIT: PHP file $kikiFile". "index.php" );
+            Log::debug( "Controller_Kiki: PHP file $kikiFile". "index.php" );
+
+            $this->status = 200;
+            $this->template = 'pages/default';
+
             include_once($kikiFile. "index.php");
-            exit();
+
+            return;
           }
+          break;
+
         default:;
       }
       Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );

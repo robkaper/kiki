@@ -1,9 +1,6 @@
 <?
-  $template = Template::getInstance();
-
-  $template->load( $user->isAdmin() ? 'pages/admin' : 'pages/default' );
-
-  $template->assign( 'title', _("Your Account") );
+  $this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
+  $this->title = _("Your Account");
 
   ob_start();
 
@@ -35,6 +32,5 @@
     echo "<p>\nLogin first.</p>\n";
   }
 
-  $template->assign( 'content', ob_get_clean() );
-  echo $template->content();
+  $this->content = ob_get_clean();
 ?>

@@ -8,7 +8,7 @@
     <input type="password" name="password" value="{$password}" />
   </p>
   <p>
-    <button name="submit" id="submit" type="submit">{"Login"|i18n}"</button>
+    <button name="submit" id="submit" type="submit">{"Login"|i18n}</button>
   </p>
   <br class="spacer" />
 </form>

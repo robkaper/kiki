@@ -1,16 +1,13 @@
 <?
-  $template = Template::getInstance();
-
+  $this->title = "Albums";
+  
   if ( !$user->isAdmin() )
   {
-    $template->load( 'pages/admin-required' );
-    echo $template->content();
-    exit();
+    $this->template = 'pages/admin-required';
+    return;
   }
 
-  $template->load( 'pages/admin' );
-
-  $template->assign( 'title', "Albums" );
+  $this->template = 'pages/admin';
 
   ob_start();
 
@@ -55,6 +52,5 @@
     echo "</table>\n";
   }
 
-  $template->assign( 'content', ob_get_clean() );
-  echo $template->content();
+  $this->content = ob_get_clean();
 ?>
