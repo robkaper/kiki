@@ -175,7 +175,7 @@ form {
 }
 
 form p {
-	clear: left;
+	/* clear: left; */
 }
 
 form label {
