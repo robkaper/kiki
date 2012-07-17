@@ -22,6 +22,7 @@
 
   // Update title of albums linked to articles
   echo "<li>Update title of albums linked to articles... ";
+  $updated = 0;
   $q = "select a.id,ar.title from albums a, articles ar where a.id=ar.album_id";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
@@ -29,13 +30,15 @@
     while( $o = $db->fetchObject($rs) )
     {
       $q = $db->buildQuery( "UPDATE albums set title='%s', system=true WHERE id=%d", $o->title, $o->id );
-      $db->query($q);
+      $rs2 = $db->query($q);
+      $updated += $db->affectedRows($rs2);
     }
   }
-  echo "done.</li>";
+  echo "done.<br />(albums updated: $updated)</li>";
 
   // Update title of albums linked to events
   echo "<li>Update title of albums linked to events... ";
+  $updated = 0;
   $q = "select a.id,e.title from albums a, events e where a.id=e.album_id";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
@@ -43,16 +46,18 @@
     while( $o = $db->fetchObject($rs) )
     {
       $q = $db->buildQuery( "UPDATE albums set title='%s', system=true WHERE id=%d", $o->title, $o->id );
-      $db->query($q);
+      $rs2 = $db->query($q);
+      $updated += $db->affectedRows($rs2);
     }
   }
-  echo "done.</li>";
+  echo "done.<br />(albums updated: $updated)</li>";
 
   // Delete all empty albums not linked to an article or event
   echo "<li>Delete all empty albums not linked to an article or event... ";
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
   $rs = $db->query($q);
-  echo "done.</li>";
+  $deleted = $db->affectedRows($rs);
+  echo "done.<br />(albums deleted: $deleted)</li>";
 
   // Delete generated thumbnails from cache
   echo "<li>Delete generated thumbnails from cache...";
@@ -75,7 +80,7 @@
       }
     }
   }
-  echo "done, $deleteCount files ($deleteSize bytes).</li>";
+  echo "done.<br />(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
 
   $q = "select header_image as id from articles";
   $articleImages = $db->getArray($q);
@@ -86,10 +91,12 @@
   echo "<li>Delete orphaned pictures... ";
   $q = "delete from pictures where id not in (select picture_id from album_pictures)";
   $rs = $db->query($q);
-  echo "done.</li>";
+  $deleted = $db->affectedRows($rs);
+  echo "done.<br />(pictures deleted: $deleted)</li>";
 
   // Delete orphaned storage items
   echo "<li>Delete orphaned storage items... ";
+  $deleted = 0;
   $q = "select id from storage where id not in (select storage_id from pictures)";
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
@@ -102,10 +109,29 @@
       $fileName = Storage::localFile( $o->id );
       unlink($fileName);
       $q = "delete from storage where id=". $o->id;
-      $db->query($q);
+      $rs2 = $db->query($q);
+      $deleted += $db->affectedRows($rs2);
     }
   }
-  echo "done.</li>";
+  echo "done.<br />(files deleted: $deleted)</li>";
+
+  echo "<li>Delete orphaned objects... ";
+  echo "<ul>";
+  $totalDeleted = 0;
+  $objectTables = array( 'users' => 'User', 'articles' => 'Article', 'publications' => 'SocialUpdate', 'comments' => 'Comment' );
+  foreach( $objectTables as $table => $objectType )
+  {
+    echo "<li>$objectType... ";
+    $q = "delete from objects where type='$objectType' and object_id not in (select object_id from $table)";
+    $rs = $db->query($q);
+    $deleted = $db->affectedRows($rs);
+    echo "done.<br />($table deleted: $deleted)</li>";
+    $totalDeleted += $deleted;
+  }
+  echo "</ul>";
+  echo "done.<br />(total deleted: $totalDeleted)</li>";
+
+  echo "</ul>";
 
   $this->content = ob_get_clean();
 ?>

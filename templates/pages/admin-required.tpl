@@ -3,7 +3,7 @@
 {include 'parts/nav'}
 {include 'parts/aside'}
 
-<div id="cw" class="twosides"><div id="content">
+<div id="cw"><div id="content">
 
 <p>
 {if $user.id}

@@ -4,6 +4,8 @@
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 
+  $this->title = _("Social update");
+
   if ( !$user->id() )
   {
     $this->template = 'pages/account-required';
@@ -12,8 +14,6 @@
 
   $this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
   
-  $this->title = _("Social update");
-
   ob_start();
     
   if ( $_POST )

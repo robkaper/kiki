@@ -14,30 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.24' );
-
-drop table if exists twitter_users;
-create table twitter_users (
-  id bigint unsigned not null,
-  primary key(id),
-  ctime datetime not null,
-  mtime datetime not null,
-  access_token text default null,
-  secret text default null,
-  name varchar(255) default null,
-  screen_name varchar(255) default null,
-  picture varchar(255) default null
-) default charset=utf8;
-
-drop table if exists facebook_users;
-create table facebook_users (
-  id bigint unsigned not null,
-  primary key(id),
-  ctime datetime not null,
-  mtime datetime not null,
-  access_token text default null,
-  name varchar(255) default null
-) default charset=utf8;
+insert into config (`key`, value) values( 'dbVersion', '0.1.25' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -58,12 +35,8 @@ create table users (
   email varchar(255) default null,
   auth_token varchar(40) not null default '',
   mail_auth_token varchar(40) not null default '',
-  facebook_user_id bigint unsigned default NULL,
-  twitter_user_id bigint unsigned default NULL,
   admin boolean not null default false,
   unique key(email),
-  unique key(facebook_user_id),
-  unique key(twitter_user_id)
 ) default charset=utf8;
 
 drop table if exists comments;
