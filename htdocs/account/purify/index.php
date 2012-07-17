@@ -7,7 +7,7 @@
     return;
   }
 
-  $$this->template = 'pages/admin';
+  $this->template = 'pages/admin';
 
   ob_start();
 

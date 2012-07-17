@@ -18,6 +18,7 @@
 </ul>
 
 <ul style="list-style: none; margin: 0.5em; padding: 0;">
+<li><a href="{$config.kikiPrefix}/account/phpinfo/">PHP Info</a></li>
 <li><a href="{$config.kikiPrefix}/account/purify/">Purify structure</a></li>
 </ul>
 
