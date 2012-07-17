@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.23' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.24' );
 
 drop table if exists twitter_users;
 create table twitter_users (
@@ -261,3 +261,11 @@ create table publications (
   response text not null,
   key(object_id)
 ) default charset=utf8;
+
+
+drop table if exists likes;
+create table likes (
+  object_id bigint(20) unsigned not null,
+  user_connection_id bigint(20) unsigned not null,
+  unique key object_connection(object_id, user_connection_id)
+);

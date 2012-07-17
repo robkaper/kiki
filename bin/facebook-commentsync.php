@@ -25,6 +25,8 @@
     $apiUser = Factory_User::getInstance( 'User_Facebook', $connectionId );
 
     $qPostIds = $db->implode($postIds);
+
+    // Get comments
     $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc LIMIT 5000";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     $i=0;
@@ -63,8 +65,31 @@
       $comment->setBody( $reply['text'] );
       $comment->setCtime( $ctime );
       $comment->save();
-            
-      print_r($comment);
+
+      echo $fbUser->name(). " commented on ". $objectId. PHP_EOL;
+    }
+
+    // Get likes
+    $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds)";
+    $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
+    foreach( $rs['data'] as $like )
+    {
+      list( $uid, $postId ) = explode("_", $like['post_id']);
+      $objectId = isset($objectIds[$postId]) ? $objectIds[$postId] : 0;
+
+      $fbUser = Factory_User::getInstance( 'User_Facebook', $like['user_id'] );
+      $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
+
+      if ( !$fbUser->id() )
+      {
+        $fbUser->loadRemoteData( $apiUser->api() );
+        $fbUser->link(0);
+      }
+
+      $q = "INSERT INTO likes (object_id, user_connection_id) VALUES($objectId, ". $fbUser->id(). ") on duplicate key UPDATE user_connection_id=". $fbUser->id();
+      $rsLike = $db->query($q);
+      if ( $db->affectedRows($rs) == 1 )
+        echo $fbUser->name(). " likes object ". $objectId. PHP_EOL;
     }
 }
 

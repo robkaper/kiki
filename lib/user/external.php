@@ -188,11 +188,17 @@ abstract class User_External
         "UPDATE connections set user_id=%d, external_id=%d, service='%s', mtime=now(), token='%s', secret='%s', name='%s', screenname='%s', picture='%s' WHERE id=%d",
         $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture, $this->id
       );
+      
+      $this->db->query($q);
     }
     else
+    {
       $q = $this->db->buildQuery( "insert into connections(user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
 
-    $rs = $this->db->query($q);
+      $rs = $this->db->query($q);
+      if ( $rs )
+        $this->id = $this->db->lastInsertId($rs);
+    }
   }
 }
 

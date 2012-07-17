@@ -123,8 +123,6 @@
       if ( !$objectId )
         $objectId = isset($replyObjectIds[$tweet->in_reply_to_status_id]) ? $replyObjectIds[$tweet->in_reply_to_status_id] : 0;
 
-      $name = $twUser->name();
-
       $q = $db->buildQuery( "SELECT id FROM connections WHERE external_id=%d", $twUser->externalId() );
       $connectionId = $db->getSingleValue($q);
 
@@ -146,6 +144,7 @@
       $comment->save();
 
       $replyObjectIds[$tweet->id] = $objectId ? $objectId : $comment->objectId();
-      print_r($comment);
+
+      echo $twUser->name(). " commented on ". $objectId. PHP_EOL;
     }
   }
