@@ -5,7 +5,12 @@ class Factory_ConnectionService
   static public function getInstance( $service )
   {
     $class = "ConnectionService_". ucfirst($service);
-    // FIXME: class_exists
+    if ( !class_exists($class) )
+    {
+      Log::error( "Non-existant Class $class requested" );
+      return false;
+    }
+
     return new $class;
   }
 }
