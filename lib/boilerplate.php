@@ -152,7 +152,7 @@ rsvp_event			share_item			sms
 status_update			video_upload			xmpp_login
 */
 
-       $actions = array( 'publish_stream' => "schrijfrechten", 'user_events' => "user_events", 'create_event' => "create_event", 'read_stream' => "stream leesrechten" );
+       $actions = array( 'publish_stream' => "schrijfrechten", 'user_events' => "user_events", 'create_event' => "create_event", 'read_stream' => "stream leesrechten", 'manage_pages' => "pagina (Page) beheerrechten" );
         foreach( $actions as $action => $desc )
         {
           $permission = $connection->hasPerm( $action );
