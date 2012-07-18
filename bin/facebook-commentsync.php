@@ -51,7 +51,7 @@
       $connectionId = $db->getSingleValue($q);
 
       // Find comment
-      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $externalId );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s' LIMIT 5000", $connectionId, $externalId );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
@@ -70,7 +70,7 @@
     }
 
     // Get likes
-    $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds)";
+    $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds) LIMIT 5000";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     foreach( $rs['data'] as $like )
     {
@@ -86,7 +86,7 @@
         $fbUser->link(0);
       }
 
-      $q = "INSERT INTO likes (object_id, user_connection_id) VALUES($objectId, ". $fbUser->id(). ") on duplicate key UPDATE user_connection_id=". $fbUser->id();
+      $q = "INSERT INTO likes (object_id, user_connection_id,ctime) VALUES($objectId, ". $fbUser->id(). ",now()) on duplicate key UPDATE user_connection_id=". $fbUser->id();
       $rsLike = $db->query($q);
       if ( $db->affectedRows($rs) == 1 )
         echo $fbUser->name(). " likes object ". $objectId. PHP_EOL;

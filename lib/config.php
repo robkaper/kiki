@@ -87,7 +87,7 @@ class Config
 	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
 
-	const dbVersionRequired = "0.1.25";
+	const dbVersionRequired = "0.1.26";
 
 	/**
 	* Initialises configuration values. Loads the defaults first and

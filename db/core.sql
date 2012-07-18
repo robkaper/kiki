@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.25' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.26' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -240,5 +240,6 @@ drop table if exists likes;
 create table likes (
   object_id bigint(20) unsigned not null,
   user_connection_id bigint(20) unsigned not null,
+  ctime datetime not null,
   unique key object_connection(object_id, user_connection_id)
 );

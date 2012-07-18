@@ -13,6 +13,7 @@
   $rs = $db->query($q);
   while( $o = $db->fetchObject($rs) )
   {
+    // TODO: also store object_id, not doing so flattens all comments and all nesting/threading information is lost
     $replyObjectIds[$o->external_id] = $o->in_reply_to_id;
   }
 
@@ -46,7 +47,7 @@
     $maxId = 0;
     while( $getMore )
     {
-      $arrParams = array( 'count' => 800, 'include_rts' => true, 'replies' => 'all' );
+      $arrParams = array( 'count' => 800, 'include_rts' => 1, 'replies' => 'all' );
       if ( $maxId )
         $arrParams['max_id'] = $maxId;
 
@@ -126,10 +127,10 @@
         $objectId = isset($replyObjectIds[$tweet->in_reply_to_status_id]) ? $replyObjectIds[$tweet->in_reply_to_status_id] : 0;
 
       $q = $db->buildQuery( "SELECT id FROM connections WHERE external_id=%d", $twUser->externalId() );
-      $connectionId = $db->getSingleValue($q);
+      $tweetConnectionId = $db->getSingleValue($q);
 
       // Find comment
-      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $tweet->id );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $tweetConnectionId, $tweet->id );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
@@ -138,15 +139,20 @@
       $comment = new Comment();
       $comment->setInReplyToId( $objectId );
       $comment->setUserId( $localUser->id() );
-      $comment->setConnectionId( $connectionId );
+      $comment->setConnectionId( $tweetConnectionId );
       $comment->setExternalId( $tweet->id );
       $comment->setBody( $tweet->text );
 
       $comment->setCtime( $ctime );
       $comment->save();
 
+    // TODO: also store object_id, not doing so flattens all comments and all nesting/threading information is lost
       $replyObjectIds[$tweet->id] = $objectId ? $objectId : $comment->objectId();
 
       echo $twUser->name(). " commented on ". $objectId. PHP_EOL;
+    }
+    else if ( isset($tweet->retweeted_status) && $tweet->user->id != $connectionId )
+    {
+      // TODO: store retweet
     }
   }
