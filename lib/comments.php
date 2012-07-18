@@ -74,6 +74,7 @@ class Comments
             'type' => $serviceName,
             'body' => $o->body,
             'ctime' => $o->ctime,
+            'dateTime' => date("c", strtotime($date)),
             'relTime' => Misc::relativeTime($o->ctime)
           );
           $comments[] = $comment;

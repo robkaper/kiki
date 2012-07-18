@@ -110,7 +110,7 @@ class Articles
         $img = Storage::url( $o->header_image );
         list ($base, $ext) = Storage::splitExtension( $img );
         $img = "${base}.780x400.c.${ext}";
-        $content .= "<img src=\"$img\" />\n";
+        $content .= "<img src=\"$img\" alt=\"[$title]\" />\n";
       }
 
       $content .= "<span class=\"author\">$author</span>\n";
@@ -124,7 +124,7 @@ class Articles
         // $content .= "<a href=\"$myUrl\" class=\"button\" style=\"float: right;\">". _("Read more"). "</a></p>\n";
       }
       else
-        $content .= "<span class=\"body\">$body</span>";
+        $content .= "<div class=\"body\">$body</div>";
     }
     else
       $content .= $body;
