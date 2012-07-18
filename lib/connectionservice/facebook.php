@@ -8,6 +8,7 @@ if ( isset(Config::$facebookSdkPath) )
 class ConnectionService_Facebook
 {
   private $api;
+  private $enabled = false;
 
   public function __construct()
   {
@@ -19,7 +20,11 @@ class ConnectionService_Facebook
       'secret' => Config::$facebookSecret,
       'cookie' => false
       ) );
+
+    $this->enabled = true;
   }
+
+  public function enabled() { return $this->enabled; }
 
   public function name()
   {

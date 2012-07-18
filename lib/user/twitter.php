@@ -1,14 +1,25 @@
 <?
 
-require_once( $GLOBALS['kiki']. '/lib/twitteroauth/twitteroauth.php');
+if ( isset(Config::$twitterOAuthPath) )
+{
+  require_once Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
+}
 
 class User_Twitter extends User_External
 {
   private $oAuthToken = null;
   // private $oAuthVerifier = null;
 
+  private function enabled()
+  {
+    return ( class_exists('TwitterOAuth') && Config::$twitterApp );
+  }
+
   protected function connect()
   {
+    if ( !$this->enabled() )
+      return;
+
     if ( !($this->token && $this->secret) )
       return;
 

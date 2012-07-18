@@ -20,15 +20,6 @@ IN THE SOFTWARE.
 
 ----------------------------------------------------------------------------
 
-lib/twitteroauth: TwitterOAuth SDK
-
-Copyright (c) 2009 Abraham Williams (http://abrah.am)
-
-Included under the terms of the MIT license.
-(http://www.opensource.org/licenses/mit-license.php)
-
-----------------------------------------------------------------------------
-
 lib/s3.php: Amazon S3 SDK
 
 Copyright (c) 2008 Donovan Schönknecht

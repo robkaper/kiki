@@ -7,9 +7,6 @@ itself, which should be documented through FIXME, TODO and Doxygen comments.
 - Finish installation documentation in .doxygen.php (or better yet, provide
   a simple install.php to be placed in the document root)
 
-- Don't include third-party libraries (facebook.php and lib/twitteroauth)
-  but reference them through configuration
-
 - Don't include third-party scripts (scripts/, other than default.js) but
   reference them through configuration
 

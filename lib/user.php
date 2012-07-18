@@ -1,7 +1,5 @@
 <?
 
-require_once( $GLOBALS['kiki']. '/lib/twitteroauth/twitteroauth.php');
-
 class User extends Object
 {
   private $email = null;

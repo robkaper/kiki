@@ -6,3 +6,10 @@ Optional, but required for Facebook logins and connectivity.
 Install path must be configured as: Config::$facebookSdkPath
 
 ----------------------------------------------------------------------------
+
+TwitterOAuth SDK
+https://github.com/abraham/twitteroauth/
+
+Optional, but required for Twitter logins and connectivity.
+
+Install path must be configured as: Config::$twitterOAuthPath

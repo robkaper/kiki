@@ -62,12 +62,16 @@ class Config
 	public static $googleAdSense = null;
 
 	public static $connectionServices = array();
+
 	public static $facebookSdkPath = null;
 	public static $facebookApp = null;
 	public static $facebookSecret = null;
+
+	public static $twitterOAuthPath = null;
 	public static $twitterApp = null;
 	public static $twitterSecret = null;
 	public static $twitterAnywhere = false;
+
 	public static $flickrApp = null;
 	public static $flickrSecret = null;
 
@@ -122,11 +126,20 @@ class Config
 
 	public static function loadDbConfig( &$db )
 	{
-		// TODO: Actually get these from the database
-		if ( self::$facebookApp )
-			self::$connectionServices[] = 'Facebook';
-		if ( self::$twitterApp )
-			self::$connectionServices[] = 'Twitter';
+		// TODO: make this more dynamic, and store the actual services directly, not just by name
+		if ( isset(self::$facebookSdkPath) && isset(self::$facebookApp) )
+		{
+			$service = new ConnectionService_Facebook();
+			if ( $service->enabled() )
+				self::$connectionServices[] = 'Facebook';
+		}
+
+		if ( isset(self::$twitterOAuthPath) && isset(self::$twitterApp) )
+		{
+			$service = new ConnectionService_Twitter();
+			if ( $service->enabled() )
+				self::$connectionServices[] = 'Twitter';
+		}
 	}
 
 	/**
