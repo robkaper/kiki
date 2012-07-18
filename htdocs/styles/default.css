@@ -495,10 +495,6 @@ article footer li, footer.pageFooter li  {
   display: inline;
 }
 
-article .relTime {
-  float: right;
-}
-
 .youtube-player {
 	width: 640px;
 	height: 385px;
