@@ -1,18 +1,10 @@
 !!! WARNING !!!
 
-Although open source, Kiki's development is currently a single-developer
-effort.  There is only a single branch (master) and any backwards
-incompatible changes are usually fixed directly in my own sites instead of
-being avoid alltogether.
-
-Potential users are advised to update in a development or staging
+Potential users are advised to update and test in a development or staging
 environment prior to deployment.
 
-!!! WARNING !!!
-
-Kiki does not yet offer an easy-to-use and user-friendly installation,
-although any LAMP administrator should be able to figure it out with these
-instructions.
+Kiki is not intended to be installed by end users, but any LAMP
+administrator should be able to figure it out with these instructions.
 
 Install source files
 --------------------
@@ -75,7 +67,8 @@ Install required modules and database schema
 Kiki offers a status page, available as http://example.com/kiki/ 
 
 This page lists (and checks) required PHP modules and extensions, tests your
-database configuration, and installs or updates your data model.
+database configuration, and installs or updates your data model. Run it
+after installation.
 
 Callback URLs
 -------------
