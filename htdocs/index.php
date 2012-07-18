@@ -68,7 +68,7 @@
         {
           if ( !$file->isDot() )
           {
-             $version = preg_filter( '/update-(.*)\.sql/', "$1", $file->getFilename() );
+             $version = preg_filter( '/update-(.*)\.sql$/', "$1", $file->getFilename() );
              if ( $version && version_compare($version, $dbVersion) > 0 && version_compare($version, Config::dbVersionRequired) <= 0 )
                $versions[] = $version;
           }
