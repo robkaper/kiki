@@ -651,6 +651,26 @@ tr.disabled {
 	color: #999;
 }
 
+/* HACK: use a proper grid model for columns etc */
+#content > div.column {
+  width: 250px;
+  float: right;
+  color: #000;
+  background: #deb;
+  border-radius: 5px;
+  margin: 0.5em 0.5em 0.5em 0.5em;
+  padding: 5px;
+}
+
+#content > div.column ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#content > div.column li {
+}
+
 @media print {
 	#content a[href^="http"]:after {
 		content: " (" attr(href) ") ";
