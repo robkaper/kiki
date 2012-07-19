@@ -61,6 +61,8 @@ class Config
 	public static $googleAnalytics = null;
 	public static $googleAdSense = null;
 
+	public static $piwikSiteId = 0;
+
 	public static $connectionServices = array();
 
 	public static $facebookSdkPath = null;

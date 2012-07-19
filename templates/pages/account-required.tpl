@@ -14,4 +14,7 @@ Login first.</p>
 {include 'parts/footer'}
 
 <div id="jsonUpdate"></div>
+
+{include 'parts/piwik/piwik'}
+
 </body>
