@@ -145,6 +145,7 @@ div.comment {
 	margin-bottom: 1px;
 	background: #deb;
 	padding: 5px;
+	clear: left;
 }
 
 div.comment:first-child {
@@ -172,10 +173,11 @@ form {
 	background: #deb;
 	border-radius: 5px;
 	margin: 0 0  0.5em 0;
+	float: left;
 }
 
 form p {
-	/* clear: left; */
+	clear: left;
 }
 
 form label {

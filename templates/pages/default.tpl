@@ -7,6 +7,7 @@
 
 {$content}
 
+<br class="spacer" />
 </div></div>
 
 {include 'parts/footer'}

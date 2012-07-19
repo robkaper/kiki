@@ -239,8 +239,7 @@ class Template
 
   public function cleanup()
   {
-    // FIXME: messes up textareas
-    // $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
+    $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
   public function fetch()

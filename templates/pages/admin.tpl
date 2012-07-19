@@ -5,7 +5,10 @@
 {include 'parts/aside'}
 
 <div id="cw" class="twosides"><div id="content">
-  {$content}
+
+{$content}
+
+<br class="spacer" />
 </div></div>
 
 {include 'parts/footer'}
