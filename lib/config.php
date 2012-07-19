@@ -61,6 +61,7 @@ class Config
 	public static $googleAnalytics = null;
 	public static $googleAdSense = null;
 
+	public static $piwikHost = null;
 	public static $piwikSiteId = 0;
 
 	public static $connectionServices = array();
