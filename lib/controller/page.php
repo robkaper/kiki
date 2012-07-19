@@ -13,7 +13,7 @@ class Controller_Page extends Controller
     $template = Template::getInstance();
     $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
-    if ( $article->visible() )
+    if ( $article->visible() || $article->userId() == $user->id() )
     {
       $this->title = $article->title();
       $this->status = 200;

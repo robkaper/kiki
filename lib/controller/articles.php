@@ -13,7 +13,7 @@ class Controller_Articles extends Controller
     if ( $this->objectId )
     {
       $article = new Article( 0, $this->objectId);
-      if ( $article->id() && $article->visible() )
+      if ( $article->id() && ( $article->visible() || $article->userId() == $user->id() ) )
       {
         $this->status = 200;
 
