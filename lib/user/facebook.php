@@ -216,9 +216,11 @@ class User_Facebook extends User_External
     $link = $article->url();
     $title = $article->title();
     $caption = str_replace( "http://", "", $link );
-    $description = Misc::textSummary( $article->body(), 400 );
+    $description = strip_tags( Misc::textSummary( $article->body(), 400 ) );
     $storageId = $article->headerImage();
-    $picture = $storageId ? Storage::url( $storageId ) : Config::$siteLogo;
+
+    // 500x500 cropped is good enough for Facebook
+    $picture = $storageId ? Storage::url( $storageId, 500, 500, true ) : Config::$siteLogo;
 
     $result = $this->post( $article->objectId(), $msg, $link, $title, $caption, $description, $picture );
     return $result;
