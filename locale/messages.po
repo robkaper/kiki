@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-17 17:39+0200\n"
+"POT-Creation-Date: 2012-07-20 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Create a new page"
 msgstr ""
 
-#: ../htdocs/account/social.php:15
+#: ../htdocs/account/social.php:7
 msgid "Social update"
 msgstr ""
 
@@ -66,6 +66,14 @@ msgstr ""
 
 #: ../lib/articles.php:142
 msgid "Read more"
+msgstr ""
+
+#: ../lib/articles.php:167
+msgid "Likes"
+msgstr ""
+
+#: ../lib/articles.php:188
+msgid "Comments"
 msgstr ""
 
 #: generated.php:2 generated.php:5

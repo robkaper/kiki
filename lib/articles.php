@@ -153,11 +153,41 @@ class Articles
     if ( !$maxLength && $user->id() == $o->user_id )
       $content .= $article->form( $user, true, $showAsPage ? 'pages' : 'articles' );
 
-    // FIXME: page/filter comments in embedded view
-    if  ( !$maxLength && !$showAsPage )
+    if  ( !$maxLength )
     {
-      // $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
-      $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->object_id );
+      // Likes
+      $db = $GLOBALS['db'];
+      $q = "select external_id as id from likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=". $article->objectId();
+      $likeUsers = $db->getArray($q);
+
+      if ( count($likeUsers) )
+      {
+        $template = new Template('parts/user-account-image');
+        
+        $content .= "<h3>". _("Likes"). "</h3>";
+        foreach( $likeUsers as $externalId )
+        {
+          $fbUser = Factory_User::getInstance( 'User_Facebook', $externalId );
+          $template->assign( 'connection.userName', $fbUser->name() );
+          $template->assign( 'connection.serviceName', 'Facebook' );
+          $template->assign( 'connection.pictureUrl', $fbUser->picture() );
+
+          $content .= "<div style='float: left; background: #deb; margin: 0 5px 0 0; padding: 5px 0 5px 5px;'>";
+          $content .= $template->fetch();
+          $content .= "</div>";
+
+          $template->setContent(null);
+        }
+        $content .= "<br class='spacer' />";
+      }
+
+      if ( !$showAsPage )
+      {
+        // FIXME: page/filter comments in embedded view
+        // $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->id );
+        $content .= "<h3>". _("Comments"). "</h3>";
+        $content .= Comments::show( $GLOBALS['db'], $GLOBALS['user'], $o->object_id );
+      }
     }
 
     if ( !$json && !$showAsPage )
