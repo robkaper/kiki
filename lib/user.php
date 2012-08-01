@@ -90,8 +90,8 @@ class User extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, ctime='%s', mtime=now(), email='%s', auth_token='%s', admin=%d where id=%d",
-      $this->objectId, $this->ctime, $this->email, $this->authToken, $this->isAdmin, $this->id
+      "UPDATE users SET object_id=%d, ctime='%s', mtime=now(), email='%s', mail_auth_token='%s', auth_token='%s', admin=%d where id=%d",
+      $this->objectId, $this->ctime, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->id
     );
 
     $this->db->query($q);
@@ -100,8 +100,8 @@ class User extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, ctime, mtime, email, auth_token, admin) values (%d, now(), now(), '%s', '%s', %d)",
-      $this->objectId, $this->email, $this->authToken, $this->isAdmin
+      "INSERT INTO users(object_id, ctime, mtime, email, mail_auth_token, auth_token, admin) values (%d, now(), now(), '%s', '%s', '%s', %d)",
+      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin
     );
     
     $rs = $this->db->query($q);

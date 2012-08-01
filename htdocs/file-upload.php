@@ -32,3 +32,6 @@
 <script type="text/javascript">
 window.parent.fileUploadHandler( '<?= $target; ?>', '<?= $id; ?>', '<?= Storage::url($id); ?>', <?= json_encode($html); ?> );
 </script>
+<?
+  exit();
+?>

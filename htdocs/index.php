@@ -109,7 +109,7 @@
           $file = $GLOBALS['kiki']. "/db/core.sql";
           echo "<li>Running install script <tt>$file</tt>:\n";
 
-          $error = sourceSqlFile($db, $file);
+          $error = Status::sourceSqlFile($db, $file);
           if ( $error )
             echo "<p>Please install manually.</p>\n";
 

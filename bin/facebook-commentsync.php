@@ -29,7 +29,9 @@
     // Get comments
     $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc LIMIT 5000";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
-    $i=0;
+    if ( !$rs || !isset($rs['data']) )
+      continue;
+
     foreach( $rs['data'] as $reply )
     {
       list( $uid, $postId, $partId ) = explode("_", $reply['id']);
@@ -72,6 +74,9 @@
     // Get likes
     $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds) LIMIT 5000";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
+    if ( !$rs || !isset($rs['data']) )
+      continue;
+
     foreach( $rs['data'] as $like )
     {
       list( $uid, $postId ) = explode("_", $like['post_id']);
