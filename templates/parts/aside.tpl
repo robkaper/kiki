@@ -25,10 +25,10 @@
 {if $latestArticles}
   <div class="box">
   <strong>Latest articles</strong>
-  <ul style="text-align: left;">
-{foreach $latestArticles as $article}
-  <li><a href="{$article.url}">{$article.title|escape}</a></li>
-{/foreach}
+  <ul>
+  {foreach $latestArticles as $article}
+    <li><a href="{$article.url}">{$article.title|escape}</a></li>
+  {/foreach}
   </ul>
   </div>
 {/if}
