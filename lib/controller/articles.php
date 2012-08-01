@@ -10,6 +10,16 @@ class Controller_Articles extends Controller
     $template = Template::getInstance();
     $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
+    $q = $db->buildQuery( "select id from articles where section_id=%d and visible=1 order by ctime desc limit 10", $this->instanceId );
+    $articleIds = $db->getArray($q);
+    $articles = array();
+    foreach ( $articleIds as $articleId )
+    {
+      $article = new Article( $articleId );
+      $articles[] = array( 'url' => $article->url(), 'title' => $article->title() );
+    }
+    $template->assign( 'latestArticles', $articles );
+
     if ( $this->objectId )
     {
       $article = new Article( 0, $this->objectId);
@@ -21,16 +31,6 @@ class Controller_Articles extends Controller
 
         $this->template = 'pages/default';
 
-        $template = Template::getInstance();
-        $q = $db->buildQuery( "select id from articles where section_id=%d and visible=1 order by ctime desc limit 10", $this->instanceId );
-        $articleIds = $db->getArray($q);
-        $articles = array();
-        foreach ( $articleIds as $articleId )
-        {
-          $article = new Article( $articleId );
-          $articles[] = array( 'url' => $article->url(), 'title' => $article->title() );
-        }
-        $template->assign( 'latestArticles', $articles );
 
         // $template = new Template( 'content/articles-single' );
         // $template->assign( 'article', $article->data() );
