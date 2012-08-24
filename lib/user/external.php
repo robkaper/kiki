@@ -117,6 +117,8 @@ abstract class User_External
     return $this->picture;
   }
 
+  public function setToken( $token ) { $this->token = $token; }
+
   public function token()
   {
     return $this->token;

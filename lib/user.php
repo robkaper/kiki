@@ -175,6 +175,11 @@ class User extends Object
           // Identified user, no need to connect before link?
           $user->loadRemoteData();
 
+          // Verify token
+          $apiToken = $user->api()->getAccessToken();
+          if ( $apiToken != $user->token() )
+            $user->setToken($apiToken);
+
           // Re-link connection to ensure the latest data is used (especially access token)
           $user->link( $this->id );
 
