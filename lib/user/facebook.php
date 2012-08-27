@@ -397,14 +397,12 @@ class User_Facebook extends User_External
     $this->db->query($q);
   }
 
-  // FIXME: port
   public function revokePerm( $perm, $deleteStoredValue=false )
   {
     // Tell Facebook to revoke permission
     try
     {
-      // FIXME: port to /me/permissions/$perm (HTTP DELETE)
-      $fbRs = $this->api()->api( array( 'method' => 'auth.revokeExtendedPermission', 'perm' => $perm ) );
+      $fbRs = $this->api()->api( "/me/permissions/$perm", $method = 'DELETE' );
     }
     catch ( UserApiException $e )
     {
