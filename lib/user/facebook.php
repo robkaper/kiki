@@ -89,6 +89,13 @@ class User_Facebook extends User_External
     return $this->externalId;
   }
 
+  public function verifyToken()
+  {
+    $apiToken = $this->api()->getAccessToken();
+    if ( $apiToken != $this->token )
+      $this->token = $apiToken;
+  }
+
   // Returns entire verified cookie as array, or null if not valid or no cookie present
   protected function cookie()
   {

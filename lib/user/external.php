@@ -58,6 +58,7 @@ abstract class User_External
   abstract public function authenticate();
   abstract protected function cookie();
   abstract protected function detectLoginSession();
+  abstract public function verifyToken();
   // abstract public function getLoginUrl();
   abstract protected function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' );
   abstract protected function postArticle( &$article );

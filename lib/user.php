@@ -143,7 +143,7 @@ class User extends Object
 
       if ( !$user->token() )
       {
-        Log::debug( "identified but no token, don't actually add to identified" );
+        Log::debug( "identified $service but no token, don't actually add to identified" );
         continue;
       }
 
@@ -175,12 +175,8 @@ class User extends Object
           // Identified user, no need to connect before link?
           $user->loadRemoteData();
 
-          // Verify token
-          $apiToken = $user->api()->getAccessToken();
-          if ( $apiToken != $user->token() )
-            $user->setToken($apiToken);
-
           // Re-link connection to ensure the latest data is used (especially access token)
+          $user->verifyToken();
           $user->link( $this->id );
 
           // Use identified connection, it is the latest

@@ -76,6 +76,13 @@ class User_Twitter extends User_External
     return $this->oAuthToken['user_id'];
   }
 
+  public function verifyToken()
+  {
+    $apiToken = $this->api()->getAccessToken();
+    if ( $apiToken['oauth_token'] != $this->token )
+      $this->token = $apiToken['oauth_token'];
+  }
+
   protected function cookie()
   {
     if ( array_key_exists( 'twitter_anywhere_identity', $_COOKIE ) )
