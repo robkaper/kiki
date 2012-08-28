@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.26' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.27' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -139,6 +139,7 @@ drop table if exists album_pictures;
 create table album_pictures (
   album_id int unsigned not null,
   picture_id int unsigned not null,
+  sortorder tinyint unsigned not null,
   key(album_id),
   key(picture_id),
   key(album_id,picture_id)

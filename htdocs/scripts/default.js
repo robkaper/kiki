@@ -385,5 +385,52 @@ $( function() {
 
     return false;
   } );
+
+  $('.pictureFormItem').hover( function() {
+    $(this).find('.img-overlay').show();
+  }, function() {
+    $(this).find('.img-overlay').hide();
+  } );
+        
+  $('.pictureFormItem .removePicture').click( function() {
+    var pictureIdStr = $(this).parent().parent().attr('id');
+    var pictureId = pictureIdStr.split("_")[1];
+    var albumIdStr = $(this).parent().parent().parent().attr('id');
+    var albumId = albumIdStr.split("_")[1];
+
+    $('#pictureDeleteConfirm').dialog( {
+      resizable: false,
+      modal: true,
+      buttons: {
+        "Delete": function() {
+          $(this).dialog( "close" );
+
+          var json = { albumId: albumId, pictureId: pictureId };
+
+          $.post( kikiPrefix + '/json/album-remove-picture.php', json, function(data) {
+            $('#albumForm_' + data.albumId + ' #pictureFormItem_' + data.pictureId).remove();
+          } );
+        },
+        Cancel: function() {
+          $(this).dialog( "close" );
+        }
+      }
+    } );
+
+    return false;
+  } );
+
+  $( ".albumForm" ).sortable( {
+    update: function(event, ui) {
+      var json = { albumId: $(this).attr('id'), sortOrder: $(this).sortable('toArray') };
+      $.post( kikiPrefix + '/json/album-sort.php', json, function(data) {
+      } );
+    }
+    , items: '>div'
+    , placeholder: 'ui-state-highlight'
+    , tolerance: 'pointer'
+  } );
+
+  $( ".albumForm" ).disableSelection();
   
 } );

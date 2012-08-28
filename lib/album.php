@@ -274,7 +274,7 @@ class Album
     $storageId = $o->storage_id;
     $imgUrl = Storage::url($storageId, 75, 75, true);
 
-    return "<a href=\"#\"><img id=\"picture_$storageId\" src=\"$imgUrl\" style=\"float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;\" /></a>";
+    return "<div class=\"pictureFormItem\" id=\"pictureFormItem_$pictureId\"><div class=\"img-overlay\"><a class=\"removePicture\" href=\"#\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\" /></a></div><img src=\"$imgUrl\" alt=\"\" /></div>";
     
     ob_start();
     include Template::file( 'forms/album-editpicture' );
@@ -288,8 +288,9 @@ class Album
     $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id asc";
     $rs = $this->db->query($q);
 
-    echo "<div id=\"albumForm_". $this->id. "\">";
     echo "<h2>Album</h2>";
+
+    echo "<div id=\"albumForm_". $this->id. "\" class=\"albumForm\">";
     if ( $rs && $this->db->numRowS($rs) )
     {
       while( $o = $this->db->fetchObject($rs) )
@@ -298,8 +299,10 @@ class Album
         echo $this->formItem($o->id);
       }
     }
-
+          
     echo "</div>";
+
+    echo "<div class=\"ui-dialog\" id=\"pictureDeleteConfirm\" title=\"Delete picture?\"><p>Are you sure you want to delete this picture?</p></div>";
 
     include Template::file('forms/album-newpicture' );
     return;

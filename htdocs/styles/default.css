@@ -150,6 +150,78 @@ blockquote {
 	width: 16px;
 	height: 16px;
 }
+
+.ui-dialog {
+	border: 1px solid #9c6;
+	border-radius: 5px;
+	background: #deb;
+	display: none;
+        font-size: 0.875em;
+	font-family: sans-serif;
+}
+
+.ui-dialog-titlebar {
+	background: #463;
+	color: #fff;
+	border: 0;
+	border-radius: 5px;
+}
+
+.ui-dialog-buttonpane {
+	border: 0;
+	background: transparent;
+	margin: 0;
+	padding: 0;
+}
+
+.ui-button {
+}
+.ui-button-textonly .ui-button-text, .ui-button-text {
+	padding: 0;
+	margin: 0;
+	line-height: 2em;
+}
+
+.pictureFormItem {
+	position: relative;
+	width: 75px;
+	height: 75px;
+	float: left;
+        margin: 0 10px 10px 0;
+}
+
+.ui-state-highlight {
+        position: relative;
+	width: 73px;
+	height: 73px;
+	border: 1px dotted #9c6;
+	background: #deb;
+	float: left;
+        margin: 0 10px 10px 0;
+}
+
+.pictureFormItem img {
+	width: 75px;
+	height: 75px;
+}
+
+.pictureFormItem .img-overlay {
+	display: none;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	background: #deb;
+	border: 1px solid #463;
+	padding: 3px;
+	border-radius: 0 0 0 5px;
+}
+
+.pictureFormItem .img-overlay img {
+        width: 16px;
+        height: 16px;
+	opacity: 1;
+}
+
 div.comment {
 	min-height: 50px;
 	margin-bottom: 1px;
@@ -271,7 +343,7 @@ div.commentTxt > form > textarea {
 	overflow: auto;
 }
 
-button, a.button {
+button, a.button, .ui-dialog .ui-dialog-buttonpane button {
   line-height: 16px;
   font-weight: bold;
   text-align: center;
@@ -298,6 +370,12 @@ button {
   height: 24px;
   line-height: 16px;
   padding: 1px 0px 3px 0px;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+	min-height: 3em;
+	height: 3em;
+	
 }
 
 button:hover, a.button:hover {
