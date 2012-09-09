@@ -174,8 +174,13 @@ abstract class User_External
     $this->kikiUserIds[] = $kikiUserId;
 
     $this->id = $o->id;
-    $this->token = $o->token;
-    $this->secret = $o->secret;
+    
+    if ( !$this->token )
+      $this->token = $o->token;
+
+    if ( !$this->secret )
+      $this->secret = $o->secret;
+
     $this->name = $o->name;
     $this->screenName = $o->screenname;
     $this->picture = $o->picture;

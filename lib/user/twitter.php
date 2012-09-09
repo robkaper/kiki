@@ -70,16 +70,18 @@ class User_Twitter extends User_External
     if ( !$this->oAuthToken )
       return 0;
 
+    Log::debug( "oAuthToken: ". print_r($this->oAuthToken, true ) );
     $this->token = $this->oAuthToken['oauth_token'];
     $this->secret = $this->oAuthToken['oauth_token_secret'];
 
+    Log::debug( "this->token: $this->token" );
     return $this->oAuthToken['user_id'];
   }
 
   public function verifyToken()
   {
     $apiToken = $this->api()->getAccessToken();
-    if ( $apiToken['oauth_token'] != $this->token )
+    if ( isset($apiToken['oauth_token']) && $apiToken['oauth_token'] != $this->token )
       $this->token = $apiToken['oauth_token'];
   }
 
