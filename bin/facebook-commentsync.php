@@ -68,7 +68,7 @@
       $comment->setCtime( $ctime );
       $comment->save();
 
-      echo $fbUser->name(). " commented on ". $objectId. PHP_EOL;
+      printf( "%s commented on %d:%s%s%s", $fbUser->name(), $objectId, PHP_EOL, $reply['text'], PHP_EOL. PHP_EOL );
     }
 
     // Get likes

@@ -149,7 +149,7 @@
     // TODO: also store object_id, not doing so flattens all comments and all nesting/threading information is lost
       $replyObjectIds[$tweet->id] = $objectId ? $objectId : $comment->objectId();
 
-      echo $twUser->name(). " commented on ". $objectId. PHP_EOL;
+      printf( "%s commented on %d:%s%s%s", $twUser->name(), $objectId, PHP_EOL, $tweet->text, PHP_EOL. PHP_EOL );
     }
     else if ( isset($tweet->retweeted_status) && $tweet->user->id != $connectionId )
     {
