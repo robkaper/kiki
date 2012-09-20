@@ -16,12 +16,9 @@
   // Find the Kiki install path
   $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
 
-  // FIXME: rjkcust, we shouldn't assume /www/server_name/ as site root. 
-  // Perhaps parent of $_SERVER['DOCUMENT_ROOT'], still an assumption but
-  // less specific.  We should also support having the root for these inside
-  // the document root (and provide proper htaccess rules), perhaps as
-  // fallback.  Used by Config, Log, Storage and Template classes.
-  $GLOBALS['root'] = "/www/". $_SERVER['SERVER_NAME'];
+  // FIXME: rjkcust, we shouldn't assume /home/www/server_name/ as site root.
+  // FIXME: allow setups where Config, Log, Storage and Template are part of DOCUMENT_ROOT.
+  $GLOBALS['root'] = "/home/www/". $_SERVER['SERVER_NAME'];
 
   function __autoload( $className )
   {
