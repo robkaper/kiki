@@ -35,6 +35,12 @@
 
     $apiUser = Factory_User::getInstance( 'User_Twitter', $connectionId );
     $rs = $apiUser->api()->get('account/rate_limit_status');
+    if ( !$rs )
+    {
+      echo "No valid result from Twitter (connection $connectionId).";
+      continue;
+    }
+
     if ( $rs->remaining_hits < 10 )
     {
       $resetTime = $rs->reset_time_in_seconds;
