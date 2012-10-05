@@ -15,9 +15,14 @@ class Comments
   {
     $comments = array();
 
-    $qObjectId = $db->escape( $objectId );
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = "select c.id, c.body, o.ctime, c.user_id, con.service, con.external_id FROM comments c LEFT JOIN objects o ON o.object_id=c.object_id LEFT JOIN users u ON c.user_id=u.id LEFT JOIN connections con ON c.user_connection_id=con.id WHERE c.in_reply_to_id=$qObjectId $qLast order by o.ctime asc";
+    $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, c.user_id, con.service, con.external_id
+      FROM comments c
+      LEFT JOIN objects o ON o.object_id=c.object_id
+      LEFT JOIN users u ON c.user_id=u.id
+      LEFT JOIN connections con ON c.user_connection_id=con.id
+      WHERE c.in_reply_to_id=%d $qLast
+      ORDER BY o.ctime ASC", $objectId );
     $rs = $db->query($q);
     if ( $rs && $db->numrows($rs) )
     {

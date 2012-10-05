@@ -41,7 +41,7 @@
     echo "<ul>\n";
     foreach( $failedRequirements as $failedRequirement )
     {
-      $remedyStr = (!$loaded && isset($failedRequirement['remedy'])) ? ( " Potential remedy: <tt>". $failedRequirement['remedy']. "</tt>." ) : null;
+      $remedyStr = isset($failedRequirement['remedy']) ? ( " Potential remedy: <tt>". $failedRequirement['remedy']. "</tt>." ) : null;
       echo "<li><strong>". $failedRequirement['name']. "</strong>: <span style=\"color: red\">disabled</span>.${remedyStr}</li>\n";
     }
     echo "</ul>\n";
