@@ -7,8 +7,6 @@ class Controller_Pages extends Controller
     $db = $GLOBALS['db'];
     $user = $GLOBALS['user'];
 
-    Log::debug( print_r($this,true) );
-
     if ( !$this->objectId )
       $this->objectId = 'index';
 
