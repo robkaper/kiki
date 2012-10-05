@@ -27,7 +27,7 @@
     $qPostIds = $db->implode($postIds);
 
     // Get comments
-    $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc LIMIT 5000";
+    $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     if ( !$rs || !isset($rs['data']) )
       continue;
@@ -53,7 +53,7 @@
       $connectionId = $db->getSingleValue($q);
 
       // Find comment
-      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s' LIMIT 5000", $connectionId, $externalId );
+      $q = $db->buildQuery( "SELECT id FROM comments WHERE user_connection_id=%d AND external_id='%s'", $connectionId, $externalId );
       $commentId = $db->getSingleValue( $q );
       if ( $commentId )
         continue;
@@ -72,7 +72,7 @@
     }
 
     // Get likes
-    $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds) LIMIT 5000";
+    $q = "select post_id, user_id, object_id, object_type from like where post_id in ($qPostIds)";
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     if ( !$rs || !isset($rs['data']) )
       continue;
