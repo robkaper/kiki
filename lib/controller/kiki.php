@@ -4,8 +4,6 @@ class Controller_Kiki extends Controller
 {
   public function exec()
   {
-    // TODO: support DirectoryIndex equivalent, or else simply rely on
-    // mod_rewrite and remove this
     $parts = parse_url($this->objectId);
     if ( !isset($parts['path']) )
       return false;
@@ -21,12 +19,14 @@ class Controller_Kiki extends Controller
         case 'jpg':
         case 'js':
         case 'png':
+
           Log::debug( "Controller_Kiki EXIT: static file $kikiFile" );
           header('Content-Type: '. Storage::getMimeType($ext) );
           exit( file_get_contents($kikiFile) );
           break;
 
         case 'php':
+
           $user = $GLOBALS['user'];
           $db = $GLOBALS['db'];
           Log::debug( "Controller_Kiki: PHP file $kikiFile" );
@@ -40,11 +40,12 @@ class Controller_Kiki extends Controller
           break;
 
         case '':
+
           if ( file_exists($kikiFile. "index.php") )
           {
             $user = $GLOBALS['user'];
             $db = $GLOBALS['db'];
-            Log::debug( "Controller_Kiki: PHP file $kikiFile". "index.php" );
+            Log::debug( "Controller_Kiki: PHP index file $kikiFile". "index.php" );
 
             $this->status = 200;
             $this->template = 'pages/default';
