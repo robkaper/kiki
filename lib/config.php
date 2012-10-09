@@ -50,6 +50,7 @@ class Config
 	public static $staticPrefix = "/static";
 
 	public static $siteLogo = null;
+	public static $responsive = false;
 	public static $customCss = null;
 
 	public static $clEditor = false;
