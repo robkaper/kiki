@@ -8,44 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-20 12:17+0200\n"
+"POT-Creation-Date: 2012-10-09 16:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../htdocs/login/index.php:2 generated.php:4
-msgid "Login"
-msgstr ""
-
-#: ../htdocs/index.php:19
-msgid "Kiki Status"
-msgstr ""
-
-#: ../htdocs/account/articles/index.php:50
-msgid "Create a new article"
-msgstr ""
-
-#: ../htdocs/account/index.php:3 generated.php:10
-msgid "Your Account"
-msgstr ""
-
 #: ../htdocs/account/sections/index.php:26
 msgid "Create a new section"
-msgstr ""
-
-#: ../htdocs/account/events/index.php:2
-msgid "Events"
-msgstr ""
-
-#: ../htdocs/account/events/index.php:49
-msgid "Create a new event"
-msgstr ""
-
-#: ../htdocs/account/pages/index.php:53
-msgid "Create a new page"
 msgstr ""
 
 #: ../htdocs/account/social.php:7
@@ -56,12 +29,40 @@ msgstr ""
 msgid "Social demo"
 msgstr ""
 
+#: ../htdocs/account/events/index.php:2
+msgid "Events"
+msgstr ""
+
+#: ../htdocs/account/events/index.php:49
+msgid "Create a new event"
+msgstr ""
+
+#: ../htdocs/account/index.php:3 generated.php:2
+msgid "Your Account"
+msgstr ""
+
+#: ../htdocs/account/pages/index.php:53
+msgid "Create a new page"
+msgstr ""
+
+#: ../htdocs/account/articles/index.php:50
+msgid "Create a new article"
+msgstr ""
+
 #: ../htdocs/account/albums/index.php:27
 msgid "Create a new album"
 msgstr ""
 
-#: ../htdocs/account/create.php:2 generated.php:9
+#: ../htdocs/account/create.php:2 generated.php:11
 msgid "Create account"
+msgstr ""
+
+#: ../htdocs/index.php:19
+msgid "Kiki Status"
+msgstr ""
+
+#: ../htdocs/login/index.php:2 generated.php:6
+msgid "Login"
 msgstr ""
 
 #: ../lib/articles.php:142
@@ -76,22 +77,22 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: generated.php:2 generated.php:5
+#: generated.php:3
+msgid "Logout"
+msgstr ""
+
+#: generated.php:4 generated.php:7
 msgid "E-mail"
 msgstr ""
 
-#: generated.php:3 generated.php:6
+#: generated.php:5 generated.php:8
 msgid "Password"
 msgstr ""
 
-#: generated.php:7
+#: generated.php:9
 msgid "Verify password"
 msgstr ""
 
-#: generated.php:8
+#: generated.php:10
 msgid "Administrator password"
-msgstr ""
-
-#: generated.php:11
-msgid "Logout"
 msgstr ""
