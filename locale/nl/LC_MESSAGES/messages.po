@@ -7,46 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-20 12:14+0200\n"
+"POT-Creation-Date: 2012-10-09 16:21+0200\n"
 "PO-Revision-Date: 2011-10-04 01:11+0200\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Rob Kaper\n"
 "Language-Team: none\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../htdocs/login/index.php:2 generated.php:4
-msgid "Login"
-msgstr "Login"
-
-#: ../htdocs/index.php:19
-msgid "Kiki Status"
-msgstr "Kiki Status"
-
-#: ../htdocs/account/articles/index.php:50
-msgid "Create a new article"
-msgstr "Nieuw artikel"
-
-#: ../htdocs/account/index.php:3 generated.php:10
-msgid "Your Account"
-msgstr "Jouw Account"
-
 #: ../htdocs/account/sections/index.php:26
 msgid "Create a new section"
 msgstr "Nieuwe sectie"
-
-#: ../htdocs/account/events/index.php:2
-msgid "Events"
-msgstr "Events"
-
-#: ../htdocs/account/events/index.php:49
-msgid "Create a new event"
-msgstr "Nieuw event"
-
-#: ../htdocs/account/pages/index.php:53
-msgid "Create a new page"
-msgstr "Nieuwe pagina"
 
 #: ../htdocs/account/social.php:7
 msgid "Social update"
@@ -56,13 +29,41 @@ msgstr "Social update"
 msgid "Social demo"
 msgstr "Social demo"
 
+#: ../htdocs/account/events/index.php:2
+msgid "Events"
+msgstr "Events"
+
+#: ../htdocs/account/events/index.php:49
+msgid "Create a new event"
+msgstr "Nieuw event"
+
+#: ../htdocs/account/index.php:3 generated.php:2
+msgid "Your Account"
+msgstr "Jouw Account"
+
+#: ../htdocs/account/pages/index.php:53
+msgid "Create a new page"
+msgstr "Nieuwe pagina"
+
+#: ../htdocs/account/articles/index.php:50
+msgid "Create a new article"
+msgstr "Nieuw artikel"
+
 #: ../htdocs/account/albums/index.php:27
 msgid "Create a new album"
 msgstr "Nieuw album"
 
-#: ../htdocs/account/create.php:2 generated.php:9
+#: ../htdocs/account/create.php:2 generated.php:11
 msgid "Create account"
 msgstr "Registreer"
+
+#: ../htdocs/index.php:19
+msgid "Kiki Status"
+msgstr "Kiki Status"
+
+#: ../htdocs/login/index.php:2 generated.php:6
+msgid "Login"
+msgstr "Login"
 
 #: ../lib/articles.php:142
 msgid "Read more"
@@ -76,22 +77,22 @@ msgstr "Likes"
 msgid "Comments"
 msgstr "Reacties"
 
-#: generated.php:2 generated.php:5
+#: generated.php:3
+msgid "Logout"
+msgstr "Log uit"
+
+#: generated.php:4 generated.php:7
 msgid "E-mail"
 msgstr "E-mail"
 
-#: generated.php:3 generated.php:6
+#: generated.php:5 generated.php:8
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: generated.php:7
+#: generated.php:9
 msgid "Verify password"
 msgstr "Bevestig wachtwoord"
 
-#: generated.php:8
+#: generated.php:10
 msgid "Administrator password"
 msgstr "Administrator wachtwoord"
-
-#: generated.php:11
-msgid "Logout"
-msgstr "Log uit"
