@@ -157,7 +157,7 @@ class Articles
     {
       // Likes
       $db = $GLOBALS['db'];
-      $q = "select external_id as id from likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=". $article->objectId();
+      $q = $db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=%d", $article->objectId() );
       $likeUsers = $db->getArray($q);
 
       if ( count($likeUsers) )
