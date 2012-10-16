@@ -355,16 +355,34 @@ class Template
 
     $content = null;
 
-    // FIXME: only toplevel arrays supported
-    if ( !isset($this->data[$array]) || !is_array($this->data[$array]) )
-      return $content;
+    if ( isset($this->data[$array]) && is_array($this->data[$array]) )
+      $data = $this->data[$array];
+    else
+    {
+      $parts = explode(".", $array);
+      $data = $this->data;
+      foreach( $parts as $part )
+      {
+        if ( isset($data[$part]) && is_array($data[$part]) )
+          $data = $data[$part];
+        else
+          unset($data);
+      }
 
-    foreach( $this->data["$array"] as $key => $$named )
+      if ( !isset($data) )
+      {
+        Log::debug( "loops returning unmatched: {foreach $array as $named}, part: $part" );
+        return $content;
+      }
+    }
+
+    foreach( $data as $key => $$named )
     {
       $pattern = "~\{(if\d\s)?\\\$${named}(|[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\2}";
       $content .= preg_replace( $pattern, $replace, $input[3] );
     }
+
     return $content;
   }
 
