@@ -424,6 +424,13 @@ class Template
     {
       switch($mod)
       {
+        // Parse the contents of a template as a template itself.
+        case 'parse':
+          $template = new Template();
+          $template->setContent($input);
+          $input = $template->fetch();
+          break;
+
         case 'escape':
           $input = htmlentities($input, ENT_COMPAT, mb_internal_encoding());
           break;
