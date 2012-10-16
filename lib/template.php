@@ -101,12 +101,11 @@ class Template
     );
 
     $this->data['user'] = array(
+      'id' => $this->user->id(),
+      'admin' => $this->user->isAdmin(),
       'activeConnections' => array(),
       'inactiveConnections' => array()
     );
-
-    if ( $this->user->id() )
-      $this->data['user']['id'] = $this->user->id();
 
     $this->data['activeConnections'] = array();
     $this->data['inactiveConnections'] = array();
