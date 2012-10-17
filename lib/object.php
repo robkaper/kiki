@@ -122,7 +122,6 @@ abstract class Object
   final public function likes()
   {
     $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=%d", $this->objectId );
-    Log::debug($q);
     $likeUsers = $this->db->getArray($q);
 
     $likes = array();
