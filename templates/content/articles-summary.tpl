@@ -20,10 +20,6 @@
     <li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
   {/foreach}
 
-  {if $user.admin}
-    <li><a href="javascript:showArticleForm({$article.id});" class="button">Wijzigen</a></li>
-  {/if}
-
   </ul></footer>
 
 <br class="spacer" />
