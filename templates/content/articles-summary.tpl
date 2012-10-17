@@ -26,4 +26,6 @@
 
   </ul></footer>
 
+<br class="spacer" />
+
 </article>

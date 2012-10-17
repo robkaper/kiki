@@ -574,7 +574,6 @@ article header > img.thumb {
 }
 
 article footer, footer.pageFooter {
-  clear: both;
   padding: 0;
   margin: 0;
   text-align: right;
