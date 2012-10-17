@@ -1,4 +1,5 @@
-<?
+<?php
+
 /**
  * Initialisation/bootloader script for Kiki.
  *

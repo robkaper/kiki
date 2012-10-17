@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * HTML generation for HTML5 forms.
@@ -129,7 +129,8 @@ $( function() {
   } );
 } );
 </script>
-<?
+<?php
+
     $content .= ob_get_contents();
     ob_end_clean();
 

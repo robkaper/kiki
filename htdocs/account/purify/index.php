@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = "Purify structure";
 
   if ( !$user->isAdmin() )

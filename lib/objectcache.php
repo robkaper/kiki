@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Provides a rudimentary Object cache.

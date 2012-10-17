@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Revokes a Facebook permission and redirects to referer.

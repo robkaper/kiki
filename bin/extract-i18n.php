@@ -1,5 +1,6 @@
 #!/usr/bin/php -q
-<?
+<?php
+
   $content = "<?php". PHP_EOL;
 
   array_shift($argv);

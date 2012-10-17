@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Handles Ajax file upload requests (POSTS) and calls fileUploadHandler
  * from default.js in parent window (Ajax uploads use iframes).
@@ -32,6 +32,7 @@
 <script type="text/javascript">
 window.parent.fileUploadHandler( '<?= $target; ?>', '<?= $id; ?>', '<?= Storage::url($id); ?>', <?= json_encode($html); ?> );
 </script>
-<?
+<?php
+
   exit();
 ?>

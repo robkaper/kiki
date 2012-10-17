@@ -1,4 +1,5 @@
-<?
+<?php
+
 /**
  * Creates, stores and resolves local tiny URLs.
  *

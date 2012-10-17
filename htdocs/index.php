@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Kiki status page. Checks required modules and extensions and also the

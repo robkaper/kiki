@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once "Mail/RFC822.php";
 require_once "Net/SMTP.php";

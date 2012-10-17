@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
   $this->title = _("Your Account");
 
@@ -10,10 +11,11 @@
   }
 
 ?> 
+
 <div id="facebookPermissions" class="jsonupdate">
 <?= Boilerplate::facebookPermissions( $user ); ?>
 </div>
-<?
+<?php
   if ( $user->anyUser() )
   {
     echo "<h2>Sociale hulpmiddelen</h2>\n";

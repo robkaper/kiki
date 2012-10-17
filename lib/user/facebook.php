@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Facebook connection user class.

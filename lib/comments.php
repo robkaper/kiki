@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class for comments attached to objects.

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Utility class for displaying post collections (articles and pages).

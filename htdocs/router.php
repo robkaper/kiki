@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Router script for Kiki. Should be called for all URI's where there is no

@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Factory_User
 {

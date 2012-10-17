@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Constructs an e-mail message to be used by Mailer. Supports a HTML

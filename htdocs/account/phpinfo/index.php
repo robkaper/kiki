@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = "phpinfo()";
 
   if ( !$user->isAdmin() )
@@ -18,7 +19,7 @@
 ?>
 <p>
 Leuk geprobeerd, maar alleen ontwikkelaars van deze site hebben toegang tot <tt>phpinfo()</tt> informatie.</p>
-<?
+<?php
   }
 
   $content = ob_get_clean();

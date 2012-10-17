@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Abstract class to deal with users from external sources.

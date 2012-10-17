@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class providing routing functionalities such as redirection and base URI detection.

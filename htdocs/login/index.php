@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = _("Login");
 
   ob_start();

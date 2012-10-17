@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class providing the Article object.

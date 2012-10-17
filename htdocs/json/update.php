@@ -1,4 +1,5 @@
-<?
+<?php
+
 /**
  * Returns updateable page parts in JSON format as required by jsonUpdate from htdocs/scripts/default.js
  *

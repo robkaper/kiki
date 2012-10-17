@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Utility class to assist authentication. Provides cookie creation and

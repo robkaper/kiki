@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Base 62 encoding and decoding.

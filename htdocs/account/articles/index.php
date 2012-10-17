@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = "Articles";
 
   if ( !$user->isAdmin() )

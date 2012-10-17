@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Controller for TinyURL resources.

@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Controller_Event extends Controller
 {
