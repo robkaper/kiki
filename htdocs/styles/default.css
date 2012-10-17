@@ -566,6 +566,13 @@ article header > img {
   width: 100%;
 }
 
+article header > img.thumb {
+  width: 160px;
+  height: 90px;
+  float: right;
+  margin: 10px;
+}
+
 article footer, footer.pageFooter {
   clear: both;
   padding: 0;

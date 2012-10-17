@@ -26,16 +26,13 @@ class Controller_Articles extends Controller
       if ( $article->id() && ( $article->visible() || $article->userId() == $user->id() ) )
       {
         $this->status = 200;
-
         $this->title = $article->title();
-
         $this->template = 'pages/default';
 
+        $template = new Template( 'content/articles-single' );
+        $template->assign( 'article', $article->templateData() );
 
-        // $template = new Template( 'content/articles-single' );
-        // $template->assign( 'article', $article->data() );
-        // $this->content = $template->fetch();
-        $this->content = Articles::showSingle( $db, $user, $this->objectId );
+        $this->content = $template->fetch();
       }
       else
       {
@@ -46,15 +43,33 @@ class Controller_Articles extends Controller
     }
     else
     {
+      $section = new Section( $this->instanceId );
+
       $this->status = 200;
-
-      $this->title = Articles::sectionTitle( $db, $user, $this->instanceId );
-
+      $this->title = $section->title();
       $this->template = 'pages/default';
 
-      $this->content = Articles::showMulti( $db, $user, $this->instanceId, 10, 2 );
+      $this->content = MultiBanner::articles( $sectionId );
+
+      $articles = array();
+      $article = new Article();
+    
+      $q = $db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d", $this->instanceId, $user->id(), 10 );
+      $articleIds = $db->getArray($q);
+
+      foreach( $articleIds as $articleId )
+      {
+        $article->load($articleId);
+
+        $template = new Template( 'content/articles-summary' );
+        $template->assign( 'article', $article->templateData() );
+
+        $this->content .= $template->fetch();
+      }
     }
+
   }
+
 }
   
 ?>

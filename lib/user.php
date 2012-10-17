@@ -56,7 +56,10 @@ class User extends Object
   public function load( $id = 0 )
   {
     if ( $id )
+    {
       $this->id = $id;
+      $this->objectId = 0;
+    }
 
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     // TODO: todo email

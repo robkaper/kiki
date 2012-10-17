@@ -45,8 +45,14 @@ class Article extends Object
     $this->albumId = 0;
   }
 
-  public function load()
+  public function load( $id = 0 )
   {
+    if ( $id )
+    {
+      $this->id = $id;
+      $this->objectId = 0;
+    }
+
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
@@ -233,6 +239,35 @@ class Article extends Object
 
     return $content;
   }
+
+  public function templateData()
+  {
+    $uAuthor = ObjectCache::getByType( 'User', $this->userId );
+    $publications = $this->publications();
+
+    $data = array(
+      'id' => $this->id,
+      'url' => $this->url(),
+      'ctime' => strtotime($this->ctime),
+      'relTime' => Misc::relativeTime($this->ctime),
+      'title' => $this->title,
+      'body' => $this->body,
+      'author' => $uAuthor->name(),
+      'headerImage' => Storage::url($this->headerImage),
+      'publications' => array(),
+      'likes' => $this->likes(),
+      'html' => array(
+        'comments' => Comments::show( $this->db, $GLOBALS['user'], $this->objectId ),
+        'editform' => $this->form( $GLOBALS['user'], true, $showAsPage ? 'pages' : 'articles' )
+      )
+    );
+
+    foreach( $publications as $publication )
+      $data['publications'][] = $publication->templateData();
+
+    return $data;
+  }
+
 }
 
 ?>
