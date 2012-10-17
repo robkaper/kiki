@@ -1,4 +1,4 @@
 <?
   Auth::setCookie(0);
-  Router::redirect( "/kiki/account/" ) && exit();
+  Router::redirect( Config::$kikiPrefix. "/account/" ) && exit();
 ?>
