@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = _("Events");
 
   if ( !$user->isAdmin() )

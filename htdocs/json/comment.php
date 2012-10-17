@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Handles creation requests (POSTS) for comments. Returns all comments

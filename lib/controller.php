@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class providing controller factory and base class.

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class providing various helper functions for checking internal integrity,

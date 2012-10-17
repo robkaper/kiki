@@ -1,4 +1,5 @@
-<?
+<?php
+
 /**
  * Handles creation and modification requests (POSTS) for articles.
  *

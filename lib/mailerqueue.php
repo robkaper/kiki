@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Class to manage the e-mail queue.

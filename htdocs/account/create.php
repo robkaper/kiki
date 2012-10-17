@@ -1,4 +1,5 @@
-<?
+<?php
+
   $this->title = _("Create account") );
 
   ob_start();

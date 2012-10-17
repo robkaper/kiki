@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Utility class for various methods that don't fit Kiki's object model (yet).

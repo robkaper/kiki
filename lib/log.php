@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Facilitates debug and error logging.

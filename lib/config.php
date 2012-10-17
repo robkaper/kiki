@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Ensures availability of core configuration properties, with reasonable

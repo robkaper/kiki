@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Object base class.

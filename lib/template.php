@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Rudimentary template class.

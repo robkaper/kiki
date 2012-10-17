@@ -1,4 +1,4 @@
-<?
+<?php
 
   // TODO: /kiki/album/
   //RewriteRule ^/kiki/album(/)?$ /www/git/kiki/htdocs/album/index.php [L]

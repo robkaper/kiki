@@ -1,4 +1,4 @@
-<?
+<?php
 
 // FIXME: make sure all publications reference an object. This means all social updates must also have their own unique object id.
 

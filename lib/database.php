@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Utility class for database operations. Offers SQL injection prevention.

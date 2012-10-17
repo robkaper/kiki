@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Redirects a user to the Facebook auth dialog after clearing permissions

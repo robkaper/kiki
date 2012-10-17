@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Builds a Twitter authorisation URL using the generic application token

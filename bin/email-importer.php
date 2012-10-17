@@ -1,5 +1,5 @@
 #!/usr/bin/php -q
-<?
+<?php
 
 /**
 * @file email-importer.php

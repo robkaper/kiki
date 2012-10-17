@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Handles Ajax album navigation.
