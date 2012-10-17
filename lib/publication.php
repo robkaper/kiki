@@ -93,4 +93,14 @@ class Publication
     }
     return false;
   }
+
+  public function templateData()
+  {
+    $data = array(
+      'url' => $this->url(),
+      'service' => $this->service()
+    );
+    
+    return $data;
+  }
 }

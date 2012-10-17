@@ -118,6 +118,26 @@ abstract class Object
     }    
   }
 
+  // FIXME: should not directly return templateData, but Like objects (which have a templatData method)
+  final public function likes()
+  {
+    $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=%d", $this->objectId );
+    Log::debug($q);
+    $likeUsers = $this->db->getArray($q);
+
+    $likes = array();
+    foreach( $likeUsers as $externalId )
+    {
+      $fbUser = Factory_User::getInstance( 'User_Facebook', $externalId );
+      $likes[] = array(
+        'userName' => $fbUser->name(),
+        'serviceName' => 'Facebook',
+        'pictureUrl' => $fbUser->picture()
+      );
+    }
+    return $likes;
+  }
+
   final public function publications()
   {
     if ( !isset($this->publications) )

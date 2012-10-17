@@ -95,7 +95,19 @@
       $response = array();
       $response['formId'] = $_POST['formId'];
       $response['articleId'] = $article->id();
-      $response['article'] = Articles::showSingle( $db, $user, $article->id(), true, $showAsPage );
+      
+      if ( $showAsPage )
+      {
+        $template = new Template( 'content/pages-single' );
+        $template->assign( 'page', $article->templateData() );
+      }
+      else
+      {
+        $template = new Template( 'content/articles-single' );
+        $template->assign( 'article', $article->templateData() );
+      }
+      $response['article'] = $template->fetch();
+
       $response['errors'] = $errors;
 
       header( 'Content-type: application/json' );

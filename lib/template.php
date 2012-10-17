@@ -422,6 +422,10 @@ class Template
     $mods = explode( ',', $mods );
     foreach( $mods as $mod )
     {
+      $parts = explode( ":", $mod );
+      $mod = array_shift($parts);
+      $fmt = array_shift($parts);
+
       switch($mod)
       {
         // Parse the contents of a template as a template itself.
@@ -431,21 +435,46 @@ class Template
           $input = $template->fetch();
           break;
 
+        // Transform BB-code-like syntax to HTML.
+        case 'markup':
+          $input = Misc::markup($input);
+          break;
+
+        case 'date':
+          $input = date($fmt, $input);
+          break;
+
+        // Insert formatting contents between base part and extension in an image URL. 
+        case 'thumb':
+          list ($base, $ext) = Storage::splitExtension($input);
+          $input = "${base}.${fmt}.${ext}";
+          break;
+
+        // Creates a summary of $fmt paragraphs.
+        case 'summary':
+          $input = Misc::textSummary( $input, $fmt, true );
+          break;
+
         case 'escape':
           $input = htmlentities($input, ENT_COMPAT, mb_internal_encoding());
           break;
+
         case 'i18n':
           $input = _($input);
           break;
+
         case 'trim':
           $input = trim($input);
           break;
+
         case 'strip':
           $input = strip_tags($input);
           break;
+
         case 'lower':
           $input = strtolower($input);
           break;
+
         default:;
       }
     }
