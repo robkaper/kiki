@@ -258,7 +258,7 @@ class Article extends Object
       'likes' => $this->likes(),
       'html' => array(
         'comments' => Comments::show( $this->db, $GLOBALS['user'], $this->objectId ),
-        'editform' => $this->form( $GLOBALS['user'], true, $showAsPage ? 'pages' : 'articles' )
+        'editform' => $this->form( $GLOBALS['user'], true, 'articles' )
       )
     );
 

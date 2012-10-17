@@ -11,7 +11,7 @@
 </ul></footer>
 
 {if $user.admin}
-  <pre>// TODO: $article->form( $user, true, 'pages' );</pre>
+  {$page.html.editform}
 {/if}
 
 {if $page.likes|count}
