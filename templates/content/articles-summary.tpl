@@ -26,7 +26,4 @@
 
   </ul></footer>
 
-<p>
-{$article.likes|count} likes, {$article.comments|count} comments</p>
-
 </article>
