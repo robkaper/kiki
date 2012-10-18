@@ -571,6 +571,7 @@ article header > img.thumb {
   height: 90px;
   float: right;
   margin: 10px;
+  border: 1px solid #deb;
 }
 
 article footer, footer.pageFooter {
