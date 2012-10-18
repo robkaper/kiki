@@ -72,10 +72,10 @@ class Misc
     $text = htmlspecialchars( $text );
 
     // Substitute newlines to breaks.
-    $text = preg_replace('((\r)?\n)', "<br />", $text );
+    $text = preg_replace('((\r)?\n)', "<br>", $text );
 
     // Substitute double breaks to paragraphs.
-    $text = preg_replace('(<br /><br />)', "</p>\n\n<p>\n", $text );
+    $text = preg_replace('(<br><br>)', "</p>\n\n<p>\n", $text );
 
     // Begin and end parapgraphs.
     $text = "<p>\n$text</p>\n";
@@ -110,11 +110,11 @@ class Misc
     if ( $authorMode )
     {
         // Replace [img]img[/img]
-        $text = preg_replace( '(\[img\]([^\[\]]+)\[/img\])', "<div class=\"center\"><img src=\"\\1\" alt=\"\\1\" style=\"width: 99%\" /></div>", $text );
+        $text = preg_replace( '(\[img\]([^\[\]]+)\[/img\])', "<div class=\"center\"><img src=\"\\1\" alt=\"\\1\" style=\"width: 99%\"></div>", $text );
         // Replace [blockquote]text[/blockquote]
-        $text = preg_replace( '((<p>)?(\n)*\[blockquote\](<br />)?([^\[\]]+)\[/blockquote\](<br />)?(\n)*(</p>)?)', "<blockquote><p>\\4</p></blockquote>", $text );
+        $text = preg_replace( '((<p>)?(\n)*\[blockquote\](<br>)?([^\[\]]+)\[/blockquote\](<br>)?(\n)*(</p>)?)', "<blockquote><p>\\4</p></blockquote>", $text );
         // Replace [(/)ul|li]
-        $text = preg_replace( '((<p>)?(\n)*\[(/)?(ol|ul|li)\](<br />)?(\n)*(</p>)?)', "<\\3\\4>", $text );
+        $text = preg_replace( '((<p>)?(\n)*\[(/)?(ol|ul|li)\](<br>)?(\n)*(</p>)?)', "<\\3\\4>", $text );
 
         // Complete relative links
         if ( $fullURLs )
@@ -208,10 +208,10 @@ class Misc
     }
 
     // Substitute breaks for newlines.
-    $str = preg_replace('((\r)?\n)', "<br />", $str );
+    $str = preg_replace('((\r)?\n)', "<br>", $str );
 
     // Substitute paragraphs for double breaks.
-    $str = preg_replace('(<br /><br />)', "</p>\n\n<p>\n", $str );
+    $str = preg_replace('(<br><br>)', "</p>\n\n<p>\n", $str );
         
     return $str;
   }

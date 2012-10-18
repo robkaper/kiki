@@ -35,7 +35,7 @@
       $updated += $db->affectedRows($rs2);
     }
   }
-  echo "done.<br />(albums updated: $updated)</li>";
+  echo "done.<br>(albums updated: $updated)</li>";
 
   // Update title of albums linked to events
   echo "<li>Update title of albums linked to events... ";
@@ -51,14 +51,14 @@
       $updated += $db->affectedRows($rs2);
     }
   }
-  echo "done.<br />(albums updated: $updated)</li>";
+  echo "done.<br>(albums updated: $updated)</li>";
 
   // Delete all empty albums not linked to an article or event
   echo "<li>Delete all empty albums not linked to an article or event... ";
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
   $rs = $db->query($q);
   $deleted = $db->affectedRows($rs);
-  echo "done.<br />(albums deleted: $deleted)</li>";
+  echo "done.<br>(albums deleted: $deleted)</li>";
 
   // Delete generated thumbnails from cache
   echo "<li>Delete generated thumbnails from cache...";
@@ -81,7 +81,7 @@
       }
     }
   }
-  echo "done.<br />(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
+  echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
 
   $q = "select header_image as id from articles";
   $articleImages = $db->getArray($q);
@@ -93,7 +93,7 @@
   $q = "delete from pictures where id not in (select picture_id from album_pictures)";
   $rs = $db->query($q);
   $deleted = $db->affectedRows($rs);
-  echo "done.<br />(pictures deleted: $deleted)</li>";
+  echo "done.<br>(pictures deleted: $deleted)</li>";
 
   // Delete orphaned storage items
   echo "<li>Delete orphaned storage items... ";
@@ -114,7 +114,7 @@
       $deleted += $db->affectedRows($rs2);
     }
   }
-  echo "done.<br />(files deleted: $deleted)</li>";
+  echo "done.<br>(files deleted: $deleted)</li>";
 
   echo "<li>Delete orphaned objects... ";
   echo "<ul>";
@@ -126,11 +126,11 @@
     $q = "delete from objects where type='$objectType' and object_id not in (select object_id from $table)";
     $rs = $db->query($q);
     $deleted = $db->affectedRows($rs);
-    echo "done.<br />($table deleted: $deleted)</li>";
+    echo "done.<br>($table deleted: $deleted)</li>";
     $totalDeleted += $deleted;
   }
   echo "</ul>";
-  echo "done.<br />(total deleted: $totalDeleted)</li>";
+  echo "done.<br>(total deleted: $totalDeleted)</li>";
 
   echo "</ul>";
 

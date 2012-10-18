@@ -24,7 +24,7 @@
 
     if ( $emailUploadAddress = $user->emailUploadAddress() )
     {
-      echo "<li>Update je status en foto's door ze te e-mailen naar:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></li>\n";
+      echo "<li>Update je status en foto's door ze te e-mailen naar:<br><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></li>\n";
     }
 
     echo "</ul>\n";

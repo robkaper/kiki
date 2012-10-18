@@ -50,7 +50,7 @@
     echo "<thead>\n";
 
     echo "<tr>\n"; 
-    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\" /></a></td>\n";
+    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"></a></td>\n";
     echo "<td colspan=\"3\">". _("Create a new page"). "</td>\n";
     echo "</tr>\n";
 
@@ -67,9 +67,9 @@
         $section = new Section( $article->sectionId() );
         $class = $article->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
-        echo "<td><a href=\"?id=". $article->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\" /></a></td>\n";
-        echo "<td><a href=\"". $article->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\" /></a></td>\n";
-        echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\" /></a></td>\n";
+        echo "<td><a href=\"?id=". $article->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\"></a></td>\n";
+        echo "<td><a href=\"". $article->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\"></a></td>\n";
+        echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\"></a></td>\n";
         if ( $section->baseURI() )
         {
           echo "<td>". $section->baseURI(). "</td>\n";

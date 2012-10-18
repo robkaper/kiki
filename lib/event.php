@@ -214,7 +214,7 @@ class Event extends Object
     $end = strftime( "%A %e %B %Y %R", strtotime($this->end) );
 
     $imgUrl = Storage::url( $this->headerImage, 320, 180, true );
-    $content = "<img src=\"$imgUrl\" style=\"float: right; margin: 0 0 1em 1em;\" />";
+    $content = "<img src=\"$imgUrl\" style=\"float: right; margin: 0 0 1em 1em;\">";
 
     $content .= Misc::markup( $this->description );
 

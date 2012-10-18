@@ -2,7 +2,7 @@
 
 <header>
   {if $article.headerImage}
-    <img src="{$article.headerImage|thumb:160x90.c}" alt="[{$article.title|escape}]" class="thumb" />
+    <img src="{$article.headerImage|thumb:160x90.c}" alt="[{$article.title|escape}]" class="thumb">
   {/if}
   <h2><span><a href="{$article.url}">{$article.title|escape}</a></span></h2>
 

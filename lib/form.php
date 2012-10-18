@@ -34,14 +34,14 @@ class Form
 
   public static function close()
   {
-    $content = "<br class=\"spacer\" />\n";
+    $content = "<br class=\"spacer\">\n";
     $content .= "</form>\n";
     return $content;
   }
 
   public static function hidden( $id, $value=null )
   {
-    return "<input type=\"hidden\" name=\"${id}\" value=\"${value}\" />\n";
+    return "<input type=\"hidden\" name=\"${id}\" value=\"${value}\">\n";
   }
 
   public static function text( $id, $value=null, $label=null, $placeholder=null, $password=false )
@@ -49,7 +49,7 @@ class Form
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
     $content = "<p><label>${label}</label>\n";
     $type = $password ? "password" : "text";
-    $content .= "<input type=\"${type}\" name=\"${id}\" value=\"${value}\"${placeholder} /></p>\n";
+    $content .= "<input type=\"${type}\" name=\"${id}\" value=\"${value}\"${placeholder}></p>\n";
     return $content;
   }
 
@@ -95,7 +95,7 @@ class Form
   {
     $checked = $checked ? " checked" : "";
     $content = "<p><label>${label}</label>\n";
-    $content .= "<div class=\"checkboxw\"><input type=\"checkbox\" name=\"${id}\" ${checked} /><span>${aside}</span></div></p>\n";
+    $content .= "<div class=\"checkboxw\"><input type=\"checkbox\" name=\"${id}\" ${checked}><span>${aside}</span></div></p>\n";
     return $content;
   }
 
@@ -117,7 +117,7 @@ class Form
   public static function datetime( $id, $value=null, $label=null )
   {
     $content = "<p><label>${label}</label>\n";
-    $content .= "<input type=\"text\" name=\"${id}\" value=\"${value}\" class=\"datetimepicker\" /></p>\n";
+    $content .= "<input type=\"text\" name=\"${id}\" value=\"${value}\" class=\"datetimepicker\"></p>\n";
     ob_start();
 ?>
 <script>
@@ -147,14 +147,14 @@ $( function() {
   {
     if ( Misc::isMobileSafari() )
     {
-      $label .= "<br /><span class=\"small\">Warning: Mobile Safari does not support file uploads.</span>";
+      $label .= "<br><span class=\"small\">Warning: Mobile Safari does not support file uploads.</span>";
       global $user;
       if ( $emailUploadAddress = $user->emailUploadAddress($target) )
-        $label .= "<br /><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br /><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
+        $label .= "<br><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
     }
 
     $content = "<p><label>${label}</label>\n";
-    $content .= "<input type=\"file\" name=\"${id}\" /></p>\n";
+    $content .= "<input type=\"file\" name=\"${id}\"></p>\n";
     return $content;
   }
 

@@ -2,7 +2,7 @@
 
   <header>
     {if $article.headerImage}
-      <img src="{$article.headerImage|thumb:780x400.c}" alt="[{$article.title|escape}]" />
+      <img src="{$article.headerImage|thumb:780x400.c}" alt="[{$article.title|escape}]">
     {/if}
     <span class="author">{$article.author}</span>
     <time class="relTime" datetime="{$article.ctime|date:c)}">{$article.relTime} geleden</time>
@@ -32,7 +32,7 @@
         {include 'parts/user-account-image'}
       </div>
     {/foreach}
-    <br class="spacer" />
+    <br class="spacer">
   {/if}
 
   <h3>{"Comments"|i18n}</h3>

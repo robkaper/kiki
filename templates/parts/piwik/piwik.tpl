@@ -8,7 +8,7 @@ document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/ja
 var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", {$config.piwikSiteId});
 piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
-</script><noscript><p><img src="http://{$config.piwikHost}/piwik/piwik.php?idsite={$config.piwikSiteId}" style="border:0" alt="" /></p></noscript>
+</script><noscript><p><img src="http://{$config.piwikHost}/piwik/piwik.php?idsite={$config.piwikSiteId}" style="border:0" alt=""></p></noscript>
 <!-- End Piwik Tracking Code -->
   {/if}
 {/if}

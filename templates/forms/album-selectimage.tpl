@@ -1,5 +1,5 @@
 <p><label>{$label}</label>
-<a href="#" class="albumSelectImageToggle"><img class="selectedImage" src="{$imgUrl}" style="width: 75px; height: 75px; margin-top: 0.5em;" /></a>
+<a href="#" class="albumSelectImageToggle"><img class="selectedImage" src="{$imgUrl}" style="width: 75px; height: 75px; margin-top: 0.5em;"></a>
 <div class="albumSelectImage" style="display: none;">
 
 <script type="text/javascript">
@@ -20,15 +20,15 @@ $('.albumSelectImageToggle').live('click', function() {
 <div class="imageList">
 {if $images|count}
   {foreach $images as $image}
-    <a href="#"><img id="{$image.storageId}" src="{$image.url}" style="float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;" /></a>
+    <a href="#"><img id="{$image.storageId}" src="{$image.url}" style="float: left; width: 75px; height: 75px; margin: 0 0.5em 0.5em 0;"></a>
   {/foreach}
 {else}
   <p class="noImages">Upload eerst een foto in het album.</p>
 {/if}
 </div>
-<br style="clear: left"/>
+<br style="clear: left">
 
 </div>
 </p>
 
-<input type="hidden" name="{$id}" value="{$selected}" />
+<input type="hidden" name="{$id}" value="{$selected}">

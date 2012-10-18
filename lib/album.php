@@ -274,7 +274,7 @@ class Album
     $storageId = $o->storage_id;
     $imgUrl = Storage::url($storageId, 75, 75, true);
 
-    return "<div class=\"pictureFormItem\" id=\"pictureFormItem_$pictureId\"><div class=\"img-overlay\"><a class=\"removePicture\" href=\"#\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\" /></a></div><img src=\"$imgUrl\" alt=\"\" /></div>";
+    return "<div class=\"pictureFormItem\" id=\"pictureFormItem_$pictureId\"><div class=\"img-overlay\"><a class=\"removePicture\" href=\"#\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\"></a></div><img src=\"$imgUrl\" alt=\"\"></div>";
     
     ob_start();
     include Template::file( 'forms/album-editpicture' );
@@ -315,9 +315,9 @@ class Album
       while( $o = $this->db->fetchObject($rs) )
       {
         echo "<pre>". print_r($o, true). "</pre>". PHP_EOL;
-        echo "<img src=\"/storage/". $o->hash. ".100x100.c.". $o->extension. "\" style=\"width: 100px; height: 100px; float: left;\" />";
+        echo "<img src=\"/storage/". $o->hash. ".100x100.c.". $o->extension. "\" style=\"width: 100px; height: 100px; float: left;\">";
       }
-      echo "<br style=\"clear: left;\" />";
+      echo "<br class=\"spacer\">";
     }
   }
 

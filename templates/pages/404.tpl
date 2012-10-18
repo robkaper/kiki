@@ -7,7 +7,7 @@
 
 <h2>Kiki says <q>mea culpa</q>.</h2>
 
-<img src="/kiki/img/404-circuit.png" style="width: 320px; height: 330px; float: right; margin: 0 0 1em 1em;" alt="" />
+<img src="/kiki/img/404-circuit.png" style="width: 320px; height: 330px; float: right; margin: 0 0 1em 1em;" alt="">
 
 <p>
 This website turned itself inside out to find what you are looking for, but
@@ -32,7 +32,7 @@ could not find it.</p>
 <li>404!</li>
 </ul>
 
-<br class="spacer" />
+<br class="spacer">
 </div></div>
 
 {include 'parts/footer'}

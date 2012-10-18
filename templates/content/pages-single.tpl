@@ -21,5 +21,5 @@
       {include 'parts/user-account-image'}
     </div>
   {/foreach}
-  <br class="spacer" />
+  <br class="spacer">
 {/if}

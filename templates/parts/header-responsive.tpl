@@ -1,15 +1,15 @@
 <header>
 <ul>
-<li class="menu" name="mainmenu"><a href="#" class="menu" name="mainmenu"><img src="/test/responsive/list_bullets.png" /></a></li>
-<li><a href="/"><img src="{$config.kikiPrefix}/img/kiki-inverse-74x50.png" alt="{$config.siteName}" style="xwidth: 74px; height: 32px;"/></a></li>
+<li class="menu" name="mainmenu"><a href="#" class="menu" name="mainmenu"><img src="/test/responsive/list_bullets.png"></a></li>
+<li><a href="/"><img src="{$config.kikiPrefix}/img/kiki-inverse-74x50.png" alt="{$config.siteName}" style="xwidth: 74px; height: 32px;"></a></li>
 <li class="right">contact</li>
 <li class="right"><a href="#" class="menu" name="accountmenu">account</a><li>
 </ul>
 
 <section id="title">
-<a href="/"><img src="{$config.kikiPrefix}/img/kiki-inverse-74x50.png" alt="{$config.siteName}" style="width: 74px; height: 50px; float: left;"/></a>
+<a href="/"><img src="{$config.kikiPrefix}/img/kiki-inverse-74x50.png" alt="{$config.siteName}" style="width: 74px; height: 50px; float: left;"></a>
 <span class="title"><a href="/">{$title}</a></span>
-<br /><span class="subTitle">{$subTitle}</span>
+<br><span class="subTitle">{$subTitle}</span>
 <br class="spacer">
 </section>
 </header>

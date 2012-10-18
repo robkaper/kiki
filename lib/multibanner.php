@@ -46,7 +46,7 @@ class MultiBanner
       $content .= "</div>\n"; 
     }
 
-    $content .= "<br class=\"clear\" />";
+    $content .= "<br class=\"spacer\">";
     $content .= "</div>\n";
     
     return $content;
