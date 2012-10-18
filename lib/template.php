@@ -86,15 +86,8 @@ class Template
         $this->data['config'][$configKey] = $configValue;
     }
 
-    // FIXME: $page does not exist at this point. Maybe get rid of
-    // Page class and just assign title, description and tagLine to the
-    // template engine directly.
-    /*
-    $page = $GLOBALS['page'];
-    $this->data['page'] = array(
-      'description' => $page->description()
-    );
-    */
+    if ( Config::$customCss )
+      $this->append( 'stylesheets', Config::$customCss );
 
     $this->data['server'] = array(
       'requestUri' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ""
