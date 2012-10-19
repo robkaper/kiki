@@ -240,10 +240,15 @@ class Article extends Object
     return $content;
   }
 
+  public function images()
+  {
+    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d", $this->albumId );
+    return $this->db->getArray( $q );
+  }
+
   public function templateData()
   {
     $uAuthor = ObjectCache::getByType( 'User', $this->userId );
-    $publications = $this->publications();
 
     $data = array(
       'id' => $this->id,
@@ -253,7 +258,8 @@ class Article extends Object
       'title' => $this->title,
       'body' => $this->body,
       'author' => $uAuthor->name(),
-      'headerImage' => Storage::url($this->headerImage),
+      'headerImage' => $this->headerImage ? Storage::url($this->headerImage) : null,
+      'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
       'html' => array(
@@ -262,8 +268,13 @@ class Article extends Object
       )
     );
 
+    $publications = $this->publications();
     foreach( $publications as $publication )
       $data['publications'][] = $publication->templateData();
+
+    $images = $this->images();
+    foreach( $images as $image )
+      $data['images'][] = Storage::url($image);
 
     return $data;
   }
