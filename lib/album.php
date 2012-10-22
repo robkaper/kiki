@@ -285,7 +285,7 @@ class Album
 
   public function form()
   {
-    $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id asc";
+    $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
     $rs = $this->db->query($q);
 
     echo "<h2>Album</h2>";

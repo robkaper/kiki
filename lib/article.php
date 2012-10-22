@@ -242,7 +242,8 @@ class Article extends Object
 
   public function images()
   {
-    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d", $this->albumId );
+    // TODO: query album, do not do this here.
+    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
     return $this->db->getArray( $q );
   }
 
