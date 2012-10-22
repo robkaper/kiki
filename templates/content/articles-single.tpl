@@ -1,8 +1,8 @@
 <article id="article_{$article.id}">
 
   <header>
-    {if $article.headerImage}
-      <img src="{$article.headerImage|thumb:780x400.c}" alt="[{$article.title|escape}]">
+    {if $article.images.0}
+      <img src="{$article.images.0|thumb:780x400.c}" alt="[{$article.title|escape}]">
     {/if}
     <span class="author">{$article.author}</span>
     <time class="relTime" datetime="{$article.ctime|date:c)}">{$article.relTime} geleden</time>
@@ -37,4 +37,5 @@
 
   <h3>{"Comments"|i18n}</h3>
   {$article.html.comments}
+
 </article>

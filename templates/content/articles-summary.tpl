@@ -1,8 +1,8 @@
 <article id="article_{$article.id}">
 
 <header>
-  {if $article.headerImage}
-    <img src="{$article.headerImage|thumb:160x90.c}" alt="[{$article.title|escape}]" class="thumb">
+  {if $article.images.0}
+    <img src="{$article.images.0|thumb:160x90.c}" alt="[{$article.title|escape}]" class="thumb">
   {/if}
   <h2><span><a href="{$article.url}">{$article.title|escape}</a></span></h2>
 
