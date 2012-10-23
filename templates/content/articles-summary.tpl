@@ -7,7 +7,7 @@
   <h2><span><a href="{$article.url}">{$article.title|escape}</a></span></h2>
 
   <span class="author">{$article.author}</span>
-  <time class="relTime" datetime="{$article.ctime|date:c)}">{$article.relTime} geleden</time>
+  <time class="relTime" datetime="{$article.ctime|date:c}">{$article.relTime} geleden</time>
 </header>
   
   <div class="body"><p>{$article.body|summary:2}</p></div>

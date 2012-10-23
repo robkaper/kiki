@@ -5,7 +5,7 @@
       <img src="{$article.images.0|thumb:780x400.c}" alt="[{$article.title|escape}]">
     {/if}
     <span class="author">{$article.author}</span>
-    <time class="relTime" datetime="{$article.ctime|date:c)}">{$article.relTime} geleden</time>
+    <time class="relTime" datetime="{$article.ctime|date:c}">{$article.relTime} geleden</time>
   </header>
   
   <div class="body">{$article.body|markup}</div>
