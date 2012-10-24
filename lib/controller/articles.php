@@ -49,7 +49,7 @@ class Controller_Articles extends Controller
       $this->title = $section->title();
       $this->template = 'pages/default';
 
-      $this->content = MultiBanner::articles( $sectionId );
+      $this->content = MultiBanner::articles( $section->id() );
 
       $articles = array();
       $article = new Article();
