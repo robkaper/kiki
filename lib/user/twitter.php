@@ -119,6 +119,12 @@ class User_Twitter extends User_External
     $this->picture = $data->profile_image_url;
   }
 
+  public function getSubAccounts()
+  {
+    // Twitter has no subaccounts.
+    $this->subAccounts = array();
+  }
+
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
     $result = new stdClass;

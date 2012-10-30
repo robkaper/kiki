@@ -143,9 +143,32 @@ class User_Facebook extends User_External
     }
 
     // $this->externalId = $data['id'];
-    $this->name = $this->screenName = $data['name'];
+    $this->name = $data['name'];
     $this->screenName = $data['username'];
     $this->picture = "http://graph.facebook.com/". $this->externalId. "/picture";
+  }
+
+  public function getSubAccounts()
+  {
+    $this->subAccounts = array();
+
+    if ( $this->hasPerm('manage_pages') )
+    {
+      $rs = $this->api()->api( '/me/accounts' );
+      if ( isset($rs['data']) && count($rs['data']) )
+      {
+        foreach( $rs['data'] as $page )
+        {
+          if ( !isset($page['perms']) )
+            continue;
+
+          // Log::debug( "page: ". print_r($page,true) );
+          $this->subAccounts[] = $page;
+          // $connection->api()->setAccessToken( $page['access_token'] );
+          // $fbRs = $connection->api()->api('/me/feed', 'post', $attachment);
+        }
+      }
+    }
   }
 
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )

@@ -32,6 +32,8 @@ abstract class User_External
   protected $screenName = null;
   protected $picture = null;
 
+  protected $subAccounts = null;
+
   protected $connected = false;
   protected $authenticated = false;
 
@@ -59,6 +61,9 @@ abstract class User_External
   abstract protected function cookie();
   abstract protected function detectLoginSession();
   abstract public function verifyToken();
+
+  abstract public function getSubAccounts();
+
   // abstract public function getLoginUrl();
   abstract protected function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' );
   abstract protected function postArticle( &$article );
@@ -207,6 +212,15 @@ abstract class User_External
       if ( $rs )
         $this->id = $this->db->lastInsertId($rs);
     }
+  }
+
+  public function subAccounts()
+  {
+    if ( !isset($this->subAccounts) )
+    {
+      $this->getSubAccounts();
+    }
+    return $this->subAccounts;
   }
 }
 
