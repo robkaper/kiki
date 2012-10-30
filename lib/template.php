@@ -61,6 +61,8 @@ class Template
 
   private $ifDepth = 0;
   private $maxIfDepth = 0;
+  private $loopDepth = 0;
+  private $maxLoopDepth = 0;
 
   private $cleanup = true;
 
@@ -185,17 +187,21 @@ class Template
   {
     $reIncludes = '~\{include \'([^\']+)\'\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
+    $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
 
-    //echo "<h2>pre preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // echo "<h2>pre preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     while( preg_match($reIncludes, $this->content) )
     {
       $this->content = preg_replace_callback( $reIncludes, array($this, 'includes'), $this->content );
     }
-    //echo "<h2>post preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // echo "<h2>post preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     $this->content = preg_replace_callback( $reIfs, array($this, 'preIfs'), $this->content );
-    //echo "<h2>post preparse ifs:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // echo "<h2>post preparse ifs:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+    $this->content = preg_replace_callback( $reLoops, array($this, 'preLoops'), $this->content );
+    // echo "<h2>post preparse loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     for( $i=$this->maxIfDepth; $i>=0; $i-- )
     {
@@ -208,13 +214,17 @@ class Template
   public function parse()
   {
     $reLegacy = '~<\?=?([^>]+)\?>~';
-    $reLoops = '~\n?\{foreach (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach\}\n?~sU';
     $reConditions = '~\n?\{if ([^\}]+)\}\n??(.*)\n?\{\/if\}\n?~sU';
     $re = '~\{([^}]+)\}~';
 
     $this->content = preg_replace_callback( $reLegacy, array($this, 'legacy'), $this->content );
     // echo "<h2>post parse/legacy:</h2><pre>". htmlspecialchars($this->content). "</pre>";
-    $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
+
+    for( $i=0; $i<=$this->maxLoopDepth; $i++ )
+    {
+      $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
+      $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
+    }
     // echo "<h2>post parse/loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     for( $i=0; $i<=$this->maxIfDepth; $i++ )
@@ -223,6 +233,7 @@ class Template
       $this->content = preg_replace_callback( $reConditions, array($this, 'conditions'), $this->content );
     }
     // echo "<h2>post parse/conditions:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
     $this->content = preg_replace_callback( $re, array($this, 'replace'), $this->content );
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
   }
@@ -317,6 +328,30 @@ class Template
     return $output;
   }
 
+  private function preLoops( $input )
+  {
+    // Log::debug( print_r( $input, true ) );
+
+    if ( !isset($input[3]) )
+      $input[3] = '';
+
+    if ( $input[2]=='/' )
+      $this->loopDepth--;
+
+    $output = "{". $input[1]. $this->loopDepth. $input[3]. "}". PHP_EOL;
+
+    // Log::debug( print_r( $output, true ) );
+
+    if ( $input[2]!='/' )
+    {
+      $this->loopDepth++;
+      if ( $this->loopDepth > $this->maxLoopDepth )
+        $this->maxLoopDepth = $this->loopDepth;
+    }
+
+    return $output;
+  }
+
   private function preElse( $input )
   {
     return preg_replace( '~\{else\}~', "{else". $input[1]. "}", $input[0] );
@@ -370,7 +405,8 @@ class Template
 
     foreach( $data as $key => $$named )
     {
-      $pattern = "~\{(if\d\s)?\\\$${named}(|[^\}]+)?\}~";
+      // Substitute the full key path for the local alias in variables, conditions and loops
+      $pattern = "~\{(if|foreach\d\s)?\\\$${named}(\||\.[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\2}";
       $content .= preg_replace( $pattern, $replace, $input[3] );
     }
