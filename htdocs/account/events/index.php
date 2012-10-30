@@ -28,12 +28,6 @@
       $event->setAlbumId($album->id());
       if ( $event->id() )
         $event->save();
-
-      if ( $album->id() && $event->headerImage() )
-      {
-        $pictures = $album->addPictures( null, null, array($event->headerImage()) );
-        Log::debug( "event had headerImage (". $event->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
-      }
     }
 
     echo $event->form( $user );

@@ -224,7 +224,7 @@ class User_Facebook extends User_External
     $title = $article->title();
     $caption = str_replace( "http://", "", $link );
     $description = strip_tags( Misc::textSummary( $article->body(), 400 ) );
-    $storageId = $article->headerImage();
+    $storageId = $article->topImage();
 
     // 500x500 cropped is good enough for Facebook
     $picture = $storageId ? Storage::url( $storageId, 500, 500, true ) : Config::$siteLogo;
@@ -235,7 +235,7 @@ class User_Facebook extends User_External
 
   public function postEvent( &$event )
   {
-    $rs = $this->createEvent( $event->objectId(), $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->headerImage()) );
+    $rs = $this->createEvent( $event->objectId(), $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->topImage()) );
 
     // TODO: post a link on the event wall. Disabled because of a bug in Facebook:
     // https://developers.facebook.com/bugs/225344230889618/

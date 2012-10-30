@@ -46,9 +46,6 @@
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
 
-    if ( isset($_POST['headerImage']) )
-      $article->setHeaderImage( $_POST['headerImage'] );
-
     $article->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $article->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $article->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );

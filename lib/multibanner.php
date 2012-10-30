@@ -8,7 +8,7 @@ class MultiBanner
     $content = null;
 
     $articles = array();
-    $q = $db->buildQuery( "select id from articles where header_image!=0 and featured=true and visible=true and ctime<=now() and section_id=%d order by ctime desc limit 4", $sectionId );
+    $q = $db->buildQuery( "select id from articles where featured=true and visible=true and ctime<=now() and section_id=%d order by ctime desc limit 4", $sectionId );
     $rs = $db->query($q);
     if ( $rs && $count = $db->numRows($rs) )
     {
@@ -37,7 +37,7 @@ class MultiBanner
     {
       $width = $widths[$count][$id];
 
-      $img = Storage::url( $article->headerImage() );
+      $img = Storage::url( $article->topImage() );
       list ($base, $ext) = Storage::splitExtension( $img );
       $img = "${base}.${width}x250.c.${ext}";
 

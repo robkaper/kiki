@@ -37,9 +37,6 @@
     $event->setDescription( $_POST['description'] );
     $event->setLocation( $_POST['location'] );
 
-    if ( isset($_POST['headerImage']) )
-      $event->setHeaderImage( $_POST['headerImage'] );
-
     $event->setFeatured( (isset($_POST['featured']) && $_POST['featured']=='on') ? 1 : 0 );
     $event->setVisible( (isset($_POST['visible']) && $_POST['visible']=='on') ? 1 : 0 );
     $event->setHashtags( isset($_POST['hashtags']) ? $_POST['hashtags'] : null );

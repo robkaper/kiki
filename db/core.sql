@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.27' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.28' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -78,7 +78,6 @@ create table articles (
   cname varchar(255) not null,
   unique key(section_id, cname),
   body text not null,
-  header_image bigint unsigned not null,
   featured boolean not null default false,
   visible boolean not null default false,
   hashtags varchar(255) not null,
@@ -216,7 +215,6 @@ create table events (
   unique key(cname),
   description text not null,
   location text not null,
-  header_image bigint unsigned not null,
   featured boolean not null default false,
   visible boolean not null default false,
   hashtags varchar(255) not null,

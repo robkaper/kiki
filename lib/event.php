@@ -20,7 +20,6 @@ class Event extends Object
   private $cname = null;
   private $location = null;
   private $description = null;
-  private $headerImage = null;
   private $featured = null;
   private $visible = false;
   private $hashtags = null;
@@ -37,7 +36,6 @@ class Event extends Object
     $this->cname = null;
     $this->location = null;
     $this->description = null;
-    $this->headerImage = null;
     $this->featured = false;
     $this->visible = false;
     $this->hashtags = null;
@@ -47,7 +45,7 @@ class Event extends Object
   public function load()
   {
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, hashtags, album_id";
+    $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where e.id=%d or e.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -66,7 +64,6 @@ class Event extends Object
     $this->cname = $o->cname;
     $this->description = $o->description;
     $this->location = $o->location;
-    $this->headerImage = $o->header_image;
     $this->featured = $o->featured;
     $this->visible = $o->visible;
     $this->hashtags = $o->hashtags;
@@ -81,8 +78,8 @@ class Event extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE events SET object_id=%d, ctime='%s', mtime=now(), start='%s', end='%s', user_id=%d, title='%s', cname='%s', description='%s', location='%s', header_image=%d, featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
+      "UPDATE events SET object_id=%d, ctime='%s', mtime=now(), start='%s', end='%s', user_id=%d, title='%s', cname='%s', description='%s', location='%s', featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -97,8 +94,8 @@ class Event extends Object
     $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, header_image, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId
+      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
     Log::debug($q);
 
@@ -123,8 +120,6 @@ class Event extends Object
   public function description() { return $this->description; }
   public function setLocation( $location ) { $this->location = $location; }
   public function location() { return $this->location; }
-  public function setHeaderImage( $headerImage ) { $this->headerImage = $headerImage; }
-  public function headerImage() { return $this->headerImage; }
   public function setFeatured( $featured ) { $this->featured = $featured; }
   public function featured() { return $this->featured; }
   public function setVisible( $visible ) { $this->visible = $visible; }
@@ -165,7 +160,6 @@ class Event extends Object
     $content .= Form::datetime( "end", $end, "End" );
     $content .= Form::textarea( "description", htmlspecialchars($this->description), "Description" );
     $content .= Form::text( "location", $this->location, "Location" );
-    $content .= Form::albumImage( "headerImage", "Header image", $this->albumId, $this->headerImage );
     $content .= Form::checkbox( "featured", $this->featured, "Featured" );
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
 
@@ -206,6 +200,20 @@ class Event extends Object
     return $content;
   }
 
+  public function topImage()
+  {
+    // Provided for backwards compatibility.
+    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC LIMIT 1", $this->albumId );
+    return $this->db->getSingleValue( $q );
+  }
+
+  public function images()
+  {
+    // TODO: query album, do not do this here.
+    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
+    return $this->db->getArray( $q );
+  }
+
   public function content()
   {
     // rjkcust
@@ -213,7 +221,7 @@ class Event extends Object
     $start = strftime( "%A %e %B %Y %R", strtotime($this->start) );
     $end = strftime( "%A %e %B %Y %R", strtotime($this->end) );
 
-    $imgUrl = Storage::url( $this->headerImage, 320, 180, true );
+    $imgUrl = Storage::url( $this->topImage(), 320, 180, true );
     $content = "<img src=\"$imgUrl\" style=\"float: right; margin: 0 0 1em 1em;\">";
 
     $content .= Misc::markup( $this->description );

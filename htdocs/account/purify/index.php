@@ -83,11 +83,6 @@
   }
   echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
 
-  $q = "select header_image as id from articles";
-  $articleImages = $db->getArray($q);
-  $q = "select header_image as id from events";
-  $eventImages = $db->getArray($q);
-
   // Delete orphaned pictures  
   echo "<li>Delete orphaned pictures... ";
   $q = "delete from pictures where id not in (select picture_id from album_pictures)";
@@ -104,9 +99,6 @@
   {
     while( $o = $db->fetchObject($rs) )
     {
-      if ( in_array($o->id, $articleImages) || in_array($o->id, $eventImages) )
-        continue;
-
       $fileName = Storage::localFile( $o->id );
       unlink($fileName);
       $q = "delete from storage where id=". $o->id;

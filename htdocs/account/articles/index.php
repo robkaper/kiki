@@ -29,12 +29,6 @@
       $article->setAlbumId($album->id());
       if ( $article->id() )
         $article->save();
-
-      if ( $album->id() && $article->headerImage() )
-      {
-        $pictures = $album->addPictures( null, null, array($article->headerImage()) );
-        Log::debug( "article had headerImage (". $article->headerImage(). ") that was not a picture in an album, added it to album ". $album->id() );
-      }
     }
 
     echo $article->form( $user );

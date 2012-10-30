@@ -22,7 +22,6 @@ class Article extends Object
   private $title = null;
   private $cname = null;
   private $body = null;
-  private $headerImage = null;
   private $featured = false;
   private $visible = false;
   private $hashtags = null;
@@ -39,7 +38,6 @@ class Article extends Object
     $this->hashtags = null;
     $this->cname = null;
     $this->body = null;
-    $this->headerImage = null;
     $this->featured = false;
     $this->visible = false;
     $this->albumId = 0;
@@ -54,7 +52,7 @@ class Article extends Object
     }
 
     // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id";
+    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
@@ -72,7 +70,6 @@ class Article extends Object
     $this->title = $o->title;
     $this->cname = $o->cname;
     $this->body = $o->body;
-    $this->headerImage = $o->header_image;
     $this->featured = $o->featured;
     $this->visible = $o->visible;
     $this->hashtags = $o->hashtags;
@@ -87,8 +84,8 @@ class Article extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', header_image=%d, featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
+      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -103,8 +100,8 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, header_image, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->headerImage, $this->featured, $this->visible, $this->hashtags, $this->albumId
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
 
     $rs = $this->db->query($q);
@@ -126,8 +123,6 @@ class Article extends Object
   public function cname() { return $this->cname; }
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
-  public function setHeaderImage( $headerImage ) { $this->headerImage = $headerImage; }
-  public function headerImage() { return $this->headerImage; }
   public function setFeatured( $featured ) { $this->featured = $featured; }
   public function featured() { return $this->featured; }
   public function setVisible( $visible ) { $this->visible = $visible; }
@@ -199,7 +194,6 @@ class Article extends Object
 
     $class = Config::$clEditor ? "cleditor" : null;
     $content .= Form::textarea( "body", preg_replace( '~\r?\n~', '&#010;', htmlspecialchars($this->body) ), "Body", null, 0, $class );
-    $content .= Form::albumImage( "headerImage", "Header image", $this->albumId, $this->headerImage );
 
     if ( $type!='pages' )
       $content .= Form::checkbox( "featured", $this->featured, "Featured" );
@@ -240,6 +234,13 @@ class Article extends Object
     return $content;
   }
 
+  public function topImage()
+  {
+    // Provided for backwards compatibility.
+    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC LIMIT 1", $this->albumId );
+    return $this->db->getSingleValue( $q );
+  }
+
   public function images()
   {
     // TODO: query album, do not do this here.
@@ -259,7 +260,6 @@ class Article extends Object
       'title' => $this->title,
       'body' => $this->body,
       'author' => $uAuthor->name(),
-      'headerImage' => $this->headerImage ? Storage::url($this->headerImage) : null,
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
