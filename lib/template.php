@@ -27,8 +27,8 @@
  * {if !$var} ... {/if}
  * {if $var} ... {else} ... {/if}
  *
- * Nesting supported, but no conditions other than variable values: no ands,
- * or, buts or maybes.
+ * Nesting supported, but no conditions other than variable values: no
+ * comparisons, ands, or, buts or maybes.
  *
  * --> Iteration:
  * {foreach $arrayname as $variable} ... {/foreach}
@@ -99,7 +99,8 @@ class Template
       'id' => $this->user->id(),
       'admin' => $this->user->isAdmin(),
       'activeConnections' => array(),
-      'inactiveConnections' => array()
+      'inactiveConnections' => array(),
+      'emailUploadAddress' => $this->user->emailUploadAddress()
     );
 
     $this->data['activeConnections'] = array();
@@ -108,7 +109,7 @@ class Template
     $connectedServices = array();
     foreach( $this->user->connections() as $connection )
     {
-      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture() );
+      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts() );
       $connectedServices[] = $connection->serviceName();
     }
 
@@ -502,6 +503,10 @@ class Template
 
         case 'lower':
           $input = strtolower($input);
+          break;
+          
+        case 'dump':
+          $input = "<pre>". print_r($input,true). "</pre>";
           break;
 
         default:;
