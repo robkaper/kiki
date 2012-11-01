@@ -378,6 +378,8 @@ class Template
 
   private function loops( $input )
   {
+    // Log::debug( print_r( $input, true ) );
+
     $array = substr( $input[1], 1 );
     $named = substr( $input[2], 1 );
 
@@ -399,7 +401,7 @@ class Template
 
       if ( !isset($data) )
       {
-        Log::debug( "loops returning unmatched: {foreach $array as $named}, part: $part" );
+        Log::debug( "loops returning unmatched: {foreach $array as $named}, part: $part, uri: ". $_SERVER['REQUEST_URI'] );
         return $content;
       }
     }
