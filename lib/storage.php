@@ -244,7 +244,7 @@ class Storage
         imagegif( $scaled, $scaledFile );
         break;
       case "jpg": 
-        imagejpeg( $scaled, $scaledFile, 90 );
+        imagejpeg( $scaled, $scaledFile, 95 );
         break;
       case "png": 
         imagepng( $scaled, $scaledFile, 1 );
