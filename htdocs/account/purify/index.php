@@ -97,6 +97,7 @@
   $rs = $db->query($q);
   if ( $rs && $db->numRowS($rs) )
   {
+    $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
     while( $o = $db->fetchObject($rs) )
     {
       $fileName = Storage::localFile( $o->id );
@@ -107,6 +108,32 @@
     }
   }
   echo "done.<br>(files deleted: $deleted)</li>";
+  
+    
+  // Delete orphaned storage files
+  echo "<li>Delete orphaned storage files...";
+  $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
+  $deleteCount = 0;
+  $deleteSize = 0;
+  $dir = $GLOBALS['root']. "/storage/";
+  $iterator = new DirectoryIterator($dir);
+  foreach ($iterator as $fileinfo)
+  {
+    if ($fileinfo->isFile())
+    {
+      $fileName = $fileinfo->getFilename();
+      $fileSize = filesize($dir. $fileName);
+
+      list( $hash ) = explode( ".", $fileName );
+      if  ( !in_array($hash, $storageHashes) )
+      {
+        unlink($dir. $fileName);
+        $deleteSize += $fileSize;
+        $deleteCount++;
+      }
+    }
+  }
+  echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
 
   echo "<li>Delete orphaned objects... ";
   echo "<ul>";
@@ -122,7 +149,7 @@
     $totalDeleted += $deleted;
   }
   echo "</ul>";
-  echo "done.<br>(total deleted: $totalDeleted)</li>";
+  echo "done.<br>(total objects deleted: $totalDeleted)</li>";
 
   echo "</ul>";
 
