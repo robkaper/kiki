@@ -100,7 +100,7 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, '%s', %d)",
       $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
 

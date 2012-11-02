@@ -94,7 +94,7 @@ class Event extends Object
     $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %d)",
+      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, '%s', %d)",
       $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->visible, $this->hashtags, $this->albumId
     );
     Log::debug($q);
