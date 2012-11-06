@@ -44,7 +44,7 @@
   Log::init();
   Config::init();
     
-  if ( $staticFile )
+  if ( isset($staticFile) && $staticFile )
     return; 
 
   I18n::init();
