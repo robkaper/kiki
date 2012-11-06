@@ -21,6 +21,8 @@ class I18n
    */
   public static function init()
   {
+    mb_internal_encoding('utf8');
+
     if ( !function_exists('bindtextdomain') || !function_exists('textdomain') )
       return;
 

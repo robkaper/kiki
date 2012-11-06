@@ -16,7 +16,7 @@ var submitClicked = false;
 /// Updates each element with class .jsonupdate through JSON.
 function jsonUpdate()
 {
-  var ids = new Array();
+  var ids = [];
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
     // TODO: Add a class to manage the opacity so it can be configured in the stylesheet.

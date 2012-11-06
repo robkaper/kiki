@@ -38,14 +38,16 @@
       include_once "$kiki";
     }
   }
-  
-  mb_internal_encoding('utf8');
-  
-  Log::init();
-  Config::init();
-  I18n::init();
 
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
+
+  Log::init();
+  Config::init();
+    
+  if ( $staticFile )
+    return; 
+
+  I18n::init();
 
   // Set locale when URI starts with a two-letter country code.
   // TODO: support locale setting by TLD or subdomain.
@@ -64,10 +66,12 @@
   {
     I18n::setLocale( Config::$language );
   }
-    
+
+  // Database
   $db = $GLOBALS['db'] = new Database( Config::$db );
   Config::loadDbConfig($db);
 
+  // User(s)
   // FIXME: is this where we want this..
   $q = "select id from users where admin=1"; // and verified=1
   $rs = $db->query($q);

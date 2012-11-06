@@ -14,12 +14,12 @@
  * @warning album URLs currently broken
  */
 
+  // Optimisation: pre-recognise static files (skips i18n, database and user handling in init.php)
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['REQUEST_URI'] );
+  
   require_once "../lib/init.php";
 
-  Log::debug( "START router.php: $reqUri" );
-
-  $template = Template::getInstance();
-  $template->assign( 'footerText', Boilerplate::copyright() );
+  Log::debug( "START router.php: $reqUri / static: $staticFile", $staticFile );
 
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
@@ -111,7 +111,8 @@
   //  $title .= " - ". $var;
 
   $template = Template::getInstance();
-
+  $template->assign( 'footerText', Boilerplate::copyright() );
+    
   $template->load( $controller->template() );
 
   $template->assign( 'title', $controller->title() );

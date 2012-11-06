@@ -27,12 +27,18 @@ class Log
 	private static $mtime;
 
 	/**
+	* @var queue array to store delayed log messages
+	*/
+	private static $queue;
+
+	/**
  	* Initialises a unique identifier and starting timestamp.
  	*/
 	public static function init()
 	{
 		self::$uniqId = uniqid();
 		self::$ctime = microtime(true);
+		self::$queue = array();
 	}
 
 	/**
@@ -53,18 +59,10 @@ class Log
 	* URI and execution times since init() and previous log entry.
 	* @param string $msg message to log
 	*/
-	public static function debug( $msg )
+	public static function debug( $msg, $queue = false )
 	{
 		if ( !Config::$debug )
 			return;
-
-		$logFile = $GLOBALS['root']. "/debug.txt";
-		$fp = @fopen( $logFile, "a" );
-		if ( !$fp )
-		{
-			Log::error( "cannot write to $logFile: $msg", false );
-			return;
-		}
 
 		$last = self::$mtime ? self::$mtime : self::$ctime;
 		self::$mtime = microtime(true);
@@ -83,8 +81,27 @@ class Log
 			$callerStr = '';
 		
 		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$callerStr] $msg\n";
+		self::$queue[] = $logStr;
 
-		fwrite( $fp, $logStr );
+		if ( !$queue )
+			self::write();
+	}
+
+	private static function write()
+	{
+		$logFile = $GLOBALS['root']. "/debug.txt";
+		$fp = @fopen( $logFile, "a" );
+		if ( !$fp )
+		{
+			Log::error( "cannot write to $logFile: $msg", false );
+			return;
+		}
+
+		while( $str = array_shift(self::$queue) )
+		{
+			fwrite( $fp, $str );
+		}
+
 		fclose( $fp );
 	}
 
