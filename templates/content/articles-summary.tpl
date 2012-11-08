@@ -12,14 +12,11 @@
   
   <div class="body"><p>{$article.body|summary:2}</p></div>
 
-  <footer><ul>
+  <footer>
+    <ul>
+      <li><a class="xbutton" href="{$article.url}">{"Read more"|i18n}</a></li>
+    </ul>
+  </footer>
 
-  <li><a class="button" href="{$article.url}">{"Read more"|i18n}</a></li>
-  
-  {foreach $article.publications as $publication}
-    <li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
-  {/foreach}
-
-  </ul></footer>
-
+	<br class="spacer">
 </article>

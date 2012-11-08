@@ -16,7 +16,7 @@
   </div>
 {else}
   <p>
-    <a href="#login">Log in</a> via Facebook of Twitter om te reageren
+    <a href="#login">Log in</a> om direct via de site te reageren.
   </p>
 {/if}
 </div>

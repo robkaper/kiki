@@ -10,6 +10,7 @@
 {else}
   <link rel="stylesheet" type="text/css" href="{$config.kikiPrefix}/styles/default.css" title="Kiki CMS Default">
 {/if}
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 {foreach $stylesheets as $url}
 <link rel="stylesheet" type="text/css" href="{$url}">
 {/foreach}

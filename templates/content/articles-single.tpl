@@ -10,23 +10,25 @@
   
   <div class="body">{$article.body|markup}</div>
 
-  <footer><ul>
-  {foreach $article.publications as $publication}
-    <li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
-  {/foreach}
+  <footer>
 
-  {if $user.admin}
-    <li><a href="javascript:showArticleForm({$article.id});" class="button">Wijzigen</a></li>
-  {/if}
+		<hr>
 
-  </ul></footer>
 
-  {if $user.admin}
-    {$article.html.editform}
-  {/if}
+
+  	{if $user.admin}
+			<hr class="clear">
+
+			<ul>
+	    	<li><a href="javascript:showArticleForm({$article.id});" class="button">Wijzigen</a></li>
+			</ul>
+
+	    {$article.html.editform}
+	  {/if}
 
   {if $article.likes|count}
-    <h3>{"Likes"|i18n}</h3>
+    <hr class="clear">
+		<h3>{"Likes"|i18n}</h3>
     {foreach $article.likes as $connection}
       <div style="float: left; background: #deb; margin: 0 5px 0 0; padding: 5px 0 5px 5px;">
         {include 'parts/user-account-image'}
@@ -35,7 +37,19 @@
     <br class="spacer">
   {/if}
 
+  <hr class="clear">
   <h3>{"Comments"|i18n}</h3>
   {$article.html.comments}
+
+  {if $article.publications|count}
+		<p>Je kunt ook reageren via:</p>
+  	<ul>
+  		{foreach $article.publications as $publication}
+    		<li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
+	  	{/foreach}
+  	<ul>
+  {/if}
+
+  </footer>
 
 </article>
