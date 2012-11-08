@@ -19,7 +19,7 @@
   
   require_once "../lib/init.php";
 
-  Log::debug( "START router.php: $reqUri / static: $staticFile", $staticFile );
+  Log::debug( "START router.php: $reqUri", $staticFile );
 
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
