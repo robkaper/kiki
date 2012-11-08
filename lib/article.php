@@ -250,13 +250,15 @@ class Article extends Object
 
   private function getNext()
   {
-    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime>'%s' ORDER BY ctime ASC LIMIT 1", $this->sectionId, $this->ctime );
+		$user = $GLOBALS['user'];
+    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime>'%s' AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
   
   private function getPrev()
   {
-    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime<'%s' ORDER BY ctime DESC LIMIT 1", $this->sectionId, $this->ctime );
+		$user = $GLOBALS['user'];
+    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime<'%s' AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
 
