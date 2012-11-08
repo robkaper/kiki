@@ -612,6 +612,18 @@ article footer li, footer.pageFooter li  {
   display: inline;
 }
 
+article footer .prev {
+	float: left;
+	max-width: 50%;
+  margin: 10px 5px 10px 0;
+}
+
+article footer .next {
+	float: right;
+  max-width: 50%;
+  margin: 10px 0 10px 5px;
+}
+
 .youtube-player {
 	width: 640px;
 	height: 385px;

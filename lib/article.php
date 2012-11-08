@@ -248,9 +248,24 @@ class Article extends Object
     return $this->db->getArray( $q );
   }
 
+  private function getNext()
+  {
+    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime>'%s' ORDER BY ctime ASC LIMIT 1", $this->sectionId, $this->ctime );
+    return new Article( $this->db->getSingleValue($q) );
+  }
+  
+  private function getPrev()
+  {
+    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime<'%s' ORDER BY ctime DESC LIMIT 1", $this->sectionId, $this->ctime );
+    return new Article( $this->db->getSingleValue($q) );
+  }
+
   public function templateData()
   {
     $uAuthor = ObjectCache::getByType( 'User', $this->userId );
+
+    $prevArticle = $this->getPrev();
+    $nextArticle = $this->getNext();
 
     $data = array(
       'id' => $this->id,
@@ -268,6 +283,24 @@ class Article extends Object
         'editform' => $this->form( $GLOBALS['user'], true, 'articles' )
       )
     );
+    
+    if ( $nextArticle = $this->getNext() )
+    {
+      $data['next'] =array(
+        'id'=> $nextArticle->id(),
+        'url' => $nextArticle->url(),
+        'title' => $nextArticle->title()
+      );
+    }
+
+    if ( $prevArticle = $this->getPrev() )
+    {
+      $data['prev'] =array(
+        'id'=> $prevArticle->id(),
+        'url' => $prevArticle->url(),
+        'title' => $prevArticle->title()
+      );
+    }
 
     $publications = $this->publications();
     foreach( $publications as $publication )

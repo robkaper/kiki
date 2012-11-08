@@ -14,7 +14,13 @@
 
 		<hr>
 
+		{if $article.prev.id}
+			<span class="prev">« <a href="{$article.prev.url}">{$article.prev.title|escape}</a></span>
+		{/if}
 
+		{if $article.next.id}
+			<span class="next"><a href="{$article.next.url}">{$article.next.title|escape}</a> »</span>
+		{/if}
 
   	{if $user.admin}
 			<hr class="clear">
