@@ -25,7 +25,7 @@ class Router
     if ( !$url )
       return false;
 
-    Log::debug( "EXIT: redirect to $url[$statusCode]" );
+    Log::debug( "EXIT: redirect to $url [$statusCode]" );
     header( "Location: $url", true, $statusCode );
     return true;
   }

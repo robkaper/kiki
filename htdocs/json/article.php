@@ -37,7 +37,7 @@
     else
       $showAsPage = true;
 
-    if ( $_POST['cname'] && !count($article->publications()) )
+    if ( isset($_POST['cname']) && !count($article->publications()) )
     {
       // TODO: allow changing when publications exist: 301 redirect must be created somewhere in this case.
       $article->setCname( $_POST['cname'] );
