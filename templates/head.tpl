@@ -1,5 +1,4 @@
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="{$description}">
 {include 'parts/icmb/geo-location'}
@@ -14,13 +13,6 @@
 {foreach $stylesheets as $url}
 <link rel="stylesheet" type="text/css" href="{$url}">
 {/foreach}
-<script type="text/javascript">
-var boilerplates = new Array();
-boilerplates['jsonLoad'] = '<span class="jsonload"><img src="{$config.kikiPrefix}/img/ajax-loader.gif" alt="*"> Laden...</span>';
-boilerplates['jsonSave'] = '<span class="jsonload"><img src="{$config.kikiPrefix}/img/ajax-loader.gif" alt="*"> Opslaan...</span>';
-var kikiPrefix = '{$config.kikiPrefix}';
-var requestUri = '{$server.requestUri}';
-</script>
 <!--[if IE]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -32,6 +24,13 @@ var requestUri = '{$server.requestUri}';
 {foreach $scripts as $url}
 <script type="text/javascript" src="{$url}"></script>
 {/foreach}
+<script type="text/javascript">
+var boilerplates = new Array();
+boilerplates['jsonLoad'] = '<span class="jsonload"><img src="{$config.kikiPrefix}/img/ajax-loader.gif" alt="*"> Laden...</span>';
+boilerplates['jsonSave'] = '<span class="jsonload"><img src="{$config.kikiPrefix}/img/ajax-loader.gif" alt="*"> Opslaan...</span>';
+var kikiPrefix = '{$config.kikiPrefix}';
+var requestUri = '{$server.requestUri}';
+</script>
 <title>{$title|strip}</title>
 {include 'parts/google/analytics'}
 </head>
