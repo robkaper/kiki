@@ -989,6 +989,13 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 		float: none;
 	}
 
+	article header > img {
+		width: 100%;
+		height: auto;
+    margin: 0.5em 0 0 0;
+		border: 0;
+	}
+
 	.youtube-player {
 		width: auto;
 		height: auto;
