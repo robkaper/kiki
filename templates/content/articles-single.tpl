@@ -2,7 +2,7 @@
 
   <header>
     {if $article.images.0}
-      <img src="{$article.images.0|thumb:780x400.c}" alt="[{$article.title|escape}]">
+      <img src="{$article.images.0|thumb:480x270.c}" alt="[{$article.title|escape}]">
     {/if}
     <span class="author">{$article.author}</span>
     <time class="relTime" datetime="{$article.ctime|date:c}">{$article.relTime} geleden</time>
