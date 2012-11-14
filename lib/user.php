@@ -124,7 +124,7 @@ class User extends Object
 
   public function getStoredConnections()
   {
-    $connections = array();
+    $this->connections = array();
 
     $q = $this->db->buildQuery( "select external_id, service from connections where user_id=%d order by ctime asc", $this->id );
     $rs = $this->db->query($q);
