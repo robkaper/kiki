@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 16:21+0200\n"
+"POT-Creation-Date: 2012-11-14 23:19+0100\n"
 "PO-Revision-Date: 2011-10-04 01:11+0200\n"
 "Last-Translator: Rob Kaper\n"
 "Language-Team: none\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../htdocs/account/sections/index.php:26
+#: ../htdocs/account/sections/index.php:27
 msgid "Create a new section"
 msgstr "Nieuwe sectie"
 
-#: ../htdocs/account/social.php:7
+#: ../htdocs/account/social.php:8
 msgid "Social update"
 msgstr "Social update"
 
-#: ../htdocs/account/updates.php:10
+#: ../htdocs/account/updates.php:11
 msgid "Social demo"
 msgstr "Social demo"
 
-#: ../htdocs/account/events/index.php:2
+#: ../htdocs/account/events/index.php:3
 msgid "Events"
 msgstr "Events"
 
-#: ../htdocs/account/events/index.php:49
+#: ../htdocs/account/events/index.php:44
 msgid "Create a new event"
 msgstr "Nieuw event"
 
-#: ../htdocs/account/index.php:3 generated.php:2
+#: ../htdocs/account/index.php:4 generated.php:2
 msgid "Your Account"
 msgstr "Jouw Account"
 
-#: ../htdocs/account/pages/index.php:53
+#: ../htdocs/account/pages/index.php:48
 msgid "Create a new page"
 msgstr "Nieuwe pagina"
 
-#: ../htdocs/account/articles/index.php:50
+#: ../htdocs/account/articles/index.php:45
 msgid "Create a new article"
 msgstr "Nieuw artikel"
 
-#: ../htdocs/account/albums/index.php:27
+#: ../htdocs/account/albums/index.php:28
 msgid "Create a new album"
 msgstr "Nieuw album"
 
-#: ../htdocs/account/create.php:2 generated.php:11
+#: ../htdocs/account/create.php:3 generated.php:18
 msgid "Create account"
 msgstr "Registreer"
 
@@ -61,38 +61,51 @@ msgstr "Registreer"
 msgid "Kiki Status"
 msgstr "Kiki Status"
 
-#: ../htdocs/login/index.php:2 generated.php:6
+#: ../htdocs/login/index.php:3 generated.php:13
 msgid "Login"
 msgstr "Login"
 
-#: ../lib/articles.php:142
-msgid "Read more"
-msgstr "Lees verder"
+#: ../lib/paging.php:69
+msgid "Previous"
+msgstr "Vorige"
 
-#: ../lib/articles.php:167
-msgid "Likes"
-msgstr "Likes"
-
-#: ../lib/articles.php:188
-msgid "Comments"
-msgstr "Reacties"
+#: ../lib/paging.php:78
+msgid "Next"
+msgstr "Volgende"
 
 #: generated.php:3
 msgid "Logout"
 msgstr "Log uit"
 
-#: generated.php:4 generated.php:7
+#: generated.php:4
+#, fuzzy
+msgid "Latest articles"
+msgstr "Nieuw artikel"
+
+#: generated.php:5 generated.php:7 generated.php:8
+msgid "Likes"
+msgstr "Likes"
+
+#: generated.php:6 generated.php:9
+msgid "Comments"
+msgstr "Reacties"
+
+#: generated.php:10
+msgid "Read more"
+msgstr "Lees verder"
+
+#: generated.php:11 generated.php:14
 msgid "E-mail"
 msgstr "E-mail"
 
-#: generated.php:5 generated.php:8
+#: generated.php:12 generated.php:15
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: generated.php:9
+#: generated.php:16
 msgid "Verify password"
 msgstr "Bevestig wachtwoord"
 
-#: generated.php:10
+#: generated.php:17
 msgid "Administrator password"
 msgstr "Administrator wachtwoord"

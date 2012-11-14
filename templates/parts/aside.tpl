@@ -24,7 +24,7 @@
 
 {if $latestArticles}
   <div class="box">
-  <strong>Latest articles</strong>
+  <strong>{"Latest articles"|i18n}</strong>
   <ul>
   {foreach $latestArticles as $article}
     <li><a href="{$article.url}">{$article.title|escape}</a></li>
