@@ -11,16 +11,23 @@
 
 class Comments
 {
+	public static function count( &$db, &$user, $objectId )
+	{
+		$q = $db->buildQuery( "SELECT count(*) FROM comments WHERE in_reply_to_id=%d", $objectId );
+		return $db->getSingleValue($q);
+	}
+
+
   public static function show( &$db, &$user, $objectId, $jsonLast=null )
   {
     $comments = array();
 
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, c.user_id, con.service, con.external_id
+    $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, u.id as local_user_id, o.user_id, c.user_connection_id, con.service, con.external_id
       FROM comments c
       LEFT JOIN objects o ON o.object_id=c.object_id
-      LEFT JOIN users u ON c.user_id=u.id
       LEFT JOIN connections con ON c.user_connection_id=con.id
+			LEFT JOIN users u ON u.id=c.user_id
       WHERE c.in_reply_to_id=%d $qLast
       ORDER BY o.ctime ASC", $objectId );
     $rs = $db->query($q);
@@ -28,16 +35,15 @@ class Comments
     {
       while( $o = $db->fetchObject($rs) )
       {
-        $commentAuthor = ObjectCache::getByType( 'User', $o->user_id );
+        $commentAuthor = ObjectCache::getByType( 'User', $o->user_id ? $o->user_id : $o->local_user_id );
         if ( $commentAuthor )
         {
           if ( $o->external_id )
           {
-            if ( !$commentAuthor->id() )
-            {
-              $commentAuthor->getStoredConnections();
-            }
-            $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id);
+						// HACK: should not always have to load this, but this is quicker than getStoredConnections for User 0
+						$connection = Factory_User::getInstance( $o->service, $o->external_id, 0 );
+            // $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id, true);
+
             if ( $connection )
             {
               $serviceName = $connection->serviceName();

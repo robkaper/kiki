@@ -560,7 +560,7 @@ article .author, article .relTime {
 }
 article h2 {
   margin: 5px;
-  xpadding: 0;
+  padding: 5px 0 0 0;
   color: #463;
   background: #deb;
   border-radius: 5px 5px 0 0;

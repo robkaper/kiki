@@ -14,7 +14,7 @@
 
   if ( isset($_GET['id']) )
   {
-    $section = new Section( $id );
+    $section = new Section( (int) $_GET['id'] );
     echo $section->form( $user );
   }
   else

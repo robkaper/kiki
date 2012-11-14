@@ -20,7 +20,7 @@ class Controller_Kiki extends Controller
         case 'js':
         case 'png':
 
-          Log::debug( "Controller_Kiki EXIT: static file $kikiFile" );
+          // Log::debug( "Controller_Kiki EXIT: static file $kikiFile" );
           header('Content-Type: '. Storage::getMimeType($ext) );
           exit( file_get_contents($kikiFile) );
           break;

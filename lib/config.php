@@ -55,8 +55,8 @@ class Config
 
 	public static $clEditor = false;
 
-    	public static $iconSetColor = "black";
-    	public static $iconPrefix = null;
+	public static $iconSetColor = "black";
+	public static $iconPrefix = null;
 
 	public static $googleSiteVerification = null;
 	public static $googleAnalytics = null;

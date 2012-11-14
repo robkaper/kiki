@@ -169,7 +169,6 @@ status_update			video_upload			xmpp_login
         }
 
         $content .= "</ul>\n";
-
       }
     }
 

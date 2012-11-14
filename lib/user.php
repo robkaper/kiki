@@ -12,6 +12,15 @@ class User extends Object
   private $connections = array();
   private $identifiedConnections = null;
 
+/*
+  public function __construct( $id = 0, $objectId = 0 )
+  {
+		parent::__construct( $id, $objectId );
+
+		$this->getStoredConnections();
+	}
+*/
+
   public function reset()
   {
     parent::reset();
@@ -284,7 +293,7 @@ class User extends Object
 
   public function getConnection( $id )
   {
-    return isset($this->connections[$id]) ? $this->connections[$id] : null;
+		return isset($this->connections[$id]) ? $this->connections[$id] : null;
   }
 
   public function url()

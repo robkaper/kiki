@@ -29,6 +29,7 @@
 
     // Get comments
     $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc";
+
     $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     if ( !$rs || !isset($rs['data']) )
       continue;
@@ -97,5 +98,5 @@
       if ( $db->affectedRows($rs) == 1 )
         echo $fbUser->name(). " likes object ". $objectId. PHP_EOL;
     }
-}
+  }
 

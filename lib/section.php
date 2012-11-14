@@ -111,9 +111,7 @@ class Section
    */
   public function form( &$user, $hidden=false )
   {
-    $baseURI;
-    $title;
-    $type;
+		$class = null;
 
     $content = Form::open( "sectionForm_". $this->id, Config::$kikiPrefix. "/json/section.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "sectionId", $this->id );
@@ -124,7 +122,7 @@ class Section
     $types['articles'] = 'Articles';
     $types['pages'] = 'Pages';
 
-    $content .= Form::select( "type", $types, "Type", $this->typeId );
+    $content .= Form::select( "type", $types, "Type", $this->type );
 
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();

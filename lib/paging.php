@@ -52,12 +52,10 @@ class Paging
 	{
 		$content = null;
 
-		Log::debug( "ti: $this->totalItems, ipp: $this->itemsPerPage, cp: $this->currentPage" );
 		if ( !$this->totalItems )
 			return $content;
 
 		$numberOfPages = ceil( $this->totalItems / $this->itemsPerPage );
-		Log::debug( "nop: $numberOfPages" );
 
 		if ( $numberOfPages == 1 )
 			return $content;
