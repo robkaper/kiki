@@ -264,6 +264,7 @@ class Article extends Object
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
+			'comments' => Comments::count( $this->db, $GLOBALS['user'], $this->objectId ),
       'html' => array(
         'comments' => Comments::show( $this->db, $GLOBALS['user'], $this->objectId ),
         'editform' => $this->form( $GLOBALS['user'], true, 'articles' )
