@@ -27,7 +27,7 @@ class Comments
       FROM comments c
       LEFT JOIN objects o ON o.object_id=c.object_id
       LEFT JOIN connections con ON c.user_connection_id=con.id
-			LEFT JOIN users u ON u.id=c.user_id
+			LEFT JOIN users u ON u.id=o.user_id
       WHERE c.in_reply_to_id=%d $qLast
       ORDER BY o.ctime ASC", $objectId );
     $rs = $db->query($q);
