@@ -625,6 +625,45 @@ article footer .next {
   margin: 10px 0 10px 5px;
 }
 
+
+ul.paging {
+	margin: 0;
+	border: 0;
+	padding: 0;
+}
+
+ul.paging li {
+	list-style: none;
+	float: left;
+}
+
+ul.paging li.active, ul.paging li a {
+	display: block;
+
+	padding: 0.25em 0.5em;
+	margin-right: 0.25em !important;
+
+	border: 1px solid #9c6;
+}
+
+ul.paging li a {
+	text-decoration: none;
+}
+
+ul.paging li.active {
+	color: white;
+	background: #9c6;
+	font-weight: bold;
+}
+
+ul.paging li.active:first-child, ul.paging li:first-child a {
+	border-radius: 5px 0 0 5px;
+}
+
+ul.paging li.active:last-child, ul.paging li:last-child a {
+	border-radius: 0 5px 5px 0;
+}
+
 .youtube-player {
 	width: 640px;
 	height: 385px;

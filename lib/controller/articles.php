@@ -20,6 +20,12 @@ class Controller_Articles extends Controller
     }
     $template->assign( 'latestArticles', $articles );
 
+		if ( preg_match( '/^page-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
+		{
+			unset($this->objectId);
+			$currentPage = $matches[1];
+		}
+
     if ( $this->objectId )
     {
       $article = new Article( 0, $this->objectId);
@@ -51,10 +57,22 @@ class Controller_Articles extends Controller
 
       $this->content = MultiBanner::articles( $section->id() );
 
-      $articles = array();
+			$itemsPerPage = 10;
+
       $article = new Article();
-    
-      $q = $db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d", $this->instanceId, $user->id(), 10 );
+
+			if ( !isset($currentPage) )
+				$currentPage = 1;
+
+      $q = $db->buildQuery( "SELECT count(*) FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
+			$totalArticles = $db->getSingleValue($q);
+
+			$paging = new Paging();
+			$paging->setCurrentPage( $currentPage );
+			$paging->setItemsPerPage( $itemsPerPage );
+			$paging->setTotalItems( $totalArticles );
+
+      $q = $db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
       $articleIds = $db->getArray($q);
 
       foreach( $articleIds as $articleId )
@@ -66,6 +84,8 @@ class Controller_Articles extends Controller
 
         $this->content .= $template->fetch();
       }
+
+			$this->content .= $paging->html();
     }
 
   }
