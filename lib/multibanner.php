@@ -8,7 +8,7 @@ class MultiBanner
     $content = null;
 
     $articles = array();
-    $q = $db->buildQuery( "select id from articles where featured=true and visible=true and ctime<=now() and section_id=%d order by ctime desc limit 4", $sectionId );
+    $q = $db->buildQuery( "select id from articles a LEFT JOIN objects o ON o.object_id=a.object_id where featured=true and visible=true and ctime<=now() and section_id=%d order by ctime desc limit 4", $sectionId );
     $rs = $db->query($q);
     if ( $rs && $count = $db->numRows($rs) )
     {

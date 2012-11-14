@@ -61,9 +61,8 @@ class User extends Object
       $this->objectId = 0;
     }
 
-    // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
     // TODO: todo email
-    $q = $this->db->buildQuery( "SELECT id, u.object_id, u.ctime, u.mtime, email, auth_token, mail_auth_token, admin FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR u.object_id=%d", $this->id, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT id, o.object_id, o.ctime, o.mtime, email, auth_token, mail_auth_token, admin FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", $this->id, $this->objectId );
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
@@ -93,8 +92,8 @@ class User extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, ctime='%s', mtime=now(), email='%s', mail_auth_token='%s', auth_token='%s', admin=%d where id=%d",
-      $this->objectId, $this->ctime, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->id
+      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d where id=%d",
+      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->id
     );
 
     $this->db->query($q);
@@ -103,7 +102,7 @@ class User extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, ctime, mtime, email, mail_auth_token, auth_token, admin) values (%d, now(), now(), '%s', '%s', '%s', %d)",
+      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin) values (%d, '%s', '%s', '%s', %d)",
       $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin
     );
     

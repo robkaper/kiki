@@ -26,6 +26,10 @@ abstract class Object
   protected $ctime = null;
   protected $mtime = null;
 
+	protected $visible = false;
+	protected $userId = 0;
+	protected $sectionId = 0;
+
   protected $publications;
 
   public function __construct( $id = 0, $objectId = 0 )
@@ -51,6 +55,10 @@ abstract class Object
     $this->ctime = null;
     $this->mtime = null;
 
+		$this->visible = false;
+		$this->userId = 0;
+		$this->sectionId = 0;
+
     $this->publications = null;
   }
 
@@ -69,6 +77,11 @@ abstract class Object
 
     $this->ctime = $o->ctime;
     $this->mtime = $o->mtime;
+
+		// FIXME: issets are necessary because not all Object child classes have these set in their queries e.g. load(), i.e. User.
+		$this->visible = isset($o->visible) ? $o->visible : false;
+		$this->userId = isset($o->user_id) ? $o->user_id : 0;
+		$this->sectionId = isset($o->section_id) ? $o->section_id : 0;
   }
 
   final public function save()
@@ -77,7 +90,7 @@ abstract class Object
     {
       $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
 
-      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime) values('%s',$qCtime,now())", get_class($this) );
+      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->userId, $this->sectionId );
       $rs = $this->db->query($q);
       if ( $rs )
         $this->objectId = $this->db->lastInsertId($rs);
@@ -89,8 +102,8 @@ abstract class Object
   protected function dbUpdate()
   {
     $q = $this->db->buildQuery(
-      "UPDATE objects SET ctime='%s', mtime=now() where object_id=%d",
-      $this->ctime, $this->objectId
+      "UPDATE objects SET ctime='%s', mtime=now(), visible=%d, user_id=%d, section_id=%d WHERE object_id=%d",
+      $this->ctime, $this->visible, $this->userId, $this->sectionId, $this->objectId
     );
 
     $this->db->query($q);
@@ -103,6 +116,13 @@ abstract class Object
   final public function objectId() { return $this->objectId; }
   final public function setCtime( $ctime ) { $this->ctime = $ctime; }
   final public function ctime() { return $this->ctime; }
+
+  final public function setVisible( $visible ) { $this->visible = $visible; }
+  final public function visible() { return $this->visible; }
+  final public function setUserId( $userId ) { $this->userId = $userId; }
+  final public function userId() { return $this->userId; }
+  final public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
+  final public function sectionId() { return $this->sectionId; }
 
   final public function loadPublications()
   {

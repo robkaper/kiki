@@ -18,7 +18,6 @@ class Comment extends Object
 
   private $inReplyToId = null;
 
-  private $userId = 0;
   private $connectionId = 0;
   private $externalId = null;
 
@@ -32,7 +31,6 @@ class Comment extends Object
 
     $this->inReplyToId = 0;
 
-    $this->userId = 0;
     $this->connectionId = 0;
     $this->externalId = null;
     
@@ -42,7 +40,7 @@ class Comment extends Object
   public function load()
   {
     $q = $this->db->buildQuery(
-      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, c.user_id, c.user_connection_id, c.external_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.id=c.object_id WHERE c.id=%d",
+      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, o.user_id, c.user_connection_id, c.external_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.id=c.object_id WHERE c.id=%d",
       $this->id
     );
 
@@ -61,7 +59,6 @@ class Comment extends Object
 
     $this->inReplyToId = $o->in_reply_to_id;
 
-    $this->userId = $o->user_id;
     $this->connectionId = $o->user_connection_id;
     $this->externalId = $o->external_id;
     
@@ -73,8 +70,8 @@ class Comment extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE comments SET object_id=%d, ip_addr='%s', in_reply_to_id=%d, user_id=%d, user_connection_id=%d, external_id='%s', body='%s' WHERE id=%d",
-      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->externalId, $this->body, $this->id
+      "UPDATE comments SET object_id=%d, ip_addr='%s', in_reply_to_id=%d, user_connection_id=%d, external_id='%s', body='%s' WHERE id=%d",
+      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->connectionId, $this->externalId, $this->body, $this->id
     );
 
     $this->db->query($q);
@@ -83,8 +80,8 @@ class Comment extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_id, user_connection_id, external_id, body) VALUES (%d, '%s', %d, %d, %d, '%s', '%s')",
-      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->userId, $this->connectionId, $this->externalId, $this->body
+      "INSERT INTO comments (object_id, ip_addr, in_reply_to_id, user_connection_id, external_id, body) VALUES (%d, '%s', %d, %d, '%s', '%s')",
+      $this->objectId, $this->ipAddr, $this->inReplyToId, $this->connectionId, $this->externalId, $this->body
     );
 
     $rs = $this->db->query($q);
@@ -105,8 +102,6 @@ class Comment extends Object
   public function setInReplyToId( $inReplyToId ) { $this->inReplyToId = $inReplyToId; }
   public function inReplyToId() { return $this->inReplyToId; }
 
-  public function setUserId( $userId ) { $this->userId = $userId; }
-  public function userId() { return $this->userId; }
   public function setConnectionId( $connectionId ) { $this->connectionId = $connectionId; }
   public function connectionId() { return $this->connectionId; }
   public function setExternalId( $externalId ) { $this->externalId = $externalId; }

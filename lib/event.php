@@ -13,7 +13,6 @@
 
 class Event extends Object
 {
-  private $userId = null;
   private $start = null;
   private $end = null;
   private $title = null;
@@ -21,7 +20,6 @@ class Event extends Object
   private $location = null;
   private $description = null;
   private $featured = null;
-  private $visible = false;
   private $hashtags = null;
   private $albumId = 0;
   
@@ -29,7 +27,6 @@ class Event extends Object
   {
     parent::reset();
 
-    $this->userId = null;
     $this->start = null;
     $this->end = null;
     $this->title = null;
@@ -37,16 +34,14 @@ class Event extends Object
     $this->location = null;
     $this->description = null;
     $this->featured = false;
-    $this->visible = false;
     $this->hashtags = null;
     $this->albumId = 0;
   }
 
   public function load()
   {
-    // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, e.ctime, e.mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where e.id=%d or e.object_id=%d", $this->id, $this->objectId );
+    $qFields = "id, o.object_id, o.ctime, o.mtime, start, end, o.user_id, title, cname, description, location, featured, o.visible, hashtags, album_id";
+    $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where e.id=%d or o.object_id=%d", $this->id, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
@@ -57,7 +52,6 @@ class Event extends Object
     if ( !$o )
       return;
 
-    $this->userId = $o->user_id;
     $this->start = $o->start;
     $this->end = $o->end;
     $this->title = $o->title;
@@ -65,7 +59,6 @@ class Event extends Object
     $this->description = $o->description;
     $this->location = $o->location;
     $this->featured = $o->featured;
-    $this->visible = $o->visible;
     $this->hashtags = $o->hashtags;
     $this->albumId = $o->album_id;
   }
@@ -78,8 +71,8 @@ class Event extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE events SET object_id=%d, ctime='%s', mtime=now(), start='%s', end='%s', user_id=%d, title='%s', cname='%s', description='%s', location='%s', featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
+      "UPDATE events SET object_id=%d, start='%s', end='%s', title='%s', cname='%s', description='%s', location='%s', featured=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->start, $this->end, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -94,8 +87,8 @@ class Event extends Object
     $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO events (object_id, ctime, mtime, start, end, user_id, title, cname, description, location, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, '%s', %d)",
-      $this->objectId, $this->ctime, $this->start, $this->end, $this->userId, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->visible, $this->hashtags, $this->albumId
+      "INSERT INTO events (object_id, start, end, title, cname, description, location, featured, hashtags, album_id) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d)",
+      $this->objectId, $this->start, $this->end, $this->title, $this->cname, $this->description, $this->location, $this->featured, $this->hashtags, $this->albumId
     );
     Log::debug($q);
 
@@ -110,8 +103,6 @@ class Event extends Object
   public function start() { return $this->start; }
   public function setEnd( $end ) { $this->end = $end; }
   public function end() { return $this->end; }
-  public function setUserId( $userId ) { $this->userId = $userId; }
-  public function userId() { return $this->userId; }
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
   public function setCname( $cname ) { $this->cname = $cname; }
@@ -122,8 +113,6 @@ class Event extends Object
   public function location() { return $this->location; }
   public function setFeatured( $featured ) { $this->featured = $featured; }
   public function featured() { return $this->featured; }
-  public function setVisible( $visible ) { $this->visible = $visible; }
-  public function visible() { return $this->visible; }
   public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
   public function hashtags() { return $this->hashtags; }
   public function setAlbumId( $albumId ) { $this->albumId = $albumId; }

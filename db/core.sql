@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.28' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.29' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -29,8 +29,6 @@ create table users (
   id bigint unsigned not null auto_increment,
   primary key(id),
   object_id bigint unsigned default null,
-  ctime datetime not null,
-  mtime datetime not null,
   name varchar(255) not null default '',
   email varchar(255) default null,
   auth_token varchar(40) not null default '',
@@ -46,7 +44,6 @@ create table comments (
   object_id bigint unsigned not null,
   ip_addr varchar(15),
   in_reply_to_id bigint unsigned not null,
-  user_id bigint unsigned not null,
   user_connection_id int unsigned not null,
   external_id varchar(255) not null,
   body text not null
@@ -69,17 +66,12 @@ create table articles (
   primary key(id),
   object_id bigint unsigned default null,
   unique key(object_id),
-  ctime datetime not null,
-  mtime datetime not null,
   ip_addr varchar(15),
-  section_id bigint unsigned not null,
-  user_id bigint unsigned not null,
   title text not null,
   cname varchar(255) not null,
   unique key(section_id, cname),
   body text not null,
   featured boolean not null default false,
-  visible boolean not null default false,
   hashtags varchar(255) not null,
   album_id int unsigned not null
 ) default charset=utf8;
@@ -148,7 +140,7 @@ drop table if exists social_updates;
 create table social_updates (
   id int unsigned not null auto_increment,
   primary key(id),
-  ctime datetime not null,
+  object_id bigint unsigned not null,
   network varchar(255) not null,
   post text not null,
   response text not null
@@ -196,7 +188,10 @@ create table objects (
   primary key(object_id),
   type varchar(32) not null,
   ctime datetime not null,
-  mtime datetime not null
+  mtime datetime not null,
+	section_id int unsigned not null default 0,
+	user_id int unsigned not null default 0,
+	visible boolean not null default false
 ) default charset=utf8;
 
 drop table if exists events;
@@ -205,18 +200,14 @@ create table events (
   primary key(id),
   object_id bigint unsigned default null,
   unique key(object_id),
-  ctime datetime not null,
-  mtime datetime not null,
   start datetime not null,
   end datetime not null,
-  user_id bigint unsigned not null,
   title text not null,
   cname varchar(255) not null,
   unique key(cname),
   description text not null,
   location text not null,
   featured boolean not null default false,
-  visible boolean not null default false,
   hashtags varchar(255) not null,
   album_id int unsigned not null
 ) default charset=utf8;
@@ -225,7 +216,6 @@ drop table if exists publications;
 create table publications (
   publication_id int unsigned not null auto_increment,
   primary key(publication_id),
-  ctime datetime not null,
   object_id bigint unsigned not null,
   connection_id bigint unsigned not null,
   external_id bigint unsigned not null,

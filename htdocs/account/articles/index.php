@@ -50,7 +50,7 @@
     echo "</thead>\n";
     echo "<tbody>\n";
 
-    $q = "SELECT a.id FROM articles a LEFT JOIN sections s ON s.id=a.section_id WHERE s.type='articles' ORDER BY ctime desc LIMIT 25";
+    $q = "SELECT a.id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id LEFT JOIN sections s ON s.id=o.section_id WHERE s.type='articles' ORDER BY o.ctime desc LIMIT 25";
     $rs = $db->query($q);
     if ( $db->numRows($rs) )
     {

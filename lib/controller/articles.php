@@ -10,7 +10,7 @@ class Controller_Articles extends Controller
     $template = Template::getInstance();
     $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
-    $q = $db->buildQuery( "select id from articles where section_id=%d and visible=1 order by ctime desc limit 10", $this->instanceId );
+    $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND ((o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
     $articleIds = $db->getArray($q);
     $articles = array();
     foreach ( $articleIds as $articleId )
@@ -26,8 +26,26 @@ class Controller_Articles extends Controller
 			$currentPage = $matches[1];
 		}
 
-    if ( $this->objectId )
+    if ( isset($this->objectId) && $this->objectId )
     {
+			$matches = array();
+			if ( preg_match( '/^socialupdate-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
+			{
+				$updateId = $matches[1];
+				$update = new SocialUpdate( $updateId );
+
+				$this->status = 200;
+				$this->title  = Misc::textSummary( $update->body(), 50 );
+				$this->template = 'pages/default';
+
+        $template = new Template( 'content/socialupdates-single' );
+        $template->assign( 'update', $update->templateData() );
+
+        $this->content = $template->fetch();
+
+				return;
+			}
+
       $article = new Article( 0, $this->objectId);
       if ( $article->id() && ( $article->visible() || $article->userId() == $user->id() ) )
       {
@@ -51,38 +69,57 @@ class Controller_Articles extends Controller
     {
       $section = new Section( $this->instanceId );
 
+			$itemsPerPage = 25;
+			if ( !isset($currentPage) )
+				$currentPage = 1;
+
       $this->status = 200;
       $this->title = $section->title();
       $this->template = 'pages/default';
 
       $this->content = MultiBanner::articles( $section->id() );
 
-			$itemsPerPage = 10;
-
       $article = new Article();
+			$update = new SocialUpdate();
 
-			if ( !isset($currentPage) )
-				$currentPage = 1;
-
-      $q = $db->buildQuery( "SELECT count(*) FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
-			$totalArticles = $db->getSingleValue($q);
+			$q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('socialupdate', 'article') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
+			$totalPosts = $db->getSingleValue($q);
 
 			$paging = new Paging();
 			$paging->setCurrentPage( $currentPage );
 			$paging->setItemsPerPage( $itemsPerPage );
-			$paging->setTotalItems( $totalArticles );
+			$paging->setTotalItems( $totalPosts );
 
-      $q = $db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
-      $articleIds = $db->getArray($q);
+      $q = $db->buildQuery( "SELECT object_id, ctime, type FROM objects WHERE type IN ('socialupdate', 'article') AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
+			$rs = $db->query($q);
+			while( $o = $db->fetchObject($rs) )
+			{
+				switch( $o->type )
+				{
+					case 'Article':
+						$article->reset();
+						$article->setObjectId( $o->object_id );
+						$article->load();
 
-      foreach( $articleIds as $articleId )
-      {
-        $article->load($articleId);
+						$template = new Template( 'content/articles-summary' );
+						$template->assign( 'article', $article->templateData() );
 
-        $template = new Template( 'content/articles-summary' );
-        $template->assign( 'article', $article->templateData() );
+						$this->content .= $template->fetch();
+						break;
 
-        $this->content .= $template->fetch();
+					case 'SocialUpdate':
+						$update->reset();
+						$update->setObjectId( $o->object_id );
+						$update->load();
+
+	          $template = new Template( 'content/socialupdates-summary' );
+	          $template->assign( 'update', $update->templateData() );
+
+						$this->content .= $template->fetch();
+						break;
+
+					default:;
+				}
       }
 
 			$this->content .= $paging->html();

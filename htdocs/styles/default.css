@@ -574,10 +574,15 @@ article h2 a {
   text-decoration: none;
 }
 
-article header {
-  margin: 0px;
+article header, article.socialupdate blockquote {
+	margin: 0px;
   background: #deb;
   border-radius: 5px;
+}
+
+article.socialupdate blockquote {
+	padding: 5px;
+	border-radius: 5px 5px 0 0;
 }
 
 article header > img {
@@ -625,6 +630,11 @@ article footer .next {
   margin: 10px 0 10px 5px;
 }
 
+article.socialupdate footer {
+  background: #deb;
+  border-radius: 0 0 5px 5px;
+	border-top: 1px solid white;
+}
 
 ul.paging {
 	margin: 0;

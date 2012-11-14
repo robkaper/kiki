@@ -17,13 +17,10 @@
 class Article extends Object
 {
   private $ipAddr = null;
-  private $sectionId = null;
-  private $userId = null;
   private $title = null;
   private $cname = null;
   private $body = null;
   private $featured = false;
-  private $visible = false;
   private $hashtags = null;
   private $albumId = 0;
 
@@ -32,14 +29,11 @@ class Article extends Object
     parent::reset();
 
     $this->ipAddr = null;
-    $this->sectionId = null;
-    $this->userId = null;
     $this->title = null;
     $this->hashtags = null;
     $this->cname = null;
     $this->body = null;
     $this->featured = false;
-    $this->visible = false;
     $this->albumId = 0;
   }
 
@@ -51,9 +45,8 @@ class Article extends Object
       $this->objectId = 0;
     }
 
-    // FIXME: provide an upgrade path removing ctime/atime from table, use objects table only, same for saving
-    $qFields = "id, o.object_id, a.ctime, a.mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
+    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, o.section_id, o.user_id, title, cname, body, featured, o.visible, hashtags, album_id";
+    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
     $this->setFromObject( $this->db->getSingle($q) );
   }
 
@@ -65,13 +58,10 @@ class Article extends Object
       return;
 
     $this->ipAddr = $o->ip_addr;
-    $this->sectionId = $o->section_id;
-    $this->userId = $o->user_id;
     $this->title = $o->title;
     $this->cname = $o->cname;
     $this->body = $o->body;
     $this->featured = $o->featured;
-    $this->visible = $o->visible;
     $this->hashtags = $o->hashtags;
     $this->albumId = $o->album_id;
   }
@@ -84,8 +74,8 @@ class Article extends Object
       $this->cname = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ctime='%s', mtime=now(), ip_addr='%s', section_id=%d, user_id=%d, title='%s', cname='%s', body='%s', featured=%d, visible=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->featured, $this->visible, $this->hashtags, $this->albumId, $this->id
+      "UPDATE articles SET object_id=%d, ip_addr='%s', title='%s', cname='%s', body='%s', featured=%d, hashtags='%s', album_id=%d where id=%d",
+      $this->objectId, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -100,8 +90,8 @@ class Article extends Object
       $this->ctime = date("Y-m-d H:i:s");
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ctime, mtime, ip_addr, section_id, user_id, title, cname, body, featured, visible, hashtags, album_id) VALUES (%d, '%s', now(), '%s', %d, %d, '%s', '%s', '%s', %d, %d, '%s', %d)",
-      $this->objectId, $this->ctime, $this->ipAddr, $this->sectionId, $this->userId, $this->title, $this->cname, $this->body, $this->featured, $this->visible, $this->hashtags, $this->albumId
+      "INSERT INTO articles (object_id, ip_addr, title, cname, body, featured, hashtags, album_id) VALUES (%d, '%s', '%s', '%s', '%s', %d, '%s', %d)",
+      $this->objectId, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId
     );
 
     $rs = $this->db->query($q);
@@ -113,10 +103,6 @@ class Article extends Object
 
   public function setIpAddr( $ipAddr ) { $this->ipAddr = $ipAddr; }
   public function ipAddr() { return $this->ipAddr; }
-  public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
-  public function sectionId() { return $this->sectionId; }
-  public function setUserId( $userId ) { $this->userId = $userId; }
-  public function userId() { return $this->userId; }
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
   public function setCname( $cname ) { $this->cname = $cname; }
@@ -125,8 +111,6 @@ class Article extends Object
   public function body() { return $this->body; }
   public function setFeatured( $featured ) { $this->featured = $featured; }
   public function featured() { return $this->featured; }
-  public function setVisible( $visible ) { $this->visible = $visible; }
-  public function visible() { return $this->visible; }
   public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
   public function hashtags() { return $this->hashtags; }
   public function setAlbumId( $albumId ) { $this->albumId = $albumId; }
@@ -251,14 +235,14 @@ class Article extends Object
   private function getNext()
   {
 		$user = $GLOBALS['user'];
-    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime>'%s' AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
+    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime>'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
   
   private function getPrev()
   {
 		$user = $GLOBALS['user'];
-    $q = $this->db->buildQuery( "SELECT id FROM articles WHERE section_id=%d AND ctime<'%s' AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
+    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime<'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
 

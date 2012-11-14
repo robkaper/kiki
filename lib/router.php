@@ -126,7 +126,7 @@ class Router
     if ( !$uri )
       $uri = 'index';
 
-    $q = $db->buildQuery( "SELECT id FROM articles WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
+    $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
     Log::debug( $q );
     $pageId = $db->getSingleValue($q);
 
