@@ -1,4 +1,4 @@
-<article class="socialupdate">
+<article class="summary socialupdate">
 
 	<blockquote>{$update.body|markup}</blockquote>
 
@@ -9,5 +9,4 @@
 	  <a href="{$update.url}">{$update.comments|count} reacties, {$update.likes|count} likes</a>
 	</footer>
 
-	<br class="spacer">
 </article>

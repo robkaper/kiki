@@ -1,4 +1,4 @@
-<article class>
+<article>
 
 	<header>
   	<span class="author">{$update.author}</span>
@@ -7,7 +7,7 @@
 
   <blockquote>{$update.body|markup}</blockquote>
 
-  <footer>
+	<footer>
 
   {if $update.likes|count}
     <hr class="clear">
@@ -33,6 +33,6 @@
   	<ul>
   {/if}
 
-  </footer>
+	</footer>
 
 </article>

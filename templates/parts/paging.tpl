@@ -1,5 +1,3 @@
-<hr class="spacer">
-
 <ul class="paging">
 	{foreach $pageLinks as $pageLink}
 		{if $pageLink.active}
