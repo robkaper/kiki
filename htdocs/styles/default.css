@@ -1000,6 +1000,24 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 	padding: 0;
 }
 
+@media handheld, only screen and (device-width: 768px) and (orientation:portrait) {
+  body {
+    min-width: 0;
+  }
+
+	#sw, #cw, #fw, #title, body > nav ul, .footer {
+		width: 748px;
+	}
+
+	#content {
+		width: 568px;
+	}
+
+	#cw.twosides #content {
+	  width: 408px;
+	}
+}
+
 @media handheld, only screen and (max-device-width: 767px) {
 
   body {
