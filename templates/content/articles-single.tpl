@@ -58,4 +58,9 @@
 
   </footer>
 
+	{if $article.images|count}
+		<hr class="clear">
+		{include 'parts/articles-image-embed'}
+	{/if}
+
 </article>
