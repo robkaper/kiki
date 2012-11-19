@@ -406,7 +406,7 @@ class Template
     foreach( $data as $key => $$named )
     {
       // Substitute the full key path for the local alias in variables, conditions and loops
-      $pattern = "~\{((if|foreach)\d\s)?\\\$${named}(\||\.[^\}]+)?\}~";
+      $pattern = "~\{((if|foreach)\d\s)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
       $content .= preg_replace( $pattern, $replace, $input[3] );
     }
