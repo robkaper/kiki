@@ -1042,25 +1042,26 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 		padding: 0;
 	}
 
-	aside {
+	aside, #sw.left aside {
 		display: block;
 		float: none;
 		max-width: auto;
 		width: auto;
 	}
 
-	#cw #content {
-		margin: 0;
-		width: auto;
-	}
-
 	#content {
-        	max-width: auto;
+		max-width: auto;
 		width: auto;
 		margin-right: 0;
 		margin: 0;
 		border: 0;
 		clear: both;
+		word-wrap: break-word;
+	}
+
+	#cw.twosides #content {
+		margin: 0;
+		width: auto;
 	}
 
 	body > nav ul li.right {
@@ -1097,6 +1098,6 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 
 	form label {
 		border: 1px solid #9c6;
-                border-radius: 5px 5px 0 0;
+		border-radius: 5px 5px 0 0;
 	}
 }
