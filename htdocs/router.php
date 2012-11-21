@@ -100,8 +100,6 @@
 
   $content = $controller->content();
 
-  $user = $GLOBALS['user'];
-
   $title = $controller->title();
   if ( $title )
     $title .= " - ";
