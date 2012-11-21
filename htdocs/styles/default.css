@@ -673,10 +673,6 @@ article footer .next {
   margin: 5px 0 10px 5px;
 }
 
-article.summary.socialupdate {
-	border-top: 1px solid #deb;
-}
-
 article.summary:first-child {
 	border-top: 0 !important;
 }
