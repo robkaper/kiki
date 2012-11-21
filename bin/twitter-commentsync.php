@@ -25,7 +25,7 @@
   foreach( $connectionIds as $connectionId )
   {
     $q = $db->buildQuery(
-      "SELECT external_id, object_id FROM publications WHERE connection_id=%d",
+      "SELECT external_id, object_id FROM publications WHERE connection_id=%d AND external_id!=0",
       $connectionId );
 
     $rs = $db->query($q);
