@@ -104,6 +104,10 @@ class Misc
     // Replace [quote]text[/quote]
     $text = preg_replace( '(\[quote\]([^\[\]]+)\[/quote\])', "<blockquote>\\1</blockquote>", $text );
 
+		// Album images (should this be here? I don't think so...)
+    // Replace [image]1-based id in gallery[/image]
+    $text = preg_replace_callback( '~(\[image\]([^\[\]]+)\[/image\])~', array('self', 'markupImages'), $text );
+
     // Replace [code]text[/code] for use with prettify.js
     $text = preg_replace( '(\[code\]([^\[\]]+)\[/code\])', "<pre><code>\\1</code></pre>", $text );
 
@@ -132,6 +136,19 @@ class Misc
 
     return $text;
   }
+
+	private function markupImages( $input )
+	{
+		$imgId = (int) $input[2];
+		$imgId--;
+
+		$album = new Album( $GLOBALS['articleAlbumId'] );
+		$imageUrls = $album->imageUrls();
+
+		$output = "<img src=\"". $imageUrls[$imgId]. "\" alt=\"\">";
+		return $output;
+	}
+
 
   /**
   * Converts a string into a version safe for use in URIs.

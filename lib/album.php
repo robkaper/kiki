@@ -160,6 +160,21 @@ class Album
     return $template->fetch();
   }
 
+	public function imageUrls()
+	{
+    $q = "select p.id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
+		$pictureIds = $this->db->getArray($q);
+
+    $q = "select storage_id as id from pictures where id in(". implode(',', $pictureIds). ")";
+		$storageIds = $this->db->getArray($q);
+
+		$urls = array();
+		foreach( $storageIds as $storageId )
+			$urls[] = Storage::url($storageId, 780, 440, true );
+
+		return $urls;		
+	}
+
   /**
    * Adds pictures to the album. All pictures get the same title/description,
    * if this is not desired this method must be called separately for each

@@ -54,6 +54,7 @@ class Controller_Articles extends Controller
         $this->template = 'pages/default';
 
         $template = new Template( 'content/articles-single' );
+				$GLOBALS['articleAlbumId'] = $article->albumId();
         $template->assign( 'article', $article->templateData() );
 
         $this->content = $template->fetch();
