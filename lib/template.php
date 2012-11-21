@@ -396,19 +396,29 @@ class Template
         if ( isset($data[$part]) && is_array($data[$part]) )
           $data = $data[$part];
         else
-          unset($data);
+					unset($data);
       }
 
       if ( !isset($data) )
         return $content;
     }
 
+		$i=0;
     foreach( $data as $key => $$named )
     {
       // Substitute the full key path for the local alias in variables, conditions and loops
       $pattern = "~\{((if|foreach)\d\s)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
-      $content .= preg_replace( $pattern, $replace, $input[3] );
+
+      $tmp = preg_replace( $pattern, $replace, $input[3] );
+
+      $pattern = "~\{((if|foreach)\d\s)?\\\$${array}\.${key}\.i\}~";
+			// Log::debug( "pattern $i: $pattern" );
+      $replace = "{\${1}\"". $key. "\"\\3}";
+			// Log::debug( "replace $i: $replace" );
+
+      $content .= preg_replace( $pattern, $replace, $tmp );
+			$i++;
     }
 
     return $content;
@@ -517,7 +527,11 @@ class Template
   private function getVariable( $var )
   {
     if ( $var[0] != "\$" )
-      return null;
+		{
+			$text = trim($var, '"');
+			return $text!=$var ? $text : null;
+		}
+
     $var = substr( $var, 1 );
 
     if ( strstr($var, '|') )
