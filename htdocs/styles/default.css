@@ -1003,6 +1003,10 @@ body > nav ul li {
 	font-weight: bold;
 	text-align: center;
 	vertical-align: bottom;
+	max-width: 110px;
+	word-wrap: break-word;
+	border: 0;
+	border-radius: 5px 5px 0 0;
 }
 
 body > nav ul li.right {
