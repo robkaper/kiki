@@ -60,6 +60,7 @@ class SocialUpdate extends Object
       'url' => $this->url(),
       'ctime' => strtotime($this->ctime),
       'relTime' => Misc::relativeTime($this->ctime),
+      'title' => Misc::textSummary( $this->body, 40 ),
       'body' => $this->body,
       'author' => $uAuthor->name(),
       'publications' => array(),

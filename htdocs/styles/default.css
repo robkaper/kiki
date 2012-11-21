@@ -116,6 +116,15 @@ blockquote {
 	clear: both; height: 1px;
 }
 
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
 hr {
 	width: 100%;
 	height: 1px;
@@ -584,6 +593,25 @@ article blockquote {
 	padding: 0 5px;
 }
 
+.slider {
+	position: relative;
+}
+
+.slider img {
+	-webkit-transition: opacity 2s ease-in-out;
+	-moz-transition: opacity 2s ease-in-out;
+	-o-transition: opacity 2s ease-in-out;
+	transition: opacity 2s ease-in-out;
+}
+
+article header .slider {
+  float: right;
+  width: 480px;
+  height: 270px;
+  margin: 5px;
+  border: 1px solid #deb;
+}
+
 article header > img {
   float: right;
   width: 480px;
@@ -596,6 +624,18 @@ article header > img.thumb {
   width: 160px;
   height: 90px;
   margin: 10px;
+	opacity: 1;
+}
+
+.slider * {
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.slider .active {
+	opacity: 1;
 }
 
 article.summary .body {
@@ -1068,11 +1108,16 @@ body > nav.second ul li:hover, body > nav.second ul li.active {
 		float: none;
 	}
 
-	article header > img {
-		width: 100%;
-		height: auto;
+	article header .slider, article header > img {
+		width: 176px;
+		height: 99px;
     margin: 0.5em 0 0 0;
 		border: 0;
+	}
+
+	article header .slider img {
+		width: 176px;
+		height: 99px;
 	}
 
 	.youtube-player {

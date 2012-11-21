@@ -1,5 +1,10 @@
 <article class="summary socialupdate">
 
+	<header>
+  	<h2><span><a href="{$update.url}">{$update.title|escape}</a></span></h2>
+
+	</header>
+
 	<blockquote>{$update.body|markup}</blockquote>
 
 	<footer>

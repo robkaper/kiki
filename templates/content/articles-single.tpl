@@ -1,13 +1,15 @@
 <article id="article_{$article.id}">
 
   <header>
-    {if $article.images.0}
-      <img src="{$article.images.0|thumb:480x270.c}" alt="[{$article.title|escape}]">
-    {/if}
+		<div class="slider">
+    {foreach $article.images as $image}
+      <img src="{$image|thumb:480x270.c}" alt="[{$article.title|escape}]" class="{if $image.i}{else}active{/if}">
+    {/foreach}
+		</div>
     <span class="author">{$article.author}</span>
     <time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} geleden</time>
   </header>
-  
+
   <div class="body">{$article.body|markup}</div>
 
   <footer>
