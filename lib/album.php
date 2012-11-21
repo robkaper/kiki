@@ -162,10 +162,7 @@ class Album
 
 	public function imageUrls()
 	{
-    $q = "select p.id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
-		$pictureIds = $this->db->getArray($q);
-
-    $q = "select storage_id as id from pictures where id in(". implode(',', $pictureIds). ")";
+    $q = "select p.storage_id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
 		$storageIds = $this->db->getArray($q);
 
 		$urls = array();
