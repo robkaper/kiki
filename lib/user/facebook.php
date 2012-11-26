@@ -300,11 +300,8 @@ class User_Facebook extends User_External
   {
     // Privacy types: OPEN, CLOSED, SECRET
 
-    // Remove timezome because otherwise Facebook will convert it to
-    // Pacific.  Just let it assume our time is indeed Pacific time (even
-    // when it isn't) because that is what Facebook displays anway.
-    $start = substr( date( "c", $start ), 0, -6 );
-    $end = substr( date( "c", $end ), 0, -6 );
+    $start = is_numeric($start) ? date( "c", $start ) : $start;
+    $end = is_numeric($end) ? date( "c", $end ) : $end;
 
     $attachment = array(
       "privacy_type" => "OPEN",
