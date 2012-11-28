@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.29' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.30' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -216,6 +216,7 @@ drop table if exists publications;
 create table publications (
   publication_id int unsigned not null auto_increment,
   primary key(publication_id),
+	ctime datetime not null,
   object_id bigint unsigned not null,
   connection_id bigint unsigned not null,
   external_id bigint unsigned not null,
