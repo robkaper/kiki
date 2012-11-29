@@ -24,6 +24,7 @@
       $update = new SocialUpdate();
       $update->setSectionId( $_POST['sectionId'] );
       $update->setVisible(true);
+			$update->setUserId( $user->id() );
       $update->save();
 
       foreach( $_POST['connections'] as $id => $value )
