@@ -22,6 +22,8 @@
     if ( $msg = $_POST['msg'] )
     {
       $update = new SocialUpdate();
+      $update->setSectionId( $_POST['sectionId'] );
+      $update->setVisible(true);
       $update->save();
 
       foreach( $_POST['connections'] as $id => $value )
@@ -56,7 +58,17 @@
   if ( $user->anyUser() )
   {
     echo Form::open( "socialForm" );
+
+    $q = $db->buildQuery( "select id,title from sections where type='%s' order by title asc", 'articles' );
+    $rs = $db->query($q);
+    if ( $rs && $db->numRows($rs) )
+      while( $oSection = $db->fetchObject($rs) )
+        $sections[$oSection->id] = $oSection->title;
+
+    echo Form::select( "sectionId", $sections, "Section", $this->sectionId );
+
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
+
     foreach ( $user->connections() as $connection )
     {
       if ( $connection->serviceName() == 'Facebook' )
