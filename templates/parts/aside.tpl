@@ -39,4 +39,6 @@
 {include 'parts/google/adsense'}
 </div>
 
+{include 'customparts/aside'}
+
 </aside></div>
