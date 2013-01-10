@@ -74,7 +74,6 @@ class Config
 	public static $twitterOAuthPath = null;
 	public static $twitterApp = null;
 	public static $twitterSecret = null;
-	public static $twitterAnywhere = false;
 
 	public static $flickrApp = null;
 	public static $flickrSecret = null;
