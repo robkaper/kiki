@@ -41,12 +41,12 @@
     {
       if ( count($notices) )
       {
-        $msg = "Your ". SocialUpdate::$type. " update was successful:\n\n";
+        $msg = "Your update was successful:\n\n";
         foreach( $notices as $notice )
           $msg .= "- $notice\n\n";
       }
       else
-        $msg = "Your ". SocialUpdate::$type. " update was successful.";
+        $msg = "Your update was successful.";
     }
 
     $email = new Email( $from, $to, $subject );
@@ -168,6 +168,7 @@
   $user->load( $userId );
   $user->authenticate();
 
+	$album = null;
   $albumUrl = null;
   if ( count($pictureAttachments) )
   {
@@ -190,21 +191,27 @@
 
     if ( !$target )
     {
-      $albumUrl = SocialUpdate::postAlbumUpdate( $user, $album, $pictures );
+			// Automatically post social updates for album Mobile Uploads
+			// @todo: make configurable whether publication is desired or not (maybe album property?)
+			// @todo: each blog should have it's own album, or socialupdate can/should include album/picture
+
+			$connections = $user->connections();
+			foreach( $connections as $connection )
+			{
+				$rs = $connection->postAlbum( $album, $pictures );
+				$notices[] = print_r( $rs, true );
+			}
     }
 
-    $notices[] = "Album URL:\n$albumUrl";
+    $notices[] = "Album URL:". PHP_EOL. $album->url(). PHP_EOL;
+		$notices[] = print_r( $pictures,true );
+
   }
   else if ( !isset($target) )
-  {    $requestType = "status update";
+  {
+		$requestType = "status update";
     SocialUpdate::postStatus( $user, $body );
   }
-
-  if ( ($fbUrl=SocialUpdate::$fbRs->url) )
-    $notices[] = "Facebook URL:\n$fbUrl";
-
-  if ( ($twUrl=SocialUpdate::$twRs->url) )
-    $notices[] = "Twitter URL:\n$twUrl";
 
   sendReport( $sender, $errors, $notices );
 ?>

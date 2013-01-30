@@ -129,8 +129,8 @@ class Album
 
     if ( !$pictureId )
     {
-      include Template::file( 'parts/album-empty' );
-      return;
+			$template = new Template( 'parts/album-empty' );
+			return $template->fetch();
     }
 
     // Picture details
@@ -151,9 +151,13 @@ class Album
       'title' => $this->title,
       'prev' => self::findPrevious($this->id, $pictureId),
       'next' => self::findNext($this->id, $pictureId),
+			'picture' => $picture
     );
       
+		Log::debug( print_r($album,true) );
+
     $template->assign( 'album', $album );
+		$template->assign( 'picture', $picture );
     $template->assign( 'objectId', 0 );
     $template->assign( 'comments', array() );
 
@@ -164,10 +168,14 @@ class Album
 	{
     $q = "select p.storage_id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
 		$storageIds = $this->db->getArray($q);
+		echo "<pre>";
+		echo $q;
+		print_r( $storageIds );
 
 		$urls = array();
 		foreach( $storageIds as $storageId )
 			$urls[] = Storage::url($storageId, 780, 440, true );
+		print_r( $urls );
 
 		return $urls;		
 	}

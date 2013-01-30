@@ -187,6 +187,10 @@ class User_Twitter extends User_External
     return $result;
   }
 
+	public function postAlbum( &$album, $newPictures = 0 )
+	{
+	}
+
   public function postEvent( &$event )
   {
     $tinyUrl = TinyUrl::get( $event->url() );

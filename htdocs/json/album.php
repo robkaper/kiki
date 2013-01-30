@@ -9,7 +9,7 @@
  * @license Released under the terms of the MIT license.
  */
 
-  include "../../lib/init.php";
+  // include "../../lib/init.php";
 
   list( $dummy, $albumId ) = explode( "_", $_GET['album'] );
   $current = $_GET['current'];
@@ -31,5 +31,6 @@
   $response['prev'] = Album::findPrevious( $albumId, $id );
   $response['next'] = Album::findNext( $albumId, $id );
 
-  echo json_encode($response);
-?>
+  header( 'Content-type: application/json' );
+  echo json_encode( $response );
+  exit();

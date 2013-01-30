@@ -257,6 +257,10 @@ class User_Facebook extends User_External
     return $result;
   }
 
+	public function postAlbum( &$album, $newPictures = 0 )
+	{
+	}
+
   public function postEvent( &$event )
   {
     $rs = $this->createEvent( $event->objectId(), $event->title(), strtotime($event->start()), strtotime($event->end()), $event->location(), $event->description(), Storage::localFile($event->topImage()) );
