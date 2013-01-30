@@ -373,7 +373,7 @@ class Template
     $re = '~\{([^}]+)\}~';
     // $file = preg_replace_callback( $re, array($this, 'replace'), $input[1] );
     // return trim( file_get_contents($file) );
-    return trim( file_get_contents( $this->file($input[1]) ) );
+    return file_exists( $this->file($input[1]) ) ? trim( file_get_contents( $this->file($input[1]) ) ) : null;
   }
 
   private function loops( $input )
