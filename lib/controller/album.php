@@ -23,11 +23,7 @@ class Controller_Album extends Controller
         $this->template = 'pages/default';
         $this->status = 200;
         $this->title = "Album: $album->title";
-
-        ob_start();
-        $album->show($pictureId);
-        $this->content = ob_get_contents();
-        ob_end_clean();
+        $this->content = $album->show($pictureId);
         
         return true;
       }
