@@ -66,7 +66,8 @@
       while( $oSection = $db->fetchObject($rs) )
         $sections[$oSection->id] = $oSection->title;
 
-    echo Form::select( "sectionId", $sections, "Section", $this->sectionId );
+    $sectionId = isset($_POST['sectionId']) ? $_POST['sectionId'] : null;
+    echo Form::select( "sectionId", $sections, "Section", $sectionId );
 
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
 
