@@ -34,8 +34,6 @@
 {/if}
 
 <div class="box">
-{* // FIXME: make conditional based on Config::privacyUrl or something similar, even though I think every site should have a proclaimer and privacy policy... }
-<p><a href="/proclaimer.php#privacy">Privacybeleid</a></p>
 {include 'parts/google/adsense'}
 </div>
 
