@@ -123,8 +123,7 @@ class Album
     // Find latest if not starting picture specified
     if ( !$pictureId )
     {
-      $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
-      $pictureId = $this->db->getSingleValue($q);
+			$pictureId = $this->firstPicture();
     }
 
     if ( !$pictureId )
@@ -217,6 +216,12 @@ class Album
 
     return $pictures;
   }
+
+	public function firstPicture()
+	{
+		$q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
+		return $this->db->getSingleValue($q);
+	}
 
   /**
    * Finds the previous picture in an album.

@@ -257,8 +257,51 @@ class User_Facebook extends User_External
     return $result;
   }
 
+	public function postPicture()
+	{
+	}
+
 	public function postAlbum( &$album, $newPictures = 0 )
 	{
+		Log::debug( print_r($album,true) );
+		Log::debug( print_r($newPictures,true) );
+
+		$this->api()->setFileUploadSupport(true);
+
+		$pictureCount = count($newPictures);
+		$pictureId = ( $pictureCount > 0 ) ? $newPictures[0]['id'] : $album->firstPicture();
+
+    $q = $this->db->buildQuery( "SELECT storage_id FROM pictures WHERE id=%d", $pictureId );
+    $storageId = $this->db->getSingleValue($q);
+
+		$msg = null;
+		switch( $pictureCount )
+		{
+			case 0:
+				$msg = sprintf( "%d new pictures in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+			case 1:
+				$msg = sprintf( "%d new picture in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+			default:
+				$msg = sprintf( "%d new pictures in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+		}
+
+		$attachment = array(
+			'source' => "@". Storage::localFile($storageId),
+			'message' => $msg
+		);
+
+		$target = "/". $this->externalId. "/photos";
+
+		Log::debug( print_r( $attachment,true) );
+
+		$rs = $fbCon->api()->api( $target, 'POST', $data );
+
+		Log::debug(	print_r($rs,true) );
+
+		return $rs;
 	}
 
   public function postEvent( &$event )
