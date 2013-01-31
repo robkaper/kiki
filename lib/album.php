@@ -133,8 +133,7 @@ class Album
     }
 
     // Picture details
-    $qPictureId = $this->db->escape($pictureId);
-    $q = "select title, storage_id from pictures where id=$qPictureId";
+    $q = $this->db->buildQuery( "SELECT title, storage_id FROM pictures WHERE id=%d", $pictureId );
     $o = $this->db->getSingle($q);
 
     $picture = array(

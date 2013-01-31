@@ -13,8 +13,16 @@ class Controller_Album extends Controller
     $db = $GLOBALS['db'];
     $user = $GLOBALS['user'];
 
-    list( $albumId, $pictureId ) = explode( "/", $this->objectId );
+    $path = explode( "/", $this->objectId );
+ 
+    $albumId = 0;
+    $pictureId = 0;
 
+    if ( count($path) == 2 )
+      list( $albumId, $pictureId ) = $path;
+    else if ( count($path) == 1 )
+      list( $albumId) = $path;
+ 
     if ( $albumId )
     {
       $album = new Album( $albumId );

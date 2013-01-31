@@ -66,6 +66,12 @@
       {
         foreach( $rs as $tweet )
         {
+          if ( !isset($tweet->id) )
+          {
+						echo "Non object result: ". print_r($tweet). PHP_EOL;
+            continue;
+          }
+
           $tweets[$tweet->id] = $tweet;
           $maxId = $tweet->id-1;
 
@@ -92,6 +98,12 @@
       {
         foreach( $rs as $tweet )
         {
+					if ( !isset($tweet->id) )
+					{
+						echo "Non object result: ". print_r($tweet). PHP_EOL;
+						continue;
+					}
+
           $tweets[$tweet->id] = $tweet;
           $maxId = $tweet->id-1;
 

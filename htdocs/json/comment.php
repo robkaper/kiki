@@ -51,4 +51,3 @@
 
     Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
   }
-?>

@@ -1,8 +1,7 @@
 # Enable mod_rewrite.
 # (required)
 # It is technically possible to abuse ErrorDocument 404 to get all requests
-# into router.php, however.
-# @todo Consider supporting said option, thus making mod_rewrite optional.
+# into router.php, however that's ugly and I won't support it.
 RewriteEngine On
 
 # Kiki upload storage.
