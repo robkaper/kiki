@@ -26,11 +26,11 @@ class Controller_Album extends Controller
     if ( $albumId )
     {
       $album = new Album( $albumId );
-      if ( $album->id )
+      if ( $album->id() )
       {
         $this->template = 'pages/default';
         $this->status = 200;
-        $this->title = "Album: $album->title";
+        $this->title = "Album: ". $album->title();
         $this->content = $album->show($pictureId);
         
         return true;
