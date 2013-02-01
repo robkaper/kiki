@@ -72,7 +72,7 @@ class Album extends Object
 
 	public function dbInsert()
 	{
-    $q = $this->db->buildQuery( "INSERT INTO albums (object_id,title,system) VALUES ($d'%s', %d)",
+    $q = $this->db->buildQuery( "INSERT INTO albums (object_id,title,system) VALUES (%d, '%s', %d)",
 			$this->objectId, $this->title, $this->system
 		);
 
