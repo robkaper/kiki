@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.30' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.31' );
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
@@ -113,6 +113,7 @@ drop table if exists albums;
 create table albums (
   id int unsigned not null auto_increment,
   primary key(id),
+  object_id bigint unsigned not null,
   title varchar(255) not null,
   system boolean default false
 ) default charset=utf8;

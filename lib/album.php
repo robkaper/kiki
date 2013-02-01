@@ -13,34 +13,18 @@
  * @license Released under the terms of the MIT license.
  */
 
-class Album
+class Album extends Object
 {
-  private $db;
-
-  public $id, $title;
+  public $title;
   private $system;
-
-  /**
-   * Initialises an album.
-   *
-   * @param int $id ID of the album, for quick loading
-   */
-  public function __construct( $id = null )
-  {
-    $this->db = $GLOBALS['db'];
-    
-    $this->reset();
-    
-    if ( $id )
-      $this->load( $id );
-  }
 
   /**
    * Resets member variables to their pristine state.
    */
   public function reset()
   {
-    $this->id = 0;
+		parent::reset();
+
     $this->title = null;
     $this->system = false;
   }
@@ -50,42 +34,55 @@ class Album
    *
    * @param int $id ID of the album
    */
-  public function load( $id )
+  public function load( $id = 0 )
   {
-    $qId = $this->db->escape( $id );
-    $q = "select id,title,system from albums where id=$qId";
-    $o = $this->db->getSingle($q);
-    $this->setFromObject($o);
+		if ( $id )
+		{
+			$this->id = $id;
+			$this->objectId = 0;
+		}
+
+		$qFields = "id, o.object_id, o.ctime, o.mtime, o.section_id, o.user_id, title, system, o.visible";
+		$q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->objectId );
+		$this->setFromObject( $this->db->getSingle($q) );
   }
   
   public function setFromObject( $o )
   {
+		parent::setFromObject($o);
+
     if ( !$o )
       return;
 
-    $this->id = $o->id;
     $this->title = $o->title;
     $this->system = $o->system;
   }
 
-  public function save()
-  {
-    $this->id ? $this->update() : $this->insert();
-  }
+	public function dbUpdate()
+	{
+		parent::dbUpdate();
 
-  public function insert()
-  {
-    $q = $this->db->buildQuery( "insert into albums (title,system) values ('%s', %d)", $this->title, $this->system );
+		$q = $this->db->buildQuery(
+			"UPDATE albums set object_id=%d, title='%s',system=%d WHERE id=%d",
+			$this->title, $this->system, $this->id
+		);
+
+		$this->db->query($q);
+	}
+
+	public function dbInsert()
+	{
+    $q = $this->db->buildQuery( "INSERT INTO albums (object_id,title,system) VALUES ($d'%s', %d)",
+			$this->objectId, $this->title, $this->system
+		);
+
     $rs = $this->db->query($q);
-    $this->id = $this->db->lastInsertId($rs);
+		if ( $rs )
+	    $this->id = $this->db->lastInsertId($rs);
+
+		return $this->id;
   }
   
-  public function update()
-  {
-    $q = $this->db->buildQuery( "UPDATE albums set title='%s',system=%d WHERE id=%d", $this->title, $this->system, $this->id );
-    $rs = $this->db->query($q);
-  }
-
   /**
    * Provides the full URL of the album to be used in external references.
    *
@@ -351,5 +348,3 @@ class Album
   public function setSystem( $system ) { $this->system  = $system; }
   public function system() { return $this->system; }
 }
-
-?>

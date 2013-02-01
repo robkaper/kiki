@@ -189,6 +189,33 @@ class User_Twitter extends User_External
 
 	public function postAlbum( &$album, $newPictures = 0 )
 	{
+		$pictureCount = count($newPictures);
+		$pictureId = ( $pictureCount > 0 ) ? $newPictures[0]['id'] : $album->firstPicture();
+
+    $q = $this->db->buildQuery( "SELECT storage_id FROM pictures WHERE id=%d", $pictureId );
+    $storageId = $this->db->getSingleValue($q);
+
+		$msg = null;
+		switch( $pictureCount )
+		{
+			case 0:
+				$msg = sprintf( "%d new pictures in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+			case 1:
+				$msg = sprintf( "%d new picture in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+			default:
+				$msg = sprintf( "%d new pictures in album %s (%s)", $pictureCount, $album->title(), $album->url() );
+				break;
+		}
+
+		// TODO: (also?) store publication for individual pictures
+		$rs = $this->post( $album->objectId(), $msg );
+
+		Log::debug(	print_r($rs,true) );
+
+		return $rs;
+
 	}
 
   public function postEvent( &$event )

@@ -297,7 +297,25 @@ class User_Facebook extends User_External
 
 		Log::debug( print_r( $attachment,true) );
 
-		$rs = $fbCon->api()->api( $target, 'POST', $data );
+    $publication = new Publication();
+    $publication->setObjectId( $album->objectId() );
+    $publication->setConnectionId( $this->externalId );
+    $publication->setBody( serialize($attachment) );
+
+		// TODO: store Publication(s), requires objectId for pictures and albums
+		$rs = $this->api()->api( $target, 'POST', $data );
+
+		$publication->setResponse( serialize($rs) );
+
+    if ( isset($rs['id']) )
+    {
+      $result->id = $fbRs['id'];
+      list( $uid, $postId ) = explode( "_", $fbRs['id']);
+      $result->url = "http://www.facebook.com/$uid/posts/$postId";
+      $publication->setExternalId( $postId );
+		}
+
+		$publication->save();
 
 		Log::debug(	print_r($rs,true) );
 
