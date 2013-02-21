@@ -164,7 +164,7 @@ class Router
     }
 
     $result = preg_filter($pattern, $replace, $uri);
-    Log::debug( "$uri, pattern $pattern result: ". print_r($result, true) );
+    // Log::debug( "$uri, pattern $pattern result: ". print_r($result, true) );
 
     return $result;
   }
