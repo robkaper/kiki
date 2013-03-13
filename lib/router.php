@@ -123,6 +123,10 @@ class Router
     $db = $GLOBALS['db'];
 
     $uri = trim( $uri, '/' );
+
+		if ( strstr($uri, '/') )
+			return false;
+
     if ( !$uri )
       $uri = 'index';
 
