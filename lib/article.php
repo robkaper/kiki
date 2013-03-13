@@ -229,6 +229,8 @@ class Article extends Object
   {
     // TODO: query album, do not do this here.
     $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
+		// echo $q;
+    // print_r( $this->db->getArray( $q ) );
     return $this->db->getArray( $q );
   }
 
@@ -296,6 +298,8 @@ class Article extends Object
     $images = $this->images();
     foreach( $images as $image )
       $data['images'][] = Storage::url($image);
+
+		// print_r( $data['images'] );
 
     return $data;
   }

@@ -163,14 +163,14 @@ class Album extends Object
 	{
     $q = "select p.storage_id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
 		$storageIds = $this->db->getArray($q);
-		echo "<pre>";
-		echo $q;
-		print_r( $storageIds );
+		// echo "<pre>";
+		// echo $q;
+		// print_r( $storageIds );
 
 		$urls = array();
 		foreach( $storageIds as $storageId )
 			$urls[] = Storage::url($storageId, 780, 440, true );
-		print_r( $urls );
+		// print_r( $urls );
 
 		return $urls;		
 	}
