@@ -6,13 +6,31 @@
  * Utility class for internationalisation (i18n), assuming gettext.
  *
  * @fixme Add requirements check to status page.
- * @todo Check whether _() exists.
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
+
+if ( !function_exists("_") )
+{
+	function _()
+	{
+		$args = func_get_args();
+		$n = count($args);
+		switch($n)
+		{
+			case 0:
+				return null;
+			case 1:
+				return $args[0];
+			default:
+				$text = array_shift($args);
+				return sprintf( $text, $args );
+		}
+	}
+}
 
 class I18n
 {
