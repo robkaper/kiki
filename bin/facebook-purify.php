@@ -60,7 +60,7 @@
 
 		$qDeleteIds = $db->implode($deleteIds);
 		$qCtime = date("Y-m-d H:i:s", $minCreatedTime); // TODO: check if we need to take into account time difference with Facebook servers in time_t/datetime conversion
-		$q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND ctime>'$minCreatedTime'";
+		$q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND o.ctime>'$minCreatedTime'";
 		$rs = $db->query($q);
 		$deleteCount += $db->affectedRows($rs);
 	}

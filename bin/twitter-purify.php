@@ -70,7 +70,7 @@
 
 		$qDeleteIds = $db->implode($deleteIds);
 		$qCtime = date( "Y-m-d H:i:s", strtotime($lastTweet->created_at) );
-    $q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND ctime>'$qCtime'";
+    $q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND o.ctime>'$qCtime'";
     $rs = $db->query($q);
 		$deleteCount += $db->affectedRows($rs);
   }
