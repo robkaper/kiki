@@ -34,13 +34,20 @@ class Controller
   public static function factory($type)
   {
     $classFile = "controller/".  strtolower($type). ".php";
-    if ( include_once($classFile) )
-    {
-      $classname = "Controller_". ucfirst($type);
-      // FIXME: class_exists
-      return new $classname;
-    }
-    return new Controller();
+		if ( !include_once($classFile) )
+		{
+			Log::error( "file not found: $classFile" );
+			return new Controller();
+		}
+
+    $className = "Controller_". ucfirst($type);
+		if ( !class_exists($className) )
+		{
+			Log::error( "class $className not defined in $classFile" );
+			return new Controller();
+		}
+
+    return new $className;
   }
 
   public function setInstanceId( $instanceId )
