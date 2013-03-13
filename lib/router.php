@@ -80,7 +80,7 @@ class Router
 
     $baseUris = self::getBaseUris();
     if ( !count($baseUris) )
-      return false;
+      return null;
 
     $trailingSlash = false;
 
@@ -91,14 +91,14 @@ class Router
 
       $result = self::matchBaseUri($uri,true);
       if ( !$result )
-        return false;
+        return null;
     }
 
     Log::debug( "lookup for uri: $uri --> result: $result" );
     
     list($matchedUri, $remainder, $q ) = explode(":", $result);
     if ( !$matchedUri )
-      return false;
+      return null;
 
 		// Ensure trailing slash for all handler indices.
 		// TODO: consider *removing* trailing slashes instead: collection
@@ -131,7 +131,7 @@ class Router
     $uri = trim( $uri, '/' );
 
 		if ( strstr($uri, '/') )
-			return false;
+			return null;
 
     if ( !$uri )
       $uri = 'index';
@@ -142,7 +142,7 @@ class Router
     Log::debug( "lookup for section: $sectionId, cname: $uri --> pageId: $pageId" );
 
     if ( !$pageId )
-      return false;
+      return null;
 
 		$controller = Controller::factory('page');
 		$controller->setInstanceId( $pageId );
