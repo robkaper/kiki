@@ -94,7 +94,7 @@ class Router
         return false;
     }
 
-    Log::debug( "uri: $uri, result: $result" );
+    Log::debug( "uri: $uri --> result: $result" );
     
     list($matchedUri, $remainder, $q ) = explode(":", $result);
     if ( !$matchedUri )
@@ -139,7 +139,7 @@ class Router
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
     $pageId = $db->getSingleValue($q);
 
-    Log::debug( "uri: $uri, pageId: $pageId" );
+    Log::debug( "section: $sectionId, cname: $uri --> pageId: $pageId" );
 
     if ( !$pageId )
       return false;
