@@ -148,7 +148,7 @@ class Router
 		$controller->setInstanceId( $pageId );
 		// $controller->setObjectId( $remainder );
 
-		Log::debug( "matches $cname (type: page, id: $pageId), remainder: , q: " );
+		Log::debug( "matches $uri (type: page, id: $pageId), remainder: , q: " );
 		return $controller;
   }
 
