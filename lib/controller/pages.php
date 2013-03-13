@@ -12,11 +12,8 @@ class Controller_Pages extends Controller
 
     // Find page under this section through subcontroller.
     // TODO: also find subsections...
-    if ( $handler = Router::findPage( $this->objectId, $this->instanceId ) )
+    if ( $this->subController = Router::findPage( $this->objectId, $this->instanceId ) )
     {
-      $this->subController = Controller::factory($handler->type);
-      $this->subController->setInstanceId($handler->instanceId);
-      $this->subController->setObjectId($handler->remainder);
       $this->subController->exec();
     }
     else if ( $this->objectId == 'index' )

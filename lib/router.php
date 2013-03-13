@@ -74,7 +74,7 @@ class Router
     return $db->getSingleValue($q);
   }
 
-  public static function findHandler( $uri )
+  public static function findSection( $uri )
   {
     $db = $GLOBALS['db'];
 
@@ -82,40 +82,46 @@ class Router
     if ( !count($baseUris) )
       return false;
 
-    // No trailing slash
-    // TODO: accept pages, otherwise add and redirect 301
     $trailingSlash = false;
+
     $result = self::matchBaseUri($uri);
-    if ( $result )
-    {
-      Log::debug( "Router-/ $uri, result: $result, accept: pages=show, else=add and 301" );
-    }
-    else
+    if ( !$result )
     {
       $trailingSlash = true;
+
       $result = self::matchBaseUri($uri,true);
       if ( !$result )
         return false;
-      Log::debug( "Router+/ $uri, result: $result, accept: albums,articles," );
     }
+
+    Log::debug( "uri: $uri, result: $result" );
     
     list($matchedUri, $remainder, $q ) = explode(":", $result);
     if ( !$matchedUri )
       return false;
 
+		// Ensure trailing slash for all handler indices.
+		// TODO: consider *removing* trailing slashes instead: collection
+		// handlers are found either way, pages only without.  Removing them
+		// allows graceful collection to page migration of URLs, adding them
+		// does not.
+  	if ( !$trailingSlash )
+		{
+			$url = $matchedUri. "/". $remainder. $q;
+  	  self::redirect($url, 302) && exit();
+    }
+
     $route = $baseUris[$matchedUri];
 
-    $handler = new stdClass;
-    $handler->matchedUri = $matchedUri;
-    $handler->type = $route->type;
-    $handler->instanceId = $route->id;
-    $handler->trailingSlash = $trailingSlash;
-    $handler->remainder = $remainder;
-    $handler->q = $q;
+		$controller = Controller::factory($route->type);
+		$controller->setInstanceId($route->id);
+		$controller->setObjectId($remainder);
+		// $controller->setQuery($q);
+		// $controller->setMatchedUri( $matchedUri );
 
-    Log::debug( "found, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", remainder:". $remainder. ", q:$q" );
+		Log::debug( "match, type: ". $route->type. ", instanceId: ". $route->id. ", remainder: ". $remainder. ", q: ". $q );
 
-    return $handler;
+    return $controller;
   }
 
   public static function findPage( $uri, $sectionId = 0 )
@@ -131,23 +137,19 @@ class Router
       $uri = 'index';
 
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
-    Log::debug( $q );
     $pageId = $db->getSingleValue($q);
+
+    Log::debug( "uri: $uri, pageId: $pageId" );
 
     if ( !$pageId )
       return false;
 
-    $handler = new stdClass;
-    $handler->matchedUri = $uri;
-    $handler->type = 'page';
-    $handler->instanceId = $pageId;
-    $handler->trailingSlash = false;
-    $handler->remainder = '';
-    $handler->q = $q;
+		$controller = Controller::factory('page');
+		$controller->setInstanceId( $pageId );
+		// $controller->setObjectId( $remainder );
 
-    Log::debug( "found, type:". $handler->type. ", /:". $handler->trailingSlash. ", instanceId:". $handler->instanceId. ", q:$q" );
-
-    return $handler;
+		Log::debug( "match, type: page, instanceId: $pageId, remainder: , q: " );
+		return $controller;
   }
 
   public static function matchBaseUri( $uri, $trailingSlash = false )
