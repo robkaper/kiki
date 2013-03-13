@@ -5,8 +5,6 @@
  *
  * Utility class for internationalisation (i18n), assuming gettext.
  *
- * @fixme Add requirements check to status page.
- *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>

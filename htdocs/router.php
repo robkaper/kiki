@@ -67,7 +67,6 @@
 	}
 
   $controller->exec();
-  // Log::debug( print_r($controller, true) );
 
   Http::sendHeaders( $controller->status() );
   

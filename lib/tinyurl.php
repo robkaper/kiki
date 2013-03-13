@@ -3,8 +3,6 @@
 /**
  * Creates, stores and resolves local tiny URLs.
  *
- * @todo Allow lookup of full URLs (as opposed to IDs)
- *
  * @class TinyUrl
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
