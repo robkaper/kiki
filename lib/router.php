@@ -94,7 +94,7 @@ class Router
         return false;
     }
 
-    Log::debug( "uri: $uri --> result: $result" );
+    Log::debug( "lookup for uri: $uri --> result: $result" );
     
     list($matchedUri, $remainder, $q ) = explode(":", $result);
     if ( !$matchedUri )
@@ -119,7 +119,7 @@ class Router
 		// $controller->setQuery($q);
 		// $controller->setMatchedUri( $matchedUri );
 
-		Log::debug( "match, type: ". $route->type. ", instanceId: ". $route->id. ", remainder: ". $remainder. ", q: ". $q );
+		Log::debug( "matches $matchedUri (type: $route->type, id: $route->id), remainder: ". $remainder. ", q: ". $q );
 
     return $controller;
   }
@@ -139,7 +139,7 @@ class Router
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE cname='%s' AND section_id=%d", $uri, $sectionId );
     $pageId = $db->getSingleValue($q);
 
-    Log::debug( "section: $sectionId, cname: $uri --> pageId: $pageId" );
+    Log::debug( "lookup for section: $sectionId, cname: $uri --> pageId: $pageId" );
 
     if ( !$pageId )
       return false;
@@ -148,7 +148,7 @@ class Router
 		$controller->setInstanceId( $pageId );
 		// $controller->setObjectId( $remainder );
 
-		Log::debug( "match, type: page, instanceId: $pageId, remainder: , q: " );
+		Log::debug( "matches $cname (type: page, id: $pageId), remainder: , q: " );
 		return $controller;
   }
 
