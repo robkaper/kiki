@@ -163,6 +163,7 @@ class User_Facebook extends User_External
           if ( !isset($page['perms']) )
             continue;
 
+
           // Log::debug( "page: ". print_r($page,true) );
           $this->subAccounts[] = $page;
           // $connection->api()->setAccessToken( $page['access_token'] );
@@ -171,6 +172,31 @@ class User_Facebook extends User_External
       }
     }
   }
+
+	public function getPermissions()
+	{
+		$this->permissions = array();
+
+		$supportedPermissions = array(
+			'read_stream'=> "Jouw news feed lezen",
+			'publish_stream' => "Namens jou berichten publiceren",
+			'user_events' => "Jouw events inzien",
+			'create_event' => "Namens jou een event aanmaken",
+			'manage_pages'=> "Pagina (Page) beheer",
+		);
+
+		foreach( $supportedPermissions as $key => $description )
+		{
+			$this->permissions[] = array(
+				'key' => $key,
+				'description' => $description,
+				'value' => $this->hasPerm($key),
+				'revokeUrl' => null,
+				'requestUrl' => null,
+			);
+		}		
+
+	}
 
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {

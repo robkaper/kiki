@@ -109,7 +109,7 @@ class Template
     $connectedServices = array();
     foreach( $this->user->connections() as $connection )
     {
-      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts() );
+      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
       $connectedServices[] = $connection->serviceName();
     }
 
