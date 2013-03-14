@@ -19,6 +19,7 @@
 class Config
 {
 	public static $debug = false;
+	public static $offlineMode = false;
 
 	public static $siteName = null;
 	public static $copyOwner = "Kiki website framework";
