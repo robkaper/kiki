@@ -42,11 +42,13 @@ class Router
     $db = $GLOBALS['db'];
 
     $baseUris = array();
+
     $qType = $type ? $db->buildQuery("where type='%s'", $type) : null;
+
     // Sort DESC when no sort order is requested for non-greedy matching (e.g. /a/b/ before /a/)
-    $qSort = $sort ? "order by base_uri asc" : "order by base_uri desc";
-    $q = "select id, base_uri, type, title from sections $qType $qSort";
+    $q = $db->buildQuery( "SELECT id, base_uri, type, title FROM sections %s ORDER BY base_uri %s", $qType, $sort ? "ASC" : "DESC" );
     $rs = $db->query($q);
+
     if ( $rs && $db->numrows($rs) )
       while( $o = $db->fetchObject($rs) )
       {

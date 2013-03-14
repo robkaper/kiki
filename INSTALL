@@ -52,6 +52,17 @@ cd /www/example.com
 touch debug.txt
 chgrp www-data debug.txt && chmod g+w debug.txt
 
+* Optional: paths for custom classes and template files
+
+You can use your own classes and templates by placing them into the appropriate paths:
+
+cd /www/example.com
+mkdir -p lib/controller/
+mkdir -p templates
+
+Your local path is tried before the Kiki path, so you cannot just add
+classes or templates, but even override the Kiki defaults where desired.
+
 Configure your virtual host
 ---------------------------
 
@@ -77,3 +88,19 @@ If you're going to use the Twitter connection, you must configure a callback
 URL in your Twitter application to avoid PIN requests.  You can set it to
 any value: it is not actually being used as Kiki sets the callback URL
 itself in all requests.  You just cannot leave it empty.
+
+Custom modules
+--------------
+
+You can easily create your own custom controller modules within Kiki. 
+
+To create a module named Foo, the following are required:
+
+- A file /www/example.com/lib/controller/foo.php (check lib/controller/examples/helloworld.php for an example)
+- A class named Controller_Foo within that file, extending the Controller class
+
+See lib/controller/examples/ in the Kiki install path.
+
+To start using a custom module, create a route to it in the sections table.
+
+FIXME: this should be automated with an Add Section CMS module.

@@ -33,16 +33,11 @@ class Controller
 
   public static function factory($type)
   {
-    $classFile = "controller/".  strtolower($type). ".php";
-		if ( !include_once($classFile) )
-		{
-			Log::error( "file not found: $classFile" );
-			return new Controller();
-		}
+    $className = ClassHelper::typeToClass($type);
 
-    $className = "Controller_". ucfirst($type);
 		if ( !class_exists($className) )
 		{
+			$classFile = ClassHelper::classToFile($className);
 			Log::error( "class $className not defined in $classFile" );
 			return new Controller();
 		}
