@@ -33,6 +33,7 @@ abstract class User_External
   protected $picture = null;
 
   protected $subAccounts = null;
+	protected $permissions = null;
 
   protected $connected = false;
   protected $authenticated = false;
@@ -63,6 +64,7 @@ abstract class User_External
   abstract public function verifyToken();
 
   abstract public function getSubAccounts();
+	abstract public function getPermissions();
 
   // abstract public function getLoginUrl();
   abstract protected function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' );
@@ -222,6 +224,15 @@ abstract class User_External
     }
     return $this->subAccounts;
   }
+
+	public function permissions()
+	{
+		if ( !isset($this->permissions) )
+		{
+			$this->getPermissions();
+		}
+		return $this->permissions;
+	}
 }
 
 ?>

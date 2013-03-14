@@ -28,6 +28,12 @@ class Status
     $requirements[] = array( 'name' => 'Fileinfo (PECL', 'function' => 'finfo_open', 'remedy' => 'pecl install Fileinfo' );
     $requirements[] = array( 'name' => 'Mailparse (PECL)', 'function' => 'mailparse_msg_create', 'remedy' => 'pecl install Mailparse' );
 
+		if ( Config::$i18n )
+		{
+			$requirements[] = array( 'name' => 'gettext', 'function' => 'bindtextdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::$i18n</strong> to <em>false</em>" );
+			$requirements[] = array( 'name' => 'gettext', 'function' => 'textdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::$i18n</strong> to <em>false</em>" );
+		}
+
     $failures = array();
 
     foreach( $requirements as $requirement )

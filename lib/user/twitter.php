@@ -125,6 +125,12 @@ class User_Twitter extends User_External
     $this->subAccounts = array();
   }
 
+	public function getPermissions()
+	{
+		// Twitter has permissions (read OR read+write), but these are not individually managable, not even per-user, just per app. So ignore them for now.
+		$this->permissions = array();
+	}
+
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
     $result = new stdClass;

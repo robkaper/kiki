@@ -14,9 +14,9 @@ class Http
   /**
    * Sends raw HTTP headers.
    *
-   * Defaults to 200, but setting any unrecognised code in setHttpStatus() results in 500.
+   * Defaults to 200, setting any unrecognised code in setHttpStatus() results in 500.
    *
-   * @todo Support all HTTP/1.1 codes from RFC2616 when sending the status code.  Currently only 200, 301, 302, 404 and 500 are supported.
+   * @todo Support all HTTP/1.1 codes from RFC2616 when sending the status code. Currently only the most common are supported.
    */
   public static function sendHeaders( $status = 200 )
   {

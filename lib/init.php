@@ -23,20 +23,30 @@
 
   function __autoload( $className )
   {
+		include_once $GLOBALS['kiki']. "/lib/classhelper.php";
+
+		$classFile = ClassHelper::classToFile($className);
+
     // Try local customisations first, but fallback no Kiki's base classes,
     // allows developers to easily rewrite/extend.
-    $local = $GLOBALS['root']. "/lib/". strtolower( str_replace("_", "/", $className) ). ".php";
-    if ( file_exists($local) )
-    {
-      include_once "$local";
-      return;
-    }
+		$classPaths = array( $GLOBALS['root'], $GLOBALS['kiki'] );
 
-    $kiki = $GLOBALS['kiki']. "/lib/". strtolower( str_replace("_", "/", $className) ). ".php";
-    if ( file_exists($kiki) )
-    {
-      include_once "$kiki";
-    }
+		foreach( $classPaths as $classPath )
+		{
+			$includeFile = $classPath. "/lib/". $classFile;
+	    if ( file_exists($includeFile) )
+	    {
+  	    include_once "$includeFile";
+
+				if ( class_exists($className, false) )
+		      return;
+    	}
+		}
+
+		if ( !class_exists($className, false) )
+		{
+			Log::error( "could not load class $className from local path nor Kiki install path" );
+		}
   }
 
   $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];

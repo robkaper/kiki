@@ -60,38 +60,13 @@
   }
 
   // Check if URI contains a base handled by a dynamic controller
-  else if ( $handler = Router::findPage($reqUri) )
+  else if ( !($controller = Router::findPage($reqUri)) && !($controller = Router::findSection($reqUri)) )
   {
-    // TODO: decide on what to do with trailing slashes... forbid them? 
-    // require them?  what if there is a page /test AND section /test/ ? 
-    // may they be different?  They are being added below, but I'm leaning
-    // towards *removing* them.
-    $controller = Controller::factory($handler->type);
-    $controller->setInstanceId($handler->instanceId);
-    $controller->setObjectId($handler->remainder);
-  }
-  else if ( $handler = Router::findHandler($reqUri) )
-  {
-    // Ensure trailing slash for all handler indices
-    if ( !$handler->trailingSlash )
-    {
-      $url = $handler->matchedUri. "/". $handler->remainder. $handler->q;
-      Router::redirect($url, 302) && exit();
-    }
-
-    // TODO: these are nearly one on one, might as well let findPage and
-    // findHandler return the right controller...
-    $controller = Controller::factory($handler->type);
-    $controller->setInstanceId($handler->instanceId);
-    $controller->setObjectId($handler->remainder);
-  }
-
-  // Nothing? Default controller (404 page)
-  else
+	  // Nothing? Default controller (404 page)
     $controller = new Controller();
+	}
 
   $controller->exec();
-  // Log::debug( print_r($controller, true) );
 
   Http::sendHeaders( $controller->status() );
   

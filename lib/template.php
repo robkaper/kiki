@@ -109,7 +109,7 @@ class Template
     $connectedServices = array();
     foreach( $this->user->connections() as $connection )
     {
-      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts() );
+      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
       $connectedServices[] = $connection->serviceName();
     }
 
@@ -447,18 +447,25 @@ class Template
     }
 
     if ( $key[0] != "\$" )
+		{
       return $input[0];
+		}
 
-    $value = $this->getVariable( $key );
-    return ($value !== null) ? $value : null; // $input[0];
+		$value = $this->getVariable( $key );
+		return ($value !== null) ?  $value : null; // $input[0];
   }
 
   private function modify( $input, $mods )
   {
+		// echo "input: $input, mods: $mods". PHP_EOL;
+
     if ( ! ($mods = trim($mods)) )
       return $input;
 
+		// $input = (string) $input;
+
     $mods = explode( ',', $mods );
+
     foreach( $mods as $mod )
     {
       $parts = explode( ":", $mod );
@@ -513,6 +520,10 @@ class Template
         case 'lower':
           $input = strtolower($input);
           break;
+
+        case 'count':
+          $input = count($input);
+          break;
           
         case 'dump':
           $input = "<pre>". print_r($input,true). "</pre>";
@@ -565,10 +576,12 @@ class Template
     }
 
     if ( is_array($this->data[$var]) )
-      return count($this->data[$var]);
+		{
+      // return count($this->data[$var]);
+		}
 
     // Log::debug( "return modify $var -> ". $this->data[$var] );
-    return $this->modify( (string) $this->data[$var], $mods );
+    return $this->modify( $this->data[$var], $mods );
   }
 }
 
