@@ -191,8 +191,8 @@ class User_Facebook extends User_External
 				'key' => $key,
 				'description' => $description,
 				'value' => $this->hasPerm($key),
-				'revokeUrl' => null,
-				'requestUrl' => null,
+				'revokeUrl' => Config::$kikiPrefix. "/facebook-revoke.php?id=". $this->id. "&permission=". $key,
+				'requestUrl' => Config::$kikiPrefix. "/facebook-grant.php?id=". $this->id. "&permission=". $key
 			);
 		}		
 

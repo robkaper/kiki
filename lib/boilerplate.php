@@ -96,54 +96,6 @@ class Boilerplate
     return $menu;
   }
 
-  public static function facebookPermissions( &$user )
-  {
-    $content = "";
-
-    foreach( $user->connections() as $connection )
-    {
-      if ( $connection->serviceName() == 'Twitter' )
-      {
-        $content .="<h2>Twitter</h2>\n";
-
-        $content .="<ul>\n";
-        $content .="<li>Je bent ingelogd als <strong>". $connection->screenName(). "</strong> (". $connection->name(). ") (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>\n";
-        $content .="<li>Deze site heeft schrijfrechten. (<a href=\"/proclaimer.php#twitter\">waarom?</a>)</li>\n";
-        $content .="<li>Deze site heeft offline toegang. (<a href=\"/proclaimer.php#twitter\">waarom?</a>)</li>\n";
-
-        $content .="</ul>\n";
-      }
-      else if ( $connection->serviceName() == 'Facebook' )
-      {
-        $content .= "<h2>Facebook</h2>\n";
-
-        $content .= "<ul>\n";
-
-        $content .= "<li>Je bent ingelogd als <strong>". $connection->name(). "</strong> (<a href=\"/proclaimer.php#disconnect\">Ontkoppelhulp</a>).</li>";
-
-        $actions = array( 'publish_stream' => "schrijfrechten", 'user_events' => "user_events", 'create_event' => "create_event", 'read_stream' => "stream leesrechten", 'manage_pages' => "pagina (Page) beheerrechten" );
-        foreach( $actions as $action => $desc )
-        {
-          $permission = $connection->hasPerm( $action );
-          if ( $permission )
-          {
-            $permissionUrl = Config::$kikiPrefix. "/facebook-revoke.php?id=". $connection->id(). "&permission=$action";
-            $content .= "<li>Deze site heeft $desc. (<a href=\"$permissionUrl\">Trek '$action' rechten in</a>).</li>\n";
-          }
-          else
-          {
-            $permissionUrl = Config::$kikiPrefix. "/facebook-grant.php?id=". $connection->id(). "&permission=$action";
-            $content .= "<li>Deze site heeft geen $desc. (<a href=\"$permissionUrl\">Voeg '$action' rechten toe</a>).</li>\n";
-          }
-        }
-
-        $content .= "</ul>\n";
-      }
-    }
-
-    return $content;
-  }
-
 }
 
 ?>

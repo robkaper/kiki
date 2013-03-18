@@ -35,9 +35,6 @@
     case 'address':
       $data = User::anyUser() ? Boilerplate::address() : Boilerplate::login();
       break;
-    case 'facebookPermissions':
-      $data = Boilerplate::facebookPermissions($user);
-      break;
     default:
       if ( preg_match( '/^commentFormWrapper_/', $id ) )
       {
