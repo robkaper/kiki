@@ -68,16 +68,17 @@
   {
     switch( strtolower(trim($key)) )
     {
-    case 'to':
-      $recipient = iconv_mime_decode($headers[2][$id]);
-      break;
-    case 'from':
-      $sender = iconv_mime_decode($headers[2][$id]);
-      break;
-    case 'subject':
-      $subject = trim( iconv_mime_decode($headers[2][$id]) );
-      break;
-    default:;
+      case 'x-original-to':
+      case 'to':
+        $recipient = iconv_mime_decode($headers[2][$id]);
+        break;
+      case 'from':
+        $sender = iconv_mime_decode($headers[2][$id]);
+        break;
+      case 'subject':
+        $subject = trim( iconv_mime_decode($headers[2][$id]) );
+        break;
+      default:;
     }
   }
 
