@@ -127,8 +127,28 @@ class User_Twitter extends User_External
 
 	public function getPermissions()
 	{
-		// Twitter has permissions (read OR read+write), but these are not individually managable, not even per-user, just per app. So ignore them for now.
 		$this->permissions = array();
+
+		// Twitter has permissions (read OR read+write), but these are not
+		// individually managable, not even per-user, just per app.  This array
+		// is hardcoded (Kiki requires read+write for admins thus for all users)
+		// to be at least informative.
+
+		$supportedPermissions = array(
+			'read_stream'=> "Jouw news feed lezen",
+			'publish_stream' => "Namens jou berichten publiceren",
+		);
+
+		foreach( $supportedPermissions as $key => $description )
+		{
+			$this->permissions[] = array(
+				'key' => $key,
+				'description' => $description,
+				'value' => true,
+				'revokeUrl' => null,
+				'requestUrl' => null,
+			);
+		}		
 	}
 
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )

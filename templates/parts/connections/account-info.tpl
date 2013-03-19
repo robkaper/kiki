@@ -7,12 +7,12 @@ Jouw account is gekoppeld aan {$connection.serviceName} account <strong>{$connec
 	<ul>
 	{foreach $connection.permissions as $permission}
 		{if $permission.value}
-			<li>Ja: <strong>{$permission.description|escape}</strong> (<a href="{$permission.revokeUrl}">Trek '{$permission.key}' rechten in</a>)</li>
+			<li>{$permission.description|escape}: <strong>ja</strong>{if $permission.revokeUrl} (<a href="{$permission.revokeUrl}">Trek '{$permission.key}' rechten in</a>){/if}</li>
 		{/if}
 	{/foreach}
 	{foreach $connection.permissions as $permission}
 		{if !$permission.value}
-			<li>Nee: <strong>{$permission.description|escape}</strong> (<a href="{$permission.requestUrl}">Voeg '{$permission.key}' rechten toe</a>)</li>
+			<li>{$permission.description|escape}: <strong>nee</strong>{if $permission.requestUrl} (<a href="{$permission.requestUrl}">Voeg '{$permission.key}' rechten toe</a>){/if}</li>
 		{/if}
 	{/foreach}
 	</ul>
