@@ -96,5 +96,5 @@
 
   echo $template->content();
 
-  Log::debug( "END router.php: $reqUri" );
+  Log::debug( "END router.php ". $controller->status(). ": $reqUri " );
 ?>
