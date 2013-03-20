@@ -125,6 +125,8 @@ class Template
     $this->data['menu'] = Boilerplate::navMenu($this->user);
     $this->data['subMenu'] = Boilerplate::navMenu($this->user, 2);
 
+		$this->data['now'] = time();
+
     // Log::debug( "template data: ". print_r($this->data, true) );
   }
 
