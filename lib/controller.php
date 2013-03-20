@@ -46,15 +46,24 @@ class Controller
     return new $className;
   }
 
+	public function type()
+	{
+		return ClassHelper::classToType( get_called_class() );
+	}
+
   public function setInstanceId( $instanceId )
   {
     $this->instanceId = $instanceId;
   }
 
+	public function instanceId() { return $this->instanceId; }
+
   public function setObjectId( $objectId )
   {
     $this->objectId = $objectId;
   }
+
+	public function objectId() { return $this->objectId; }
 
   public function exec() {}
 

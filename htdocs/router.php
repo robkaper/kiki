@@ -19,7 +19,10 @@
   
   require_once "../lib/init.php";
 
-  Log::debug( "START router.php: $reqUri", $staticFile );
+	if ( !$staticFile )
+	{
+	  Log::debug( "START router: $reqUri", $staticFile );
+	}
 
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
@@ -62,12 +65,15 @@
   // Check if URI contains a base handled by a dynamic controller
   else if ( !($controller = Router::findPage($reqUri)) && !($controller = Router::findSection($reqUri)) )
   {
-	  // Nothing? Default controller (404 page)
-    $controller = new Controller();
+	  // Nothing?
+    $controller = new Controller_404();
 	}
 
   $controller->exec();
 
   $controller->output();
-  
-  Log::debug( "END router.php ". $controller->status(). ": $reqUri " );
+
+	if ( !$staticFile )
+	{
+	  Log::debug( "END router ". $controller->status(). ": $reqUri [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "]" );
+	}

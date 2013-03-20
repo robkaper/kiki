@@ -18,9 +18,15 @@
 
 class ClassHelper
 {
+	public static function classToType( $className )
+	{
+		return str_replace("_", "/", strtolower($className));
+	}
+
+
 	public static function classToFile( $className )
 	{
-		$partName = str_replace("_", "/", strtolower($className));
+		$partName = self::classToType($className);
 		$fileName = $partName. ".php";
 		return $fileName;
 	}
