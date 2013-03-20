@@ -95,7 +95,7 @@ class Storage
   /**
    * Returns a mimetype based on a filename's extension.
    *
-   * @warning Supports only those mimetypes internally used by Kiki.
+   * Supports only those mimetypes internally used by Kiki.
    *
    * @param string $ext extension
    * return string mimetype
