@@ -172,6 +172,7 @@
     }
     else if ( isset($tweet->retweeted_status) && $tweet->user->id != $connectionId )
     {
-      // TODO: store retweet
+      // TODO: store quoted retweet
+      // echo "==== retweet ====". print_r($tweet,true). "==== end retweet ====". PHP_EOL;
     }
   }
