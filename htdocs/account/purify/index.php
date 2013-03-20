@@ -14,12 +14,28 @@
 
   echo "<ul>";
 
-  $articleAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM articles" );
+  // Delete generated thumbnails from cache
+  echo "<li>Delete generated thumbnails from cache...";
+  $deleteCount = 0;
+  $deleteSize = 0;
+  $dir = $GLOBALS['root']. "/storage/";
+  $iterator = new DirectoryIterator($dir);
+  foreach ($iterator as $fileinfo)
+  {
+    if ($fileinfo->isFile())
+    {
+      $fileName = $fileinfo->getFilename();
+      if ( preg_match('/^([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?/', $fileName) )
+      {
+        $fileSize = filesize($dir. $fileName);
 
-  $eventAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM events" );
-
-  $usedAlbumIds = array_merge( $articleAlbumIds, $eventAlbumIds );
-  $qUsedAlbumIds = $db->implode( $usedAlbumIds );
+        unlink($dir. $fileName);
+        $deleteSize += $fileSize;
+        $deleteCount++;
+      }
+    }
+  }
+  echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
 
   // Update title of albums linked to articles
   echo "<li>Update title of albums linked to articles... ";
@@ -55,33 +71,21 @@
 
   // Delete all empty albums not linked to an article or event
   echo "<li>Delete all empty albums not linked to an article or event... ";
+  $articleAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM articles" );
+  $eventAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM events" );
+  $usedAlbumIds = array_merge( $articleAlbumIds, $eventAlbumIds );
+  $qUsedAlbumIds = $db->implode( $usedAlbumIds );
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
   $rs = $db->query($q);
   $deleted = $db->affectedRows($rs);
   echo "done.<br>(albums deleted: $deleted)</li>";
 
-  // Delete generated thumbnails from cache
-  echo "<li>Delete generated thumbnails from cache...";
-  $deleteCount = 0;
-  $deleteSize = 0;
-  $dir = $GLOBALS['root']. "/storage/";
-  $iterator = new DirectoryIterator($dir);
-  foreach ($iterator as $fileinfo)
-  {
-    if ($fileinfo->isFile())
-    {
-      $fileName = $fileinfo->getFilename();
-      if ( preg_match('/^([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?/', $fileName) )
-      {
-        $fileSize = filesize($dir. $fileName);
-
-        unlink($dir. $fileName);
-        $deleteSize += $fileSize;
-        $deleteCount++;
-      }
-    }
-  }
-  echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
+	// Delete album/picture links for dereferenced albums
+	echo "<li>Delete album/picture links for dereferenced albums... ";
+  $q = "delete from album_pictures where album_id not in (select id from albums)";
+	$rs = $db->query($q);
+	$deleted = $db->affectedRows($rs);
+	echo "done.<br>(links deleted: $deleted)</li>";
 
   // Delete orphaned pictures  
   echo "<li>Delete orphaned pictures... ";
@@ -92,26 +96,13 @@
 
   // Delete orphaned storage items
   echo "<li>Delete orphaned storage items... ";
-  $deleted = 0;
-  $q = "select id from storage where id not in (select storage_id from pictures)";
+  $q = "delete from storage where id not in (select storage_id from pictures)";
   $rs = $db->query($q);
-  if ( $rs && $db->numRowS($rs) )
-  {
-    $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
-    while( $o = $db->fetchObject($rs) )
-    {
-      $fileName = Storage::localFile( $o->id );
-      unlink($fileName);
-      $q = "delete from storage where id=". $o->id;
-      $rs2 = $db->query($q);
-      $deleted += $db->affectedRows($rs2);
-    }
-  }
-  echo "done.<br>(files deleted: $deleted)</li>";
+  $deleted = $db->affectedRows($rs);
+  echo "done.<br>(items deleted: $deleted)</li>";
   
-    
   // Delete orphaned storage files
-  echo "<li>Delete orphaned storage files...";
+  echo "<li>Delete all storage files not registered as storage item... ";
   $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
   $deleteCount = 0;
   $deleteSize = 0;
@@ -134,6 +125,10 @@
     }
   }
   echo "done.<br>(files deleted: $deleteCount, bytes freed: $deleteSize)</li>";
+
+	// @todo: detect inconsistencies the other way around (storage items with
+	// missing file, pictures with missing storage item, album/picture links
+	// with missing picture).
 
   echo "<li>Delete orphaned objects... ";
   echo "<ul>";
