@@ -16,22 +16,8 @@ class Controller_Thumbnails extends Controller
     if ( !file_exists($scaleFile) )
       return;
 
-    $ext = Storage::getExtension($scaleFile);
-    switch( $ext )
-    {
-      case "gif":
-      case "jpg":
-      case "png":
-        header( "Content-type: ". Storage::getMimeType($ext) );
-        break;
-      default:
-        return;
-    }
-
-    // WARNING: Exits execution. static files need not fall through to a
-    // template.
-    exit( file_get_contents($scaleFile) );
-
+    $this->altContentType = Storage::getMimeType( Storage::getExtension($scaleFile) );
+    $this->template = null; // Send content directly, without a template.
     $this->status = 200;
     $this->content = file_get_contents($scaleFile);
   }

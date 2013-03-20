@@ -61,8 +61,11 @@ class Controller_Articles extends Controller
       }
       else
       {
-        Log::debug("article404");
-        // TODO: set custom 404 template
+        // $this->template = 'pages/default';
+
+				// $template = new Template( 'content/articles-404' );
+				// $this->content = $template->fetch();
+
         return false;
       }
     }

@@ -17,6 +17,7 @@ class Controller
   protected $objectId = 0;
 
   protected $status = 404;
+  protected $altContentType = null;
   protected $title = '404 Not found';
   protected $template = 'pages/404';
   protected $content = null;
@@ -57,9 +58,47 @@ class Controller
 
   public function exec() {}
 
+  public function output()
+  {
+    Http::sendHeaders( $this->status(), $this->altContentType() );
+
+    switch( $this->status() )
+    {
+      case 301:
+      case 302:
+        Router::redirect( $this->content(), $this->status() );
+        break;
+
+      default:
+
+        if ( !$this->template() )
+        {
+          echo $this->content();
+          return;
+        }
+
+        $template = Template::getInstance();
+        $template->assign( 'footerText', Boilerplate::copyright() );
+    
+        $template->load( $this->template() );
+        $template->assign( 'title', $this->title() );
+        $template->assign( 'content', $this->content() );
+
+        echo $template->content();
+
+        break;
+    }
+
+  }
+
   public function status()
   {
     return isset($this->subController) ? $this->subController->status() : $this->status;
+  }
+
+  public function altContentType()
+  {
+    return isset($this->subController) ? $this->subController->altContentType() : $this->altContentType;
   }
 
   public function title()

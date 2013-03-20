@@ -68,33 +68,6 @@
 
   $controller->exec();
 
-  Http::sendHeaders( $controller->status() );
+  $controller->output();
   
-  if ( $controller->status() == 301 )
-    Router::redirect($controller->content(), $controller->status()) && exit();
-
-  $content = $controller->content();
-
-  $title = $controller->title();
-  if ( $title )
-    $title .= " - ";
-  $title .= Config::$siteName;
-
-  // if ( $var = $template->getVar('subTitle') )
-  //  $title .= " - ". $var;
-
-  $template = Template::getInstance();
-  $template->assign( 'footerText', Boilerplate::copyright() );
-    
-  $template->load( $controller->template() );
-
-  $template->assign( 'title', $controller->title() );
-  // $template->assign( 'subTitle', $controller->subTitle() );
-  // $template->assign( 'description', $controller->description() );
-        
-  $template->assign( 'content', $controller->content() );
-
-  echo $template->content();
-
   Log::debug( "END router.php ". $controller->status(). ": $reqUri " );
-?>

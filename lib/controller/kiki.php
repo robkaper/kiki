@@ -20,19 +20,23 @@ class Controller_Kiki extends Controller
         case 'js':
         case 'png':
 
-          // Log::debug( "Controller_Kiki EXIT: static file $kikiFile" );
-          header('Content-Type: '. Storage::getMimeType($ext) );
-          exit( file_get_contents($kikiFile) );
+          $this->altContentType = Storage::getMimeType($ext);
+          $this->template = null;
+          $this->status = 200;
+          $this->content = file_get_contents($kikiFile);
+
+          return;
           break;
 
         case 'php':
 
-          $user = $GLOBALS['user'];
-          $db = $GLOBALS['db'];
           Log::debug( "Controller_Kiki: PHP file $kikiFile" );
 
           $this->status = 200;
           $this->template = 'pages/default';
+
+          $user = $GLOBALS['user'];
+          $db = $GLOBALS['db'];
 
           include_once($kikiFile);
 
@@ -43,12 +47,13 @@ class Controller_Kiki extends Controller
 
           if ( file_exists($kikiFile. "index.php") )
           {
-            $user = $GLOBALS['user'];
-            $db = $GLOBALS['db'];
             Log::debug( "Controller_Kiki: PHP index file $kikiFile". "index.php" );
 
             $this->status = 200;
             $this->template = 'pages/default';
+
+            $user = $GLOBALS['user'];
+            $db = $GLOBALS['db'];
 
             include_once($kikiFile. "index.php");
 
@@ -61,7 +66,7 @@ class Controller_Kiki extends Controller
       Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
     }
     else
-      Log::debug( "non-existant kikiFile $kikiFile" );
+      Log::debug( "non-existing kikiFile $kikiFile" );
   }
 }
   

@@ -18,13 +18,12 @@ class Http
    *
    * @todo Support all HTTP/1.1 codes from RFC2616 when sending the status code. Currently only the most common are supported.
    */
-  public static function sendHeaders( $status = 200 )
+  public static function sendHeaders( $status = 200, $altContentType = null )
   {
     switch( $status )
     {
       case 200:
         header( $_SERVER['SERVER_PROTOCOL']. ' 200 OK', 200 );
-        header( 'Content-Type: text/html; charset=utf-8' );
         break;
 
       case 301:
@@ -41,12 +40,10 @@ class Http
 
       case 404:
         header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
-        header( 'Content-Type: text/html; charset=utf-8' );
         break;
 
       case 503:
         header( $_SERVER['SERVER_PROTOCOL']. ' 503 Service Unavailable', 503 );
-        header( 'Content-Type: text/html; charset=utf-8' );
         break;
 
       case 500:
@@ -54,5 +51,7 @@ class Http
         header( $_SERVER['SERVER_PROTOCOL']. ' 500 Internal Server Error', 500 );
         break;
     }
+
+    header( 'Content-Type: '. ($altContentType ? $altContentType : 'text/html; charset=utf8') );
   }
 }
