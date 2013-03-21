@@ -80,22 +80,33 @@ class Template
   private function loadData()
   {
     // Handle some basic stuff that should always be available in templates.
-    // Should probably be done more elegantly.
-    $this->data['config'] = array();
+    // Should probably be done more elegantly, taking up only the Kiki namespace.
+
+		$data = array();
+
+		// Config values
+    $data['config'] = array();
     foreach( get_class_vars( 'Config' ) as $configKey => $configValue )
     {
+			// Lame security check, but better safe than sorry until a proper
+			// audit has been done that in no way unauthorised user content get
+			// parsed as template itself, through parsing recursion or otherwise. 
+			// Should mostly be careful about direct assignment of any of it to
+			// 'content'.
       if ( !preg_match( '~(^db|pass|secret)~i', $configKey ) )
-        $this->data['config'][$configKey] = $configValue;
+        $data['config'][$configKey] = $configValue;
     }
 
     if ( Config::$customCss )
       $this->append( 'stylesheets', Config::$customCss );
 
-    $this->data['server'] = array(
+		// Is that all we want?
+    $data['server'] = array(
       'requestUri' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ""
     );
 
-    $this->data['user'] = array(
+		// Port to User::templateData()
+    $data['user'] = array(
       'id' => $this->user->id(),
       'admin' => $this->user->isAdmin(),
       'activeConnections' => array(),
@@ -103,29 +114,55 @@ class Template
       'emailUploadAddress' => $this->user->emailUploadAddress()
     );
 
-    $this->data['activeConnections'] = array();
-    $this->data['inactiveConnections'] = array();
+		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
+
+    $data['activeConnections'] = array();
 
     $connectedServices = array();
     foreach( $this->user->connections() as $connection )
     {
-      $this->data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
+      $data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
       $connectedServices[] = $connection->serviceName();
     }
+
+		// Inactive connections. Might as well be in {$user) as well,
+		// potentially in {$user.connections} with an {active} switch, although
+		// the separation at this level is not the worst.
 
     foreach( Config::$connectionServices as $name )
     {
       if ( !in_array( $name, $connectedServices ) )
       {
         $connection = Factory_ConnectionService::getInstance($name);
-        $this->data['inactiveConnections'][] = array( 'serviceName' => $connection->name(), 'loginUrl' => $connection->loginUrl() );
+        $data['inactiveConnections'][] = array( 'serviceName' => $connection->name(), 'loginUrl' => $connection->loginUrl() );
       }
     }
 
-    $this->data['menu'] = Boilerplate::navMenu($this->user);
-    $this->data['subMenu'] = Boilerplate::navMenu($this->user, 2);
+		// Menu and submenu. This feels like it the default controller (with the
+		// option for children to reimplement or amend) should do through a Menu
+		// class.
 
-		$this->data['now'] = time();
+    $data['menu'] = Boilerplate::navMenu($this->user);
+    $data['subMenu'] = Boilerplate::navMenu($this->user, 2);
+
+		// @todo Allow starttime and execution time from Log(::init) to be
+		// queried and assign them.  Just in case someone wants to output it in
+		// a template.
+
+		$data['now'] = time();
+
+		// @deprecated Assign into global namespace. For backwards compatibility
+		// with <= 0.0.32, when the namespace kiki was introduced and populated
+		// but not yet ported and used.  Compatibility will be removed in future
+		// 0.1.0 (the this is getting somewhere update, which seems to be
+		// approaching).
+
+		foreach( $data as $key => $value )
+	    $this->data[$key] = $data;
+
+		// Assign to {$kiki} namespace.
+
+		$this->data['kiki'] = $data;
 
     // Log::debug( "template data: ". print_r($this->data, true) );
   }
@@ -139,7 +176,9 @@ class Template
   }
 
   /**
-  * Resolves a template filename. Looks for a site-specific file first and falls back on the Kiki default.
+  * Resolves a template filename. Looks for a site-specific file first and
+  * falls back on the Kiki default.
+	*
   * @param $template [string] name of the template
   * @return string filename of the template
   */

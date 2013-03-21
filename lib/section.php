@@ -3,7 +3,7 @@
 /**
  * Utility class for displaying post collections (articles and pages).
  *
- * @class Section Utility class for displaying post collections (articles and pages).
+ * @class Section
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>

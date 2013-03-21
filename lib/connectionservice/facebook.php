@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Facebook connection service.
+ *
+ * @class ConnectionService_Facebook
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011-2013 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 if ( isset(Config::$facebookSdkPath) )
 {
   require_once Config::$facebookSdkPath. "/src/facebook.php"; 
@@ -13,7 +23,13 @@ class ConnectionService_Facebook
   public function __construct()
   {
     if ( !class_exists('Facebook') )
+		{
+			if ( isset(Config::$facebookSdkPath) )
+			{
+				Log::error( "could not instantiate Facebook class from ". Config::$facebookSdkPath. "/src/facebook.php" );
+			}
       return;
+		}
 
     $this->api = new Facebook( array(
       'appId'  => Config::$facebookApp,

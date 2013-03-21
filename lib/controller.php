@@ -7,7 +7,7 @@
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011-2013 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 

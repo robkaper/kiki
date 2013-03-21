@@ -11,7 +11,11 @@ class Controller_Pages extends Controller
       $this->objectId = 'index';
 
     // Find page under this section through subcontroller.
-    // TODO: also find subsections, instead of defining full paths in sections db...
+
+    // TODO: also find subsections, instead of defining full paths in
+    // sections db...  the latter is faster, but then the base paths are not
+    // properly normalised.  Both should be possible.
+
     $this->subController = Router::findPage( $this->objectId, $this->instanceId );
 		if ( $this->subController )
     {
