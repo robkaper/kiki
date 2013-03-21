@@ -158,7 +158,7 @@ class Template
 		// approaching).
 
 		foreach( $data as $key => $value )
-	    $this->data[$key] = $data;
+	    $this->data[$key] = $value;
 
 		// Assign to {$kiki} namespace.
 
