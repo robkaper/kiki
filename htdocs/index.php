@@ -5,9 +5,9 @@
  * database version (installing/upgrading when possible and necessary). 
  * Works fine for backwards compatible updates.
  *
- * @fixme Breaks when new columns are added to tables used to generate this
- * page, mostly notable users (to recognise administration rights or new
- * setup) and config (to check database version).
+ * @warning Breaks when database queries require new columns used to generate
+ * this page, mostly notable users (to recognise administration rights or
+ * new setup) and config (to check database version).
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>

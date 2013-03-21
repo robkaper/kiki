@@ -233,7 +233,6 @@ class Storage
 
     $c = $crop ? "c." : null;
     $scaledFile = "${base}.${w}x${h}.${c}${ext}";
-    Log::debug( "resampled file is $scaledFile" );
 
     if ( file_exists($scaledFile) )
       chmod( $scaledFile, 0664 );

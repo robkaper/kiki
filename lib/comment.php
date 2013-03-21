@@ -6,6 +6,10 @@
  * Comments are responses attached to base objects (but are also a base
  * object themselves, as comments can be in reply to each other)
  *
+ * If any, comments store the user connection creating them, but also - if
+ * any - the local user linked at the time of creation, which should
+ * eventually be more authorative.
+ *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
  * @copyright 2012 Rob Kaper <http://robkaper.nl/>

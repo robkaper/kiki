@@ -13,4 +13,12 @@ itself, which should be documented through FIXME, TODO and Doxygen comments.
 - Provide a status htdocs file and alias checking third-party availability
   and requirements
 
-- Document mail-to-social plugin.
+- Allow creation of new admin user when:
+	- masterPassword set and no admin user exists (verify before insertion as well)
+	- admin creates a user
+	- through site when Config::allowUserCreation is true and email verification is finished
+
+	- Facebook and Twitter connection user accounts cannot be logged into when
+		Config::allowUserCreation is disabled (the non-usable user accounts will
+		exist however for the sake of their connections from comment
+		synchronisation)

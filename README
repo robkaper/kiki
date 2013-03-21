@@ -12,7 +12,7 @@ Kiki is a website framework.
       * supports publish and offline permissions
 
     * blog/article system
-      * BBCode-like markup (including Youtube video embeds)
+      * HTML or BBCode-like markup (including Youtube video embeds)
       * publish integration with Facebook and Twitter
 
     * picture/album system

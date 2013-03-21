@@ -14,9 +14,13 @@ class Http
   /**
    * Sends raw HTTP headers.
    *
-   * Defaults to 200, setting any unrecognised code in setHttpStatus() results in 500.
-   *
-   * @todo Support all HTTP/1.1 codes from RFC2616 when sending the status code. Currently only the most common are supported.
+   * Defaults to 200, setting any unrecognised code in setHttpStatus()
+	 * results in 500.  This is intentional, although the custom module
+	 * support could very well mean someone finds a use for Kiki outside the
+	 * anticipated scope.  So maybe all HTTP/1.1 codes from RFC2616 should be
+	 * supported here.
+	 *
+	 * Note that the fallback controller in the router actually does default to 404.
    */
   public static function sendHeaders( $status = 200, $altContentType = null )
   {
