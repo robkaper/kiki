@@ -56,6 +56,6 @@ class Http
         break;
     }
 
-    header( 'Content-Type: '. ($altContentType ? $altContentType : 'text/html; charset=utf8') );
+    header( 'Content-Type: '. ($altContentType ? $altContentType : 'text/html; charset=utf-8') );
   }
 }
