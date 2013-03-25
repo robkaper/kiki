@@ -19,7 +19,7 @@
 	  <span class="author">{$article.author}</span>
 		<time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} geleden</time>
 
-		{$article.comments|count} reacties, {$article.likes|count} likes
+		{$article.comments} reacties, {$article.likes|count} likes
   </footer>
 
 </article>
