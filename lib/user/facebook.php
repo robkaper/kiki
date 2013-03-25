@@ -25,8 +25,8 @@ class User_Facebook extends User_External
     if ( !$this->enabled() )
       return;
 
-    // TODO: directly use BaseFacebook or extend it with our own shell,
-    // maybe then we can catch predictable connection errors.
+    // TODO: use not the default Facebook class extending BaseFacebook, but
+    // our own, so we can catch connection error exceptions.
     $this->api = new Facebook( array(
       'appId'  => Config::$facebookApp,
       'secret' => Config::$facebookSecret,
