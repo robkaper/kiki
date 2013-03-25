@@ -22,7 +22,7 @@ class Controller_Articles extends Controller
 
 		if ( preg_match( '/^page-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
 		{
-			unset($this->objectId);
+			$this->objectId = null;
 			$currentPage = $matches[1];
 		}
 
