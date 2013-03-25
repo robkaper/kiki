@@ -69,6 +69,21 @@ class Controller
 
   public function output()
   {
+		if ( PHP_SAPI == 'cli' )
+		{
+			$template = Template::getInstance();
+			$template->assign( 'footerText', Boilerplate::copyright() );
+			$template->load( $this->template() );
+			$template->assign( 'title', $this->title() );
+			$template->assign( 'content', $this->content() );
+
+			$template->fetch();
+
+			print_r( $template->data() );
+
+			return;
+		}
+
     Http::sendHeaders( $this->status(), $this->altContentType() );
 
     switch( $this->status() )

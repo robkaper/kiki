@@ -76,6 +76,14 @@ class Template
 
     $this->template = $template;
   }
+
+  public static function getInstance()
+  {
+    if ( !isset(self::$instance) )
+      self::$instance = new Template(); // __CLASS__;
+
+    return self::$instance;
+  }
   
   private function loadData()
   {
@@ -167,13 +175,10 @@ class Template
     // Log::debug( "template data: ". print_r($this->data, true) );
   }
 
-  public static function getInstance()
-  {
-    if ( !isset(self::$instance) )
-      self::$instance = new Template(); // __CLASS__;
-
-    return self::$instance;
-  }
+	public function data()
+	{
+		return $this->data;
+	}
 
   /**
   * Resolves a template filename. Looks for a site-specific file first and
