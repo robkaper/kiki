@@ -27,13 +27,13 @@
 
   // Optimisation: pre-recognise built-in static files (skips i18n, database
   // and user handling in init.php)
-  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['REQUEST_URI'] );
-  
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
+
   require_once "../lib/init.php";
 
 	if ( !$staticFile )
 	{
-	  Log::debug( "START router: $reqUri", $staticFile );
+	  Log::debug( "START router: $requestPath", $staticFile );
 	}
 
   // Redirect requests with parameters we don't want visible for the user or
@@ -72,10 +72,10 @@
 	// another name, or showing the target and opting to remove or rename the
 	// tinyURL reference.
 
-  if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $reqUri) )
+  if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $requestPath) )
   {
     $controller = Controller::factory('TinyUrl');
-    $controller->setObjectId( substr($reqUri, 1) );
+    $controller->setObjectId( substr($requestPath, 1) );
   }
 
   // Kiki built-in modules and files
@@ -87,7 +87,7 @@
 	// modules yet lacking more sophisticated action and view recognition in
 	// the controller) to built-in stylesheets, Javascript and images.
 
-  else if ( preg_match('#^/kiki/(.*)#', $reqUri, $matches) )
+  else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
   {
     if ( preg_match('#^(album|event)/(.*)#', $matches[1], $moduleMatches) )
     {
@@ -118,7 +118,7 @@
 	// any newly requested format instantly works and the cache can be safely
 	// cleared at any time.
 
-  else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $reqUri, $matches) )
+  else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $requestPath, $matches) )
   {
     $controller = Controller::factory('Thumbnails');
     $controller->setObjectId($matches);
@@ -132,7 +132,7 @@
 	// routing table as the Sections (and actually all modules, now that
 	// sections are truly dynamic in loading any Controller type.
 
-  else if ( !($controller = Router::findPage($reqUri)) && !($controller = Router::findSection($reqUri)) )
+  else if ( !($controller = Router::findPage($requestPath)) && !($controller = Router::findSection($requestPath)) )
   {
 	  // Nothing? 404.
 		//
@@ -154,5 +154,5 @@
 
 	if ( !$staticFile )
 	{
-	  Log::debug( "END router ". $controller->status(). ": $reqUri [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "]" );
+	  Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "]" );
 	}

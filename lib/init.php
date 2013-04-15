@@ -51,7 +51,8 @@
 		}
   }
 
-  $reqUri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $argv[0];
+	// SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
+  $requestPath = isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : $argv[0];
 
   Log::init();
   Config::init();
@@ -64,14 +65,14 @@
   // Set locale when URI starts with a two-letter country code.
   // TODO: support locale setting by TLD or subdomain.
   // TODO: adjust element lang attributes based on chosen locale.
-  if ( preg_match('#^/([a-zA-Z]{2})/#', $reqUri, $matches) )
+  if ( preg_match('#^/([a-zA-Z]{2})/#', $requestPath, $matches) )
   {
     if ( I18n::setLocale($matches[1]) )
     {
       // TODO: finish the Kiki controller and/or let the rewrite rule take
       // locale URIs into account.  Also, rewrite Config::kikiPrefix based on
       // locale.
-      $reqUri = substr( $reqUri, 3 );
+      $requestPath = substr( $requestPath, 3 );
     }
   }
   else
