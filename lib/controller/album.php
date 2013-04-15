@@ -4,8 +4,8 @@ class Controller_Album extends Controller
 {
   public function exec()
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
+    $db = Kiki::getDb();
+    $user = Kiki::getUser();
 
     $path = explode( "/", $this->objectId );
  

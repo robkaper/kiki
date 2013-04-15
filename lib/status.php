@@ -57,7 +57,7 @@ class Status
    */
   public static function dbVersion()
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = "select value from config where `key`='dbVersion'";
     return $db->getSingleValue($q);
   }

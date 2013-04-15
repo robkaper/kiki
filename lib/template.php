@@ -190,12 +190,12 @@ class Template
   public static function file( $template )
   {
     // Try site-specific version of template
-    $file = $GLOBALS['root']. '/templates/'. $template. '.tpl';
+    $file = Kiki::getRootPath(). '/templates/'. $template. '.tpl';
     if ( file_exists($file) )
       return $file;
 
     // Fallback to Kiki base version of template
-    return $GLOBALS['kiki']. '/templates/'. $template. '.tpl';
+    return Kiki::getInstallPath(). '/templates/'. $template. '.tpl';
   }
 
   public function load( $template )

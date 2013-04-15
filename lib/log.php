@@ -89,7 +89,7 @@ class Log
 
 	private static function write()
 	{
-		$logFile = $GLOBALS['root']. "/debug.txt";
+		$logFile = Kiki::getRootPath(). "/debug.txt";
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{

@@ -160,7 +160,7 @@ $( function() {
 
   public static function albumImage( $id, $label, $albumId, $selected=0 )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $template = new Template('forms/album-selectimage');
 

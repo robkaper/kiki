@@ -229,7 +229,7 @@ class Album extends Object
    */
   public static function findPrevious( $albumId, $pictureId )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $qAlbumId = $db->escape( $albumId );
     $qPictureId = $db->escape( $pictureId );
     return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id>$qPictureId order by picture_id asc limit 1" );
@@ -245,7 +245,7 @@ class Album extends Object
    */
   public static function findNext( $albumId, $pictureId )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $qAlbumId = $db->escape( $albumId );
     $qPictureId = $db->escape( $pictureId );
     return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id<$qPictureId order by picture_id desc limit 1" );
@@ -267,7 +267,7 @@ class Album extends Object
    */
   public static function findByTitle( $title, $create=false )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     // Find
     $qTitle = $db->escape($title);

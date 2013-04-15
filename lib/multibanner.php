@@ -4,7 +4,7 @@ class MultiBanner
 {
   public static function articles( $sectionId )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $content = null;
 
     $articles = array();

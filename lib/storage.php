@@ -23,7 +23,7 @@ class Storage
    */
   public static function localFile( $id )
   {
-    return sprintf( "%s/storage/%s", $GLOBALS['root'], self::uri($id) );
+    return sprintf( "%s/storage/%s", Kiki::getRootPath(), self::uri($id) );
   }
 
   /**
@@ -37,7 +37,7 @@ class Storage
    */
   public static function uri( $id, $w=0, $h=0, $crop=false )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE hash='%s'", $id );
     $o = $db->getSingle($q);
@@ -153,7 +153,7 @@ class Storage
    */
   public static function save( $fileName, $data )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $fileName = strtolower($fileName);
     $extension = self::getExtension( $fileName );

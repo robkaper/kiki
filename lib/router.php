@@ -39,7 +39,7 @@ class Router
    */
   public static function getBaseURIs( $type = null, $sort = false )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $baseUris = array();
 
@@ -70,7 +70,7 @@ class Router
    */
   public static function getBaseUri( $type, $id )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $q = $db->buildQuery( "select base_uri from sections where type='%s' and id=%d", $type, $id );
     return $db->getSingleValue($q);
@@ -78,7 +78,7 @@ class Router
 
   public static function findSection( $uri )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $baseUris = self::getBaseUris();
     if ( !count($baseUris) )
@@ -128,7 +128,7 @@ class Router
 
   public static function findPage( $uri, $sectionId = 0 )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $uri = trim( $uri, '/' );
 
@@ -179,7 +179,7 @@ class Router
 
   public static function storeBaseUri( $baseUri, $title, $type, $instanceId = 0 )
   {
-      $db = $GLOBALS['db'];
+      $db = Kiki::getDb();
 
       if ( $baseUri[0] != '/' )
         $baseUri = '/'. $baseUri;

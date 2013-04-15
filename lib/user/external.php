@@ -40,7 +40,7 @@ abstract class User_External
 
   public function __construct( $id=0, $kikiUserId = 0 )
   {
-    $this->db = $GLOBALS['db'];	
+    $this->db = Kiki::getDb();	
 
     if ( $this->externalId = $id )
     {

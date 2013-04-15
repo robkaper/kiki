@@ -79,7 +79,7 @@ class Boilerplate
     }
     $paths = explode( "/", $context );
 
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
 
     $qLevel = $db->escape( $level );
     $qContext = $db->escape( $context );

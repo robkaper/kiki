@@ -65,9 +65,9 @@ class SocialUpdate extends Object
       'author' => $uAuthor->name(),
       'publications' => array(),
       'likes' => $this->likes(),
-      'comments' => Comments::count( $this->db, $GLOBALS['user'], $this->objectId ),
+      'comments' => Comments::count( $this->db, Kiki::getUser(), $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, $GLOBALS['user'], $this->objectId )
+        'comments' => Comments::show( $this->db, Kiki::getUser(), $this->objectId )
       )
     );
     

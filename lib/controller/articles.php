@@ -4,8 +4,8 @@ class Controller_Articles extends Controller
 {
   public function exec()
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
+    $db = Kiki::getDb();
+    $user = Kiki::getUser();
 
     $template = Template::getInstance();
     $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );

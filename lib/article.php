@@ -154,7 +154,7 @@ class Article extends Object
     if ( $type=='pages' )
       $sections[0] = 'top-level page';
 
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = $db->buildQuery( "select id,title from sections where type='%s' order by title asc", $type );
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
@@ -236,14 +236,14 @@ class Article extends Object
 
   private function getNext()
   {
-		$user = $GLOBALS['user'];
+		$user = Kiki::getUser();
     $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime>'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
   
   private function getPrev()
   {
-		$user = $GLOBALS['user'];
+		$user = Kiki::getUser();
     $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime<'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
@@ -266,10 +266,10 @@ class Article extends Object
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
-			'comments' => Comments::count( $this->db, $GLOBALS['user'], $this->objectId ),
+			'comments' => Comments::count( $this->db, Kiki::getUser(), $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, $GLOBALS['user'], $this->objectId ),
-        'editform' => $this->form( $GLOBALS['user'], true, 'articles' )
+        'comments' => Comments::show( $this->db, Kiki::getUser(), $this->objectId ),
+        'editform' => $this->form( Kiki::getUser(), true, 'articles' )
       )
     );
     

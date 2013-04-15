@@ -47,7 +47,7 @@ class I18n
     if ( !function_exists('bindtextdomain') || !function_exists('textdomain') )
       return;
 
-    bindtextdomain('messages', $GLOBALS['kiki']. '/locale/');
+    bindtextdomain('messages', Kiki::getInstallPath(). '/locale/');
     textdomain('messages');
   }
 

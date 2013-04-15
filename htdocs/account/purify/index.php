@@ -18,7 +18,7 @@
   echo "<li>Delete generated thumbnails from cache...";
   $deleteCount = 0;
   $deleteSize = 0;
-  $dir = $GLOBALS['root']. "/storage/";
+  $dir = Kiki::getRootPath(). "/storage/";
   $iterator = new DirectoryIterator($dir);
   foreach ($iterator as $fileinfo)
   {
@@ -106,7 +106,7 @@
   $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
   $deleteCount = 0;
   $deleteSize = 0;
-  $dir = $GLOBALS['root']. "/storage/";
+  $dir = Kiki::getRootPath(). "/storage/";
   $iterator = new DirectoryIterator($dir);
   foreach ($iterator as $fileinfo)
   {

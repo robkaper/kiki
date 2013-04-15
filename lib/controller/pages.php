@@ -4,8 +4,8 @@ class Controller_Pages extends Controller
 {
   public function exec()
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
+    $db = Kiki::getDb();
+    $user = Kiki::getUser();
 
     if ( !$this->objectId )
       $this->objectId = 'index';

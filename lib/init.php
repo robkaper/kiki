@@ -14,22 +14,24 @@
  * @license Released under the terms of the MIT license.
  */
 
-  // Find the Kiki install path
-  $GLOBALS['kiki'] = str_replace( "/lib/init.php", "", __FILE__ );
+  // Find and store the Kiki install path
+  $installPath = str_replace( "/lib/init.php", "", __FILE__ );
+	include_once $installPath. "/lib/kiki.php";
+	Kiki::setInstallPath( $installPath );
 
   // FIXME: rjkcust, we shouldn't assume /home/www/server_name/ as site root.
   // FIXME: allow setups where Config, Log, Storage and Template are part of DOCUMENT_ROOT.
-  $GLOBALS['root'] = "/home/www/". $_SERVER['SERVER_NAME'];
+  Kiki::setRootPath( "/home/www/". $_SERVER['SERVER_NAME'] );
 
   function __autoload( $className )
   {
-		include_once $GLOBALS['kiki']. "/lib/classhelper.php";
+		include_once Kiki::getInstallPath(). "/lib/classhelper.php";
 
 		$classFile = ClassHelper::classToFile($className);
 
     // Try local customisations first, but fallback no Kiki's base classes,
     // allows developers to easily rewrite/extend.
-		$classPaths = array( $GLOBALS['root'], $GLOBALS['kiki'] );
+		$classPaths = array( Kiki::getRootPath(), Kiki::getInstallPath() );
 
 		foreach( $classPaths as $classPath )
 		{
@@ -78,7 +80,7 @@
   }
 
   // Database
-  $db = $GLOBALS['db'] = new Database( Config::$db );
+  $db = Kiki::getDb();
   Config::loadDbConfig($db);
 
   // User(s)
@@ -89,6 +91,6 @@
     while( $o = $db->fetchObject($rs) )
       Config::$adminUsers[] = $o->id;
 
-  $user = $GLOBALS['user'] = new User();
+  $user = Kiki::getUser();
   $user->authenticate();
 ?>

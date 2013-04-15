@@ -151,11 +151,11 @@ class Config
 	* Provides the full path of the configuration file.
 	* @return string full path of the configuration file
 	* @todo Search multiple locations and don't assume config.php is in
-	*   $GLOBALS['root'].
+	*   Kiki::getRootPath().
 	*/
 	public static function configFile()
 	{
-		return $GLOBALS['root']. "/config.php";
+		return Kiki::getRootPath(). "/config.php";
 	}
 
 	/**

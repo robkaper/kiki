@@ -34,7 +34,7 @@ abstract class Object
 
   public function __construct( $id = 0, $objectId = 0 )
   {
-    $this->db = $GLOBALS['db'];
+    $this->db = Kiki::getDb();
 
     $this->id = $id;
     $this->objectId = $objectId;

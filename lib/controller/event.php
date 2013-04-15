@@ -4,8 +4,8 @@ class Controller_Event extends Controller
 {
   public function exec()
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
+    $db = Kiki::getDb();
+    $user = Kiki::getUser();
 
     $q = $db->buildQuery( "select id from events where cname='%s'", $this->objectId );
     $eventId = $db->getSingleValue($q);

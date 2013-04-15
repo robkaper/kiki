@@ -8,7 +8,7 @@ class Controller_Kiki extends Controller
     if ( !isset($parts['path']) )
       return false;
 
-    $kikiFile = $GLOBALS['kiki']. "/htdocs/". $parts['path'];
+    $kikiFile = Kiki::getInstallPath(). "/htdocs/". $parts['path'];
     if ( file_exists($kikiFile) )
     {
       $ext = Storage::getExtension($kikiFile);
@@ -35,8 +35,8 @@ class Controller_Kiki extends Controller
           $this->status = 200;
           $this->template = 'pages/default';
 
-          $user = $GLOBALS['user'];
-          $db = $GLOBALS['db'];
+          $user = Kiki::getUser();
+          $db = Kiki::getDb();
 
           include_once($kikiFile);
 
@@ -52,8 +52,8 @@ class Controller_Kiki extends Controller
             $this->status = 200;
             $this->template = 'pages/default';
 
-            $user = $GLOBALS['user'];
-            $db = $GLOBALS['db'];
+            $user = Kiki::getUser();
+            $db = Kiki::getDb();
 
             include_once($kikiFile. "index.php");
 

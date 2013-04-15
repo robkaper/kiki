@@ -19,7 +19,7 @@ class Section
 
   public function __construct( $id = 0 )
   {
-    $this->db = $GLOBALS['db'];
+    $this->db = Kiki::getDb();
 
     $this->id = $id;
     if ( $this->id )

@@ -25,4 +25,4 @@
 	$_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'];
 	$_SERVER['SERVER_PROTOCOL'] = null;
 
-	include_once $GLOBALS['kiki']. "/htdocs/router.php";
+	include_once Kiki::getInstallPath(). "/htdocs/router.php";

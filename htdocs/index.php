@@ -64,7 +64,7 @@
 
         // Find update files
         $versions = array();
-        foreach ( new DirectoryIterator( $GLOBALS['kiki']. "/db/" ) as $file )
+        foreach ( new DirectoryIterator( Kiki::getInstallPath(). "/db/" ) as $file )
         {
           if ( !$file->isDot() )
           {
@@ -79,7 +79,7 @@
 
         foreach( $versions as $version )
         {
-          $file = $GLOBALS['kiki']. "/db/update-${version}.sql";
+          $file = Kiki::getInstallPath(). "/db/update-${version}.sql";
           echo "<li>Running update script <tt>$file</tt>:\n";
 
           $error = Status::sourceSqlFile($db, $file);
@@ -106,7 +106,7 @@
         {
           echo "<li>Database tables not installed.</li>\n";
 
-          $file = $GLOBALS['kiki']. "/db/core.sql";
+          $file = Kiki::getInstallPath(). "/db/core.sql";
           echo "<li>Running install script <tt>$file</tt>:\n";
 
           $error = Status::sourceSqlFile($db, $file);

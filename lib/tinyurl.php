@@ -22,7 +22,7 @@ class TinyUrl
    */
   public static function lookup( $id )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = $db->buildQuery( "select url from tinyurl where id='%s'", $id );
     return $db->getSingleValue($q);
   }
@@ -49,7 +49,7 @@ class TinyUrl
    */
   public static function insert( $url )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = $db->buildQuery( "insert into tinyurl(url) values('%s')", $url );
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
@@ -66,7 +66,7 @@ class TinyUrl
    */
   public static function get( $url )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = $db->buildQuery( "select id from tinyurl where url='%s'", $url );
     $id = $db->getSingleValue($q);
     if ( !$id )

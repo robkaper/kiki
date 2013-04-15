@@ -104,7 +104,7 @@ class ObjectCache
    */
   static private function getType( $objectId )
   {
-    $db = $GLOBALS['db'];
+    $db = Kiki::getDb();
     $q = $db->buildQuery( "select type from objects where object_id=%d", $objectId );
     return $db->getSingleValue($q);
   }

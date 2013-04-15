@@ -4,8 +4,8 @@ class Controller_Page extends Controller
 {
   public function exec()
   {
-    $db = $GLOBALS['db'];
-    $user = $GLOBALS['user'];
+    $db = Kiki::getDb();
+    $user = Kiki::getUser();
 
     $article = new Article( $this->instanceId );
     $this->title = $article->title();

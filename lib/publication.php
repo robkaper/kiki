@@ -19,7 +19,7 @@ class Publication
 
   public function __construct()
   {
-    $this->db = $GLOBALS['db'];
+    $this->db = Kiki::getDb();
   }
 
   public function reset()
