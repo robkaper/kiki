@@ -25,8 +25,8 @@
 
     if ( !$section->baseURI() )
       $errors[] = "Je kunt de URL naam niet leeg laten.";
-    if ( strstr( $section->baseURI(), "/" ) )
-      $errors[] = "Een URL naam mag geen <q>/</q> bevatten.";
+    // if ( strstr( $section->baseURI(), "/" ) )
+    //   $errors[] = "Een URL naam mag geen <q>/</q> bevatten.";
 
     if ( !sizeof($errors) )
     {

@@ -64,11 +64,12 @@ class Section
 
   public function dbUpdate()
   {
-    if ( !$this->baseURI || !$this->visible )
-      $this->baseURI = Misc::uriSafe($this->title);
+//    if ( !$this->baseURI || !$this->visible )
+//      $this->baseURI = Misc::uriSafe($this->title);
 
     $q = $this->db->buildQuery(
-      "UPDATE sections SET ..."
+      "UPDATE sections SET title='%s', base_uri='%s', type='%s' WHERE id=%d",
+			$this->title, $this->baseURI, $this->type, $this->id
     );
     Log::debug($q);
 
