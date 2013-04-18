@@ -29,7 +29,7 @@
   // and user handling in init.php)
   $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
 
-  require_once "../lib/init.php";
+  require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
 	if ( !$staticFile )
 	{
