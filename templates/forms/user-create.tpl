@@ -1,4 +1,4 @@
-<form id="createUserForm" action="{$config.kikiPrefix}/account/create.php" method="POST">
+<form id="createUserForm" action="{$kiki.config.kikiPrefix}/account/create.php" method="POST">
   <p>
     <label for="email">{"E-mail"|i18n}</label>
     <input type="text" name="email" value="{$email}">
@@ -12,7 +12,7 @@
     <input type="password" name="password-repeat" value="{$password}">
   </p>
 
-  {if !$config.adminUsers}
+  {if !$kiki.config.adminUsers}
     <p>
       <label for="password-admin">{"Administrator password"|i18n}<br><span class="small">This website has no administrator accounts. Enter the password from <tt>config.php</tt> to create this account as an administrator account.</span></label>
       <input type="text" name="password-admin" value="{$adminPassword}">

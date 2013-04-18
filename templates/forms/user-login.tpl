@@ -1,4 +1,4 @@
-<form id="loginForm" action="{$config.kikiPrefix}/login/" method="POST">
+<form id="loginForm" action="{$kiki.config.kikiPrefix}/login/" method="POST">
   <p>
     <label for="email">{"E-mail"|i18n}</label>
     <input type="text" name="email" value="{$email}">

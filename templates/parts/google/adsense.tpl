@@ -1,7 +1,7 @@
-{if $config.googleAdsense}
+{if $kiki.config.googleAdsense}
 <div>
 <script type="text/javascript"><!--
-google_ad_client = "{$config.googleAdsense}";
+google_ad_client = "{$kiki.config.googleAdsense}";
 google_ad_slot = "";
 google_ad_width = 120;
 google_ad_height = 240;

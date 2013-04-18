@@ -1,2 +1,2 @@
 <!DOCTYPE html>
-<html lang="{$config.language}">
+<html lang="{$kiki.config.language}">

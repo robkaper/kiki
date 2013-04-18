@@ -1,7 +1,7 @@
-{if $config.googleAnalytics}
+{if $kiki.config.googleAnalytics}
 <script type="text/javascript">
 var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '{$config.googleAnalytics}']);
+_gaq.push(['_setAccount', '{$kiki.config.googleAnalytics}']);
 _gaq.push(['_trackPageview']);
 
 ( function() {
