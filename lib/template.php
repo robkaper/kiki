@@ -66,15 +66,37 @@ class Template
 
   private $cleanup = true;
 
-  private $user;
   private $db;
 
   public function __construct( $template = null )
   {
-    $this->user = $GLOBALS['user'];
-    $this->db = $GLOBALS['db'];
+    $this->db = Kiki::getDb();
 
     $this->template = $template;
+
+		$data = Kiki::getTemplateData();
+
+		// @deprecated Assign into global namespace. For backwards compatibility
+		// with <= 0.0.32, when the namespace kiki was introduced and populated
+		// but not yet ported and used.  Compatibility will be removed in future
+		// 0.1.0 (the this is getting somewhere update, which seems to be
+		// approaching).
+
+		foreach( $data as $key => $value )
+		{
+			switch($key)
+			{
+				case 'config':
+					break;
+
+				default:
+					$this->data[$key] = $value;
+			}
+		}
+
+		// Assign to {$kiki} namespace.
+
+		$this->data['kiki'] = $data;
   }
 
   public static function getInstance()
@@ -85,96 +107,6 @@ class Template
     return self::$instance;
   }
   
-  private function loadData()
-  {
-    // Handle some basic stuff that should always be available in templates.
-    // Should probably be done more elegantly, taking up only the Kiki namespace.
-
-		$data = array();
-
-		// Config values
-    $data['config'] = array();
-    foreach( get_class_vars( 'Config' ) as $configKey => $configValue )
-    {
-			// Lame security check, but better safe than sorry until a proper
-			// audit has been done that in no way unauthorised user content get
-			// parsed as template itself, through parsing recursion or otherwise. 
-			// Should mostly be careful about direct assignment of any of it to
-			// 'content'.
-      if ( !preg_match( '~(^db|pass|secret)~i', $configKey ) )
-        $data['config'][$configKey] = $configValue;
-    }
-
-    if ( Config::$customCss )
-      $this->append( 'stylesheets', Config::$customCss );
-
-		// Is that all we want?
-    $data['server'] = array(
-      'requestUri' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ""
-    );
-
-		// Port to User::templateData()
-    $data['user'] = array(
-      'id' => $this->user->id(),
-      'admin' => $this->user->isAdmin(),
-      'activeConnections' => array(),
-      'inactiveConnections' => array(),
-      'emailUploadAddress' => $this->user->emailUploadAddress()
-    );
-
-		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
-
-    $data['activeConnections'] = array();
-
-    $connectedServices = array();
-    foreach( $this->user->connections() as $connection )
-    {
-      $data['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
-      $connectedServices[] = $connection->serviceName();
-    }
-
-		// Inactive connections. Might as well be in {$user) as well,
-		// potentially in {$user.connections} with an {active} switch, although
-		// the separation at this level is not the worst.
-
-    foreach( Config::$connectionServices as $name )
-    {
-      if ( !in_array( $name, $connectedServices ) )
-      {
-        $connection = Factory_ConnectionService::getInstance($name);
-        $data['inactiveConnections'][] = array( 'serviceName' => $connection->name(), 'loginUrl' => $connection->loginUrl() );
-      }
-    }
-
-		// Menu and submenu. This feels like it the default controller (with the
-		// option for children to reimplement or amend) should do through a Menu
-		// class.
-
-    $data['menu'] = Boilerplate::navMenu($this->user);
-    $data['subMenu'] = Boilerplate::navMenu($this->user, 2);
-
-		// @todo Allow starttime and execution time from Log(::init) to be
-		// queried and assign them.  Just in case someone wants to output it in
-		// a template.
-
-		$data['now'] = time();
-
-		// @deprecated Assign into global namespace. For backwards compatibility
-		// with <= 0.0.32, when the namespace kiki was introduced and populated
-		// but not yet ported and used.  Compatibility will be removed in future
-		// 0.1.0 (the this is getting somewhere update, which seems to be
-		// approaching).
-
-		foreach( $data as $key => $value )
-	    $this->data[$key] = $value;
-
-		// Assign to {$kiki} namespace.
-
-		$this->data['kiki'] = $data;
-
-    // Log::debug( "template data: ". print_r($this->data, true) );
-  }
-
 	public function data()
 	{
 		return $this->data;
@@ -302,7 +234,6 @@ class Template
   public function content( $fullHTML = true )
   {
     // Log::debug( "begin template engine" );
-    $this->loadData();
 
     // TODO: don't always auto-include html framework, desired template
     // output could just as well be another format (json, xml, ...)

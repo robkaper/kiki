@@ -47,7 +47,13 @@ class Boilerplate
 
     $o->icon = false;
 
-    $match = preg_match( "#$o->url#", isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null );
+		// Replace with directmatch property.
+		if ( $o->level == 1 )
+	    $match = preg_match( "#$o->url#", isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null );
+		else
+	    $match = preg_match( "#$o->url$#", isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null );
+
+		Log::debug( "match #$o->url# with ". $_SERVER['REQUEST_URI']. " is ". (int)$match );
     $class = $o->class;
     $class .= ($match ? " active" : null);
     $class .= ($o->icon ? " icon" : null);
@@ -85,9 +91,9 @@ class Boilerplate
     $qContext = $db->escape( $context );
 
     if ( $context )
-      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and ('$qContext' like concat('%', context, '%') or context is null) order by sortorder asc";
+      $q = "select title, url, level, admin, class, icon from menu_items where level=$qLevel and ('$qContext' like concat('%', context, '%') or context is null) order by sortorder asc";
     else
-      $q = "select title, url, admin, class, icon from menu_items where level=$qLevel and context is null order by sortorder asc";
+      $q = "select title, url, level, admin, class, icon from menu_items where level=$qLevel and context is null order by sortorder asc";
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $o = $db->fetchObject($rs) )
