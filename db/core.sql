@@ -14,7 +14,16 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.31' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.32' );
+
+drop table if exists runtime;
+create table runtime (
+  id bigint unsigned not null auto_increment,
+  primary key(id),
+  `key` varchar(255) default null,
+  unique key(`key`),
+  value varchar(255) default null
+) default charset=utf8;
 
 drop table if exists facebook_user_perms;
 create table facebook_user_perms (
