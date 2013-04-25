@@ -27,42 +27,50 @@
 
     $apiUser = Factory_User::getInstance( 'User_Facebook', $connectionId );
 
-    // Get stream
-    $qPostIds = $db->implode($quotedPostIds);
-    $q = "SELECT post_id, created_time FROM stream WHERE source_id = $connectionId AND post_id IN ($qPostIds)";
+    // Split postIds into smaller sets, FQL has a maximum length and a failure results in OAuthException: An unknown error has occurred
+		$postIds = array_chunk( $postIds, 100 );
+    $quotedPostIds = array_chunk( $quotedPostIds, 100 );
 
-    $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
-    if ( !$rs || !isset($rs['data']) )
-      continue;
-
-		$fbPostIds = array();
-		$minCreatedTime = null;
-		foreach( $rs['data'] as $post )
+    foreach( $quotedPostIds as $setId => $postIdSet )
 		{
-			$fbPostIds[] = $post['post_id'];
-			if ( !isset($minCreatedTime) || $post['created_time'] < $minCreatedTime )
-				$minCreatedTime = $post['created_time'];
+	    // Get stream
+			$qPostIds = $db->implode($postIdSet);
+	    $q = "SELECT post_id, created_time FROM stream WHERE source_id = $connectionId AND post_id IN ($qPostIds)";
+
+	    $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
+	    if ( !$rs || !isset($rs['data']) )
+	      continue;
+
+			$fbPostIds = array();
+			$minCreatedTime = null;
+			foreach( $rs['data'] as $post )
+			{
+				$fbPostIds[] = $post['post_id'];
+				if ( !isset($minCreatedTime) || $post['created_time'] < $minCreatedTime )
+					$minCreatedTime = $post['created_time'];
+			}
+
+			if ( !count($fbPostIds) )
+				continue;
+
+			$missingIds = array_diff( $postIds[$setId], $fbPostIds );
+			if ( !count($missingIds) )
+				continue;
+
+			$deleteIds = array();
+			foreach( $missingIds as $missingId )
+			{
+				list( $dummy, $postId ) = explode( "_", $missingId );
+				$deleteIds[] = "'". $postId. "'";
+			}
+
+			$qDeleteIds = $db->implode($deleteIds);
+			// TODO: check if we need to take into account time difference with Facebook servers in time_t/datetime conversion
+			$qCtime = date("Y-m-d H:i:s", $minCreatedTime);
+			$q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND o.ctime>'$minCreatedTime'";
+			$rs = $db->query($q);
+			$deleteCount += $db->affectedRows($rs);
 		}
-
-		if ( !count($fbPostIds) )
-			continue;
-
-		$missingIds = array_diff( $postIds, $fbPostIds );
-		if ( !count($missingIds) )
-			continue;
-
-		$deleteIds = array();
-		foreach( $missingIds as $missingId )
-		{
-			list( $dummy, $postId ) = explode( "_", $missingId );
-			$deleteIds[] = "'". $postId. "'";
-		}
-
-		$qDeleteIds = $db->implode($deleteIds);
-		$qCtime = date("Y-m-d H:i:s", $minCreatedTime); // TODO: check if we need to take into account time difference with Facebook servers in time_t/datetime conversion
-		$q = "DELETE p.*, o.* FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE connection_id=$connectionId AND external_id IN ($qDeleteIds) AND o.ctime>'$minCreatedTime'";
-		$rs = $db->query($q);
-		$deleteCount += $db->affectedRows($rs);
 	}
 
 	if ( $deleteCount )
