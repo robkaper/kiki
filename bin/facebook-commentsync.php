@@ -32,15 +32,15 @@
 	    $qPostIds = $db->implode($postIdSet);
 
 	    // Get comments
-  	  $q = "select xid, object_id, post_id, fromid, time, text, id, username, reply_xid, post_fbid, app_id, likes, comments, can_like, user_likes, text_tags, is_private from comment where post_id in ($qPostIds) order by time desc";
+  	  $q = "select object_id, post_id, fromid, time, text, id, post_fbid, app_id, likes, can_like, user_likes, text_tags, is_private, parent_id from comment where post_id in ($qPostIds) order by time desc";
   	  $rs = $apiUser->api()->api('fql', 'get', array('q' => $q) );
     	if ( !$rs || !isset($rs['data']) )
       	continue;
 
 	    foreach( $rs['data'] as $reply )
   	  {
-  	    list( $uid, $postId, $partId ) = explode("_", $reply['id']);
-  	    $externalId = $postId. "_". $partId;
+  	    $externalId = $reply['id'];
+  	    list( $postId, $partId ) = explode( "_", $externalId );
 
   	    $fbUser = Factory_User::getInstance( 'User_Facebook', $reply['fromid'] );
   	    $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
@@ -65,7 +65,11 @@
       
 	      // Store comment
 	      $comment = new Comment();
+
+				// TODO: support nested comments using $reply['parent_id']
+				// (Facebook UI does not support that yet, but their post-July 2013 data model does.)
 	      $comment->setInReplyToId( $objectId );
+
 	      $comment->setUserId( $localUser->id() );
 	      $comment->setConnectionId( $connectionId );
 	      $comment->setExternalId( $externalId );
