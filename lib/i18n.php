@@ -73,6 +73,10 @@ class I18n
   {
     switch( $locale )
     {
+			case "hu":
+				setlocale( LC_ALL, "hu", "hu_HU", "hu_HU.utf8", "hu_HU.UTF-8" );
+				break;
+
       case "nl":
         setlocale( LC_ALL, "nl", "nl_NL", "nl_NL.utf8", "nl_NL.UTF-8" );
         break;

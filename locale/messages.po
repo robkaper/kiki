@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-14 23:19+0100\n"
+"POT-Creation-Date: 2013-05-08 11:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,8 +25,8 @@ msgstr ""
 msgid "Social update"
 msgstr ""
 
-#: ../htdocs/account/updates.php:11
-msgid "Social demo"
+#: ../htdocs/account/login.php:4 ../htdocs/login/index.php:3 generated.php:14
+msgid "Login"
 msgstr ""
 
 #: ../htdocs/account/events/index.php:3
@@ -53,16 +53,24 @@ msgstr ""
 msgid "Create a new album"
 msgstr ""
 
-#: ../htdocs/account/create.php:3 generated.php:18
+#: ../htdocs/account/create.php:3 generated.php:19
 msgid "Create account"
+msgstr ""
+
+#: ../htdocs/account/create.php:26
+msgid "You did not enter a valid e-mail address."
+msgstr ""
+
+#: ../htdocs/account/create.php:28
+msgid "Your password cannot be empty."
+msgstr ""
+
+#: ../htdocs/account/create.php:30
+msgid "The passwords entered did not match."
 msgstr ""
 
 #: ../htdocs/index.php:19
 msgid "Kiki Status"
-msgstr ""
-
-#: ../htdocs/login/index.php:3 generated.php:13
-msgid "Login"
 msgstr ""
 
 #: ../lib/paging.php:69
@@ -71,6 +79,11 @@ msgstr ""
 
 #: ../lib/paging.php:78
 msgid "Next"
+msgstr ""
+
+#: ../lib/controller/pages.php:30
+#, php-format
+msgid "Index of %s"
 msgstr ""
 
 #: generated.php:3
@@ -93,18 +106,22 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: generated.php:11 generated.php:14
-msgid "E-mail"
+#: generated.php:11
+msgid "This section currently has no underlying content."
 msgstr ""
 
 #: generated.php:12 generated.php:15
+msgid "E-mail"
+msgstr ""
+
+#: generated.php:13 generated.php:16
 msgid "Password"
 msgstr ""
 
-#: generated.php:16
+#: generated.php:17
 msgid "Verify password"
 msgstr ""
 
-#: generated.php:17
+#: generated.php:18
 msgid "Administrator password"
 msgstr ""
