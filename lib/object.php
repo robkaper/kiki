@@ -7,7 +7,7 @@
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011-2013 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 
@@ -20,7 +20,7 @@ abstract class Object
   protected $id = 0;
   protected $objectId = 0;
 
-  protected $name = null;
+  protected $title = null;
   protected $uriAlias = null;
   
   protected $ctime = null;
@@ -49,7 +49,7 @@ abstract class Object
     $this->id = 0;
     $this->objectId = 0;
 
-    $this->name = null;
+    $this->title = null;
     $this->uriAlias = null;
 
     $this->ctime = null;
@@ -72,7 +72,7 @@ abstract class Object
     $this->id = $o->id;
     $this->objectId = $o->object_id;
 
-    // $this->name = $o->name;
+    // $this->title = $o->title;
     // $this->uriAlias = $o->uriAlias;
 
     $this->ctime = $o->ctime;

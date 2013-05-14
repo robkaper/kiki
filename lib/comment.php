@@ -44,8 +44,8 @@ class Comment extends Object
   public function load()
   {
     $q = $this->db->buildQuery(
-      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, o.user_id, c.user_connection_id, c.external_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.id=c.object_id WHERE c.id=%d",
-      $this->id
+      "SELECT c.id, c.object_id, c.ip_addr, c.in_reply_to_id, o.user_id, c.user_connection_id, c.external_id, c.body, o.ctime, o.mtime FROM comments c LEFT JOIN objects o ON o.object_id=c.object_id WHERE c.id=%d OR o.object_id=%d",
+      $this->id, $this->objectId
     );
 
     $o = $this->db->getSingle($q);

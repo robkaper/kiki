@@ -17,7 +17,7 @@
 class Article extends Object
 {
   private $ipAddr = null;
-  private $title = null;
+  // private $title = null;
   private $cname = null;
   private $body = null;
   private $featured = false;

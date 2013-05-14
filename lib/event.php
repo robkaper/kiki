@@ -15,7 +15,7 @@ class Event extends Object
 {
   private $start = null;
   private $end = null;
-  private $title = null;
+  // private $title = null;
   private $cname = null;
   private $location = null;
   private $description = null;
