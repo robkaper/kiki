@@ -131,6 +131,8 @@ class Config
 
 	public static function loadDbConfig( &$db )
 	{
+		// FIXME: name and purpose of this method are totally unrelated...
+
 		// TODO: make this more dynamic, and store the actual services directly, not just by name
 		if ( isset(self::$facebookSdkPath) && isset(self::$facebookApp) )
 		{

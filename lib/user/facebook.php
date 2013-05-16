@@ -479,10 +479,12 @@ class User_Facebook extends User_External
 
     $value = false;
 
+		Log::debug("hasPerm $perm");
     // FIXME: port to /me/permissions
     try
     {
       $value = $this->api()->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
+			Log::debug( "hasPerm $perm: $value" );
     }
     catch ( UserApiException $e )
     {
@@ -493,7 +495,20 @@ class User_Facebook extends User_External
       Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
     }
 
-    self::storePerm( $perm, $value );
+		try
+		{
+			$permissions = $this->api()->api( '/me/permissions' );
+			Log::debug ( print_r( $permissions, true ) );
+		}
+    catch ( UserApiException $e )
+    {
+      Log::error( "UserApiException: $e" );
+    }
+    catch( FacebookApiException $e )
+    {
+      Log::debug( "error in fb api call for hasPerm ($e), guessing user doesn't have it then" );
+    }
+
     return $value;
   }
 

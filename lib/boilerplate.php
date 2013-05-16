@@ -53,7 +53,7 @@ class Boilerplate
 		else
 	    $match = preg_match( "#$o->url$#", isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null );
 
-		Log::debug( "match #$o->url# with ". $_SERVER['REQUEST_URI']. " is ". (int)$match );
+		// Log::debug( "match #$o->url# with ". $_SERVER['REQUEST_URI']. " is ". (int)$match );
     $class = $o->class;
     $class .= ($match ? " active" : null);
     $class .= ($o->icon ? " icon" : null);

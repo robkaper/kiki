@@ -23,3 +23,5 @@
   {/foreach}
   <br class="spacer">
 {/if}
+
+<br class="clear">

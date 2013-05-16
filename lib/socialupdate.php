@@ -18,7 +18,7 @@ class SocialUpdate extends Object
 			$this->objectId = 0;
 		}
 
-		$qFields = "publication_id AS id, o.object_id, o.ctime, o.mtime, body";
+		$qFields = "publication_id AS id, o.object_id, o.user_id, o.ctime, o.mtime, body";
 		$q = $this->db->buildQuery( "SELECT $qFields FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE publication_id=%d OR o.object_id=%d", $this->id, $this->objectId );
 		$this->setFromObject( $this->db->getSingle($q) );
   }
@@ -28,7 +28,7 @@ class SocialUpdate extends Object
     parent::setFromObject($o);
 
 		// FIXME: rjkcust assuming only User 1 posts updates. Should be derived from publication connection reference.
-    $this->userId = 1;
+    $this->userId = $o->user_id;
 
 		$body = @unserialize($o->body);
 		if ( $body !== false )

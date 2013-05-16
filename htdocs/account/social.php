@@ -37,15 +37,13 @@
         {
           $rs = $connection->post( $update->objectId(), $msg );
           if ( isset($rs->id) )
+					{
             echo "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
+					}
           else if ( $rs->error == 'Read-only application cannot POST' )
           {
-            // FIXME: temporary, either make app RW from the start or have two apps (one RO, one RW)
-            echo "<p>\nJe hebt deze site alleen leesrechten gegeven en geen schrijfrechten. Helaas laat Twitter je deze rechten niet eenvoudig uitbreiden, je moet hiervoor twee stappen ondernemen:</p>\n";
-            echo "<ol>\n";
-            echo "<li>Verwijder de toegang van <b>robkaper.nl</b> bij je <a target=\"_blank\" href=\"http://twitter.com/settings/connections\">Twitter connection settings</a> (<q>Revoke access</q>)</li>\n";
-            echo "<li><a href=\"/twitter-redirect.php\">Log opnieuw in</a>. Twitter geeft deze site dan lees- en schrijfrechten.</li>\n";
-            echo "</ol>\n";
+						$template = new Template('parts/connections/twitter/insufficient-rights');
+						echo $template->content();
           }
           else
             echo "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
