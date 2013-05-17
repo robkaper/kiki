@@ -64,6 +64,9 @@ class Log
 		if ( !Config::$debug )
 			return;
 
+		if ( !self::$uniqId )
+			self::init();
+
 		$last = self::$mtime ? self::$mtime : self::$ctime;
 		self::$mtime = microtime(true);
 
