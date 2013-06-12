@@ -26,6 +26,9 @@ class User_Twitter extends User_External
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
     $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
 
+		// Use 1.1 API (now that 1.0 is deprecated)
+		$this->api->host = "https://api.twitter.com/1.1/";
+
     // $this->externalId = $this->oAuthToken['user_id'];
     $this->screenName = $this->oAuthToken['screen_name'];
   }

@@ -35,18 +35,19 @@
     }
 
     $apiUser = Factory_User::getInstance( 'User_Twitter', $connectionId );
-    $rs = $apiUser->api()->get('account/rate_limit_status');
-    if ( !$rs )
+    $rs = $apiUser->api()->get('application/rate_limit_status');
+    if ( !isset($rs) )
     {
-      echo "No valid result from Twitter (connection $connectionId).";
+      echo "No valid result from Twitter (connection $connectionId).". PHP_EOL;
       continue;
     }
 
-    if ( $rs->remaining_hits < 10 )
+		$remainingHits = $rs->resources->application->{'/application/rate_limit_status'}->remaining;
+    if ( $remainingHits < 5 )
     {
-      $resetTime = $rs->reset_time_in_seconds;
+      $resetTime = $rs->resources->application->{'/application/rate_limit_status'}->reset;
       $wait = $resetTime - time();
-      echo "Less than 10 query hits remaining (". $rs->remaining_hits. "), replenishes in ${wait}s.". PHP_EOL;
+      echo "Less than 10 query hits remaining ($remainingHits), replenishes in ${wait}s.". PHP_EOL;
       continue;
     }
 
@@ -58,7 +59,7 @@
       if ( $maxId )
         $arrParams['max_id'] = $maxId;
 
-      $rs = $apiUser->api()->get('statuses/mentions', $arrParams );
+      $rs = $apiUser->api()->get('statuses/mentions_timeline', $arrParams );
 
       if ( count($rs) == 0 )
         $getMore = false;
