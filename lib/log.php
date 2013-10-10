@@ -74,6 +74,9 @@ class Log
 		$total = sprintf( "%3.7f", self::$mtime - self::$ctime );
 
 		$trace = debug_backtrace();
+
+		$location = basename($trace[0]['file']). ':'. $trace[0]['line'];
+
 		$caller = array_shift($trace);
 		while( isset($caller['class']) && $caller['class'] == 'Log' )
 			$caller = array_shift($trace);
@@ -83,7 +86,7 @@ class Log
 		else
 			$callerStr = '';
 		
-		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$callerStr] $msg\n";
+		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$location] [$callerStr] $msg\n";
 		self::$queue[] = $logStr;
 
 		if ( !$queue )
