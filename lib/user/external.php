@@ -193,9 +193,17 @@ abstract class User_External
     $this->picture = $o->picture;
   }
 
-  public function link( $kikiUserId )
+  public function link( $kikiUserId = null )
   {
-    $this->kikiUserIds[] = $kikiUserId;
+
+		if ( $kikiUserId === null )
+		{
+			$kikiUserId = $this->kikiUserId();
+		}
+		else
+		{
+			$this->kikiUserIds[] = $kikiUserId;
+		}
 
     if ( $this->id )
     {

@@ -102,6 +102,8 @@ class User_Twitter extends User_External
 
   public function loadRemoteData()
   {
+		$data = null;
+
     try
     {
       $data = $this->api()->get('account/verify_credentials');
@@ -111,7 +113,7 @@ class User_Twitter extends User_External
       Log::error( "UserApiException: $e" );
     }
 
-    if ( !$data )
+    if ( empty($data) )
     {
       Log::debug( "failed, no data" );
       return;
