@@ -78,7 +78,6 @@ create table articles (
   ip_addr varchar(15),
   title text not null,
   cname varchar(255) not null,
-  unique key(section_id, cname),
   body text not null,
   featured boolean not null default false,
   hashtags varchar(255) not null,
