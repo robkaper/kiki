@@ -42,7 +42,7 @@ class ConnectionService_Twitter
 
   public function loginUrl()
   {
-    return Config::$kikiPrefix. "/twitter-redirect.php";
+    return Config::$kikiPrefix. "/twitterRedirect";
   }
 }
 
