@@ -97,7 +97,11 @@ class Boilerplate
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
       while( $o = $db->fetchObject($rs) )
-        $menu[] = Boilerplate::navMenuItem( $user, $o );
+			{
+				$menuItem = Boilerplate::navMenuItem( $user, $o );
+				if ( $menuItem )
+					$menu[] = $menuItem;
+			}
 
     return $menu;
   }

@@ -76,6 +76,10 @@ class Kiki
 
 		self::$templateData = array();
 
+		// Request values
+		self::$templateData['get'] = $_GET;
+		self::$templateData['post'] = $_POST;
+
 		// Config values
     self::$templateData['config'] = array();
     foreach( get_class_vars( 'Config' ) as $configKey => $configValue )
@@ -97,17 +101,9 @@ class Kiki
       'requestUri' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ""
     );
 
-		// Port to User::templateData()
-    self::$templateData['user'] = array(
-      'id' => self::$user->id(),
-      'admin' => self::$user->isAdmin(),
-      'activeConnections' => array(),
-      'inactiveConnections' => array(),
-      'emailUploadAddress' => self::$user->emailUploadAddress()
-    );
+    self::$templateData['user'] = self::$user->templateData();
 
 		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
-
     self::$templateData['activeConnections'] = array();
 
     $connectedServices = array();
