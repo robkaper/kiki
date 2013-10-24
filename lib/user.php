@@ -84,7 +84,10 @@ class User extends Object
     $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->objectId );
     $o = $this->db->getSingle($q);
     if ( !$o )
+		{
+			$this->reset();
       return;
+		}
     
     $this->setFromObject( $o );
 
@@ -338,6 +341,12 @@ class User extends Object
 	public function getIdByEmail( $email )
 	{
 		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' LIMIT 1", $email );
+		return $this->db->getSingleValue($q);
+	}
+
+	public function getIdByLogin( $email, $password )
+	{
+		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' AND auth_token='%s'", $email, Auth::passwordHash($password) );
 		return $this->db->getSingleValue($q);
 	}
 

@@ -4,23 +4,21 @@ class Controller_Kiki extends Controller
 {
   public function exec()
   {
-    $parts = parse_url($this->objectId);
-    if ( !isset($parts['path']) )
-      return false;
-
-		$actionCall = $parts['path']. 'Action';
-		if ( method_exists($this, $actionCall) )
-		{
-			$this->status = 200;
-			$this->title = $actionCall;
-			$this->template = 'pages/default';
-			$this->$actionCall();
+		if ( $this->actionHandler() )
 			return;
-		}
 
-    $kikiFile = Kiki::getInstallPath(). "/htdocs/". $parts['path'];
-    if ( file_exists($kikiFile) )
-    {
+		$this->fallback();
+	}
+
+	public function fallback()
+	{
+	  $parts = parse_url($this->objectId);
+	  if ( !isset($parts['path']) )
+	    return false;
+
+		$kikiFile = Kiki::getInstallPath(). "/htdocs/". $parts['path'];
+   	if ( file_exists($kikiFile) )
+	  {
       $ext = Storage::getExtension($kikiFile);
       switch($ext)
       {
@@ -35,56 +33,61 @@ class Controller_Kiki extends Controller
           $this->status = 200;
           $this->content = file_get_contents($kikiFile);
 
-          return;
-          break;
+ 	        return true;
+ 	        break;
 
-        case 'php':
+ 	      case 'php':
 
-          Log::debug( "Controller_Kiki: PHP file $kikiFile" );
+ 	        Log::debug( "Controller_Kiki: PHP file $kikiFile" );
 
-          $this->status = 200;
-          $this->template = 'pages/default';
+ 	        $this->status = 200;
+ 	        $this->template = 'pages/default';
 
-          $user = Kiki::getUser();
-          $db = Kiki::getDb();
+   	      $user = Kiki::getUser();
+   	      $db = Kiki::getDb();
 
-          include_once($kikiFile);
+     	    include_once($kikiFile);
 
-          return;
-          break;
+     	    return true;
+     	    break;
 
-        case '':
+ 	      case '':
 
-          if ( file_exists($kikiFile. "index.php") )
-          {
-            Log::debug( "Controller_Kiki: PHP index file $kikiFile". "index.php" );
+ 	        if ( file_exists($kikiFile. "index.php") )
+ 	        {
+ 	          Log::debug( "Controller_Kiki: PHP index file $kikiFile". "index.php" );
 
-            $this->status = 200;
-            $this->template = 'pages/default';
+   	        $this->status = 200;
+   	        $this->template = 'pages/default';
 
-            $user = Kiki::getUser();
-            $db = Kiki::getDb();
+   	        $user = Kiki::getUser();
+   	        $db = Kiki::getDb();
 
-            include_once($kikiFile. "index.php");
+   	        include_once($kikiFile. "index.php");
 
-            return;
-          }
-          break;
+   	        return true;
+   	      }
+     	    break;
 
-        default:;
-      }
-      Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
-    }
-    else
-      Log::debug( "non-existing kikiFile $kikiFile" );
-  }
+   	   default:;
+
+   	 }
+   	 Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
+   	}
+   	else
+		{
+   	  Log::debug( "non-existing kikiFile $kikiFile" );
+	 	}
+
+		return false;
+	}
 
 	// FIXME: grant, revoke, redirect actions from connectionservices should be delegated to their own controller (part of a, yikes, "Bundle" perhaps)
 
 	/**
 	 * Redirects a user to the Facebook auth dialog after clearing permissions
 	 * so they will be reverified upon next hasPerm() call.
- 	*/
+	 */
 	public function facebookGrantAction()
 	{
 		if ( isset($_GET['id']) && isset($_GET['permission']) )
@@ -96,13 +99,15 @@ class Controller_Kiki extends Controller
 					$connection->clearPermissions();
 					$this->status = 302;
 					$this->content = $connection->getLoginUrl( array( 'scope' => $_GET['permission'], 'redirect_uri' => $_SERVER['HTTP_REFERER'] ), true );
-					return;
+					return false;
 				}
 			}
 		}
 
 	  $this->status = 302;
 		$this->content = $_SERVER['HTTP_REFERER'];
+
+		return true;
 	}
 
 	/**
@@ -123,6 +128,8 @@ class Controller_Kiki extends Controller
 
 	  $this->status = 302;
 		$this->content = $_SERVER['HTTP_REFERER'];
+
+		return true;
 	}
 
 	/**
@@ -139,7 +146,7 @@ class Controller_Kiki extends Controller
 		{
 			$this->content = _("Error in Twitter configuration (TwitterOAuth path not set).");
 			Log::debug( "SNH: called without Twitter configuration" );
-			return;
+			return false;
 		}
 
 		// Build TwitterOAuth object with app credentials.
@@ -166,6 +173,16 @@ class Controller_Kiki extends Controller
 			default:
 				$this->content = _("Could not connect to Twitter. Try again later.");
 		}
+
+		return true;
+	}
+
+	public function accountAction( $objectId )
+	{
+		$this->subController = new Controller_Account();
+		$this->subController->setObjectId( $objectId );
+
+		return $this->subController->exec();
 	}
 
 }

@@ -8,6 +8,7 @@
 </nav>
 {/if}
 
+{if $subMenu|count}
 <nav class="second">
 	<ul>
 	{foreach $subMenu as $subMenuItem}

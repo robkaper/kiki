@@ -43,10 +43,12 @@ class Router
 
     $baseUris = array();
 
-    $qType = $type ? $db->buildQuery("where type='%s'", $type) : null;
-
     // Sort DESC when no sort order is requested for non-greedy matching (e.g. /a/b/ before /a/)
-    $q = $db->buildQuery( "SELECT id, base_uri, type, title FROM sections %s ORDER BY base_uri %s", $qType, $sort ? "ASC" : "DESC" );
+		if ( $type )
+	    $q = $db->buildQuery( "SELECT id, base_uri, type, title FROM sections WHERE type='%s' ORDER BY base_uri %s", $type, $sort ? "ASC" : "DESC" );
+		else
+	    $q = $db->buildQuery( "SELECT id, base_uri, type, title FROM sections ORDER BY base_uri %s", $sort ? "ASC" : "DESC" );
+
     $rs = $db->query($q);
 
     if ( $rs && $db->numrows($rs) )
@@ -86,12 +88,11 @@ class Router
 
     $trailingSlash = false;
 
-    $result = self::matchBaseUri($uri);
+    $result = self::matchBaseUri($uri, $trailingSlash);
     if ( !$result )
     {
       $trailingSlash = true;
-
-      $result = self::matchBaseUri($uri,true);
+      $result = self::matchBaseUri($uri,$trailingSlash);
       if ( !$result )
         return null;
     }
@@ -102,11 +103,12 @@ class Router
     if ( !$matchedUri )
       return null;
 
-		// Ensure trailing slash for all handler indices.
-		// TODO: consider *removing* trailing slashes instead: collection
+		// Ensure trailing slash for all handler indices.  TODO: consider
+		// *removing* trailing slashes instead if not page exists: collection
 		// handlers are found either way, pages only without.  Removing them
-		// allows graceful collection to page migration of URLs, adding them
-		// does not.
+		// allows graceful collection-to-page migration of URLs, adding them
+		// does not.  This would however overrule pages with sections unless a
+		// check is made first no page exists with the same trailingslashless URI.
   	if ( !$trailingSlash )
 		{
 			$url = $matchedUri. "/". $remainder. $q;

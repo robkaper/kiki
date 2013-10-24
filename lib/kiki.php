@@ -103,6 +103,13 @@ class Kiki
 
     self::$templateData['user'] = self::$user->templateData();
 
+		// Account service(s). Although multiple routing entries are technically
+		// possible, templateData currently only populates one: the first found or else
+		// the internal fallback in the Kiki controller.
+		$accountServices = array_values( Router::getBaseUris('account') );
+		$baseUri = isset($accountServices[0]) ? $accountServices[0]->base_uri : Config::$kikiPrefix. "/account";
+		self::$templateData['accountService'] = array( 'url' => $baseUri );
+		
 		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
     self::$templateData['activeConnections'] = array();
 

@@ -9,8 +9,8 @@
     {include 'buttons/user-connect'}
   {/foreach}
   <div class="box">
-  <a class="button" href="{$kiki.config.kikiPrefix}/account/">{"Your Account"|i18n}</a>
-  <a class="button" href="{$kiki.config.kikiPrefix}/account/logout.php">{"Logout"|i18n}</a>
+  <a class="button" href="{$kiki.accountService.url}/">{"Your Account"|i18n}</a>
+  <a class="button" href="{$kiki.accountService.url}/logout">{"Logout"|i18n}</a>
   </div>
 {/if}
 {if !$user.id}
@@ -18,7 +18,7 @@
   {foreach $inactiveConnections as $connection}
     {include 'buttons/user-login'}
   {/foreach}
-  {*include 'buttons/user-newaccount'*}
+ 	{include 'buttons/user-login'}
   </div>
 {/if}
 

@@ -1,1 +1,1 @@
-<a class="button" href="{$kiki.config.kikiPrefix}/account/create.php" rel="nofollow"><span class="buttonImg kiki"></span> {"Create account"|i18n}</a>
+<a class="button" href="{kiki.accountService.url}/create" rel="nofollow"><span class="buttonImg Email"></span> {"Create account"|i18n}</a>

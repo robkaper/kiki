@@ -15,6 +15,7 @@ class Controller
 {
   protected $instanceId = 0;
   protected $objectId = 0;
+	protected $contentType = 'html';
 
   protected $status = 404;
   protected $altContentType = null;
@@ -65,6 +66,37 @@ class Controller
 
 	public function objectId() { return $this->objectId; }
 
+	public function actionHandler()
+	{
+    $urlParts = parse_url($this->objectId);
+    if ( isset($urlParts['path']) && !empty($urlParts['path']) )
+		{
+			$pathParts = explode( '/', $urlParts['path'] );
+			$action = array_shift($pathParts);
+			$actionMethod = $action. 'Action';
+
+			$remainder = preg_replace( "#^$action/?#", "", $this->objectId );
+		}
+		else
+		{
+			$actionMethod = 'indexAction';
+			$remainder = $this->objectId;
+		}
+
+		if ( !method_exists($this, $actionMethod) )
+		{
+			return false;
+		}
+
+		Log::debug( "found actionMethod: $actionMethod, remainder: $remainder" );
+
+		// $this->status = 200;
+		$this->title = $actionMethod;
+		$this->template = 'pages/default';
+
+		return $this->$actionMethod($remainder);
+	}
+
   public function exec() {}
 
   public function output()
@@ -90,16 +122,17 @@ class Controller
     {
       case 301:
       case 302:
+			case 303:
         Router::redirect( $this->content(), $this->status() );
         break;
 
       default:
 
-        if ( !$this->template() )
-        {
-          echo $this->content();
-          return;
-        }
+				if ( isset($_REQUEST['dialog']) || !$this->template() )
+				{
+					echo $this->content();
+					return;
+				}
 
         $template = Template::getInstance();
         $template->assign( 'footerText', Boilerplate::copyright() );

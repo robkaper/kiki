@@ -66,7 +66,6 @@ class Boilerplate
 
   public static function navMenu( &$user, $level = 1 )
   {
-    // FIXME: merge non-dynamic entries (such as functionality of /kiki/account/)
     // FIXME: add exact match boolean for url/context checking
 
     $menu = array();
