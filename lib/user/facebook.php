@@ -165,7 +165,6 @@ class User_Facebook extends User_External
           if ( !isset($page['perms']) )
             continue;
 
-
           // Log::debug( "page: ". print_r($page,true) );
           $this->subAccounts[] = $page;
           // $connection->api()->setAccessToken( $page['access_token'] );
@@ -193,8 +192,8 @@ class User_Facebook extends User_External
 				'key' => $key,
 				'description' => $description,
 				'value' => $this->hasPerm($key),
-				'revokeUrl' => Config::$kikiPrefix. "/facebook-revoke.php?id=". $this->id. "&permission=". $key,
-				'requestUrl' => Config::$kikiPrefix. "/facebook-grant.php?id=". $this->id. "&permission=". $key
+				'revokeUrl' => Config::$kikiPrefix. "/facebookRevoke?id=". $this->id. "&permission=". $key,
+				'grantUrl' => Config::$kikiPrefix. "/facebookGrant?id=". $this->id. "&permission=". $key
 			);
 		}		
 

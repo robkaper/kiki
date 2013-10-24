@@ -79,6 +79,55 @@ class Controller_Kiki extends Controller
       Log::debug( "non-existing kikiFile $kikiFile" );
   }
 
+	// FIXME: grant, revoke, redirect actions from connectionservices should be delegated to their own controller (part of a, yikes, "Bundle" perhaps)
+
+	/**
+	 * Redirects a user to the Facebook auth dialog after clearing permissions
+	 * so they will be reverified upon next hasPerm() call.
+	*/
+	public function facebookGrantAction()
+	{
+		if ( isset($_GET['id']) && isset($_GET['permission']) )
+		{
+			foreach( $user->connections() as $connection )
+			{
+				if ( $connection->serviceName() == 'Facebook' && $connection->id() == $_GET['id'] )
+				{
+					$connection->clearPermissions();
+					$this->status = 302;
+					$this->content = $connection->getLoginUrl( array( 'scope' => $_GET['permission'], 'redirect_uri' => $_SERVER['HTTP_REFERER'] ), true );
+					return;
+				}
+			}
+
+	  $this->status = 302;
+		$this->content = $_SERVER['HTTP_REFERER'];
+	}
+
+	/**
+	 * Revokes a Facebook permission and redirects to referer.
+	 */
+	public function facebookRevokeAction()
+	{
+	  if ( isset($_GET['id']) && isset($_GET['permission']) )
+	  {
+	    foreach( $user->connections() as $connection )
+	    {
+	      if ( $connection->serviceName() == 'Facebook' && $connection->id() == $_GET['id'] )
+	      {
+	        $connection->revokePerm( $_GET['permission'], true );
+	      }
+	    }
+	  }
+
+	  $this->status = 302;
+		$this->content = $_SERVER['HTTP_REFERER'];
+	}
+
+	/**
+	 * Builds a Twitter authorisation URL using the generic application token
+	 * and referer as callback URL, then redirects to it.
+	 */
 	public function twitterRedirectAction()
 	{
 		if ( isset(Config::$twitterOAuthPath) )
@@ -89,7 +138,7 @@ class Controller_Kiki extends Controller
 		{
 			$this->content = _("Error in Twitter configuration (TwitterOAuth path not set).");
 			Log::debug( "SNH: called without Twitter configuration" );
-			exit();
+			return;
 		}
 
 		// Build TwitterOAuth object with app credentials.

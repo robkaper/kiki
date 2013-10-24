@@ -151,7 +151,7 @@ class User_Twitter extends User_External
 				'description' => $description,
 				'value' => true,
 				'revokeUrl' => null,
-				'requestUrl' => null,
+				'grantUrl' => null,
 			);
 		}		
 	}
