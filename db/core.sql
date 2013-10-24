@@ -14,7 +14,7 @@ create table config (
   value varchar(255) default null
 ) default charset=utf8;
 
-insert into config (`key`, value) values( 'dbVersion', '0.1.32' );
+insert into config (`key`, value) values( 'dbVersion', '0.1.33' );
 
 drop table if exists runtime;
 create table runtime (
@@ -43,6 +43,7 @@ create table users (
   auth_token varchar(40) not null default '',
   mail_auth_token varchar(40) not null default '',
   admin boolean not null default false,
+	verified boolean not null default false,
   unique key(email)
 ) default charset=utf8;
 
