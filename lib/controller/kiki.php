@@ -84,7 +84,7 @@ class Controller_Kiki extends Controller
 	/**
 	 * Redirects a user to the Facebook auth dialog after clearing permissions
 	 * so they will be reverified upon next hasPerm() call.
-	*/
+ 	*/
 	public function facebookGrantAction()
 	{
 		if ( isset($_GET['id']) && isset($_GET['permission']) )
@@ -99,6 +99,7 @@ class Controller_Kiki extends Controller
 					return;
 				}
 			}
+		}
 
 	  $this->status = 302;
 		$this->content = $_SERVER['HTTP_REFERER'];
