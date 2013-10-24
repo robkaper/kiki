@@ -7,7 +7,8 @@ class User extends Object
 
   private $authToken;
   public $mailAuthToken;
-  private $isAdmin;
+  private $isAdmin = false;
+	private $isVerified = false;
 
   private $connections = array();
   private $identifiedConnections = null;
@@ -28,6 +29,7 @@ class User extends Object
     $this->authToken = "";
     $this->mailAuthToken = "";
     $this->isAdmin = false;
+		$this->isVerified = false;
   }
 
   public function name()
@@ -57,10 +59,13 @@ class User extends Object
     return $this->connections[key($this->connections)]->serviceName();
   }
 
-  public function isAdmin()
-  {
-    return $this->isAdmin;
-  }
+	public function email() { return $this->email; }
+
+	public function getAuthToken() { return $this->authToken; }
+	public function setIsAdmin( $isAdmin ) { $this->isAdmin = $isAdmin; }
+  public function isAdmin() { return $this->isAdmin; }
+	public function setIsVerified( $isVerified ) { $this->isVerified = $isVerified; }
+  public function isVerified() { return $this->isVerified; }
 
   public function load( $id = 0 )
   {
@@ -70,8 +75,13 @@ class User extends Object
       $this->objectId = 0;
     }
 
+		$fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'email', 'auth_token', 'mail_auth_token', 'admin' );
+
+		if ( version_compare(Status::dbVersion(), '0.1.33') >= 0 )
+			$fields[] = 'verified';
+
     // TODO: todo email
-    $q = $this->db->buildQuery( "SELECT id, o.object_id, o.ctime, o.mtime, email, auth_token, mail_auth_token, admin FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", $this->id, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->objectId );
     $o = $this->db->getSingle($q);
     if ( !$o )
       return;
@@ -94,6 +104,7 @@ class User extends Object
     $this->authToken = $o->auth_token;
     $this->mailAuthToken = $o->mail_auth_token;
     $this->isAdmin = $o->admin;
+		$this->isVerified = $o->verified;
   }
 
   public function dbUpdate()
@@ -101,8 +112,8 @@ class User extends Object
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d where id=%d",
-      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->id
+      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d WHERE id=%d",
+      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->id
     );
 
     $this->db->query($q);
@@ -111,10 +122,12 @@ class User extends Object
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin) values (%d, '%s', '%s', '%s', %d)",
-      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin
+      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified) VALUES (%d, '%s', '%s', '%s', %d, %d)",
+      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified
     );
-    
+
+		// FIXME: add verified 
+   
     $rs = $this->db->query($q);
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
@@ -321,6 +334,29 @@ class User extends Object
     }
     return false;
   }
+
+	public function getIdByEmail( $email )
+	{
+		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' LIMIT 1", $email );
+		return $this->db->getSingleValue($q);
+	}
+
+	public function getIdByToken( $token )
+	{
+		$q = $this->db->buildQuery( "SELECT id FROM users WHERE auth_token='%s' LIMIT 1", $token );
+		return $this->db->getSingleValue($q);
+	}
+
+	public function templateData()
+	{
+		return array( 
+      'id' => $this->id,
+      'admin' => $this->isAdmin,
+      'activeConnections' => array(),
+      'inactiveConnections' => array(),
+      'emailUploadAddress' => $this->emailUploadAddress()
+    );
+	}
 }
 
 ?>
