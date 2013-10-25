@@ -1,3 +1,7 @@
+{if $kiki.get.dialog}
+	<span id="dialogTitle">{"Login"|i18n}</span>
+{/if}
+
 {if $errors|count}
 	<p>
 		Login failed due to the following errors:</p>

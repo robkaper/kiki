@@ -172,6 +172,10 @@ hr {
 	height: 16px;
 }
 
+#dialogTitle {
+	display: none;
+}
+
 .ui-dialog {
 	border: 1px solid #9c6;
 	border-radius: 5px;

@@ -459,4 +459,45 @@ $( function() {
     , $transition_time + $time_between_slides 
   );
 
+	$('a.dialog').click( function() {
+		console.log( $(this) );
+		var url = $(this).attr('href');
+
+
+		var json = { dialog: 1 };
+		$.get( url, json, function(data) {
+			$('#kikiDialog').html( data );
+			$('#kikiDialog').attr('title', $('#kikiDialog #dialogTitle').html() );
+//			$('#kikiDialog').title( "kiki Dialog" );
+//			$('#kikiDialog').show();
+			console.log(data);
+
+
+    $('#kikiDialog').dialog( {
+      resizable: false,
+      modal: true,
+      buttons: {
+        "Delete": function() {
+          $(this).dialog( "close" );
+
+          var json = { albumId: albumId, pictureId: pictureId };
+
+          $.post( kikiPrefix + '/json/album-remove-picture.php', json, function(data) {
+            $('#albumForm_' + data.albumId + ' #pictureFormItem_' + data.pictureId).remove();
+          } );
+        },
+        Close: function() {
+          $(this).dialog( "close" );
+        }
+      }
+    } );
+
+
+
+		} );
+	
+		return false;
+
+	} );
+
 } );
