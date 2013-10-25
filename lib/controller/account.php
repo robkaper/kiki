@@ -122,7 +122,11 @@ class Controller_Account extends Controller
 		$template = new Template('content/account-create');
 		$template->assign('postUrl', $this->getBaseUri('create') );
 
-		if ( $user->id() ) {}
+		$user = Kiki::getUser();
+
+		if ( $user->id() )
+		{
+		}
 	  else if ( $_POST )
 	  {
 	    $errors = array();
