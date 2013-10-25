@@ -99,18 +99,16 @@ msgid "The passwords entered did not match."
 msgstr "De ingevoerde wachtwoorden komen niet overeen."
 
 #: ../lib/controller/account.php:232
-#, fuzzy
 msgid "Verify account"
-msgstr "Registreer"
+msgstr "Bevestig account"
 
 #: generated.php:3
 msgid "Logout"
 msgstr "Log uit"
 
 #: generated.php:4
-#, fuzzy
 msgid "Latest articles"
-msgstr "Nieuw artikel"
+msgstr "Laatste artikelen"
 
 #: generated.php:6 generated.php:8 generated.php:9
 msgid "Likes"
@@ -133,7 +131,6 @@ msgid "Connect with"
 msgstr "Koppel met"
 
 #: generated.php:14
-#, fuzzy
 msgid "Login with"
 msgstr "Login met"
 
