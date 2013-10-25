@@ -237,6 +237,7 @@ class User extends Object
           // Register new user. Use random password, user must change it
           // (and set email) before he/she can login with just a local ID.
           $this->storeNew( uniqid(), uniqid() );
+					Auth::setCookie($this->id);
 
           // Link the connection
           $user->loadRemoteData();
@@ -285,8 +286,6 @@ class User extends Object
     $this->admin = (int) $admin;
     
     $this->save();
-
-    Auth::setCookie($this->id);
   }
 
   public function anyUser()

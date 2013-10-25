@@ -257,7 +257,7 @@ class Controller_Account extends Controller
 				$verifyUser->setIsVerified(true);
 				$verifyUser->save();
 
-				if ( $user->id() )
+				if ( $user->id() && $user->id() != $verifyUser->id() )
 				{
 					$warnings[] = sprintf( "Because you verified account <strong>%s</strong> (%d), you are no longer logged in as <strong>%s</strong> (%d).", $verifyUser->email(), $verifyUser->id(), $user->email(), $user->id() );
 				}
