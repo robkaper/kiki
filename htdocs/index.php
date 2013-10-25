@@ -28,15 +28,22 @@
 
   $this->template = 'pages/admin';
 
-  ob_start();
-
   $adminsExist = count(Config::$adminUsers);
   $dbVersion = Status::dbVersion();
   Log::debug( "adminUsers: ". print_r( Config::$adminUsers, true) );
   $checkStatus = ( $user->isAdmin() || !$adminsExist );
 
-  if ( $checkStatus && $failedRequirements = Status::failedRequirements() )
+  if ( !$checkStatus )
   {
+    $this->status = 401;
+    $this->content = "Access forbidden.";
+    return;
+  }
+
+  $failedRequirements = Status::failedRequirements();
+  if ( count($failedRequirements) )
+  {
+    ob_start();
     echo "<h2>PHP modules and PEAR/PECL extensions</h2>\n";
     echo "<ul>\n";
     foreach( $failedRequirements as $failedRequirement )
@@ -45,93 +52,85 @@
       echo "<li><strong>". $failedRequirement['name']. "</strong>: <span style=\"color: red\">disabled</span>.${remedyStr}</li>\n";
     }
     echo "</ul>\n";
+
+    $this->content = ob_get_clean();
+    return;
   }
 
-  if ( $checkStatus )
-  {
-    echo "<h2>Database</h2>\n";
+  ob_start();
+  echo "<h2>Database</h2>\n";
   
-    echo "<ul>\n";
-    echo "<li>Data model required: <strong>". Config::dbVersionRequired. "</strong>.</li>\n";
+  echo "<ul>\n";
+  echo "<li>Data model required: <strong>". Config::dbVersionRequired. "</strong>.</li>\n";
 
-    if ( $dbVersion )
+  if ( $dbVersion )
+  {
+    echo "<li>Data model installed: <strong>$dbVersion</strong>.</li>\n";
+
+    if ( version_compare($dbVersion, Config::dbVersionRequired) < 0 )
     {
-      echo "<li>Data model installed: <strong>$dbVersion</strong>.</li>\n";
+      echo "<li>Updating data model:\n";
 
-      if ( version_compare($dbVersion, Config::dbVersionRequired) < 0 )
+      // Find update files
+      $versions = array();
+      foreach ( new DirectoryIterator( Kiki::getInstallPath(). "/db/" ) as $file )
       {
-        echo "<li>Updating data model:\n";
-
-        // Find update files
-        $versions = array();
-        foreach ( new DirectoryIterator( Kiki::getInstallPath(). "/db/" ) as $file )
+        if ( !$file->isDot() )
         {
-          if ( !$file->isDot() )
-          {
-             $version = preg_filter( '/update-(.*)\.sql$/', "$1", $file->getFilename() );
-             if ( $version && version_compare($version, $dbVersion) > 0 && version_compare($version, Config::dbVersionRequired) <= 0 )
-               $versions[] = $version;
-          }
+           $version = preg_filter( '/update-(.*)\.sql$/', "$1", $file->getFilename() );
+           if ( $version && version_compare($version, $dbVersion) > 0 && version_compare($version, Config::dbVersionRequired) <= 0 )
+             $versions[] = $version;
         }
-
-        // Perform in right order 
-        natsort( $versions );
-
-        foreach( $versions as $version )
-        {
-          $file = Kiki::getInstallPath(). "/db/update-${version}.sql";
-          echo "<li>Running update script <tt>$file</tt>:\n";
-
-          $error = Status::sourceSqlFile($db, $file);
-          if ( $error )
-          {
-            echo "<p>Please upgrade manually.</p>\n";
-            echo "</li>\n";
-            break;
-          }
-          else
-          {
-            $db->query( "update config set value='$version' where `key`='dbVersion'" );
-            echo "</li>\n";
-          }
-        }
-        echo "</li>\n";
       }
-    }
-    else
-    {
-      if ( Config::$dbUser )
+
+      // Perform in right order 
+      natsort( $versions );
+
+      foreach( $versions as $version )
       {
-        if ( $db->connected() )
+        $file = Kiki::getInstallPath(). "/db/update-${version}.sql";
+        echo "<li>Running update script <tt>$file</tt>:\n";
+
+        $error = Status::sourceSqlFile($db, $file);
+        if ( $error )
         {
-          echo "<li>Database tables not installed.</li>\n";
-
-          $file = Kiki::getInstallPath(). "/db/core.sql";
-          echo "<li>Running install script <tt>$file</tt>:\n";
-
-          $error = Status::sourceSqlFile($db, $file);
-          if ( $error )
-            echo "<p>Please install manually.</p>\n";
-
+          echo "<p>Please upgrade manually.</p>\n";
           echo "</li>\n";
+          break;
         }
         else
-          echo "<li>Database connection failed. Please check your configuration (<tt>". Config::configFile(). "</tt>).</li>\n";
+        {
+          $db->query( "update config set value='$version' where `key`='dbVersion'" );
+          echo "</li>\n";
+        }
+      }
+      echo "</li>\n";
+    }
+  }
+  else
+  {
+    if ( Config::$dbUser )
+    {
+      if ( $db->connected() )
+      {
+        echo "<li>Database tables not installed.</li>\n";
+
+        $file = Kiki::getInstallPath(). "/db/core.sql";
+        echo "<li>Running install script <tt>$file</tt>:\n";
+
+        $error = Status::sourceSqlFile($db, $file);
+        if ( $error )
+          echo "<p>Please install manually.</p>\n";
+
+        echo "</li>\n";
       }
       else
-        echo "<li>Database not configured. Please create/edit <tt>". Config::configFile(). "</tt>, see <tt>config.php-sample</tt> for an example.</li>\n";
+        echo "<li>Database connection failed. Please check your configuration (<tt>". Config::configFile(). "</tt>).</li>\n";
     }
-
-    echo "</ul>\n";
+    else
+      echo "<li>Database not configured. Please create/edit <tt>". Config::configFile(). "</tt>, see <tt>config.php-sample</tt> for an example.</li>\n";
   }
 
-  if ( !$checkStatus )
-  {
-    echo "<p>\nPlease login as administrator.</p>\n";
-    
-    $template = new Template( 'forms/user-login' );
-    echo $template->fetch();
-  }
+  echo "</ul>\n";
 
   $this->content = ob_get_clean();
-?>
