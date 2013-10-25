@@ -39,7 +39,7 @@ class Config
 
 	public static $mailerQueue = false;
 
-	public static $mailSender = $_SERVER['SERVER_ADMIN'];
+	public static $mailSender = null;
 	public static $smtpHost = null;
 	public static $smtpPort = 25;
 	public static $smtpUser = null;
@@ -124,6 +124,8 @@ class Config
 	{
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
+
+		self::$mailSender = $_SERVER['SERVER_ADMIN'];
 
 		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 
