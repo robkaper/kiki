@@ -176,13 +176,19 @@ hr {
 	display: none;
 }
 
+
 .ui-dialog {
 	border: 1px solid #9c6;
 	border-radius: 5px;
 	background: #deb;
 	display: none;
-        font-size: 0.875em;
-	font-family: sans-serif;
+	font-family: 'Droid Sans', sans-serif;
+
+	min-width: 500px;
+}
+
+.ui-dialog-content {
+	min-width: 0;
 }
 
 .ui-dialog-titlebar {
@@ -199,8 +205,15 @@ hr {
 	padding: 0;
 }
 
+.ui-widget button {
+	font-family: 'Droid Sans', sans-serif;
+	font-size: 0.875em;
+	font-weight: bold;
+}
+
 .ui-button {
 }
+
 .ui-button-textonly .ui-button-text, .ui-button-text {
 	padding: 0;
 	margin: 0;
@@ -212,7 +225,7 @@ hr {
 	width: 75px;
 	height: 75px;
 	float: left;
-        margin: 0 10px 10px 0;
+	margin: 0 10px 10px 0;
 }
 
 .albumForm .ui-state-highlight {
@@ -397,7 +410,7 @@ button, a.button, .ui-dialog .ui-dialog-buttonpane button {
 button {
   height: 24px;
   line-height: 16px;
-  padding: 1px 0px 3px 0px;
+	// padding: 1px 0px 3px 0px;
 }
 
 .ui-dialog .ui-dialog-buttonpane button {

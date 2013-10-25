@@ -19,6 +19,7 @@
     {include 'buttons/user-login'}
   {/foreach}
  	{include 'buttons/user-login'}
+  {include 'buttons/user-newaccount'}
   </div>
 {/if}
 

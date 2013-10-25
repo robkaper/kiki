@@ -477,18 +477,20 @@ $( function() {
       resizable: false,
       modal: true,
       buttons: {
-        "Delete": function() {
-          $(this).dialog( "close" );
+//        "Delete": function() {
+//          $(this).dialog( "close" );
 
-          var json = { albumId: albumId, pictureId: pictureId };
+//          var json = { albumId: albumId, pictureId: pictureId };
 
-          $.post( kikiPrefix + '/json/album-remove-picture.php', json, function(data) {
-            $('#albumForm_' + data.albumId + ' #pictureFormItem_' + data.pictureId).remove();
-          } );
-        },
-        Close: function() {
-          $(this).dialog( "close" );
-        }
+//          $.post( kikiPrefix + '/json/album-remove-picture.php', json, function(data) {
+//            $('#albumForm_' + data.albumId + ' #pictureFormItem_' + data.pictureId).remove();
+//          } );
+//        },
+
+//        Close: function() {
+//          $(this).dialog( "close" );
+//        }
+
       }
     } );
 
