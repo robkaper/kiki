@@ -178,21 +178,27 @@ class Controller_Account extends Controller
 					$authToken = $user->getAuthToken();
 		     	$user->reset();
 
-  		    // FIXME: rjkcust, add validation
-  		    $from = "Rob Kaper <rob@robkaper.nl>";
-  		    $to = $email;
-  		    $email = new Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
+					if ( !isset(Config::$smtpHost) )
+					{
+						$errors[] = "Your account was created, but we could not send the verification mail. Please contact <strong>". Config::$mailSender. "</strong>.";
+					}
+					else
+					{
+	  		    $from = Config::$mailSender;
+	  		    $to = $email;
+	  		    $email = new Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
       
-    		  $msg = "Please verify your account:\n\n";
+  	  		  $msg = "Please verify your account:\n\n";
 
-					// Yes, send the actual auth token here. That's fine, because with
-					// access to that e-mail address people could gain access to the
-					// account anyway through the forget password mechanics.
-					$url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], $this->getBaseUri('verify'), $authToken );
-					$msg .= $url;
+						// Yes, send the actual auth token here. That's fine, because with
+						// access to that e-mail address people could gain access to the
+						// account anyway through the forget password mechanics.
+						$url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], $this->getBaseUri('verify'), $authToken );
+						$msg .= $url;
 
-	      	$email->setPlain( $msg );
-	      	Mailer::send($email);
+		      	$email->setPlain( $msg );
+		      	Mailer::send($email);
+					}
 
 					$template->assign( 'accountCreated', true );
 	    	}

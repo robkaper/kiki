@@ -5,8 +5,17 @@
 	{if $accountCreated}
 		<p>
 			A new account has been created.</p>
-		<p>
-			To activate your account, use the link in the e-mail just sent to <strong>{$kiki.post.email|escape}</strong>.</p>
+
+		{if $errors|count}
+			<ul>
+			{foreach $errors as $error}
+				<li>{$error}</li>
+			{/foreach}
+			</ul>
+		{else}
+			<p>
+				To activate your account, use the link in the e-mail just sent to <strong>{$kiki.post.email|escape}</strong>.</p>
+		{/if}
 	{else}
 		{if $errors|count}
 			<p>

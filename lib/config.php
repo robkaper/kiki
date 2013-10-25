@@ -39,6 +39,7 @@ class Config
 
 	public static $mailerQueue = false;
 
+	public static $mailSender = $_SERVER['SERVER_ADMIN'];
 	public static $smtpHost = null;
 	public static $smtpPort = 25;
 	public static $smtpUser = null;
