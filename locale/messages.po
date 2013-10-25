@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kiki\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-08 11:34+0200\n"
+"POT-Creation-Date: 2013-10-25 17:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,20 +25,12 @@ msgstr ""
 msgid "Social update"
 msgstr ""
 
-#: ../htdocs/account/login.php:4 ../htdocs/login/index.php:3 generated.php:14
-msgid "Login"
-msgstr ""
-
 #: ../htdocs/account/events/index.php:3
 msgid "Events"
 msgstr ""
 
 #: ../htdocs/account/events/index.php:44
 msgid "Create a new event"
-msgstr ""
-
-#: ../htdocs/account/index.php:4 generated.php:2
-msgid "Your Account"
 msgstr ""
 
 #: ../htdocs/account/pages/index.php:48
@@ -53,22 +45,6 @@ msgstr ""
 msgid "Create a new album"
 msgstr ""
 
-#: ../htdocs/account/create.php:3 generated.php:19
-msgid "Create account"
-msgstr ""
-
-#: ../htdocs/account/create.php:26
-msgid "You did not enter a valid e-mail address."
-msgstr ""
-
-#: ../htdocs/account/create.php:28
-msgid "Your password cannot be empty."
-msgstr ""
-
-#: ../htdocs/account/create.php:30
-msgid "The passwords entered did not match."
-msgstr ""
-
 #: ../htdocs/index.php:19
 msgid "Kiki Status"
 msgstr ""
@@ -81,9 +57,49 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#: ../lib/controller/kiki.php:147
+msgid "Error in Twitter configuration (TwitterOAuth path not set)."
+msgstr ""
+
+#: ../lib/controller/kiki.php:174
+msgid "Could not connect to Twitter. Try again later."
+msgstr ""
+
 #: ../lib/controller/pages.php:30
 #, php-format
 msgid "Index of %s"
+msgstr ""
+
+#: ../lib/controller/account.php:53 generated.php:2
+msgid "Your Account"
+msgstr ""
+
+#: ../lib/controller/account.php:65 generated.php:5 generated.php:19
+msgid "Login"
+msgstr ""
+
+#: ../lib/controller/account.php:72
+msgid "You are already logged in."
+msgstr ""
+
+#: ../lib/controller/account.php:124 generated.php:16 generated.php:24
+msgid "Create account"
+msgstr ""
+
+#: ../lib/controller/account.php:146
+msgid "You did not enter a valid e-mail address."
+msgstr ""
+
+#: ../lib/controller/account.php:148
+msgid "Your password cannot be empty."
+msgstr ""
+
+#: ../lib/controller/account.php:150
+msgid "The passwords entered did not match."
+msgstr ""
+
+#: ../lib/controller/account.php:232
+msgid "Verify account"
 msgstr ""
 
 #: generated.php:3
@@ -94,34 +110,46 @@ msgstr ""
 msgid "Latest articles"
 msgstr ""
 
-#: generated.php:5 generated.php:7 generated.php:8
+#: generated.php:6 generated.php:8 generated.php:9
 msgid "Likes"
 msgstr ""
 
-#: generated.php:6 generated.php:9
+#: generated.php:7 generated.php:10
 msgid "Comments"
 msgstr ""
 
-#: generated.php:10
+#: generated.php:11
 msgid "Read more"
 msgstr ""
 
-#: generated.php:11
+#: generated.php:12
 msgid "This section currently has no underlying content."
 msgstr ""
 
-#: generated.php:12 generated.php:15
+#: generated.php:13
+msgid "Connect with"
+msgstr ""
+
+#: generated.php:14
+msgid "Login with"
+msgstr ""
+
+#: generated.php:15
+msgid "Login with e-mail"
+msgstr ""
+
+#: generated.php:17 generated.php:20
 msgid "E-mail"
 msgstr ""
 
-#: generated.php:13 generated.php:16
+#: generated.php:18 generated.php:21
 msgid "Password"
 msgstr ""
 
-#: generated.php:17
+#: generated.php:22
 msgid "Verify password"
 msgstr ""
 
-#: generated.php:18
+#: generated.php:23
 msgid "Administrator password"
 msgstr ""
