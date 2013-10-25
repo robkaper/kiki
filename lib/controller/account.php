@@ -35,8 +35,12 @@ class Controller_Account extends Controller
 	{
 		$uri = $this->instanceId ? Router::getBaseUri('account', $this->instanceId) : Config::$kikiPrefix. "/account";
 		if ( !empty($action) )
-			$uri .= "/$action";
+		{
+			if ( $uri[strlen($uri)-1] != '/' )
+				$uri .= "/";
 
+			$uri .= $action;
+		}
 		return $uri;
 	}
 

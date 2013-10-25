@@ -88,7 +88,7 @@ class Controller
 			return false;
 		}
 
-		Log::debug( "found actionMethod: $actionMethod, remainder: $remainder" );
+		Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
 
 		// $this->status = 200;
 		$this->title = $actionMethod;

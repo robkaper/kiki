@@ -294,6 +294,14 @@ class Template
     if ( $input[2]=='/' )
       $this->ifDepth--;
 
+		if ( $this->ifDepth < 0 )
+		{
+			$error = "fatal error: unexpected {/if}";
+			Log::error($error);
+			echo $error;
+			exit;
+		}
+
     $output = "{". $input[1]. $this->ifDepth. $input[3]. "}". PHP_EOL;
 
     if ( $input[2]!='/' )

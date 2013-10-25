@@ -125,7 +125,7 @@ class Config
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
 
-		self::$mailSender = $_SERVER['SERVER_ADMIN'];
+		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
 
 		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 
