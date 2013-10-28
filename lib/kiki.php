@@ -6,6 +6,10 @@ class Kiki
 	private static $rootPath = null;
 
 	private static $db = null;
+
+	private static $memcache = null;
+	private static $cacheAvailable = false;
+
 	private static $user = null;
 
 	private static $templateData = null;
@@ -43,6 +47,26 @@ class Kiki
 	public static function setDb( &$db )
 	{
 		self::$db = $db;
+	}
+
+	public static function getMemcache()
+	{
+		if ( !isset(Config::$memcachedHost) ) 
+			return;
+
+		if ( !isset(self::$memcache) )
+		{
+			Log::beginTimer( "initMemcache" );
+			self::$memcache = new Memcache();
+
+			$cacheAvailable = self::$memcache->connect( Config::$memcachedHost, Config::$memcachedPort );
+			Log::endTimer( "initMemcache" );
+		}
+	}
+
+	public static function cacheAvailable()
+	{
+		return self::$cacheAvailable;
 	}
 
 	public static function getUser()

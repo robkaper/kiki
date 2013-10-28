@@ -116,7 +116,16 @@ class Database
 		}
 
 		Log::beginTimer('db');
-		$rs = mysql_query( $q, $this->dbh );
+
+		$cacheId = md5($q);
+		$rs = Kiki::cacheAvailable() ? $memcache->get($cacheId) : null;
+		if ( !$rs )
+		{
+			$rs = mysql_query( $q, $this->dbh );
+			if ( Kiki::cacheAvailable() )
+				$memcache->set($cacheId, $rs);
+		}
+
 		Log::endTimer('db');
 
 		if ( $rs === FALSE )

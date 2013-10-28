@@ -84,6 +84,9 @@
   $db = Kiki::getDb();
   Config::loadDbConfig($db);
 
+	// Memcache
+	$memache = Kiki::getMemcache();
+
   // User(s)
   // FIXME: is this where we want this..
   $q = "select id from users where admin=1"; // and verified=1

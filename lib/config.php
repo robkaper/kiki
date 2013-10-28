@@ -37,6 +37,9 @@ class Config
 	public static $dbPass = null;
 	public static $db = null;
 
+	public static $memcachedHost = null;
+	public static $memcachedPort = 11211;
+
 	public static $mailerQueue = false;
 
 	public static $mailSender = null;
