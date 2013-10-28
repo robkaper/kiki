@@ -155,4 +155,7 @@
 	if ( !$staticFile )
 	{
 	  Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "]" );
+
+		foreach( Log::getTimers() as $timer => $time )
+			Log::debug( "timer $timer: ". sprintf("%3.7f", $time) );
 	}

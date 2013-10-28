@@ -115,7 +115,10 @@ class Database
 				return null;
 		}
 
+		Log::beginTimer('db');
 		$rs = mysql_query( $q, $this->dbh );
+		Log::endTimer('db');
+
 		if ( $rs === FALSE )
 			Log::error( "no rs for query [$q]" );
 		return $rs;

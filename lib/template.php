@@ -164,6 +164,8 @@ class Template
 
   public function preparse()
   {
+		// Log::beginTimer( 'Template::preparse '. $this->template );
+
     $reIncludes = '~\{include \'([^\']+)\'\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
     $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
@@ -188,10 +190,14 @@ class Template
       $this->content = preg_replace_callback( $reConditions, array($this, 'preElse'), $this->content );
     }
     // echo "<h2>post preparse elses:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+    // Log::endTimer( 'Template::preparse '. $this->template );
   }
 
   public function parse()
   {
+		// Log::beginTimer( 'Template::parse '. $this->template );
+
     $reLegacy = '~<\?=?([^>]+)\?>~';
     $reConditions = '~\n?\{if ([^\}]+)\}\n??(.*)\n?\{\/if\}\n?~sU';
     $re = '~\{([^}]+)\}~';
@@ -215,6 +221,8 @@ class Template
 
     $this->content = preg_replace_callback( $re, array($this, 'replace'), $this->content );
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+		// Log::endTimer( 'Template::parse '. $this->template );
   }
 
   public function setCleanup( $cleanup ) { $this->cleanup = $cleanup; }
@@ -247,6 +255,8 @@ class Template
     if ( !$this->template )
       $this->template = 'pages/default';
 
+    // Log::beginTimer( "Template::content ". $this->template );
+
     // Don't load a template when setContent has been used.
     $content .= $this->content ? $this->content : file_get_contents($this->file($this->template)). PHP_EOL;
 
@@ -268,6 +278,9 @@ class Template
 
     // Log::debug( "done parsing" );
     // Log::debug( "content: ". $this->content );
+
+		// Log::endTimer( "Template::content ". $this->template );
+
     return $this->content;
   }
 

@@ -27,6 +27,16 @@ class Log
 	private static $mtime;
 
 	/**
+  * @var array with time spent per timer
+  */
+	private static $timers = array();
+
+	/**
+  * @var array with timestamps per timer
+  */
+	private static $timerMtimes = array();
+
+	/**
 	* @var queue array to store delayed log messages
 	*/
 	private static $queue;
@@ -120,6 +130,40 @@ class Log
 	public static function info( $msg )
 	{
 		self::debug( $msg );
+	}
+
+	public static function beginTimer( $timer )
+	{
+		if ( isset(self::$timerMtimes[$timer]) )
+		{
+			Log::error( "timer $timer already initialised" );
+			return;
+		}
+
+		self::$timerMtimes[$timer] = microtime(true);
+	}
+
+	public static function endTimer( $timer )
+	{
+		if ( !isset(self::$timerMtimes[$timer]) )
+		{
+			Log::error( "timer $timer not initialised" );
+			return;
+		}
+
+		$add = microtime(true) - self::$timerMtimes[$timer];
+
+		if ( !isset(self::$timers[$timer]) )
+			self::$timers[$timer] = 0;
+
+		self::$timers[$timer] += $add;
+
+		unset(self::$timerMtimes[$timer]);
+	}
+
+	public function getTimers()
+	{
+		return self::$timers;
 	}
 }
 
