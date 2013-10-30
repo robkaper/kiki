@@ -13,6 +13,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Album extends Object
 {
   public $title;
@@ -169,7 +171,7 @@ class Album extends Object
 
 		$urls = array();
 		foreach( $storageIds as $storageId )
-			$urls[] = Storage::url($storageId, 780, 440, true );
+			$urls[] = Storage::url($storageId, 724, 406, true );
 		// print_r( $urls );
 
 		return $urls;		
@@ -207,6 +209,7 @@ class Album extends Object
     {
       $pictureId = $picture['id'];
       $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
+			$q = $db->buildQuery( "INSERT INTO album_pictures (album_id, picture_id, sortorder) SELECT %d, %d, MAX(sortorder+1) FROM album_pictures WHERE album_id=%d", $this->id, $pictureId, $this->id );
       $this->db->query($q);
     }
 
@@ -229,7 +232,7 @@ class Album extends Object
    */
   public static function findPrevious( $albumId, $pictureId )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $qAlbumId = $db->escape( $albumId );
     $qPictureId = $db->escape( $pictureId );
     return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id>$qPictureId order by picture_id asc limit 1" );
@@ -245,7 +248,7 @@ class Album extends Object
    */
   public static function findNext( $albumId, $pictureId )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $qAlbumId = $db->escape( $albumId );
     $qPictureId = $db->escape( $pictureId );
     return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id<$qPictureId order by picture_id desc limit 1" );
@@ -267,7 +270,7 @@ class Album extends Object
    */
   public static function findByTitle( $title, $create=false )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     // Find
     $qTitle = $db->escape($title);
