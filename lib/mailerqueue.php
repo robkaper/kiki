@@ -22,7 +22,7 @@ class MailerQueue
 
   public static function store( &$email, $priority=10 )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $q = $db->buildQuery( "insert into mail_queue (msg_id, ctime, mtime, lock_id, priority, sent, subject, `from`, `to`, headers, body) values ('%s', now(), now(), null, %d, false, '%s', '%s', '%s', '%s', '%s')", $email->msgId(), $priority, $email->subject(), $email->from(), $email->to(), $email->headers(), $email->body() );
     $rs = $db->query($q);

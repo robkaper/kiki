@@ -1,11 +1,13 @@
 <?php
 
+namespace Kiki\Controller;
+
 class Controller_Album extends Controller
 {
   public function exec()
   {
-    $db = Kiki::getDb();
-    $user = Kiki::getUser();
+    $db = Core::getDb();
+    $user = Core::getUser();
 
     $path = explode( "/", $this->objectId );
  

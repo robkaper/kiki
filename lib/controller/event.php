@@ -1,11 +1,16 @@
 <?php
 
+namespace Kiki\Controller;
+
+use Kiki\Core;
+use Kiki\Event;
+
 class Controller_Event extends Controller
 {
   public function exec()
   {
-    $db = Kiki::getDb();
-    $user = Kiki::getUser();
+    $db = Core::getDb();
+    $user = Core::getUser();
 
     $q = $db->buildQuery( "select id from events where cname='%s'", $this->objectId );
     $eventId = $db->getSingleValue($q);

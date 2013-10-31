@@ -13,6 +13,8 @@
 
 // FIXME: move cname here, and add unique key sectionId/cname to db scheme
 
+namespace Kiki;
+
 abstract class Object
 {
   protected $db;
@@ -36,7 +38,7 @@ abstract class Object
 
   public function __construct( $id = 0, $objectId = 0 )
   {
-    $this->db = Kiki::getDb();
+    $this->db = Core::getDb();
 
     $this->id = $id;
     $this->objectId = $objectId;
@@ -149,7 +151,7 @@ abstract class Object
     $likes = array();
     foreach( $likeUsers as $externalId )
     {
-      $fbUser = Factory_User::getInstance( 'User_Facebook', $externalId );
+      $fbUser = User\Factory::getInstance( 'Facebook', $externalId );
       $likes[] = array(
         'userName' => $fbUser->name(),
         'serviceName' => 'Facebook',

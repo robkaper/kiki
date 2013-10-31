@@ -1,5 +1,7 @@
 <?php
 
+namespace Kiki;
+
 class Paging
 {
 	private $currentPage = 1;

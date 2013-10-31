@@ -6,8 +6,8 @@
  * paths.
  *
  * Example mappings:
- * type: pages <=> class: Controller_Pages <=> file: controller/pages.php
- * examples/helloworld => Controller_Examples_Helloworld <=> examples/helloword - Controller_Examples_Helloworld - controller/examples/helloworld.php
+ * type: pages <=> class: Controller\Pages <=> file: controller/pages.php
+ * type: examples/helloworld <=> class: Controller\Examples\Helloworld <=> file: controller/examples/helloworld.php
  *
  * @class ClassHelper
  * @package Kiki
@@ -16,18 +16,21 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class ClassHelper
 {
 	public static function classToType( $className )
 	{
-		return str_replace("_", "/", strtolower($className));
+		return str_replace("\\", "/", strtolower($className));
 	}
 
 
 	public static function classToFile( $className )
 	{
 		$partName = self::classToType($className);
-		$fileName = $partName. ".php";
+		$fileName = str_replace("\\", "/", $partName). ".php";
+		$fileName = preg_replace("#^kiki/#", "", $fileName );
 		return $fileName;
 	}
 
@@ -43,11 +46,13 @@ class ClassHelper
 
 	public static function typeToClass( $type )
 	{
+		// echo "typeToClass for $type". PHP_EOL;
 		$parts = explode( "/", $type );
 		foreach ( $parts as &$part )
 			$part = ucfirst($part);
 
-		$className = "Controller_". join( "_", $parts );
+		$className = "Controller\\". join( "\\", $parts );
+		// echo "returns className $className". PHP_EOL;
 		return $className;
 	}
 }

@@ -10,12 +10,14 @@
  * @license Released under the terms of the MIT license.
  */
 
-if ( isset(Config::$facebookSdkPath) )
+namespace Kiki\ConnectionService;
+
+if ( isset(\Kiki\Config::$facebookSdkPath) )
 {
-  require_once Config::$facebookSdkPath. "/src/facebook.php"; 
+  require_once \Kiki\Config::$facebookSdkPath. "/src/facebook.php"; 
 }
 
-class ConnectionService_Facebook
+class Facebook
 {
   private $api;
   private $enabled = false;
@@ -24,16 +26,16 @@ class ConnectionService_Facebook
   {
     if ( !class_exists('Facebook') )
 		{
-			if ( isset(Config::$facebookSdkPath) )
+			if ( isset(\Kiki\Config::$facebookSdkPath) )
 			{
-				Log::error( "could not instantiate Facebook class from ". Config::$facebookSdkPath. "/src/facebook.php" );
+				Log::error( "could not instantiate Facebook class from ". \Kiki\Config::$facebookSdkPath. "/src/facebook.php" );
 			}
       return;
 		}
 
-    $this->api = new Facebook( array(
-      'appId'  => Config::$facebookApp,
-      'secret' => Config::$facebookSecret,
+    $this->api = new \Facebook( array(
+      'appId'  => \Kiki\Config::$facebookApp,
+      'secret' => \Kiki\Config::$facebookSecret,
       'cookie' => false
       ) );
 

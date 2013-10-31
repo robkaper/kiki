@@ -15,6 +15,8 @@
 // fallback when gettext() is not installed so that dependency remains
 // optional.
 
+namespace Kiki;
+
 if ( !function_exists("_") )
 {
 	function _()
@@ -47,7 +49,7 @@ class I18n
     if ( !function_exists('bindtextdomain') || !function_exists('textdomain') )
       return;
 
-    bindtextdomain('messages', Kiki::getInstallPath(). '/locale/');
+    bindtextdomain('messages', Core::getInstallPath(). '/locale/');
     textdomain('messages');
   }
 

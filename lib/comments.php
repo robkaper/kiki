@@ -9,6 +9,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Comments
 {
 	public static function count( &$db, &$user, $objectId )
@@ -16,7 +18,6 @@ class Comments
 		$q = $db->buildQuery( "SELECT count(*) FROM comments WHERE in_reply_to_id=%d", $objectId );
 		return $db->getSingleValue($q);
 	}
-
 
   public static function show( &$db, &$user, $objectId, $jsonLast=null )
   {
@@ -35,13 +36,13 @@ class Comments
     {
       while( $o = $db->fetchObject($rs) )
       {
-        $commentAuthor = ObjectCache::getByType( 'User', $o->user_id ? $o->user_id : $o->local_user_id );
+        $commentAuthor = ObjectCache::getByType( '\Kiki\User', $o->user_id ? $o->user_id : $o->local_user_id );
         if ( $commentAuthor )
         {
           if ( $o->external_id )
           {
 						// HACK: should not always have to load this, but this is quicker than getStoredConnections for User 0
-						$connection = Factory_User::getInstance( $o->service, $o->external_id, 0 );
+						$connection = User\Factory::getInstance( $o->service, $o->external_id, 0 );
             // $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id, true);
 
             if ( $connection )

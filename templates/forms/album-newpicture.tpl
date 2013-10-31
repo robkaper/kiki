@@ -1,1 +1,1 @@
-<?= Form::ajaxFileUpload( "Upload image", "albumForm_". $this->id, $this->id ); ?>
+<?= \Kiki\Form::ajaxFileUpload( "Upload image", "albumForm_". $this->id, $this->id ); ?>

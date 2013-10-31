@@ -11,6 +11,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Event extends Object
 {
   private $start = null;
@@ -230,5 +232,3 @@ class Event extends Object
     return $content;
   }
 }
-
-?>

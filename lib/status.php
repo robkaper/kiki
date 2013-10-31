@@ -10,6 +10,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Status
 {
   /**
@@ -57,7 +59,7 @@ class Status
    */
   public static function dbVersion()
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = "select value from config where `key`='dbVersion'";
     return $db->getSingleValue($q);
   }

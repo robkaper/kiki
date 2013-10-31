@@ -5,6 +5,12 @@
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 
+	use Kiki\SocialUpdate;
+
+	use Kiki\Template;
+	use Kiki\Form;
+	use Kiki\Boilerplate;
+
   $this->title = _("Social update");
 
   if ( !$user->id() )

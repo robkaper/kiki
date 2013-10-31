@@ -1,4 +1,7 @@
+
 <?php
+
+	use Kiki\Album;
 
   $this->title = "Albums";
   

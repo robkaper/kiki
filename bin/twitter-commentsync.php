@@ -1,16 +1,22 @@
 #!/usr/bin/php -q
 <?php
 
+	use Kiki\Core;
+	use Kiki\Log;
+	use Kiki\ObjectCache;
+
+	use Kiki\User;
+
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-  $q = "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='User_Twitter'";
+  $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s' OR c.service='%s'", 'User_Twitter', 'Twitter', 'Kiki\\User\\Twitter' );
   $connectionIds = $db->getArray($q);
 
   $objectIds = array();
   $replyObjectIds = array();
 
-  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='User_Twitter'" );
+  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='User_Twitter' OR connections.service='Twitter'" );
   $rs = $db->query($q);
   while( $o = $db->fetchObject($rs) )
   {
@@ -34,8 +40,17 @@
       $objectIds[$o->external_id] = $o->object_id;
     }
 
-    $apiUser = Factory_User::getInstance( 'User_Twitter', $connectionId );
-    $rs = $apiUser->api()->get('application/rate_limit_status');
+    $apiUser = User\Factory::getInstance( 'Twitter', $connectionId );
+
+		try {
+	    $rs = $apiUser->api()->get('application/rate_limit_status');
+		}
+		catch (User\Exception $e) {
+			echo "API call failed for user ". print_r($apiUser, true );
+			Log::error( "API call failed for user ". print_r($apiUser, true) );
+			continue;
+		}
+
     if ( !isset($rs) )
     {
       echo "No valid result from Twitter (connection $connectionId).". PHP_EOL;
@@ -122,7 +137,7 @@
   {
     if ( ($storePublicationsAsComment && isset($objectIds[$tweet->id])) || isset($objectIds[$tweet->in_reply_to_status_id]) || isset($replyObjectIds[$tweet->in_reply_to_status_id]) )
     {
-      $twUser = Factory_User::getInstance( 'User_Twitter', $tweet->user->id );
+      $twUser = User\Factory::getInstance( 'Twitter', $tweet->user->id );
       $localUser = ObjectCache::getByType( 'User', $twUser->kikiUserId() );
 
       if ( !$twUser->id() )

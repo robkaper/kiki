@@ -14,6 +14,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Article extends Object
 {
   private $ipAddr = null;
@@ -154,7 +156,7 @@ class Article extends Object
     if ( $type=='pages' )
       $sections[0] = 'top-level page';
 
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = $db->buildQuery( "select id,title from sections where type='%s' order by title asc", $type );
     $rs = $db->query($q);
     if ( $rs && $db->numRows($rs) )
@@ -236,21 +238,21 @@ class Article extends Object
 
   private function getNext()
   {
-		$user = Kiki::getUser();
+		$user = Core::getUser();
     $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime>'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
   
   private function getPrev()
   {
-		$user = Kiki::getUser();
+		$user = Core::getUser();
     $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime<'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
 
   public function templateData()
   {
-    $uAuthor = ObjectCache::getByType( 'User', $this->userId );
+    $uAuthor = ObjectCache::getByType( '\Kiki\User', $this->userId );
 
     $prevArticle = $this->getPrev();
     $nextArticle = $this->getNext();
@@ -266,10 +268,10 @@ class Article extends Object
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
-			'comments' => Comments::count( $this->db, Kiki::getUser(), $this->objectId ),
+			'comments' => Comments::count( $this->db, Core::getUser(), $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, Kiki::getUser(), $this->objectId ),
-        'editform' => $this->form( Kiki::getUser(), true, 'articles' )
+        'comments' => Comments::show( $this->db, Core::getUser(), $this->objectId ),
+        'editform' => $this->form( Core::getUser(), true, 'articles' )
       )
     );
     

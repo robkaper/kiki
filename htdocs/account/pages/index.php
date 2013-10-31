@@ -1,5 +1,9 @@
 <?php
 
+	use Kiki\Article;
+	use Kiki\Album;
+	use Kiki\Section;
+
   $this->title = "Pages";
 
   if ( !$user->isAdmin() )

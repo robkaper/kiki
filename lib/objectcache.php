@@ -23,6 +23,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class ObjectCache
 {
   /**
@@ -60,6 +62,7 @@ class ObjectCache
     // Store by object type and Id
     if ( !isset(self::$objectsByType[$object->type()]) )
       self::$objectsByType[$object->type()] = array();
+
     self::$objectsByType[$object->type()][$object->id()] = $object;
   }
 
@@ -90,6 +93,8 @@ class ObjectCache
    */
   static public function getByType( $type, $id=0, $create=true )
   {
+		// Log::debug( "getByType $type id $id create $create" );
+
     if ( isset(self::$objectsByType[$type]) && isset(self::$objectsByType[$type][$id]) )
       return self::$objectsByType[$type][$id];
 
@@ -104,7 +109,7 @@ class ObjectCache
    */
   static private function getType( $objectId )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = $db->buildQuery( "select type from objects where object_id=%d", $objectId );
     return $db->getSingleValue($q);
   }
@@ -123,13 +128,14 @@ class ObjectCache
   {
     if ( !$type && $objectId )
       $type = self::getType( $objectId );
-    if ( !$type || !class_exists($type) )
+
+		$class = $type;
+
+    if ( !$type || !class_exists($class) )
       return null;
 
-    $object = new $type($id, $objectId);
+    $object = new $class($id, $objectId);
     self::store($object);
     return $object;
   }
 }
-
-?>

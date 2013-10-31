@@ -16,6 +16,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Config
 {
 	public static $debug = false;
@@ -142,14 +144,14 @@ class Config
 		// TODO: make this more dynamic, and store the actual services directly, not just by name
 		if ( isset(self::$facebookSdkPath) && isset(self::$facebookApp) )
 		{
-			$service = new ConnectionService_Facebook();
+			$service = new ConnectionService\Facebook();
 			if ( $service->enabled() )
 				self::$connectionServices[] = 'Facebook';
 		}
 
 		if ( isset(self::$twitterOAuthPath) && isset(self::$twitterApp) )
 		{
-			$service = new ConnectionService_Twitter();
+			$service = new ConnectionService\Twitter();
 			if ( $service->enabled() )
 				self::$connectionServices[] = 'Twitter';
 		}
@@ -159,11 +161,11 @@ class Config
 	* Provides the full path of the configuration file.
 	* @return string full path of the configuration file
 	* @todo Search multiple locations and don't assume config.php is in
-	*   Kiki::getRootPath().
+	*   Core::getRootPath().
 	*/
 	public static function configFile()
 	{
-		return Kiki::getRootPath(). "/config.php";
+		return Core::getRootPath(). "/config.php";
 	}
 
 	/**

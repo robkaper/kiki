@@ -10,6 +10,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class TinyUrl
 {
 
@@ -22,7 +24,7 @@ class TinyUrl
    */
   public static function lookup( $id )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = $db->buildQuery( "select url from tinyurl where id='%s'", $id );
     return $db->getSingleValue($q);
   }
@@ -49,7 +51,7 @@ class TinyUrl
    */
   public static function insert( $url )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = $db->buildQuery( "insert into tinyurl(url) values('%s')", $url );
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
@@ -66,7 +68,7 @@ class TinyUrl
    */
   public static function get( $url )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
     $q = $db->buildQuery( "select id from tinyurl where url='%s'", $url );
     $id = $db->getSingleValue($q);
     if ( !$id )

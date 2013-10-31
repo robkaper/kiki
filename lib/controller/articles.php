@@ -1,14 +1,22 @@
 <?php
 
-class Controller_Articles extends Controller
+namespace Kiki\Controller;
+
+use Kiki\Core;
+use Kiki\Template;
+
+use Kiki\Article;
+use Kiki\SocialUpdate;
+
+class Articles extends \Kiki\Controller
 {
   public function exec()
   {
-    $db = Kiki::getDb();
-    $user = Kiki::getUser();
+    $db = Core::getDb();
+    $user = Core::getUser();
 
     $template = Template::getInstance();
-    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
+    $template->append( 'stylesheets', \Kiki\Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND ((o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
     $articleIds = $db->getArray($q);
@@ -35,7 +43,7 @@ class Controller_Articles extends Controller
 				$update = new SocialUpdate( $updateId );
 
 				$this->status = 200;
-				$this->title  = Misc::textSummary( $update->body(), 50 );
+				$this->title  = \Kiki\Misc::textSummary( $update->body(), 50 );
 				$this->template = 'pages/default';
 
         $template = new Template( 'content/socialupdates-single' );
@@ -71,7 +79,7 @@ class Controller_Articles extends Controller
     }
     else
     {
-      $section = new Section( $this->instanceId );
+      $section = new \Kiki\Section( $this->instanceId );
 
 			$itemsPerPage = 25;
 			if ( !isset($currentPage) )
@@ -81,7 +89,7 @@ class Controller_Articles extends Controller
       $this->title = $section->title();
       $this->template = 'pages/default';
 
-      $this->content = MultiBanner::articles( $section->id() );
+      $this->content = null; // MultiBanner::articles( $section->id() );
 
       $article = new Article();
 			$update = new SocialUpdate();
@@ -89,7 +97,7 @@ class Controller_Articles extends Controller
 			$q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('socialupdate', 'article') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
 			$totalPosts = $db->getSingleValue($q);
 
-			$paging = new Paging();
+			$paging = new \Kiki\Paging();
 			$paging->setCurrentPage( $currentPage );
 			$paging->setItemsPerPage( $itemsPerPage );
 			$paging->setTotalItems( $totalPosts );

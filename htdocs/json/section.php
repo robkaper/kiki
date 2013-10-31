@@ -1,5 +1,9 @@
 <?php
 
+	use Kiki\Section;
+	use Kiki\Template;
+	use Kiki\Router;
+
 /**
  * Handles creation and modification requests (POSTS) for sections.
  *

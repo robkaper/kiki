@@ -9,6 +9,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Router
 {
   /**
@@ -39,7 +41,7 @@ class Router
    */
   public static function getBaseURIs( $type = null, $sort = false )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $baseUris = array();
 
@@ -72,7 +74,7 @@ class Router
    */
   public static function getBaseUri( $type, $id )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $q = $db->buildQuery( "select base_uri from sections where type='%s' and id=%d", $type, $id );
     return $db->getSingleValue($q);
@@ -80,7 +82,7 @@ class Router
 
   public static function findSection( $uri )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $baseUris = self::getBaseUris();
     if ( !count($baseUris) )
@@ -130,7 +132,7 @@ class Router
 
   public static function findPage( $uri, $sectionId = 0 )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $uri = trim( $uri, '/' );
 
@@ -181,7 +183,7 @@ class Router
 
   public static function storeBaseUri( $baseUri, $title, $type, $instanceId = 0 )
   {
-      $db = Kiki::getDb();
+      $db = Core::getDb();
 
       if ( $baseUri[0] != '/' )
         $baseUri = '/'. $baseUri;

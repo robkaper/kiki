@@ -14,6 +14,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Database
 {
 	private $host, $port, $user, $pass, $name;
@@ -118,11 +120,11 @@ class Database
 		Log::beginTimer('db');
 
 		$cacheId = md5($q);
-		$rs = Kiki::cacheAvailable() ? $memcache->get($cacheId) : null;
+		$rs = Core::cacheAvailable() ? $memcache->get($cacheId) : null;
 		if ( !$rs )
 		{
 			$rs = mysql_query( $q, $this->dbh );
-			if ( Kiki::cacheAvailable() )
+			if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);
 		}
 

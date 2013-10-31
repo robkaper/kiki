@@ -1,11 +1,13 @@
 <?php
 
-class Controller_Pages extends Controller
+namespace Kiki\Controller;
+
+class Pages extends \Kiki\Controller
 {
   public function exec()
   {
-    $db = Kiki::getDb();
-    $user = Kiki::getUser();
+    $db = \Kiki\Core::getDb();
+    $user = \Kiki\Core::getUser();
 
     if ( !$this->objectId )
       $this->objectId = 'index';
@@ -16,14 +18,14 @@ class Controller_Pages extends Controller
     // sections db...  the latter is faster, but then the base paths are not
     // properly normalised.  Both should be possible.
 
-    $this->subController = Router::findPage( $this->objectId, $this->instanceId );
+    $this->subController = \Kiki\Router::findPage( $this->objectId, $this->instanceId );
 		if ( $this->subController )
     {
       $this->subController->exec();
     }
     else if ( $this->objectId == 'index' )
     {
-      $section = new Section( $this->instanceId );
+      $section = new \Kiki\Section( $this->instanceId );
 
       $this->status = 200;
       $this->template = 'pages/autoindex';

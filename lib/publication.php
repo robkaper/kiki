@@ -2,6 +2,8 @@
 
 // FIXME: make sure all publications reference an object. This means all social updates must also have their own unique object id.
 
+namespace Kiki;
+
 class Publication
 {
   private $id = 0;
@@ -19,7 +21,7 @@ class Publication
 
   public function __construct()
   {
-    $this->db = Kiki::getDb();
+    $this->db = Core::getDb();
   }
 
   public function reset()
@@ -79,7 +81,7 @@ class Publication
   public function setBody( $body ) { $this->body = $body; }
   public function setResponse( $response ) { $this->response = $response; }
 
-  public function service() { return str_replace( "User_", "", $this->service ); }
+  public function service() { return $this->service; } // OLD pre namespace: return str_replace( "User_", "", $this->service ); }
   public function url()
   {
     switch( $this->service() )

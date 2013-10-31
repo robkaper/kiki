@@ -11,6 +11,8 @@
  * @todo refactor markup related methods to a Markup (or BBcode) class.
  */
 
+namespace Kiki;
+
 class Misc
 {
   /**

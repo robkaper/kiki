@@ -1,10 +1,12 @@
 #!/usr/bin/php -q
 <?php
 
+	namespace Kiki;
+
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-  $q = "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service= 'User_Facebook'";
+  $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s'", 'User_Facebook', 'Kiki\\User\\Facebook' );
   $connectionIds = $db->getArray($q);
 
   foreach( $connectionIds as $connectionId )
@@ -23,7 +25,7 @@
       $postIds[] = "'". $connectionId. "_". $o->external_id. "'";
     }
 
-    $apiUser = Factory_User::getInstance( 'User_Facebook', $connectionId );
+    $apiUser = User\Factory::getInstance( 'Facebook', $connectionId );
 
     // Split postIds into smaller sets, FQL has a maximum length and a failure results in OAuthException: An unknown error has occurred
     $postIds = array_chunk( $postIds, 100 );
@@ -42,7 +44,7 @@
   	    $externalId = $reply['id'];
   	    list( $postId, $partId ) = explode( "_", $externalId );
 
-  	    $fbUser = Factory_User::getInstance( 'User_Facebook', $reply['fromid'] );
+  	    $fbUser = User\Factory::getInstance( 'Facebook', $reply['fromid'] );
   	    $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
 
     	  if ( !$fbUser->id() )
@@ -91,7 +93,7 @@
 	      list( $uid, $postId ) = explode("_", $like['post_id']);
 	      $objectId = isset($objectIds[$postId]) ? $objectIds[$postId] : 0;
 
-	      $fbUser = Factory_User::getInstance( 'User_Facebook', $like['user_id'] );
+	      $fbUser = User\Factory::getInstance( 'User_Facebook', $like['user_id'] );
 	      $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
 
 	      if ( !$fbUser->id() )

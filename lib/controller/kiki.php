@@ -1,6 +1,11 @@
 <?php
 
-class Controller_Kiki extends Controller
+namespace Kiki\Controller;
+
+use Kiki\Core;
+use Kiki\Log;
+
+class Kiki extends \Kiki\Controller
 {
   public function exec()
   {
@@ -16,10 +21,10 @@ class Controller_Kiki extends Controller
 	  if ( !isset($parts['path']) )
 	    return false;
 
-		$kikiFile = Kiki::getInstallPath(). "/htdocs/". $parts['path'];
+		$kikiFile = Core::getInstallPath(). "/htdocs/". $parts['path'];
    	if ( file_exists($kikiFile) )
 	  {
-      $ext = Storage::getExtension($kikiFile);
+      $ext = \Kiki\Storage::getExtension($kikiFile);
       switch($ext)
       {
         case 'css':
@@ -28,7 +33,7 @@ class Controller_Kiki extends Controller
         case 'js':
         case 'png':
 
-          $this->altContentType = Storage::getMimeType($ext);
+          $this->altContentType = \Kiki\Storage::getMimeType($ext);
           $this->template = null;
           $this->status = 200;
           $this->content = file_get_contents($kikiFile);
@@ -43,8 +48,8 @@ class Controller_Kiki extends Controller
  	        $this->status = 200;
  	        $this->template = 'pages/default';
 
-   	      $user = Kiki::getUser();
-   	      $db = Kiki::getDb();
+   	      $user = Core::getUser();
+   	      $db = Core::getDb();
 
      	    include_once($kikiFile);
 
@@ -60,8 +65,8 @@ class Controller_Kiki extends Controller
    	        $this->status = 200;
    	        $this->template = 'pages/default';
 
-   	        $user = Kiki::getUser();
-   	        $db = Kiki::getDb();
+   	        $user = Core::getUser();
+   	        $db = Core::getDb();
 
    	        include_once($kikiFile. "index.php");
 
@@ -138,9 +143,9 @@ class Controller_Kiki extends Controller
 	 */
 	public function twitterRedirectAction()
 	{
-		if ( isset(Config::$twitterOAuthPath) )
+		if ( isset(\Kiki\Config::$twitterOAuthPath) )
 		{
-			require_once Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
+			require_once \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
 		}
 		else
 		{
@@ -150,7 +155,7 @@ class Controller_Kiki extends Controller
 		}
 
 		// Build TwitterOAuth object with app credentials.
-		$connection = new TwitterOAuth( Config::$twitterApp, Config::$twitterSecret );
+		$connection = new \TwitterOAuth( \Kiki\Config::$twitterApp, \Kiki\Config::$twitterSecret );
  
 		// Get temporary credentials. Even though a callback URL is specified
 		// here, it must be set in your Twitter application settings as well to
@@ -182,7 +187,11 @@ class Controller_Kiki extends Controller
 		$this->subController = new Controller_Account();
 		$this->subController->setObjectId( $objectId );
 
-		return $this->subController->exec();
+		$result = $this->subController->exec();
+		if ( !$result )
+			unset($this->subController);
+
+		return $result;
 	}
 
 }

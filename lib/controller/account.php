@@ -18,22 +18,32 @@
  * @license Released under the terms of the MIT license.
  */
 
-class Controller_Account extends Controller
+namespace Kiki\Controller;
+
+class Account extends \Kiki\Controller
 {
   public function exec()
 	{
 		if ( $this->actionHandler() )
 			return true;
 
-		$this->subController = new Controller_Kiki();
-    $this->subController->setObjectId( "account/". $this->objectId. "/" );
+		$this->subController = new Kiki();
+		// No trailing slash: for htdocs/foo/bar.php
+    $this->subController->setObjectId( "account/". $this->objectId );
+		$result = $this->subController->fallback();
+		if ( !$result )
+		{
+			// Trailing slash: for htdocs/foo/bar/index.php
+	    $this->subController->setObjectId( "account/". $this->objectId. "/" );
+			$result = $this->subController->fallback();
+		}
 
-    return $this->subController->fallback();
+		return $result;
 	}
 
 	public function getBaseUri( $action = null )
 	{
-		$uri = $this->instanceId ? Router::getBaseUri('account', $this->instanceId) : Config::$kikiPrefix. "/account";
+		$uri = $this->instanceId ? \Kiki\Router::getBaseUri('account', $this->instanceId) : \Kiki\Config::$kikiPrefix. "/account";
 		if ( !empty($action) )
 		{
 			if ( $uri[strlen($uri)-1] != '/' )
@@ -46,13 +56,13 @@ class Controller_Account extends Controller
 
 	public function indexAction()
 	{
-		$user = Kiki::getUser();
+		$user = \Kiki\Core::getUser();
 
 		$this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
 		$this->status = 200;
 		$this->title = _("Your Account");
 
-		$template = new Template( 'content/account-summary' );
+		$template = new \Kiki\Template( 'content/account-summary' );
 		$this->content = $template->fetch();
 
 		return true;
@@ -66,7 +76,7 @@ class Controller_Account extends Controller
 
 		$errors = array();
 
-		$user = Kiki::getUser();
+		$user = \Kiki\Core::getUser();
 
 		if ( $user->id() )
 			$errors[] = _("You are already logged in.");
@@ -87,7 +97,7 @@ class Controller_Account extends Controller
 				}
 				else
 				{
-					Kiki::setUser($user);
+					\Kiki\Core::setUser($user);
 					Auth::setCookie($userId);
 
 					$this->status = 303;
@@ -101,7 +111,7 @@ class Controller_Account extends Controller
 			}
 		}
 
-		$template = new Template( 'content/account-login' );
+		$template = new \Kiki\Template( 'content/account-login' );
 		$template->assign( 'errors', $errors );
 
 		$this->content = $template->fetch();
@@ -111,7 +121,7 @@ class Controller_Account extends Controller
 
 	public function logoutAction()
 	{
-		Auth::setCookie(0);
+		\Kiki\Auth::setCookie(0);
 
 		$this->status = 302;
 		$this->content = $this->getBaseUri('login');
@@ -123,10 +133,10 @@ class Controller_Account extends Controller
 	{
 	  $this->title = _("Create account");
 
-		$template = new Template('content/account-create');
+		$template = new \Kiki\Template('content/account-create');
 		$template->assign('postUrl', $this->getBaseUri('create') );
 
-		$user = Kiki::getUser();
+		$user = \Kiki\Core::getUser();
 
 		if ( $user->id() )
 		{
@@ -152,9 +162,9 @@ class Controller_Account extends Controller
 			$createAdmin = false;
 			if ( isset($adminPassword) )
     	{
-      	if ( isset(Config::$adminPassword) )
+      	if ( isset(\Kiki\Config::$adminPassword) )
       	{
-        	$createAdmin = ($adminPassword==Config::$adminPassword);
+        	$createAdmin = ($adminPassword==\Kiki\Config::$adminPassword);
         	if (!$createAdmin )
         	{
         	  $errors[] = "You did not enter the correct administration password. Try again, or leave it empty to create a regular account.";
@@ -182,13 +192,13 @@ class Controller_Account extends Controller
 					$authToken = $user->getAuthToken();
 		     	$user->reset();
 
-					if ( !isset(Config::$smtpHost) )
+					if ( !isset(\Kiki\Config::$smtpHost) )
 					{
-						$errors[] = "Your account was created, but we could not send the verification mail. Please contact <strong>". Config::$mailSender. "</strong>.";
+						$errors[] = "Your account was created, but we could not send the verification mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>.";
 					}
 					else
 					{
-	  		    $from = Config::$mailSender;
+	  		    $from = \Kiki\Config::$mailSender;
 	  		    $to = $email;
 	  		    $email = new Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
       
@@ -210,7 +220,7 @@ class Controller_Account extends Controller
 	  }
 	  else
 	  {
-	    $adminsExist = count(Config::$adminUsers);
+	    $adminsExist = count(\Kiki\Config::$adminUsers);
 
 			$template->assign( 'adminsExist', $adminsExist );
 	  }
@@ -231,12 +241,12 @@ class Controller_Account extends Controller
 		$this->template = 'pages/default';
 		$this->title = _("Verify account");
 
-		$template = new Template('content/account-verify');
+		$template = new \Kiki\Template('content/account-verify');
 
 		$errors = array();
 		$warnings = array();
 
-		$user = Kiki::getUser();
+		$user = \Kiki\Core::getUser();
 
 		$token = isset($_GET['token']) ? $_GET['token'] : null;
 		if ( empty($token) )
@@ -253,7 +263,7 @@ class Controller_Account extends Controller
 			}
 			else
 			{
-				$verifyUser = new User($verifyUserId);
+				$verifyUser = new \Kiki\User($verifyUserId);
 				$verifyUser->setIsVerified(true);
 				$verifyUser->save();
 
@@ -266,8 +276,8 @@ class Controller_Account extends Controller
 					Auth::setCookie( $verifyUser->id() );
 					$user = $verifyUser;
 
-					Kiki::setUser($verifyUser);
-					$mainTemplate = Template::getInstance();
+					\Kiki\Core::setUser($verifyUser);
+					$mainTemplate = \Kiki\Template::getInstance();
 					$mainTemplate->assign('user', $user->templateData() );
 				}
 			}

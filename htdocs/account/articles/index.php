@@ -1,5 +1,8 @@
 <?php
 
+	use Kiki\Article;
+	use Kiki\Album;
+
   $this->title = "Articles";
 
   if ( !$user->isAdmin() )

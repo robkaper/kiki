@@ -25,6 +25,8 @@
  * @todo extend to minimise mod_rewrite even further, or totally make mod_rewrite optional
  */
 
+	namespace Kiki;
+
   // Optimisation: pre-recognise built-in static files (skips i18n, database
   // and user handling in init.php)
   $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
@@ -145,7 +147,7 @@
 		// might need a technical solution beyond risk management due to their
 		// automatic generation.
 
-    $controller = new Controller_404();
+    $controller = new Controller\NotFound404();
 	}
 
   $controller->exec();

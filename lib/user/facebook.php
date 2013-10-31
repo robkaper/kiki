@@ -8,16 +8,18 @@
  * @license Released under the terms of the MIT license.
  */
 
-if ( isset(Config::$facebookSdkPath) )
+namespace Kiki\User;
+
+if ( isset(\Kiki\Config::$facebookSdkPath) )
 {
-  require_once Config::$facebookSdkPath. "/src/facebook.php"; 
+  require_once \Kiki\Config::$facebookSdkPath. "/src/facebook.php"; 
 }
  
-class User_Facebook extends User_External
+class Facebook extends External
 {
   private function enabled()
   {
-    return ( extension_loaded('curl') && class_exists('Facebook') && Config::$facebookApp );
+    return ( extension_loaded('curl') && class_exists('Facebook') && \Kiki\Config::$facebookApp );
   }
 
   protected function connect()
@@ -27,9 +29,9 @@ class User_Facebook extends User_External
 
     // TODO: use not the default Facebook class extending BaseFacebook, but
     // our own, so we can catch connection error exceptions.
-    $this->api = new Facebook( array(
-      'appId'  => Config::$facebookApp,
-      'secret' => Config::$facebookSecret,
+    $this->api = new \Facebook( array(
+      'appId'  => \Kiki\Config::$facebookApp,
+      'secret' => \Kiki\Config::$facebookSecret,
       'cookie' => true
       ) );
 
@@ -83,9 +85,9 @@ class User_Facebook extends User_External
       $this->externalId = $this->api()->getUser();
       $this->token = $this->api()->getAccessToken();
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
 
     return $this->externalId;
@@ -103,7 +105,7 @@ class User_Facebook extends User_External
   {
     $args = array();
 
-    $cookieId = "fbs_". Config::$facebookApp;
+    $cookieId = "fbs_". \Kiki\Config::$facebookApp;
     if ( isset($_COOKIE[$cookieId]) )
       parse_str( trim($_COOKIE[$cookieId], '\\"'), $args );\
 
@@ -114,7 +116,7 @@ class User_Facebook extends User_External
       if ( $key != 'sig' )
         $payload .= $key. '='. $value;
 
-    if ( !isset($args['sig']) || md5($payload. Config::$facebookSecret) != $args['sig'] )
+    if ( !isset($args['sig']) || md5($payload. \Kiki\Config::$facebookSecret) != $args['sig'] )
       return null;
 
     return $args;
@@ -129,9 +131,9 @@ class User_Facebook extends User_External
     {
       $data = $api ? $api->api('/'. $this->externalId) : $this->api()->api('/me');
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
     catch ( FacebookApiException $e )
     {
@@ -192,8 +194,8 @@ class User_Facebook extends User_External
 				'key' => $key,
 				'description' => $description,
 				'value' => $this->hasPerm($key),
-				'revokeUrl' => Config::$kikiPrefix. "/facebookRevoke?id=". $this->id. "&permission=". $key,
-				'grantUrl' => Config::$kikiPrefix. "/facebookGrant?id=". $this->id. "&permission=". $key
+				'revokeUrl' => \Kiki\Config::$kikiPrefix. "/facebookRevoke?id=". $this->id. "&permission=". $key,
+				'grantUrl' => \Kiki\Config::$kikiPrefix. "/facebookGrant?id=". $this->id. "&permission=". $key
 			);
 		}		
 
@@ -228,7 +230,7 @@ class User_Facebook extends User_External
 
     Log::debug( "attachment: ". print_r( $attachment, true ) );
 
-    $publication = new Publication();
+    $publication = new \Kiki\Publication();
     $publication->setObjectId( $objectId );
     $publication->setConnectionId( $this->externalId );
     $publication->setBody( serialize($attachment) );
@@ -237,9 +239,9 @@ class User_Facebook extends User_External
     {
       $fbRs = $this->api()->api('/me/feed', 'post', $attachment);
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
     catch ( FacebookApiException $e )
     {
@@ -278,7 +280,7 @@ class User_Facebook extends User_External
     $storageId = $article->topImage();
 
     // 500x500 cropped is good enough for Facebook
-    $picture = $storageId ? Storage::url( $storageId, 500, 500, true ) : Config::$siteLogo;
+    $picture = $storageId ? Storage::url( $storageId, 500, 500, true ) : \Kiki\Config::$siteLogo;
 
     $result = $this->post( $article->objectId(), $msg, $link, $title, $caption, $description, $picture );
     return $result;
@@ -416,9 +418,9 @@ class User_Facebook extends User_External
       // TODO: support pages (page Id instead of "me")
       $rs = $this->api()->api('me/events', 'post', $attachment);
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
     catch ( FacebookApiException $e )
     {
@@ -485,9 +487,9 @@ class User_Facebook extends User_External
       $value = $this->api()->api( array( 'method' => 'users.hasapppermission', 'ext_perm' => $perm ) );
 			Log::debug( "hasPerm $perm: $value" );
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
     catch( FacebookApiException $e )
     {
@@ -499,9 +501,9 @@ class User_Facebook extends User_External
 			$permissions = $this->api()->api( '/me/permissions' );
 			Log::debug ( print_r( $permissions, true ) );
 		}
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
     catch( FacebookApiException $e )
     {
@@ -539,9 +541,9 @@ class User_Facebook extends User_External
     {
       $fbRs = $this->api()->api( "/me/permissions/$perm", $method = 'DELETE' );
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      Log::error( "Exception: $e" );
     }
 
     // Remove permission from database
@@ -553,7 +555,7 @@ class User_Facebook extends User_External
       get_class($this), $this->externalId );
     $this->db->query($q);
 
-    $cookieId = "fbs_". Config::$facebookApp;
+    $cookieId = "fbs_". \Kiki\Config::$facebookApp;
     setcookie( $cookieId, "", time()-3600, "/", $_SERVER['SERVER_NAME'] );
   }
 

@@ -1,18 +1,23 @@
 <?php
 
-if ( isset(Config::$twitterOAuthPath) )
+namespace Kiki\User;
+
+use Kiki\Log;
+
+if ( isset(\Kiki\Config::$twitterOAuthPath) )
 {
-  require_once Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
+  require_once \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
 }
 
-class User_Twitter extends User_External
+class Twitter extends External
 {
   private $oAuthToken = null;
   // private $oAuthVerifier = null;
 
   private function enabled()
   {
-    return ( class_exists('TwitterOAuth') && Config::$twitterApp );
+		return class_exists('\TwitterOAuth');
+
   }
 
   protected function connect()
@@ -24,7 +29,7 @@ class User_Twitter extends User_External
       return;
 
     // Create TwitteroAuth object with app key/secret and token key/secret from default phase
-    $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
+    $this->api = new \TwitterOAuth(\Kiki\Config::$twitterApp, \Kiki\Config::$twitterSecret, $this->token, $this->secret);
 
 		// Use 1.1 API (now that 1.0 is deprecated)
 		$this->api->host = "https://api.twitter.com/1.1/";
@@ -56,7 +61,7 @@ class User_Twitter extends User_External
       
     if ( $_SESSION['oauth_token'] !== $_REQUEST['oauth_token'] )
     {
-      Log::error( "SNH: twitter oauth token mismatch" );
+      \Kiki\Log::error( "SNH: twitter oauth token mismatch" );
       return 0;
     }
 
@@ -65,25 +70,24 @@ class User_Twitter extends User_External
     unset($_SESSION['oauth_token']);
     unset($_SESSION['oauth_token_secret']);
 
-    Log::debug( "connecting twitter api with session token and secret" );
-    $this->api = new TwitterOAuth(Config::$twitterApp, Config::$twitterSecret, $this->token, $this->secret);
+		$this->connect();
 
-    Log::debug( "getting access token and secret from request verifier ". $_REQUEST['oauth_verifier'] );
+    \Kiki\Log::debug( "getting access token and secret from request verifier ". $_REQUEST['oauth_verifier'] );
     $this->oAuthToken = $this->api->getAccessToken( $_REQUEST['oauth_verifier'] );
     if ( !$this->oAuthToken )
       return 0;
 
-    Log::debug( "oAuthToken: ". print_r($this->oAuthToken, true ) );
+    \Kiki\Log::debug( "oAuthToken: ". print_r($this->oAuthToken, true ) );
     $this->token = $this->oAuthToken['oauth_token'];
     $this->secret = $this->oAuthToken['oauth_token_secret'];
 
-    Log::debug( "this->token: $this->token" );
+    \Kiki\Log::debug( "this->token: $this->token" );
     return $this->oAuthToken['user_id'];
   }
 
   public function verifyToken()
   {
-    $apiToken = $this->api()->getAccessToken();
+    $apiToken = $this->api()->getAccessToken( isset($_REQUEST['oauth_verifier']) ? $_REQUEST['oauth_verifier'] : null );
     if ( isset($apiToken['oauth_token']) && $apiToken['oauth_token'] != $this->token )
       $this->token = $apiToken['oauth_token'];
   }
@@ -93,7 +97,7 @@ class User_Twitter extends User_External
     if ( array_key_exists( 'twitter_anywhere_identity', $_COOKIE ) )
     {
       list( $id, $sig ) = explode( ":", $_COOKIE['twitter_anywhere_identity'] );
-      $hexDigest = sha1($id. Config::$twitterSecret);
+      $hexDigest = sha1($id. \Kiki\Config::$twitterSecret);
       $valid = ($sig == $hexDigest);
       return $valid ? $id : 0;
     }
@@ -104,24 +108,32 @@ class User_Twitter extends User_External
   {
 		$data = null;
 
+		if (!$this->api->host)
+			$this->connect();
+
     try
     {
-      $data = $this->api()->get('account/verify_credentials');
+      $data = $this->api()->get( 'users/lookup', array( "user_id" => $this->externalId ) );
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      \Kiki\Log::error( "Exception: $e" );
     }
 
     if ( empty($data) )
     {
-      Log::debug( "failed, no data" );
+      \Kiki\Log::debug( "failed, no data" );
       return;
     }
+		elseif( isset($data['errors']) )
+		{
+      \Kiki\Log::debug( "failed, errors: ". print_r($data['errors'],true) );
+      return;
+		}
 
-    $this->name = $data->name;
-    $this->screenName = $data->screen_name;
-    $this->picture = $data->profile_image_url;
+    $this->name = $data[0]->name;
+    $this->screenName = $data[0]->screen_name;
+    $this->picture = $data[0]->profile_image_url;
   }
 
   public function getSubAccounts()
@@ -171,17 +183,17 @@ class User_Twitter extends User_External
     }
 */
 
-    Log::debug( "msg: $msg" );
+    \Kiki\Log::debug( "msg: $msg" );
     try
     {
       $twRs = $this->api()->post( 'statuses/update', array( 'status' => $msg ) );
     }
-    catch ( UserApiException $e )
+    catch ( Exception $e )
     {
-      Log::error( "UserApiException: $e" );
+      \Kiki\Log::error( "Exception: $e" );
     }
 
-    $publication = new Publication();
+    $publication = new \Kiki\Publication();
     $publication->setObjectId( $objectId );
     $publication->setConnectionId( $this->externalId );
     $publication->setBody( $msg );
@@ -198,7 +210,7 @@ class User_Twitter extends User_External
     if ( isset($twRs->error) )
     {
       $result->error = $twRs->error;
-      Log::debug( "twPost error: $result->error" );
+      \Kiki\Log::debug( "twPost error: $result->error" );
     }
     else
     {
@@ -243,7 +255,7 @@ class User_Twitter extends User_External
 		// TODO: (also?) store publication for individual pictures
 		$rs = $this->post( $album->objectId(), $msg );
 
-		Log::debug(	print_r($rs,true) );
+		\Kiki\Log::debug(	print_r($rs,true) );
 
 		return $rs;
 
@@ -251,7 +263,7 @@ class User_Twitter extends User_External
 
   public function postEvent( &$event )
   {
-    $tinyUrl = TinyUrl::get( $event->url() );
+    $tinyUrl = \Kiki\TinyUrl::get( $event->url() );
     $msg = sprintf( "%s %s %s", $event->title(), $tinyUrl, $event->hashtags() );
     $result = $this->post( $event->objectId(), $msg );
     return $result;

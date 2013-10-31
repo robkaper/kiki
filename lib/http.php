@@ -8,6 +8,8 @@
  * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
+
+namespace Kiki;
  
 class Http
 {

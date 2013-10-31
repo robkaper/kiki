@@ -1,17 +1,19 @@
 <?php
 
-class Controller_Page extends Controller
+namespace Kiki\Controller;
+
+class Page extends \Kiki\Controller
 {
   public function exec()
   {
-    $db = Kiki::getDb();
-    $user = Kiki::getUser();
+    $db = \Kiki\Core::getDb();
+    $user = \Kiki\Core::getUser();
 
-    $article = new Article( $this->instanceId );
+    $article = new \Kiki\Article( $this->instanceId );
     $this->title = $article->title();
 
-    $template = Template::getInstance();
-    $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
+    $template = \Kiki\Template::getInstance();
+    $template->append( 'stylesheets', \Kiki\Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $article->visible() || $article->userId() == $user->id() )
     {
@@ -19,7 +21,7 @@ class Controller_Page extends Controller
       $this->status = 200;
       $this->template = 'pages/default';
 
-      $template = new Template( 'content/pages-single' );
+      $template = new \Kiki\Template( 'content/pages-single' );
       $template->assign( 'page', $article->templateData() );
 
       $this->content = $template->fetch();

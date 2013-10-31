@@ -27,7 +27,7 @@ abstract class Daemon
 
   public function __construct( $name, $logFacility=LOG_DAEMON )
   {
-    $this->db = Kiki::getDb();
+    $this->db = Core::getDb();
     
     $this->name = $name;
     $this->logFacility = $logFacility;

@@ -9,6 +9,11 @@
  * @license Released under the terms of the MIT license.
  */
 
+	use Kiki\Article;
+	use Kiki\Album;
+
+	use Kiki\Router;
+
 //  require_once "../../lib/init.php";
 
   if ($_POST)

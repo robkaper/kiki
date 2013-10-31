@@ -16,6 +16,8 @@
  * @license Released under the terms of the MIT license.
 */
 
+namespace Kiki;
+
 class Boilerplate
 {
   public static function address()
@@ -84,7 +86,7 @@ class Boilerplate
     }
     $paths = explode( "/", $context );
 
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $qLevel = $db->escape( $level );
     $qContext = $db->escape( $context );

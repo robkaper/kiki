@@ -10,12 +10,14 @@
  * @license Released under the terms of the MIT license.
  */
 
-if ( isset(Config::$twitterOAuthPath) )
+namespace Kiki\ConnectionService;
+
+if ( isset(\Kiki\Config::$twitterOAuthPath) )
 {
-  require_once Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php"; 
+  require_once \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php"; 
 }
 
-class ConnectionService_Twitter
+class Twitter
 {
   private $enabled = false;
 
@@ -23,9 +25,9 @@ class ConnectionService_Twitter
   {
     if ( !class_exists('TwitterOAuth') )
 		{
-			if ( isset(Config::$twitterOAuthPath) )
+			if ( isset(\Kiki\Config::$twitterOAuthPath) )
 			{
-				Log::error( "could not instantiate TwitterOAuth class from ". Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php" );
+				Log::error( "could not instantiate TwitterOAuth class from ". \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php" );
 			}
       return;
 		}
@@ -42,7 +44,7 @@ class ConnectionService_Twitter
 
   public function loginUrl()
   {
-    return Config::$kikiPrefix. "/twitterRedirect";
+    return \Kiki\Config::$kikiPrefix. "/twitterRedirect";
   }
 }
 

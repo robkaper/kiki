@@ -9,6 +9,9 @@
  * @license Released under the terms of the MIT license.
  */
 
+	use Kiki\Storage;
+	use Kiki\Album;
+
   $tmpFile = $_FILES['attachment']['tmp_name'];
   $name = $_FILES['attachment']['name'];
   $size = $_FILES['attachment']['size'];

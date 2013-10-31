@@ -51,6 +51,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Template
 {
   private static $instance;
@@ -70,11 +72,11 @@ class Template
 
   public function __construct( $template = null )
   {
-    $this->db = Kiki::getDb();
+    $this->db = Core::getDb();
 
     $this->template = $template;
 
-		$data = Kiki::getTemplateData();
+		$data = Core::getTemplateData();
 
 		// @deprecated Assign into global namespace. For backwards compatibility
 		// with <= 0.0.32, when the namespace kiki was introduced and populated
@@ -122,12 +124,12 @@ class Template
   public static function file( $template )
   {
     // Try site-specific version of template
-    $file = Kiki::getRootPath(). '/templates/'. $template. '.tpl';
+    $file = Core::getRootPath(). '/templates/'. $template. '.tpl';
     if ( file_exists($file) )
       return $file;
 
     // Fallback to Kiki base version of template
-    return Kiki::getInstallPath(). '/templates/'. $template. '.tpl';
+    return Core::getInstallPath(). '/templates/'. $template. '.tpl';
   }
 
   public function load( $template )
@@ -205,9 +207,12 @@ class Template
     $this->content = preg_replace_callback( $reLegacy, array($this, 'legacy'), $this->content );
     // echo "<h2>post parse/legacy:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
+		// echo "<hr>loop depth: ". print_r($this->maxLoopDepth,true);
+
     for( $i=0; $i<=$this->maxLoopDepth; $i++ )
     {
       $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
+			// echo "<hr>reLoops: ". print_r($reLoops,true);
       $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
     }
     // echo "<h2>post parse/loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -378,44 +383,88 @@ class Template
   {
     // Log::debug( print_r( $input, true ) );
 
-    $array = substr( $input[1], 1 );
+		// echo "<hr>loops, input: ". print_r($input,true);
+
+		$array = substr( $input[1], 1 );
     $named = substr( $input[2], 1 );
 
+		// echo "<hr>array: $array, named: $named";
     $content = null;
 
     if ( isset($this->data[$array]) && is_array($this->data[$array]) )
+		{
       $data = $this->data[$array];
+			// echo 1;
+		}
     else
     {
+			// echo 2;
       $parts = explode(".", $array);
       $data = $this->data;
       foreach( $parts as $part )
       {
+			// echo 3;
+				//echo "<br>part: [$part]";
+				// Make data array unassociative if part is numeric
+				$data = is_numeric($part) ? array_values($data) : $data;
         if ( isset($data[$part]) && is_array($data[$part]) )
+				{
+			// echo 4;
+					// echo "<br>data[$part] is array: ". print_r($data[$part],true);
           $data = $data[$part];
+				}
         else
+				{
+					// echo "<br>part [$part] not set in array: ". print_r($data,true);
 					unset($data);
+			// echo 5;
+				}
       }
+
+			// echo 6;
 
       if ( !isset($data) )
         return $content;
     }
 
+		// echo "<hr>data: ". print_r($data,true);
+		// echo 7;
+
 		$i=0;
-    foreach( $data as $key => $$named )
+
+		foreach( $data as $key => $$named )
     {
+			// echo 8;
+			if (!ctype_alpha($key)) $key = $i;
+
+			// echo "<hr>value of key $key, named $named: ". print_r($$named,true);
+			// echo "<hr>input[3]". $input[3];
+			$tmp = $input[3];	
+		
       // Substitute the full key path for the local alias in variables, conditions and loops
+
       $pattern = "~\{((if|foreach)\d\s\!?)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
+			//echo "<hr>pattern: $pattern";
+			//echo "<hr>replace". $replace;
 
-      $tmp = preg_replace( $pattern, $replace, $input[3] );
+      $tmp = preg_replace( $pattern, $replace, $tmp );
+			//echo "<hr>tmp: ". $tmp;
 
       $pattern = "~\{((if|foreach)\d\s)?\\\$${array}\.${key}\.i\}~";
-			// Log::debug( "pattern $i: $pattern" );
       $replace = "{\${1}\"". $key. "\"\\3}";
+			// Log::debug( "pattern $i: $pattern" );
 			// Log::debug( "replace $i: $replace" );
+			//echo "<hr>pattern: $pattern";
+			//echo "<hr>replace". $replace;
 
-      $content .= preg_replace( $pattern, $replace, $tmp );
+      $tmp = preg_replace( $pattern, $replace, $tmp );
+			//echo "<hr>tmp: ". $tmp;
+
+
+			$content .= $tmp;
+
+			// echo "<hr>content: ". $content;
 			$i++;
     }
 
@@ -549,18 +598,27 @@ class Template
       list( $var, $mods ) = array( $var, null );
 
     // Log::debug( "replace $var" );
+		// echo "<hr>replace var $var";
 
     // Loop through the array and store a flattened value. Could possibly be
     // done in normalise.
     if ( !array_key_exists( $var, $this->data ) )
     {
+			// echo "not exist in flat structure";
       $parts = explode( ".", $var );
       $container = $this->data;
       $value = null;
       while( ( $part = array_shift($parts) ) !== null )
       {
+				if(is_numeric($part))
+					$container = array_values($container);
+				if (is_object($container))
+					$container = (array)$container;
+				// echo "handling part $part type ". gettype($container). ":". print_r($container,true);
+
         if ( !is_array($container) || !isset($container[$part]) )
         {
+					// echo "return null";
           // Log::debug( "return null" );
           return null;
         }
@@ -579,6 +637,7 @@ class Template
 		}
 
     // Log::debug( "return modify $var -> ". $this->data[$var] );
+		// echo "return modify this->data[$var] (". $this->data[$var] . ")";
     return $this->modify( $this->data[$var], $mods );
   }
 }

@@ -1,6 +1,11 @@
 <?php
 
+	use Kiki\Core;
+
   $this->title = "Purify structure";
+
+	$user = Core::getUser();
+	$db = Core::getDb();
 
   if ( !$user->isAdmin() )
   {
@@ -15,10 +20,10 @@
   echo "<ul>";
 
   // Delete generated thumbnails from cache
-  echo "<li>Delete generated thumbnails from cache...";
+  $dir = Core::getRootPath(). "/storage/";
+  echo "<li>Delete generated thumbnails from cache $dir ...";
   $deleteCount = 0;
   $deleteSize = 0;
-  $dir = Kiki::getRootPath(). "/storage/";
   $iterator = new DirectoryIterator($dir);
   foreach ($iterator as $fileinfo)
   {
@@ -106,7 +111,7 @@
   $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
   $deleteCount = 0;
   $deleteSize = 0;
-  $dir = Kiki::getRootPath(). "/storage/";
+  $dir = Core::getRootPath(). "/storage/";
   $iterator = new DirectoryIterator($dir);
   foreach ($iterator as $fileinfo)
   {

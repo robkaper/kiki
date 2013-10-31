@@ -9,6 +9,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Log
 {
 	/**
@@ -88,7 +90,7 @@ class Log
 		$location = basename($trace[0]['file']). ':'. $trace[0]['line'];
 
 		$caller = array_shift($trace);
-		while( isset($caller['class']) && $caller['class'] == 'Log' )
+		while( isset($caller['class']) && $caller['class'] == 'Kiki\Log' )
 			$caller = array_shift($trace);
 
 		if ( isset($caller['class']) )
@@ -105,7 +107,7 @@ class Log
 
 	private static function write()
 	{
-		$logFile = Kiki::getRootPath(). "/debug.txt";
+		$logFile = Core::getRootPath(). "/debug.txt";
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{
@@ -166,5 +168,3 @@ class Log
 		return self::$timers;
 	}
 }
-
-?>

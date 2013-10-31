@@ -11,6 +11,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Controller
 {
   protected $instanceId = 0;
@@ -35,7 +37,7 @@ class Controller
 
   public static function factory($type)
   {
-    $className = ClassHelper::typeToClass($type);
+    $className = __NAMESPACE__. "\\". ClassHelper::typeToClass($type);
 
 		if ( !class_exists($className) )
 		{
@@ -84,9 +86,7 @@ class Controller
 		}
 
 		if ( !method_exists($this, $actionMethod) )
-		{
 			return false;
-		}
 
 		Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
 

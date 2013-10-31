@@ -1,5 +1,8 @@
 <?php
 
+	use Kiki\Event;
+	use Kiki\Album;
+
   $this->title = _("Events");
 
   if ( !$user->isAdmin() )

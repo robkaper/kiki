@@ -13,9 +13,13 @@
  * @license Released under the terms of the MIT license.
  */
 
-class UserApiException extends Exception {}
+namespace Kiki\User;
+
+use Kiki\Log;
+
+class Exception extends \Exception {}
  
-abstract class User_External
+abstract class External
 {
   protected $db;
 
@@ -40,7 +44,7 @@ abstract class User_External
 
   public function __construct( $id=0, $kikiUserId = 0 )
   {
-    $this->db = Kiki::getDb();	
+    $this->db = \Kiki\Core::getDb();	
 
     if ( $this->externalId = $id )
     {
@@ -78,7 +82,7 @@ abstract class User_External
 
     if ( !$this->api )
     {
-      throw new UserApiException( 'External user API for '. $this->serviceName(). ' called but not available' );
+      throw new Exception( 'External user API for '. $this->serviceName(). ' called but not available' );
     }
 
     return $this->api;
@@ -96,7 +100,8 @@ abstract class User_External
   
   public function serviceName()
   {
-    return preg_replace( "/^User_/", "", get_class($this) );
+		return end( explode( "\\", get_class($this) ) );
+    // return preg_replace( "/^". addslashes(__NAMESPACE__. "\\"). "/", "", get_class($this) );
   }
   
   public function uniqId()
@@ -136,7 +141,11 @@ abstract class User_External
   {
     $this->kikiUserIds = array();
 
-    $q = $this->db->buildQuery( "select user_id from connections where service='%s' and external_id='%s'", get_class($this), $this->externalId );
+		// TODO: remove backwards compatibility in 1.0
+		$class = get_class($this);
+		$oldClass = str_replace("Kiki\\User\\", "User_", $class);
+
+    $q = $this->db->buildQuery( "SELECT user_id FROM connections WHERE (service='%s' OR service='%s') AND external_id='%s'", $oldClass, $class, $this->externalId );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numrows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -169,10 +178,14 @@ abstract class User_External
 
   private function load( $kikiUserId = 0 )
   {
+		// TODO: remove backwards compatibility in 1.0
+		$class = get_class($this);
+		$oldClass = str_replace("Kiki\\User\\", "User_", $class);
+
     if ( $kikiUserId )
-      $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d and user_id=%d", get_class($this), $this->externalId, $kikiUserId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE (service='%s' OR service='%s') AND external_id=%d AND user_id=%d", $oldClass, $class, $this->externalId, $kikiUserId );
     else
-      $q = $this->db->buildQuery( "select id, token, secret, name, screenname, picture from connections where service='%s' and external_id=%d", get_class($this), $this->externalId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE (service='%s' OR service='%s') AND external_id=%d", $oldClass, $class, $this->externalId );
     
     $o = $this->db->getSingle($q);
     if ( !$o )

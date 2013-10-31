@@ -20,6 +20,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Form
 {
   public static function open( $id=null, $action=null, $method='POST', $class=null, $enctype=null, $target=null )
@@ -160,7 +162,7 @@ $( function() {
 
   public static function albumImage( $id, $label, $albumId, $selected=0 )
   {
-    $db = Kiki::getDb();
+    $db = Core::getDb();
 
     $template = new Template('forms/album-selectimage');
 

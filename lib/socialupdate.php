@@ -1,5 +1,7 @@
 <?php
 
+namespace Kiki;
+
 class SocialUpdate extends Object
 {
 	private $body = null;
@@ -53,7 +55,7 @@ class SocialUpdate extends Object
 
 	public function templateData()
 	{
-		$uAuthor = ObjectCache::getByType( 'User', $this->userId );
+		$uAuthor = ObjectCache::getByType( '\Kiki\User', $this->userId );
 
     $data = array(
       'id' => $this->id,
@@ -65,9 +67,9 @@ class SocialUpdate extends Object
       'author' => $uAuthor->name(),
       'publications' => array(),
       'likes' => $this->likes(),
-      'comments' => Comments::count( $this->db, Kiki::getUser(), $this->objectId ),
+      'comments' => Comments::count( $this->db, \Kiki\Core::getUser(), $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, Kiki::getUser(), $this->objectId )
+        'comments' => Comments::show( $this->db, \Kiki\Core::getUser(), $this->objectId )
       )
     );
     
@@ -78,6 +80,6 @@ class SocialUpdate extends Object
     return $data;
   }
 
-	public function title() {	return Misc::textSummary( $this->body, 40 ); }
+	public function title() {	return \Kiki\Misc::textSummary( $this->body, 40 ); }
 	public function body() { return $this->body; }
 }

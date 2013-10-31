@@ -8,6 +8,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki\Controller;
+
 class Controller_TinyUrl extends Controller
 {
   public function exec()

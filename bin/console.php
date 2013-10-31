@@ -17,6 +17,8 @@
 * Released under the terms of the MIT license.
 */
 
+	use Kiki\Core;
+
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
 	$_SERVER['REQUEST_URI'] = isset($argv[2]) ? $argv[2] : die('REQUEST_URI argument missing'. PHP_EOL);
 
@@ -25,4 +27,4 @@
 	$_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'];
 	$_SERVER['SERVER_PROTOCOL'] = null;
 
-	include_once Kiki::getInstallPath(). "/htdocs/router.php";
+	include_once Core::getInstallPath(). "/htdocs/router.php";

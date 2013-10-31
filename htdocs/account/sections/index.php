@@ -1,5 +1,7 @@
 <?php
 
+	use Kiki\Section;
+
   $this->title = "Sections";
 
   if ( !$user->isAdmin() )

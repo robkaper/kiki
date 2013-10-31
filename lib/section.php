@@ -9,6 +9,8 @@
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
+
+namespace Kiki;
             
 class Section
 {
@@ -19,7 +21,7 @@ class Section
 
   public function __construct( $id = 0 )
   {
-    $this->db = Kiki::getDb();
+    $this->db = \Kiki\Core::getDb();
 
     $this->id = $id;
     if ( $this->id )

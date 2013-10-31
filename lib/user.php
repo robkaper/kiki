@@ -1,5 +1,7 @@
 <?php
 
+namespace Kiki;
+
 class User extends Object
 {
   private $email = null;
@@ -147,7 +149,7 @@ class User extends Object
     if ( $rs && $this->db->numRows($rs) )
       while( $o = $this->db->fetchObject($rs) )
       {
-        $user = Factory_User::getInstance( $o->service, $o->external_id, $this->id );
+        $user = User\Factory::getInstance( $o->service, $o->external_id, $this->id );
         $this->connections[$user->uniqId()] = $user;
       }
   }
@@ -164,7 +166,10 @@ class User extends Object
     $this->identifiedConnections = array();
     foreach( Config::$connectionServices as $service )
     {
-      $user = Factory_User::getInstance( 'User_'. $service );
+			$oldClass = str_replace("Kiki\\User\\", "User_", $service);
+			// Log::debug( "user factory for $service (oldClass: $oldClass)" );
+
+      $user = User\Factory::getInstance($service);
       if ( !$user || !$user->externalId() )
         continue;
 
@@ -199,10 +204,10 @@ class User extends Object
           // TODO: compare connections and only load remote data if old is missing
           // $storedConnection = $this->connections[$id];
 
-          // Identified user, no need to connect before link?
-          $user->loadRemoteData();
+          // Identified user
 
           // Re-link connection to ensure the latest data is used (especially access token)
+          $user->loadRemoteData();
           $user->verifyToken();
           $user->link( $this->id );
 
@@ -213,10 +218,11 @@ class User extends Object
         {
           Log::debug( "identified $id, store link" );
 
-          // Identified user, no need to connect before link?
+          // Identified user
           $user->loadRemoteData();
 
           $user->link($this->id);
+
           $this->connections[$id] = $user;
         }
       }
