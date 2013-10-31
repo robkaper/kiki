@@ -18,6 +18,8 @@
 
 namespace Kiki;
 
+use Kiki\Object;
+
 class Comment extends Object
 {
   private $ipAddr = '0.0.0.0';
