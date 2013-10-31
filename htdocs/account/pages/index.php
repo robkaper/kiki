@@ -44,13 +44,14 @@
     $q = "SELECT a.id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id LEFT JOIN sections s ON s.id=o.section_id WHERE o.section_id=0 OR s.type='pages' ORDER BY s.base_uri ASC, FIELD(a.cname, 'index') ASC";
     $pages = $db->getArray($q);
 
+		echo "<ul>";
+		echo "<li>";
+    echo "<a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"> ". _("Create a new page"). "</a>\n";
+		echo "</li>";
+		echo "</ul>";
+
     echo "<table>\n";
     echo "<thead>\n";
-
-    echo "<tr>\n"; 
-    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"></a></td>\n";
-    echo "<td colspan=\"3\">". _("Create a new page"). "</td>\n";
-    echo "</tr>\n";
 
     echo "<tr><th></th><th></th><th></th></th><th colspan=\"2\">URL</th><th>Title</th></tr>\n";
 

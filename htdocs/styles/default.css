@@ -1,7 +1,6 @@
 body {
 	font-family: 'Droid Sans', sans-serif;
-	font-size: 1em; // 100%;
-	line-height: 1.125em; /* 1.125*16=18 */
+	font-size: 1em;
 
 	margin: 0px;
 	padding: 0px 0px 10px 0px;
@@ -48,7 +47,7 @@ aside {
 	font-size: 0.75em; /* 0.75*16=12 */
 }
 
-aside > .box
+.accountBox > .box, aside > .box
 {
 	margin: 0 0 0.5em 0;
 	border-radius: 5px;
@@ -57,18 +56,18 @@ aside > .box
 	font-size: 0.875em;
 }
 
-aside p {
+.box p {
 	margin: 0;
 	padding: 0.25em;
 }
 
-aside ul {
+.box ul {
 	list-style: none;
 	padding: 5px;
 	margin: 0;
 }
 
-aside li {
+.box li {
 	margin: 5px 0;
 }
 
@@ -291,33 +290,41 @@ div.commentTxt {
 }
 form {
 	width: 100%;
-	background: #deb;
-	border-radius: 5px;
+	xbackground: #deb;
+	xborder-radius: 5px;
 	margin: 0 0  0.5em 0;
+	padding: 0;
+	margin: 0;
 	float: left;
 }
 
 form p {
 	clear: left;
+	margin: 0 0 10px 0;
+	xbackground: #463;
+}
+
+.clear:after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
 form label {
 	display: block;
 	font-weight: bold;
 	text-align: right;
-	width: 20%;
-	margin: 5px 5px 0 0;
-	padding: 0 5px;
+	width: 16%;
+	margin: 0.5% 2% 1% 2%; // 5px 5px 0 0;
+	padding: 10px 10px 0 0;
+	padding: 0 0.5% 0 0;
 	float: left;
-	color: #fff;
-	background: #9c6;
-	border: 0;
-	border-radius: 0 5px 5px 0;
 }
 
 form span {
-	display: inline-block;
-	margin: 5px 5px 0 0;
+	xdisplay: inline-block;
+	xmargin: 5px 5px 0 0;
+	xoutline: 1px solid red;
 }
 
 form .small {
@@ -333,20 +340,36 @@ p.small {
 }
 
 form input, form textarea, form select {
-	border: solid 1px #463;
-	width: 70%;
-	margin: 5px 5px 0 0;
+	border: 0;
+	border: solid 1px #9c6;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+
+	width: 75%;
+	max-width: 75%;
+	min-width: 75%;
+	margin: 0 2% 1% 2%; // 5px 5px 0 0;
+	padding: 0.5%; // 3px;
+	xpadding: 2%;
 	float: left;
+	background: #eef0ee;
+	xfont-size: larger;
+	font-family: inherit; // "Droid Sans", sans-serif;
+}
+
+input {
 }
 
 form input[type="checkbox"] {
 	width: auto;
+	margin: 0.5% 1% 1% 0;
 }
 
 form textarea {
-	font-family: sans-serif;
-	font-size: small;
-	height: 15em;
+	xfont-family: sans-serif;
+	xfont-size: small;
+	height: 20em;
 }
 
 .cleditorMain textarea {
@@ -497,7 +520,7 @@ button.large span.buttonImg.Email, a.button.large span.buttonImg.Email {
   background: url('/kiki/img/komodo/social_networking_iconpack/email_32.png') no-repeat 0px 0px;
 }
 
-aside a.button {
+.box a.button {
 	display: block;
 	font-size: 1em;
 	margin: 3px 0px;
@@ -787,9 +810,9 @@ img.social {
 }
 
 aside img.social {
-	float:right;
-	margin-left: 0.25em;
-	margin-right: 0;
+	//float:right;
+	//margin-left: 0.25em;
+	//margin-right: 0;
 }
 
 .relTime {
@@ -864,10 +887,13 @@ table {
 	width: 100%;
 	border: 1px solid #463;
 	background: #9c6;
+	margin: 0px;
+	padding: 0px;
+	border-collapse: collapse;
 }
 
 xthead {
-	border: 1px solid green;
+	border: 1px solid red;
 	background: blue;
 }
 xtbody {
@@ -875,15 +901,15 @@ xtbody {
 	background: pink;
 }
 
+th, td {
+	border: 1px solid #9c6;
+	background: white;
+	padding: 3px;
+}
+tr:hover td {
+	background: #deb;
+}
 th {
-	background: #9c6;
-}
-
-xtr {
-	border: 1px solid orange;
-	background: black;
-}
-td {
 	background: #deb;
 }
 tr.disabled {

@@ -49,7 +49,7 @@ class Form
   public static function text( $id, $value=null, $label=null, $placeholder=null, $password=false )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
-    $content = "<p><label>${label}</label>\n";
+    $content = "<p class=\"clear\"><label>${label}</label>\n";
     $type = $password ? "password" : "text";
     $content .= "<input type=\"${type}\" name=\"${id}\" value=\"${value}\"${placeholder}></p>\n";
     return $content;
@@ -82,13 +82,8 @@ class Form
     }
 
     // $label .= "<a class=\"button toggleWysiwyg\" href=\"#\">Toggle WYSIWYG</a>";
-    if ( $label )
-    {
-      $content = "<p><label for=\"${id}\">${label}</label>\n";
-      $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}${maxlength} class=\"${class}\">${value}</textarea></p>\n";
-    }
-    else
-      $content = "<textarea id=\"${id}\" name=\"${id}\"${placeholder}>${value}</textarea>\n";
+    $content = "<p class=\"clear\"><label for=\"${id}\">${label}</label>\n";
+    $content .= "<textarea id=\"${id}\" name=\"${id}\"${placeholder}${maxlength} class=\"${class}\">${value}</textarea></p>\n";
 
     return $content;
   }
@@ -96,14 +91,14 @@ class Form
   public static function checkbox( $id, $checked=false, $label=null, $aside=null )
   {
     $checked = $checked ? " checked" : "";
-    $content = "<p><label>${label}</label>\n";
-    $content .= "<div class=\"checkboxw\"><input type=\"checkbox\" name=\"${id}\" ${checked}><span>${aside}</span></div></p>\n";
+    $content = "<p class=\"clear\"><label>${label}</label>\n";
+    $content .= "<span class=\"checkboxw clear\" xstyle=\"float:left;\"><input type=\"checkbox\" name=\"${id}\" ${checked}><span>${aside}</span></span></p>\n";
     return $content;
   }
 
   public static function select( $id, &$options=array(), $label=null, $preset=null )
   {
-    $content = "<p><label>${label}</label>\n";
+    $content = "<p class=\"clear\"><label>${label}</label>\n";
     $content .= "<select name=\"${id}\">\n";
     $content .= "<option value=\"\">Select ...</option>\n";
     foreach( $options as $id => $label )
