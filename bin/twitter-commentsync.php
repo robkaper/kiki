@@ -139,7 +139,7 @@
     if ( ($storePublicationsAsComment && isset($objectIds[$tweet->id])) || isset($objectIds[$tweet->in_reply_to_status_id]) || isset($replyObjectIds[$tweet->in_reply_to_status_id]) )
     {
       $twUser = User\Factory::getInstance( 'Twitter', $tweet->user->id );
-      $localUser = ObjectCache::getByType( 'User', $twUser->kikiUserId() );
+      $localUser = ObjectCache::getByType( 'Kiki\User', $twUser->kikiUserId() );
 
       if ( !$twUser->id() )
       {

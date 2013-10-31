@@ -50,7 +50,7 @@
   	    list( $postId, $partId ) = explode( "_", $externalId );
 
   	    $fbUser = User\Factory::getInstance( 'Facebook', $reply['fromid'] );
-  	    $localUser = ObjectCache::getByType( 'User', $fbUser->kikiUserId() );
+  	    $localUser = ObjectCache::getByType( 'Kiki\User', $fbUser->kikiUserId() );
 
     	  if ( !$fbUser->id() )
     	  {
