@@ -205,7 +205,7 @@ class Facebook extends External
 
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
-    $result = new stdClass;
+    $result = new \stdClass;
     $result->id = null;
     $result->url = null;
     $result->error = null;
@@ -372,7 +372,7 @@ class Facebook extends External
     }
     */
 
-    $result = new stdClass;
+    $result = new \stdClass;
     $result->id = isset($rs['id']) ? $rs['id'] : null;
     $result->url = isset($rs['id']) ? "http://www.facebook.com/". $rs['id'] : null;
     $result->error = isset($rs['error']) ? $rs['error'] : null;
