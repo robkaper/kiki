@@ -170,7 +170,7 @@ class Twitter extends External
 
   public function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' )
   {
-    $result = new stdClass;
+    $result = new \stdClass;
     $result->id = null;
     $result->url = null;
     $result->error = null;
