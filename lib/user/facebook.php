@@ -10,6 +10,8 @@
 
 namespace Kiki\User;
 
+use Kiki\Log;
+
 if ( isset(\Kiki\Config::$facebookSdkPath) )
 {
   require_once \Kiki\Config::$facebookSdkPath. "/src/facebook.php"; 

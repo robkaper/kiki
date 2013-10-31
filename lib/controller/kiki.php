@@ -184,7 +184,7 @@ class Kiki extends \Kiki\Controller
 
 	public function accountAction( $objectId )
 	{
-		$this->subController = new Controller_Account();
+		$this->subController = new Account();
 		$this->subController->setObjectId( $objectId );
 
 		$result = $this->subController->exec();
