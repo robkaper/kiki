@@ -1,7 +1,12 @@
 #!/usr/bin/php -q
 <?php
 
-	namespace Kiki;
+  use Kiki\Core;
+  use Kiki\Log;
+  use Kiki\ObjectCache;
+
+  use Kiki\User;
+  use Kiki\Comment;
 
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );

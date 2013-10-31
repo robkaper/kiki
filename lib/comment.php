@@ -16,6 +16,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Comment extends Object
 {
   private $ipAddr = '0.0.0.0';

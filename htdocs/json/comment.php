@@ -14,6 +14,8 @@
 
   // require_once "../lib/init.php";
 
+	use Kiki\Comment;
+
   if ($_POST)
   {
     $errors = array();
