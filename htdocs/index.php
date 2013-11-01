@@ -15,6 +15,9 @@
  * @license Released under the terms of the MIT license.
  */
 
+	use Kiki\Log;
+	use Kiki\Status;
+
   // FIXME: add accountpage/adminpage checks here or to template
   $this->title = _("Kiki Status");
 
