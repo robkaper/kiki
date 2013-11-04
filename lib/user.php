@@ -84,7 +84,7 @@ class User extends Object
 
     // TODO: todo email
     $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->objectId );
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
     if ( !$o )
 		{
 			$this->reset();

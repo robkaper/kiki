@@ -42,11 +42,11 @@ class Storage
     $db = Core::getDb();
 
     $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE hash='%s'", $id );
-    $o = $db->getSingle($q);
+    $o = $db->getSingleObject($q);
     if ( !$o )
     {
       $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE id=%d", $id );
-      $o = $db->getSingle($q);
+      $o = $db->getSingleObject($q);
     }
 
     $extra = ($w && $h) ? ( ".${w}x${h}". ($crop ? ".c" : null) ) : null;

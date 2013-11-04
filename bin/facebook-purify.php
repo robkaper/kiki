@@ -5,7 +5,7 @@
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
   $q = "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service= 'User_Facebook'";
-  $connectionIds = $db->getArray($q);
+  $connectionIds = $db->getObjectIds($q);
 
 	$deleteCount = 0;
 

@@ -187,7 +187,7 @@ abstract class External
     else
       $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE (service='%s' OR service='%s') AND external_id=%d", $oldClass, $class, $this->externalId );
     
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
     if ( !$o )
       return;
 

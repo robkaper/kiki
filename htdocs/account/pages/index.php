@@ -42,7 +42,7 @@
   else
   {
     $q = "SELECT a.id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id LEFT JOIN sections s ON s.id=o.section_id WHERE o.section_id=0 OR s.type='pages' ORDER BY s.base_uri ASC, FIELD(a.cname, 'index') ASC";
-    $pages = $db->getArray($q);
+    $pages = $db->getObjectIds($q);
 
 		echo "<ul>";
 		echo "<li>";

@@ -52,7 +52,7 @@ class Comment extends Object
       $this->id, $this->objectId
     );
 
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
     $this->setFromObject( $o );
   }
 

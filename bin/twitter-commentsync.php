@@ -12,7 +12,7 @@
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
   $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s' OR c.service='%s'", 'User_Twitter', 'Twitter', 'Kiki\\User\\Twitter' );
-  $connectionIds = $db->getArray($q);
+  $connectionIds = $db->getObjectIds($q);
 
   $objectIds = array();
   $replyObjectIds = array();

@@ -44,7 +44,7 @@ class Event extends Object
   {
     $qFields = "id, o.object_id, o.ctime, o.mtime, start, end, o.user_id, title, cname, description, location, featured, o.visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM events e LEFT JOIN objects o on o.object_id=e.object_id where e.id=%d or o.object_id=%d", $this->id, $this->objectId );
-    $this->setFromObject( $this->db->getSingle($q) );
+    $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
   public function setFromObject( &$o )
@@ -202,7 +202,7 @@ class Event extends Object
   {
     // TODO: query album, do not do this here.
     $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
-    return $this->db->getArray( $q );
+    return $this->db->getObjectIds( $q );
   }
 
   public function content()

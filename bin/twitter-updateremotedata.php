@@ -10,7 +10,7 @@
 	$apiUser = Factory_User::getInstance( 'User_Twitter', $apiConnectionId );
 
   $q = "SELECT DISTINCT external_id AS id FROM connections WHERE service='User_Twitter'";
-  $connectionIds = $db->getArray($q);
+  $connectionIds = $db->getObjectIds($q);
 
 	$chunks = array_chunk($connectionIds, 100);
 	foreach( $chunks as $chunk )

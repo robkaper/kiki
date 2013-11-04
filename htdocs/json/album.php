@@ -21,7 +21,7 @@
     $id = Album::findNext( $albumId, $current );
 
   $q = $db->buildQuery( "select title, storage_id from pictures where id=%d", $id );
-  $o = $db->getSingle($q);
+  $o = $db->getSingleObject($q);
 
   $response = array();
 

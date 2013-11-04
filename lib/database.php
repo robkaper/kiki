@@ -233,7 +233,7 @@ class Database
 	* @param string $q query
 	* @return object the first object in the resource/result set
 	*/
-	function getSingle( $q )
+	function getSingleObject( $q )
 	{
 		$rs = $this->query($q);
 		if ( $rs && $this->numRows($rs) )
@@ -262,7 +262,23 @@ class Database
 	* @param string $q query
 	* @return array an array of database objects
 	*/
-	public function getArray( $q )
+	public function getObjects( $q )
+	{
+		$ret = array();
+		$rs = $this->query($q);
+		if ( $rs && $this->numRows($rs) )
+			while( $o = $this->fetchObject($rs) )
+				$ret[] = $o;
+
+		return array_values($ret);
+	}
+
+	/**
+	* Executes a query and returns the ID of all objects
+	* @param string $q query
+	* @return array an array of database object IDs
+	*/
+	public function getObjectIds( $q )
 	{
 		$ret = array();
 		$rs = $this->query($q);

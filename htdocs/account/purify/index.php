@@ -76,8 +76,8 @@
 
   // Delete all empty albums not linked to an article or event
   echo "<li>Delete all empty albums not linked to an article or event... ";
-  $articleAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM articles" );
-  $eventAlbumIds = $db->getArray( "SELECT DISTINCT album_id AS id FROM events" );
+  $articleAlbumIds = $db->getObjectIds( "SELECT DISTINCT album_id AS id FROM articles" );
+  $eventAlbumIds = $db->getObjectIds( "SELECT DISTINCT album_id AS id FROM events" );
   $usedAlbumIds = array_merge( $articleAlbumIds, $eventAlbumIds );
   $qUsedAlbumIds = $db->implode( $usedAlbumIds );
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
@@ -108,7 +108,7 @@
   
   // Delete orphaned storage files
   echo "<li>Delete all storage files not registered as storage item... ";
-  $storageHashes = $db->getArray( "SELECT DISTINCT hash AS id FROM storage" );
+  $storageHashes = $db->getObjectIds( "SELECT DISTINCT hash AS id FROM storage" );
   $deleteCount = 0;
   $deleteSize = 0;
   $dir = Core::getRootPath(). "/storage/";

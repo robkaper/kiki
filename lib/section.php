@@ -45,7 +45,7 @@ class Section
 
     $qFields = "id, base_uri, title, type";
     $q = $this->db->buildQuery( "SELECT $qFields FROM sections WHERE id=%d", $this->id );
-    $this->setFromObject( $this->db->getSingle($q) );
+    $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
   public function setFromObject( &$o )

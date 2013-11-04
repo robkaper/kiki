@@ -49,7 +49,7 @@ class Article extends Object
 
     $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, o.section_id, o.user_id, title, cname, body, featured, o.visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
-    $this->setFromObject( $this->db->getSingle($q) );
+    $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
   public function setFromObject( &$o )
@@ -232,8 +232,8 @@ class Article extends Object
     // TODO: query album, do not do this here.
     $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
 		// echo $q;
-    // print_r( $this->db->getArray( $q ) );
-    return $this->db->getArray( $q );
+    // print_r( $this->db->getObjectIds( $q ) );
+    return $this->db->getObjectIds( $q );
   }
 
   private function getNext()

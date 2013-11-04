@@ -43,7 +43,7 @@ class MailerQueue
     $rs = $this->db->query($q);
 
     $q = "select id,subject,`from`,`to`,headers,body from mail_queue where sent=false and lock_id='$lockId' order by priority desc, ctime asc limit 1";
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
 
     // TODO: Email::setFromObject($o);
     if ($o)

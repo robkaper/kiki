@@ -46,7 +46,7 @@ class Album extends Object
 
 		$qFields = "id, o.object_id, o.ctime, o.mtime, o.section_id, o.user_id, title, system, o.visible";
 		$q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->objectId );
-		$this->setFromObject( $this->db->getSingle($q) );
+		$this->setFromObject( $this->db->getSingleObject($q) );
   }
   
   public function setFromObject( $o )
@@ -133,7 +133,7 @@ class Album extends Object
 
     // Picture details
     $q = $this->db->buildQuery( "SELECT title, storage_id FROM pictures WHERE id=%d", $pictureId );
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
 
     $picture = array(
       'id' => $pictureId,
@@ -164,7 +164,7 @@ class Album extends Object
 	public function imageUrls()
 	{
     $q = "select p.storage_id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
-		$storageIds = $this->db->getArray($q);
+		$storageIds = $this->db->getObjectIds($q);
 		// echo "<pre>";
 		// echo $q;
 		// print_r( $storageIds );
@@ -294,7 +294,7 @@ class Album extends Object
     // Picture details
     $qPictureId = $this->db->escape($pictureId);
     $q = "select storage_id from pictures where id=$qPictureId";
-    $o = $this->db->getSingle($q);
+    $o = $this->db->getSingleObject($q);
     $storageId = $o->storage_id;
     $imgUrl = Storage::url($storageId, 75, 75, true);
 
