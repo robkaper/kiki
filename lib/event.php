@@ -168,9 +168,7 @@ class Event extends Object
     {
       if ( $connection->serviceName() == 'Facebook' )
       {
-        // TODO: inform user that, and why, these are required (offline
-        // access is required because Kiki doesn't store or use the
-        // short-lived login sessions)
+        // TODO: inform user that, and why, these are required.
         if ( !$connection->hasPerm('publish_stream') )
          continue;
         if ( !$connection->hasPerm('create_event') )

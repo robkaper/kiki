@@ -58,11 +58,12 @@ class I18n
    *
    * @warning PHP locales and gettext are horribly specific about the exact
    * name which must precisely match an actually installed locale.  This
-   * switch solves it for me (as in I can use "nl"), but it's equally
-   * horrible because all variations of all supported languages must be
-   * hardcoded here.  Also, while this works for me, there's no guarantee it
-   * will work for anyone else and in fact will likely fail on a multitude
-   * of server configurations.
+   * switch solves it for me (as in I can use "nl" and the right locale for
+   * all environments I work with are supported), but it's a horrible
+   * because all variations of all supported languages are hardcoded here
+   * and while this works for me, there's no guarantee it will work for
+   * anyone else and in fact will likely fail on a multitude of server
+   * configurations.
 	 *
 	 * Should probably be configurable in Config, to the means where the
 	 * locales can be mapped to two-letter country codes (which seem

@@ -621,7 +621,7 @@ friends_website			friends_work_history
 
 ads_management			create_event			create_note
 email				export_stream			manage_friendlists
-manage_notifications		manage_pages			offline_access
+manage_notifications		manage_pages
 photo_upload			publish_actions			publish_checkins
 publish_stream			read_friendlists		read_insights
 read_mailbox			read_requests			read_stream

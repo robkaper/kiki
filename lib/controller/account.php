@@ -138,12 +138,13 @@ class Account extends \Kiki\Controller
 
 		$user = \Kiki\Core::getUser();
 
+    $errors = array();
+
 		if ( $user->id() )
 		{
 		}
 	  else if ( $_POST )
 	  {
-	    $errors = array();
 
 	    $email = $_POST['email'];
 			$template->assign('email', $email );
