@@ -1,6 +1,10 @@
 <?php
 
-class Controller_Examples_Helloworld extends Controller
+namespace Kiki\Controller;
+
+use Kiki\Controller;
+
+class HelloWorld extends Controller
 {
   public function exec()
   {

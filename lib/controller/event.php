@@ -2,10 +2,12 @@
 
 namespace Kiki\Controller;
 
+use Kiki\Controller;
+
 use Kiki\Core;
 use Kiki\Event;
 
-class Controller_Event extends Controller
+class Event extends Controller
 {
   public function exec()
   {

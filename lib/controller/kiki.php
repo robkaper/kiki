@@ -2,10 +2,14 @@
 
 namespace Kiki\Controller;
 
+use Kiki\Controller;
+
+use Kiki\Config;
 use Kiki\Core;
 use Kiki\Log;
+use Kiki\Storage;
 
-class Kiki extends \Kiki\Controller
+class Kiki extends Controller
 {
   public function exec()
   {
@@ -24,7 +28,7 @@ class Kiki extends \Kiki\Controller
 		$kikiFile = Core::getInstallPath(). "/htdocs/". $parts['path'];
    	if ( file_exists($kikiFile) )
 	  {
-      $ext = \Kiki\Storage::getExtension($kikiFile);
+      $ext = Storage::getExtension($kikiFile);
       switch($ext)
       {
         case 'css':
@@ -33,7 +37,7 @@ class Kiki extends \Kiki\Controller
         case 'js':
         case 'png':
 
-          $this->altContentType = \Kiki\Storage::getMimeType($ext);
+          $this->altContentType = Storage::getMimeType($ext);
           $this->template = null;
           $this->status = 200;
           $this->content = file_get_contents($kikiFile);
@@ -43,7 +47,7 @@ class Kiki extends \Kiki\Controller
 
  	      case 'php':
 
- 	        Log::debug( "Controller_Kiki: PHP file $kikiFile" );
+ 	        Log::debug( "PHP file $kikiFile" );
 
  	        $this->status = 200;
  	        $this->template = 'pages/default';
@@ -60,7 +64,7 @@ class Kiki extends \Kiki\Controller
 
  	        if ( file_exists($kikiFile. "index.php") )
  	        {
- 	          Log::debug( "Controller_Kiki: PHP index file $kikiFile". "index.php" );
+ 	          Log::debug( "PHP index file $kikiFile". "index.php" );
 
    	        $this->status = 200;
    	        $this->template = 'pages/default';
@@ -143,9 +147,9 @@ class Kiki extends \Kiki\Controller
 	 */
 	public function twitterRedirectAction()
 	{
-		if ( isset(\Kiki\Config::$twitterOAuthPath) )
+		if ( isset(Config::$twitterOAuthPath) )
 		{
-			require_once \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
+			require_once Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
 		}
 		else
 		{
@@ -155,7 +159,7 @@ class Kiki extends \Kiki\Controller
 		}
 
 		// Build TwitterOAuth object with app credentials.
-		$connection = new \TwitterOAuth( \Kiki\Config::$twitterApp, \Kiki\Config::$twitterSecret );
+		$connection = new \TwitterOAuth( Config::$twitterApp, Config::$twitterSecret );
  
 		// Get temporary credentials. Even though a callback URL is specified
 		// here, it must be set in your Twitter application settings as well to

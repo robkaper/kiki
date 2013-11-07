@@ -2,7 +2,12 @@
 
 namespace Kiki\Controller;
 
-class Controller_Album extends Controller
+use Kiki\Controller;
+
+use Kiki\Core;
+use Kiki\Album;
+
+class Album extends Controller
 {
   public function exec()
   {

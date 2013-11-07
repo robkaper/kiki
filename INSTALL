@@ -97,7 +97,7 @@ You can easily create your own custom controller modules within Kiki.
 To create a module named Foo, the following are required:
 
 - A file /www/example.com/lib/controller/foo.php (check lib/controller/examples/helloworld.php for an example)
-- A class named Controller_Foo within that file, extending the Controller class
+- A class named Foo within that file, extending the Kiki\Controller class
 
 See lib/controller/examples/ in the Kiki install path.
 

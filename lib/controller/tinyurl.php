@@ -10,11 +10,13 @@
 
 namespace Kiki\Controller;
 
-class Controller_TinyUrl extends Controller
+use Kiki\Controller;
+
+class TinyUrl extends Controller
 {
   public function exec()
   {
-    $uri = TinyUrl::lookup62($this->objectId);
+    $uri = \Kiki\TinyUrl::lookup62($this->objectId);
     if ( $this->content = $uri )
       $this->status = 301;
   }
