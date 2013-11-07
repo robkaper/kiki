@@ -21,6 +21,8 @@
  * - You must at all time retain this copyright message and terms in your code
  */
 
+namespace Kiki;
+
 class Base62
 {
   private static $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';

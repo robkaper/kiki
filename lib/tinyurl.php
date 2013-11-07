@@ -12,6 +12,8 @@
 
 namespace Kiki;
 
+use Kiki\Base62;
+
 class TinyUrl
 {
 
