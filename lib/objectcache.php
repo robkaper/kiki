@@ -111,7 +111,10 @@ class ObjectCache
   {
     $db = Core::getDb();
     $q = $db->buildQuery( "select type from objects where object_id=%d", $objectId );
-    return $db->getSingleValue($q);
+		$type = $db->getSingleValue($q);
+
+		// TODO: remove backwards compatibility
+		return preg_match( "/^Kiki\\\\/", $type ) ? $type : 'Kiki\\'. $type;
   }
 
   /**
