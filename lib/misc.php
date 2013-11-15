@@ -83,7 +83,7 @@ class Misc
     $text = "<p>\n$text</p>\n";
 
     // YouTube support.
-    $youTubeEmbed = "<iframe class=\"youtube-player\" type=\"text/html\" src=\"http://www.youtube.com/embed/\\1\" frameborder=\"0\"></iframe>\n";
+    $youTubeEmbed = "<iframe class=\"youtube-player\" type=\"text/html\" src=\"//www.youtube.com/embed/\\1\" frameborder=\"0\"></iframe>\n";
     $text = preg_replace( '(\[youtube\]([^\[\]]+)\[/youtube\])', $youTubeEmbed, $text );
 
     // Replace [url=link]title[/url]

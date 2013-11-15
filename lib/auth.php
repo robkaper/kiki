@@ -68,7 +68,7 @@ class Auth
     $cookie = self::generateCookie( $id, $expires );
 
     Log::debug( "setting cookie: id($id), expires($expires), cookie($cookie)" );
-    setcookie( Config::$authCookieName, $cookie, $expires, '/', $_SERVER['HTTP_HOST'] );
+    setcookie( Config::$authCookieName, $cookie, $expires, '/', $_SERVER['HTTP_HOST'], ($_SERVER['HTTPS'] == 'on') );
   }
 
   /**

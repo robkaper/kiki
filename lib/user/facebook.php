@@ -151,7 +151,7 @@ class Facebook extends External
     // $this->externalId = $data['id'];
     $this->name = $data['name'];
     $this->screenName = $data['username'];
-    $this->picture = "http://graph.facebook.com/". $this->externalId. "/picture";
+    $this->picture = "//graph.facebook.com/". $this->externalId. "/picture";
   }
 
   public function getSubAccounts()
@@ -258,7 +258,7 @@ class Facebook extends External
     {
       $result->id = $fbRs['id'];
       list( $uid, $postId ) = explode( "_", $fbRs['id']);
-      $result->url = "http://www.facebook.com/$uid/posts/$postId";
+      $result->url = "//www.facebook.com/$uid/posts/$postId";
       $publication->setExternalId( $postId );
     }
     else
@@ -277,7 +277,7 @@ class Facebook extends External
     $msg = '';
     $link = $article->url();
     $title = $article->title();
-    $caption = str_replace( "http://", "", $link );
+    $caption = preg_replace( "#^https?://", "", $link );
     $description = strip_tags( Misc::textSummary( $article->body(), 400 ) );
     $storageId = $article->topImage();
 
@@ -342,7 +342,7 @@ class Facebook extends External
     {
       $result->id = $fbRs['id'];
       list( $uid, $postId ) = explode( "_", $fbRs['id']);
-      $result->url = "http://www.facebook.com/$uid/posts/$postId";
+      $result->url = "//www.facebook.com/$uid/posts/$postId";
       $publication->setExternalId( $postId );
 		}
 
@@ -374,7 +374,7 @@ class Facebook extends External
 
     $result = new \stdClass;
     $result->id = isset($rs['id']) ? $rs['id'] : null;
-    $result->url = isset($rs['id']) ? "http://www.facebook.com/". $rs['id'] : null;
+    $result->url = isset($rs['id']) ? "//www.facebook.com/". $rs['id'] : null;
     $result->error = isset($rs['error']) ? $rs['error'] : null;
     return $result;
   }

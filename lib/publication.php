@@ -87,10 +87,10 @@ class Publication
     switch( $this->service() )
     {
       case 'Twitter':
-        return "http://www.twitter.com/$this->connectionId/statuses/$this->externalId";
+        return "//www.twitter.com/$this->connectionId/statuses/$this->externalId";
         break;
       case 'Facebook':
-        return "http://www.facebook.com/$this->connectionId/posts/$this->externalId";
+        return "//www.facebook.com/$this->connectionId/posts/$this->externalId";
         break;
     }
     return false;
