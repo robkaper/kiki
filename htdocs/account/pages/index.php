@@ -35,9 +35,9 @@
         $article->save();
     }
 
-    echo $article->form( $user, false, 'pages' );
+    echo $article->form( false, 'pages' );
     if ( $album->id() )
-      echo $album->form( $user );
+      echo $album->form();
   }
   else
   {

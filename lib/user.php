@@ -97,7 +97,7 @@ class User extends Object
     $this->getStoredConnections();
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     parent::setFromObject($o);
 

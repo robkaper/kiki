@@ -33,9 +33,9 @@
         $event->save();
     }
 
-    echo $event->form( $user );
+    echo $event->form();
     if ( $album->id() )
-      echo $album->form( $user );
+      echo $album->form();
   }
   else
   {

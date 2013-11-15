@@ -25,7 +25,7 @@ class SocialUpdate extends Object
 		$this->setFromObject( $this->db->getSingleObject($q) );
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     parent::setFromObject($o);
 
@@ -67,9 +67,9 @@ class SocialUpdate extends Object
       'author' => $uAuthor->name(),
       'publications' => array(),
       'likes' => $this->likes(),
-      'comments' => Comments::count( $this->db, \Kiki\Core::getUser(), $this->objectId ),
+      'comments' => Comments::count( $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, \Kiki\Core::getUser(), $this->objectId )
+        'comments' => Comments::show( $this->objectId )
       )
     );
     

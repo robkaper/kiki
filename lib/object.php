@@ -68,7 +68,7 @@ abstract class Object
 
   abstract public function load();
 
-  protected function setFromObject( &$o )
+  protected function setFromObject( $o )
   {
     if ( !$o )
       return;

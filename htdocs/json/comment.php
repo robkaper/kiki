@@ -43,7 +43,7 @@
       $response = array();
       $response['formId'] = $_POST['formId'];
       $response['objectId'] = $objectId;
-      $response['comments'] = Comments::show( $db, $user, $objectId, $last );
+      $response['comments'] = Comments::show( $objectId, $last );
       $response['errors'] = $errors;
 
       header( 'Content-type: application/json' );

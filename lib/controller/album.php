@@ -5,7 +5,6 @@ namespace Kiki\Controller;
 use Kiki\Controller;
 
 use Kiki\Core;
-use Kiki\Album;
 
 class Album extends Controller
 {
@@ -26,7 +25,7 @@ class Album extends Controller
  
     if ( $albumId )
     {
-      $album = new Album( $albumId );
+      $album = new \Kiki\Album( $albumId );
       if ( $album->id() )
       {
         $this->template = 'pages/default';

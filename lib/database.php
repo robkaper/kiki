@@ -22,6 +22,8 @@ class Database
 	private $newLink = false;
 	private $dbh;
 
+	private $lastQuery = null;
+
 	/**
 	* Initialises this instance.
 	* @param array $confArray configuration details (host, port, database name, user, password)
@@ -123,6 +125,7 @@ class Database
 		$rs = Core::cacheAvailable() ? $memcache->get($cacheId) : null;
 		if ( !$rs )
 		{
+			$this->lastQuery = $q;
 			$rs = mysql_query( $q, $this->dbh );
 			if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);

@@ -100,8 +100,8 @@ abstract class External
   
   public function serviceName()
   {
-		return end( explode( "\\", get_class($this) ) );
-    // return preg_replace( "/^". addslashes(__NAMESPACE__. "\\"). "/", "", get_class($this) );
+		$parts = explode( "\\", get_class($this) );
+		return end( $parts );
   }
   
   public function uniqId()

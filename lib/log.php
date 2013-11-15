@@ -163,7 +163,7 @@ class Log
 		unset(self::$timerMtimes[$timer]);
 	}
 
-	public function getTimers()
+	public static function getTimers()
 	{
 		return self::$timers;
 	}

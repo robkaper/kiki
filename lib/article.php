@@ -52,7 +52,7 @@ class Article extends Object
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     parent::setFromObject($o);
 
@@ -147,8 +147,10 @@ class Article extends Object
    * @return string The form HTML.
    *
    */
-  public function form( &$user, $hidden=false, $type='articles' )
+  public function form( $hidden=false, $type='articles' )
   {
+    $user = Core::getUser();
+
     $date = date( "d-m-Y H:i", $this->ctime ? strtotime($this->ctime) : time() );
     $class = $hidden ? "hidden" : "";
 
@@ -266,10 +268,10 @@ class Article extends Object
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
-			'comments' => Comments::count( $this->db, Core::getUser(), $this->objectId ),
+			'comments' => Comments::count( $this->objectId ),
       'html' => array(
-        'comments' => Comments::show( $this->db, Core::getUser(), $this->objectId ),
-        'editform' => $this->form( Core::getUser(), true, 'articles' )
+        'comments' => Comments::show( $this->objectId ),
+        'editform' => $this->form( true, 'articles' )
       )
     );
     

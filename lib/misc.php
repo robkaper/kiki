@@ -139,7 +139,7 @@ class Misc
     return $text;
   }
 
-	private function markupImages( $input )
+	private static function markupImages( $input )
 	{
 		$imgId = (int) $input[2];
 		$imgId--;

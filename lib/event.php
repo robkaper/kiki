@@ -47,7 +47,7 @@ class Event extends Object
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     parent::setFromObject($o);
 
@@ -136,8 +136,10 @@ class Event extends Object
    * @param User $user User object, used to show the proper connection links for publications.
    * @return string The form HTML.
    */
-  public function form( &$user, $hidden=false )
+  public function form( $hidden=false )
   {
+    $user = Core::getUser();
+
     $start = date( "d-m-Y H:i", $this->start ? strtotime($this->start) : time() );
     $end = date( "d-m-Y H:i", $this->end ? strtotime($this->end) : time() );
     $class = $hidden ? "hidden" : "";

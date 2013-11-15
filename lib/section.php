@@ -48,7 +48,7 @@ class Section
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     if ( !$o )
       return;
@@ -112,8 +112,10 @@ class Section
    * @param User $user User object, used to show the proper connection links for publications.
    * @return string The form HTML.
    */
-  public function form( &$user, $hidden=false )
+  public function form( $hidden=false )
   {
+    $user = Core::getUser();
+
 		$class = null;
 
     $content = Form::open( "sectionForm_". $this->id, Config::$kikiPrefix. "/json/section.php", 'POST', $class, "multipart/form-data" );

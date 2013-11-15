@@ -17,6 +17,7 @@
 
 	use Kiki\Log;
 	use Kiki\Status;
+	use Kiki\Config;
 
   // FIXME: add accountpage/adminpage checks here or to template
   $this->title = _("Kiki Status");

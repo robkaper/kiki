@@ -76,7 +76,7 @@ class Email
    *
    * @param object Database object.
    */
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
   }
 

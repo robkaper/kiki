@@ -13,14 +13,20 @@ namespace Kiki;
 
 class Comments
 {
-	public static function count( &$db, &$user, $objectId )
+	public static function count( $objectId )
 	{
+    $db = Core::getDb();
+    $user = Core::getUser();
+    
 		$q = $db->buildQuery( "SELECT count(*) FROM comments WHERE in_reply_to_id=%d", $objectId );
 		return $db->getSingleValue($q);
 	}
 
-  public static function show( &$db, &$user, $objectId, $jsonLast=null )
+  public static function show( $objectId, $jsonLast=null )
   {
+    $db = Core::getDb();
+    $user = Core::getUser();
+
     $comments = array();
 
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";

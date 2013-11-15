@@ -56,7 +56,7 @@ class Comment extends Object
     $this->setFromObject( $o );
   }
 
-  public function setFromObject( &$o )
+  public function setFromObject( $o )
   {
     parent::setFromObject($o);
 

@@ -17,7 +17,7 @@
   $objectIds = array();
   $replyObjectIds = array();
 
-  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='User_Twitter' OR connections.service='Twitter'" );
+  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='User_Twitter' OR connections.service='Twitter' OR connections.service='Kiki\\User\\Twitter'" );
   $rs = $db->query($q);
   while( $o = $db->fetchObject($rs) )
   {

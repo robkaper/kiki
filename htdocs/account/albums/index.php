@@ -1,7 +1,4 @@
-
 <?php
-
-	use Kiki\Album;
 
   $this->title = "Albums";
   
@@ -19,7 +16,7 @@
   {
     $id = isset($_GET['id']) ? $_GET['id'] : 0;
     $album = new Album( $id );
-    echo $album->form( $user );
+    echo $album->form();
   }
   else
   {
@@ -42,7 +39,7 @@
     {
       while( $o = $db->fetchObject($rs) )
       {
-        $album = new Album( $o->id );
+        $album = new \Kiki\Album( $o->id );
         $class = ""; // $album->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
         echo "<td><a href=\"?id=". $album->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\"></a></td>\n";
@@ -57,4 +54,3 @@
   }
 
   $this->content = ob_get_clean();
-?>
