@@ -11,19 +11,22 @@
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-  $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s' OR c.service='%s'", 'User_Twitter', 'Twitter', 'Kiki\\User\\Twitter' );
+  $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s' OR c.service='%s'", 'User_Twitter', 'Twitter', 'Kiki\User\Twitter' );
   $connectionIds = $db->getObjectIds($q);
 
   $objectIds = array();
   $replyObjectIds = array();
 
-  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='User_Twitter' OR connections.service='Twitter' OR connections.service='Kiki\\User\\Twitter'" );
+  $q = $db->buildQuery( "SELECT comments.external_id, object_id, in_reply_to_id FROM comments LEFT JOIN connections ON connections.id=comments.user_connection_id WHERE connections.service='%s' OR connections.service='%s' OR connections.service='%s'", 'User_Twitter', 'Twitter', 'Kiki\User\Twitter' );
   $rs = $db->query($q);
-  while( $o = $db->fetchObject($rs) )
-  {
-    // TODO: also store object_id, not doing so flattens all comments and all nesting/threading information is lost
-    $replyObjectIds[$o->external_id] = $o->in_reply_to_id;
-  }
+	if ( $db->numRows($rs) )
+	{
+		while( $o = $db->fetchObject($rs) )
+		{
+			// TODO: also store object_id, not doing so flattens all comments and all nesting/threading information is lost
+			$replyObjectIds[$o->external_id] = $o->in_reply_to_id;
+		}
+	}
 
   $tweets = array(); 
 
