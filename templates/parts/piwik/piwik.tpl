@@ -5,7 +5,7 @@
 var _paq = _paq || [];
 _paq.push(["trackPageView"]);
 _paq.push(["enableLinkTracking"]);
-var u="//{$kiki.config.piwikHost}/piwik/";
+var u=(("https:" == document.location.protocol) ? "https" : "http") + "://{$kiki.config.piwikHost}/piwik/";
 
 (function() {
   _paq.push(["setTrackerUrl", u+"piwik.php"]);
