@@ -5,9 +5,9 @@
 var _paq = _paq || [];
 _paq.push(["trackPageView"]);
 _paq.push(["enableLinkTracking"]);
+var u="//{$kiki.config.piwikHost}/piwik/";
 
 (function() {
-  var u="//{$kiki.config.piwikHost}/piwik/";
   _paq.push(["setTrackerUrl", u+"piwik.php"]);
   _paq.push(["setSiteId", "{$kiki.config.piwikSiteId}"]);
   var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
