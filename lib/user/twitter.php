@@ -223,7 +223,7 @@ class Twitter extends External
 
   public function postArticle( &$article )
   {
-    $tinyUrl = TinyUrl::get( $article->url() );
+    $tinyUrl = \Kiki\TinyUrl::get( $article->url() );
 
     $msg = sprintf( "%s %s %s", $article->title(), $tinyUrl, $article->hashtags() );
     $result = $this->post( $article->objectId(), $msg );

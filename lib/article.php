@@ -120,12 +120,13 @@ class Article extends Object
 
   public function url()
   {
-    $sectionBaseUri = Router::getBaseUri( 'articles', $this->sectionId );
+    $sectionBaseUri = \Kiki\Router::getBaseUri( 'articles', $this->sectionId );
     if ( !$sectionBaseUri )
-      $sectionBaseUri = Router::getBaseUri( 'pages', $this->sectionId );
+      $sectionBaseUri = \Kiki\Router::getBaseUri( 'pages', $this->sectionId );
     if ( !$sectionBaseUri )
       $sectionBaseUri = "/";
 
+    // TODO: support HTTPS
     $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
 
     // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page

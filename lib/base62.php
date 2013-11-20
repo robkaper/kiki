@@ -50,7 +50,7 @@ class Base62
     return $result;
   }
 
-  private function getDigit($var)
+  private static function getDigit($var)
   {
     return strpos(self::$characters, $var);
   }

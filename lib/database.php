@@ -20,7 +20,7 @@ class Database
 {
 	private $host, $port, $user, $pass, $name;
 	private $newLink = false;
-	private $dbh;
+	private $dbh = null;
 
 	private $lastQuery = null;
 

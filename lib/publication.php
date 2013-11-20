@@ -81,15 +81,26 @@ class Publication
   public function setBody( $body ) { $this->body = $body; }
   public function setResponse( $response ) { $this->response = $response; }
 
-  public function service() { return $this->service; } // OLD pre namespace: return str_replace( "User_", "", $this->service ); }
+  public function service()
+  {
+    if ( strstr( $this->service, "\\" ) )
+    {
+      $parts = explode( "\\", $this->service );
+      return end($parts);
+    }
+    return $this->service;
+  }
+
   public function url()
   {
     switch( $this->service() )
     {
       case 'Twitter':
+      case 'Kiki\User\Twitter':
         return "//www.twitter.com/$this->connectionId/statuses/$this->externalId";
         break;
       case 'Facebook':
+      case 'Kiki\User\Facebook':
         return "//www.facebook.com/$this->connectionId/posts/$this->externalId";
         break;
     }

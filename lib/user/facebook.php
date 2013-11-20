@@ -278,11 +278,11 @@ class Facebook extends External
     $link = $article->url();
     $title = $article->title();
     $caption = preg_replace( "#^https?://", "", $link );
-    $description = strip_tags( Misc::textSummary( $article->body(), 400 ) );
+    $description = strip_tags( \Kiki\Misc::textSummary( $article->body(), 400 ) );
     $storageId = $article->topImage();
 
     // 500x500 cropped is good enough for Facebook
-    $picture = $storageId ? Storage::url( $storageId, 500, 500, true ) : \Kiki\Config::$siteLogo;
+    $picture = $storageId ? \Kiki\Storage::url( $storageId, 500, 500, true ) : \Kiki\Config::$siteLogo;
 
     $result = $this->post( $article->objectId(), $msg, $link, $title, $caption, $description, $picture );
     return $result;

@@ -8,7 +8,9 @@ class Thumbnails extends \Kiki\Controller
   {
     list( $dummy, $id, $w, $h, $dummy, $crop ) = $this->objectId;
 
-    if ( !$fileName = \Kiki\Storage::localFile($id) )
+    $this->objectId = $id;
+    
+    if ( !$fileName = \Kiki\Storage::localFile($this->objectId) )
       return;
 
     if ( !file_exists($fileName) )
