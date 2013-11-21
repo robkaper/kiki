@@ -207,10 +207,10 @@ class Twitter extends External
       return $result;
     }
 
-    if ( isset($twRs->error) )
+    if ( isset($twRs->errors) )
     {
-      $result->error = $twRs->error;
-      \Kiki\Log::debug( "twPost error: $result->error" );
+      $result->error = $twRs->errors->message;
+      \Kiki\Log::debug( "twPost error: $result->errors->message" );
     }
     else
     {
