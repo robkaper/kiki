@@ -18,6 +18,11 @@ class YouTubeParser
 		$this->code = $code;
 	}
 
+	public function getCode()
+	{	
+		return $this->code;
+	}
+
 	public function parseHtml( $html )
 	{
 		$matches = array();
@@ -31,6 +36,7 @@ class YouTubeParser
 		$template = new Template('parts/google/youtube');
 		$template->assign( 'youtubeCode', $this->code );
 		$template->assign( 'forceHtml5', $forceHtml5 );
+
 		return $template->fetch();
 	}
 }
