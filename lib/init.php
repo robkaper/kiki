@@ -29,8 +29,9 @@
   {
 		include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
 
-		// echo "autoload for $className". PHP_EOL;
-
+		if ( !Kiki\ClassHelper::isInKikiNamespace($className) )
+			return;
+   
 		$classFile = Kiki\ClassHelper::classToFile($className);
 
     // Try local customisations first, but fallback no Kiki's base classes,
@@ -48,19 +49,15 @@
 				if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
 		      return;
 
-				// echo "$includeFile should but does not define ". $className. PHP_EOL;
-				Kiki\Log::error( "$includeFile should but does not define ". $className );
-
-				// print_r( get_declared_classes(), true );
+				trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
+				exit;
     	}
 		}
 
 		if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
 		{
-			// echo "could not load class $className from local path nor Kiki install path". PHP_EOL;
-			Kiki\Log::error( "could not load class $className from local path nor Kiki install path" );
-
-			// print_r( get_declared_classes(), true );
+				trigger_error( sprintf( "could not load class %s from local path %s nor Kiki install path %s", $className, Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() ), E_USER_ERROR );
+				exit;
 		}
   }
 

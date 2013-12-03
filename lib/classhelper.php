@@ -20,6 +20,11 @@ namespace Kiki;
 
 class ClassHelper
 {
+	public static function isInKikiNamespace( $className )
+	{
+		return preg_match( '#^Kiki\\\#', $className );
+	}
+
 	public static function classToType( $className )
 	{
 		return str_replace("\\", "/", strtolower($className));
