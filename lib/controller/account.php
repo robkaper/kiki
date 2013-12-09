@@ -132,6 +132,7 @@ class Account extends \Kiki\Controller
 	public function createAction()
 	{
 	  $this->title = _("Create account");
+		$this->status = 200;
 
 		$template = new \Kiki\Template('content/account-create');
 		$template->assign('postUrl', $this->getBaseUri('create') );

@@ -87,14 +87,14 @@ class Articles extends \Kiki\Controller
 
       $this->status = 200;
       $this->title = $section->title();
-      $this->template = 'pages/default';
+      $this->template = 'pages/articles';
 
       $this->content = null; // MultiBanner::articles( $section->id() );
 
       $article = new Article();
 			$update = new SocialUpdate();
 
-			$q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('socialupdate', 'article') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
+			$q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('SocialUpdate', 'Kiki\SocialUpdate', 'Article', 'Kiki\Article') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", $this->instanceId, $user->id() );
 			$totalPosts = $db->getSingleValue($q);
 
 			$paging = new \Kiki\Paging();
@@ -102,13 +102,14 @@ class Articles extends \Kiki\Controller
 			$paging->setItemsPerPage( $itemsPerPage );
 			$paging->setTotalItems( $totalPosts );
 
-      $q = $db->buildQuery( "SELECT object_id, ctime, type FROM objects WHERE type IN ('socialupdate', 'article') AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
+      $q = $db->buildQuery( "SELECT object_id, ctime, type FROM objects WHERE type IN ('SocialUpdate', 'Kiki\SocialUpdate', 'Article', 'Kiki\Article') AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
 			$rs = $db->query($q);
 			while( $o = $db->fetchObject($rs) )
 			{
 				switch( $o->type )
 				{
 					case 'Article':
+					case 'Kiki\Article':
 						$article->reset();
 						$article->setObjectId( $o->object_id );
 						$article->load();
@@ -120,6 +121,7 @@ class Articles extends \Kiki\Controller
 						break;
 
 					case 'SocialUpdate':
+					case 'Kiki\SocialUpdate':
 						$update->reset();
 						$update->setObjectId( $o->object_id );
 						$update->load();
