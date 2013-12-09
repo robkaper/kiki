@@ -87,7 +87,7 @@ class Articles extends \Kiki\Controller
 
       $this->status = 200;
       $this->title = $section->title();
-      $this->template = 'pages/articles';
+      $this->template = 'pages/default';
 
       $this->content = null; // MultiBanner::articles( $section->id() );
 
