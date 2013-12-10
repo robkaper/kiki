@@ -55,7 +55,7 @@ class Articles extends \Kiki\Controller
 			}
 
       $article = new Article( 0, $this->objectId);
-      if ( $article->id() && ( $article->visible() || $article->userId() == $user->id() ) )
+      if ( $article->id() && $article->sectionId() == $this->instanceId && ( $article->visible() || $article->userId() == $user->id() ) )
       {
         $this->status = 200;
         $this->title = $article->title();
