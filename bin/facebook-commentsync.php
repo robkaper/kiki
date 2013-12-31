@@ -84,7 +84,10 @@
 	      $comment->setCtime( $ctime );
 	      $comment->save();
 
-  	    printf( "%s commented on %d:%s%s%s", $fbUser->name(), $objectId, PHP_EOL, $reply['text'], PHP_EOL. PHP_EOL );
+				$object = ObjectCache::get( $objectId );
+				$label = method_exists($object, 'title') ? $object->title() : null;
+
+				printf( "%s commented on %s %d (%s):%s%s%s", $fbUser->name(), $object->type(), $objectId, $label, PHP_EOL, $reply['text'], PHP_EOL. PHP_EOL );
 			}
 
 	    // Get likes
@@ -110,7 +113,11 @@
 	      $q = "INSERT INTO likes (object_id, user_connection_id,ctime) VALUES($objectId, ". $fbUser->id(). ",now()) on duplicate key UPDATE user_connection_id=". $fbUser->id();
 	      $rsLike = $db->query($q);
 	      if ( $db->affectedRows($rs) == 1 )
-	        echo $fbUser->name(). " likes object ". $objectId. PHP_EOL;
+				{
+					$object = ObjectCache::get( $objectId );
+					$label = method_exists($object, 'title') ? $object->title() : null;
+					printf( "%s likes %s %d (%s)". PHP_EOL, $fbUser->name(), $object->type(), $objectId, $label );
+				}
 			}
     }
   }
