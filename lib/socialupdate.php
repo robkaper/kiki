@@ -22,7 +22,11 @@ class SocialUpdate extends Object
 
 		$qFields = "publication_id AS id, o.object_id, o.user_id, o.ctime, o.mtime, body";
 		$q = $this->db->buildQuery( "SELECT $qFields FROM publications p LEFT JOIN objects o ON o.object_id=p.object_id WHERE publication_id=%d OR o.object_id=%d", $this->id, $this->objectId );
-		$this->setFromObject( $this->db->getSingleObject($q) );
+		$o = $this->db->getSingleObject($q);
+		if ( !$o )
+		  return;
+		
+		$this->setFromObject($o);
   }
 
   public function setFromObject( $o )

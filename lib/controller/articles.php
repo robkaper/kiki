@@ -42,6 +42,9 @@ class Articles extends \Kiki\Controller
 				$updateId = $matches[1];
 				$update = new SocialUpdate( $updateId );
 
+				if ( !$update->id() )
+				  return;
+				
 				$this->status = 200;
 				$this->title  = \Kiki\Misc::textSummary( $update->body(), 50 );
 				$this->template = 'pages/default';
