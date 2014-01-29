@@ -107,4 +107,3 @@
 
   $user = Kiki\Core::getUser();
   $user->authenticate();
-?>

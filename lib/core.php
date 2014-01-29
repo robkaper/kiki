@@ -7,6 +7,8 @@ class Core
 	private static $path = null;
 	private static $rootPath = null;
 
+	private static $baseUrl = null;
+
 	private static $db = null;
 
 	private static $memcache = null;
@@ -34,6 +36,16 @@ class Core
 	public static function setRootPath( $path )
 	{
 		self::$rootPath = $path;
+	}
+
+	public static function getBaseUrl()
+	{
+		return self::$baseUrl;
+	}
+
+	public static function setBaseUrl( $baseUrl )
+	{
+		self::$baseUrl = $baseUrl;
 	}
 
 	public static function getDb()

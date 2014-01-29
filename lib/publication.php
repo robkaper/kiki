@@ -99,6 +99,7 @@ class Publication
       case 'Kiki\User\Twitter':
         return "//www.twitter.com/$this->connectionId/statuses/$this->externalId";
         break;
+
       case 'Facebook':
       case 'Kiki\User\Facebook':
         return "//www.facebook.com/$this->connectionId/posts/$this->externalId";
@@ -109,11 +110,9 @@ class Publication
 
   public function templateData()
   {
-    $data = array(
+    return array(
       'url' => $this->url(),
       'service' => $this->service()
     );
-    
-    return $data;
   }
 }

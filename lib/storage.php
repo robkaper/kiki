@@ -158,7 +158,10 @@ class Storage
     $db = Core::getDb();
 
     $fileName = strtolower($fileName);
+
+    // FIXME: care about actual mimetypes, not extensions
     $extension = self::getExtension( $fileName );
+
     $hash = sha1( uniqid(). $data );
 
     $qHash = $db->escape( $hash );

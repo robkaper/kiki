@@ -77,6 +77,8 @@ class TinyUrl
       $id = TinyUrl::insert($url);
 
     $host = Config::$tinyHost ? Config::$tinyHost : $_SERVER['SERVER_NAME'];
+    
+    // TODO: support HTTPS
     return sprintf( "http://%s/%03s", $host, Base62::encode($id) );
   }
 }
