@@ -18,9 +18,8 @@ namespace Kiki;
 
 class Database
 {
-	private $host, $port, $user, $pass, $name;
-	private $newLink = false;
-	private $dbh = null;
+	private $host, $user, $pass, $name, $port;
+	private $mysqli = null;
 
 	private $lastQuery = null;
 
@@ -28,10 +27,9 @@ class Database
 	* Initialises this instance.
 	* @param array $confArray configuration details (host, port, database name, user, password)
 	*/
-	public function __construct( &$confArray, $newLink = false )
+	public function __construct( &$confArray )
 	{
 		list( $this->host, $this->port, $this->name, $this->user, $this->pass ) = array_values($confArray);
-		$this->newLink = $newLink;
 		$this->connect();
 	}
 
@@ -40,17 +38,17 @@ class Database
 	*/
 	function connect()
 	{
-		if ( $this->newLink )
-			$this->dbh = mysql_connect( "$this->host:$this->port", $this->user, $this->pass, true );
-		else
-			$this->dbh = @mysql_pconnect( "$this->host:$this->port", $this->user, $this->pass );
+		$this->mysqli = new \mysqli( $this->host, $this->user, $this->pass, $this->name, $this->port );
 
-		if ( $this->dbh )
+		if ( !$this->mysqli )
 		{
-			@mysql_select_db( $this->name, $this->dbh );
-			@mysql_set_charset('utf8');
-			$this->query("set names 'utf8'" );
+			Log::error( "connection to database failed" );
+			return;
 		}
+
+		// @$this->mysqli->select_db( $this->name, $this->mysqli );
+		$this->mysqli->set_charset('utf8');
+		$this->query("set names 'utf8'" );
 	}
 
 	/**
@@ -60,19 +58,19 @@ class Database
 	*/
 	public function connected()
 	{
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 
-		return $this->dbh ? true : false;
+		return $this->mysqli ? true : false;
 	}
 
 	/**
 	* Retrieves the database connection link.
 	* @return resource the connection
 	*/
-	public function dbh()
+	public function mysqli()
 	{
-		return $this->dbh;
+		return $this->mysqli;
 	}
 
 	/**
@@ -81,11 +79,11 @@ class Database
 	*/
 	function setDatabase($name)
 	{
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 
 		$this->name = $name;
-		mysql_select_db( $this->name, $this->dbh );
+		$this->mysqli->select_db( $this->name, $this->mysqli );
 	}
 
 	/**
@@ -112,10 +110,10 @@ class Database
 	*/
 	function query( $q )
 	{
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 		{
 			$this->connect();
-			if ( !$this->dbh )
+			if ( !$this->mysqli )
 				return null;
 		}
 
@@ -126,7 +124,7 @@ class Database
 		if ( !$rs )
 		{
 			$this->lastQuery = $q;
-			$rs = mysql_query( $q, $this->dbh );
+			$rs = $this->mysqli->query($q);
 			if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);
 		}
@@ -150,10 +148,10 @@ class Database
 	*/
 	function fetchObject( $rs )
 	{
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 
-		return mysql_fetch_object($rs);
+		return $rs->fetch_object();
 	}
 
 	/**
@@ -170,10 +168,10 @@ class Database
 	{
 		if ( !$rs )
 			return 0;
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 
-		return mysql_num_rows($rs);
+		return $rs->num_rows;
 	}
 
 	/**
@@ -190,10 +188,10 @@ class Database
 	{
 		if ( !$rs )
 			return 0;
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 		
-		return mysql_insert_id($this->dbh);
+		return $this->mysqli->insert_id($this->mysqli);
 	}
 
 	/**
@@ -210,10 +208,10 @@ class Database
 	{
 		if ( !$rs )
 			return 0;
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
 
-		return mysql_affected_rows($this->dbh);
+		return $this->mysqli->affected_rows($this->mysqli);
 	}
 
 	/**
@@ -223,12 +221,13 @@ class Database
 	*/
 	function escape( $str )
 	{
-		if ( !$this->dbh )
+		if ( !$this->mysqli )
 			$this->connect();
-		if ( !$this->dbh )
+
+		if ( !$this->mysqli )
 			return null;
 
-		return mysql_real_escape_string( $str, $this->dbh );
+		return $this->mysqli->real_escape_string($str);
 	}
 
 	/**
@@ -252,9 +251,9 @@ class Database
 	function getSingleValue( $q )
 	{
 		$rs = $this->query($q);
-		if ( gettype($rs) == "resource" && mysql_num_fields($rs) == 1 )
+		if ( gettype($rs) == "resource" && $this->mysqli->num_fields($rs) == 1 )
 		{
-			$row = mysql_fetch_row($rs);
+			$row = $this->mysqli->fetch_row($rs);
 			return $row[0];
 		}
 		return null;
