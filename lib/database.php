@@ -251,9 +251,9 @@ class Database
 	function getSingleValue( $q )
 	{
 		$rs = $this->query($q);
-		if ( gettype($rs) == "resource" && $this->mysqli->num_fields($rs) == 1 )
+		if ( $this->mysqli->field_count == 1 )
 		{
-			$row = $this->mysqli->fetch_row($rs);
+			$row = $rs->fetch_row();
 			return $row[0];
 		}
 		return null;

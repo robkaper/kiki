@@ -71,7 +71,7 @@ class Core
 		if ( !isset(self::$memcache) )
 		{
 			Log::beginTimer( "initMemcache" );
-			self::$memcache = new Memcache();
+			self::$memcache = new \Memcache();
 
 			$cacheAvailable = self::$memcache->connect( Config::$memcachedHost, Config::$memcachedPort );
 			Log::endTimer( "initMemcache" );
