@@ -203,6 +203,11 @@ abstract class External
 
     $this->name = $o->name;
     $this->screenName = $o->screenname;
+
+	// FIXME:: port to namespace? Twitter? \Kiki\User\Twitter?
+	if ( get_class($this) == 'User_Twitter' )
+    $this->picture = str_replace( "_normal.", "_bigger.", $o->picture );
+	else
     $this->picture = $o->picture;
   }
 

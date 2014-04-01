@@ -1,13 +1,17 @@
 #!/usr/bin/php -q
 <?php
 
+	use Kiki\User;
+
+  use \OAuthException;
+
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 
 	// TODO: make admin check, assume all admins have working connections capable of acting as apiUser in TwitterConnectionService->getApiUsers()
-  $q = "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='User_Twitter' LIMIT 1";
+  $q = $db->buildQuery( "SELECT DISTINCT connection_id as id FROM publications p LEFT JOIN connections c ON c.external_id=p.connection_id WHERE c.service='%s' OR c.service='%s' OR c.service='%s' LIMIT 1", 'User_Twitter', 'Twitter', 'Kiki\User\Twitter' );
   $apiConnectionId = $db->getSingleValue($q);
-	$apiUser = Factory_User::getInstance( 'User_Twitter', $apiConnectionId );
+	$apiUser = User\Factory::getInstance( 'Twitter', $apiConnectionId );
 
   $q = "SELECT DISTINCT external_id AS id FROM connections WHERE service='User_Twitter'";
   $connectionIds = $db->getObjectIds($q);
@@ -18,7 +22,7 @@
 		$rs = $apiUser->api()->get( "users/lookup", array( "user_id" => implode(",", $chunk) ) );
 		foreach( $rs as $rsUser )
 		{
-			$twUser = Factory_User::getInstance( 'User_Twitter', $rsUser->id );
+			$twUser = User\Factory::getInstance( 'Twitter', $rsUser->id );
 			$twUser->setName( $rsUser->name );
 			$twUser->setScreenName( $rsUser->screen_name );
 			$twUser->setPicture( $rsUser->profile_image_url_https );
