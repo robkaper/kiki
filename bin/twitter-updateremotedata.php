@@ -13,7 +13,7 @@
   $apiConnectionId = $db->getSingleValue($q);
 	$apiUser = User\Factory::getInstance( 'Twitter', $apiConnectionId );
 
-  $q = "SELECT DISTINCT external_id AS id FROM connections WHERE service='User_Twitter'";
+  $q = $db->buildQuery( "SELECT DISTINCT external_id AS id FROM connections WHERE service='%s' OR service='%s' OR service='%s'", 'User_Twitter', 'Twitter', 'Kiki\User\Twitter' );
   $connectionIds = $db->getObjectIds($q);
 
 	$chunks = array_chunk($connectionIds, 100);
@@ -22,6 +22,7 @@
 		$rs = $apiUser->api()->get( "users/lookup", array( "user_id" => implode(",", $chunk) ) );
 		foreach( $rs as $rsUser )
 		{
+			// echo "$rsUser->id / $rsUser->name / $rsUser->screen_name / $rsUser->profile_image_url_https". PHP_EOL;
 			$twUser = User\Factory::getInstance( 'Twitter', $rsUser->id );
 			$twUser->setName( $rsUser->name );
 			$twUser->setScreenName( $rsUser->screen_name );

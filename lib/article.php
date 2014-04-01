@@ -118,16 +118,14 @@ class Article extends Object
   public function setAlbumId( $albumId ) { $this->albumId = $albumId; }
   public function albumId() { return $this->albumId; }
 
-  public function url()
+  public function url( $addSchema = false )
   {
-    $sectionBaseUri = \Kiki\Router::getBaseUri( 'articles', $this->sectionId );
-    if ( !$sectionBaseUri )
-      $sectionBaseUri = \Kiki\Router::getBaseUri( 'pages', $this->sectionId );
+    $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( $this->sectionId ) : null;
     if ( !$sectionBaseUri )
       $sectionBaseUri = "/";
 
     // TODO: support HTTPS
-    $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
+    $urlPrefix = ($addSchema ? "https" : null). "//". $_SERVER['SERVER_NAME'];
 
     // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page
     $url = $urlPrefix. $sectionBaseUri. ($this->cname!='index' ? $this->cname : null);
