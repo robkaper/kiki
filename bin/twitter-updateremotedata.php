@@ -21,7 +21,7 @@
 			$twUser = Factory_User::getInstance( 'User_Twitter', $rsUser->id );
 			$twUser->setName( $rsUser->name );
 			$twUser->setScreenName( $rsUser->screen_name );
-			$twUser->setPicture( $rsUser->profile_image_url );
+			$twUser->setPicture( $rsUser->profile_image_url_https );
 			$twUser->link();
 		}
 	}

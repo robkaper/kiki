@@ -148,7 +148,7 @@
       {
         $twUser->setName( $tweet->user->name );
         $twUser->setScreenName( $tweet->user->screen_name );
-        $twUser->setPicture( $tweet->user->profile_image_url );
+        $twUser->setPicture( $tweet->user->profile_image_url_https );
         $twUser->link( $localUser->id() );
       }
       

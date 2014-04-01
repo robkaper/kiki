@@ -133,7 +133,7 @@ class Twitter extends External
 
     $this->name = $data[0]->name;
     $this->screenName = $data[0]->screen_name;
-    $this->picture = $data[0]->profile_image_url;
+    $this->picture = $data[0]->profile_image_url_https;
   }
 
   public function getSubAccounts()
