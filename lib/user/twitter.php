@@ -215,7 +215,7 @@ class Twitter extends External
     else
     {
       $result->id = $twRs->id;
-      $result->url = "http://www.twitter.com/". $twRs->user->screen_name. "/status/". $result->id;
+      $result->url = "//www.twitter.com/". $twRs->user->screen_name. "/status/". $result->id;
     }
     
     return $result;
