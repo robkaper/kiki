@@ -191,7 +191,7 @@ class Database
 		if ( !$this->mysqli )
 			$this->connect();
 		
-		return $this->mysqli->insert_id($this->mysqli);
+		return $this->mysqli->insert_id;
 	}
 
 	/**
@@ -211,7 +211,7 @@ class Database
 		if ( !$this->mysqli )
 			$this->connect();
 
-		return $this->mysqli->affected_rows($this->mysqli);
+		return $this->mysqli->affected_rows;
 	}
 
 	/**
