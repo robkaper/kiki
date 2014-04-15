@@ -5,6 +5,8 @@
 
 <div id="cw"><div id="content">
 
+{include 'parts/flashbag'}
+
 {$content}
 
 <br class="spacer">

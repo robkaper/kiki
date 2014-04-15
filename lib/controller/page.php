@@ -28,5 +28,3 @@ class Page extends \Kiki\Controller
     }
   }
 }
-  
-?>

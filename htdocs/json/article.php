@@ -120,6 +120,7 @@
 
     if ( !count($errors) )
     {
+			\Kiki\Core::getFlashBag()->add( 'notice', sprintf( "Article '%s' saved succesfully. (id: %d, cname: %s)", $article->title(), $article->id(), $article->cname() ) );
       Router::redirect( $_SERVER['HTTP_REFERER'], 303 );
       exit();
     }

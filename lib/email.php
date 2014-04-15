@@ -14,6 +14,8 @@
  * @license Released under the terms of the MIT license.
  */
 
+namespace Kiki;
+
 class Email
 {
   private $subject;

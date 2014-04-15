@@ -274,10 +274,13 @@ class Template
 
     // Log::debug( "content: ". $this->content );
 
-    $this->normalise( $this->data );
+		$this->data['kiki']['flashBag'] = \Kiki\Core::getFlashBag()->getData();
+		Log::debug( "flashbag: ". print_r($this->data['kiki']['flashBag'], true) );
 
-    $this->preparse();
+    $this->normalise( $this->data );
+		$this->preparse();
     $this->parse();
+
     if ( $this->cleanup )
       $this->cleanup();
 
@@ -285,6 +288,11 @@ class Template
     // Log::debug( "content: ". $this->content );
 
 		// Log::endTimer( "Template::content ". $this->template );
+
+		if ( $fullHTML )
+		{
+			\Kiki\Core::getFlashBag()->reset();
+		}
 
     return $this->content;
   }

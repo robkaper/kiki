@@ -171,10 +171,33 @@ hr {
 	height: 16px;
 }
 
+#kikiFlashbag ul {
+	list-style-type: none;
+}
+
+#kikiFlashbag li {
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+#kikiFlashbag li.notice {
+	background: #dfd;
+	border: 1px dotted #0f0;
+}
+
+#kikiFlashbag li.warning {
+	background: #ff9;
+	border: 1px dotted #fa0;
+}
+
+#kikiFlashbag li.error {
+	background: #ddf;
+	border: 1px dotted #f00;
+}
+
 #dialogTitle {
 	display: none;
 }
-
 
 .ui-dialog {
 	border: 1px solid #9c6;

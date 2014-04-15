@@ -6,6 +6,8 @@
 
 <div id="cw" class="twosides"><div id="content">
 
+{include 'parts/flashbag'}
+
 {$content}
 
 <br class="spacer">

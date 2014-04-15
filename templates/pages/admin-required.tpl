@@ -5,6 +5,8 @@
 
 <div id="cw"><div id="content">
 
+{include 'parts/flashbag'}
+
 <p>
 {if $user.id}
 You do not have administration privileges.

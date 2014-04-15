@@ -5,6 +5,8 @@
 
 <div id="cw"><div id="content">
 
+{include 'parts/flashbag'}
+
 <p>
 {"This section currently has no underlying content."|i18n}</p>
 

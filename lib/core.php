@@ -17,6 +17,7 @@ class Core
 	private static $user = null;
 
 	private static $templateData = null;
+	private static $flashBag = null;
 
 	public static function getInstallPath()
 	{
@@ -193,6 +194,14 @@ class Core
 		// a template.
 
 		self::$templateData['now'] = time();
+	}
+
+	public static function getFlashBag()
+	{
+		if ( !isset(self::$flashBag) )
+			self::$flashBag = new \Kiki\FlashBag();
+
+		return self::$flashBag;
 	}
 
 }
