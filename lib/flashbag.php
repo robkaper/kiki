@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * @class FlashBag
+ * @package Kiki
+ * @author Rob Kaper <http://robkaper.nl/>
+ * @copyright 2014 Rob Kaper <http://robkaper.nl/>
+ * @license Released under the terms of the MIT license.
+ */
+
 namespace Kiki;
 
 class FlashBag
