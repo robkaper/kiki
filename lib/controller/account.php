@@ -79,7 +79,7 @@ class Account extends \Kiki\Controller
 		$user = \Kiki\Core::getUser();
 
 		if ( $user->id() )
-			\Kiki\Core::getFlashBag->add( 'warning', _("You are already logged in.") );
+			\Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
 
 		if ( !count($errors) && $_POST )
 		{
