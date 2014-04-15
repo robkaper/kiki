@@ -63,7 +63,7 @@ class Mailer
       return $error;
     }
     
-    if ( !($smtp = new Net_SMTP(Config::$smtpHost, Config::$smtpPort)) )
+    if ( !($smtp = new \Net_SMTP(Config::$smtpHost, Config::$smtpPort, $_SERVER['SERVER_NAME'])) )
     {
       $error = "Mailer: unable to instantiate Net_SMTP object";
       Log::debug($error);
@@ -71,7 +71,7 @@ class Mailer
     }
     // $smtp->setDebug(true);
 
-    $pear = new PEAR();
+    $pear = new \PEAR();
     if ( $pear->isError($e = $smtp->connect()) )
     {
       $error = "Mailer: connect error: ". $e->getMessage();
@@ -86,7 +86,7 @@ class Mailer
       return $error;
     }
 
-    $rfc = new Mail_RFC822();
+    $rfc = new \Mail_RFC822();
     $pureAddresses = $rfc->parseAddressList($email->from());
     $from = $pureAddresses[0]->mailbox. "@". $pureAddresses[0]->host;
 
