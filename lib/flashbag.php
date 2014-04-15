@@ -20,7 +20,7 @@ class FlashBag
 		if ( !isset($_SESSION['kiki.flashBag']) || !is_array($_SESSION['kiki.flashBag']) )
 		{
 			\Kiki\Log::debug( "init flashbag session" );
-			$_SESSION['kiki.flashbag'] = array();
+			$_SESSION['kiki.flashBag'] = array();
 		}
 	}
 
