@@ -45,7 +45,7 @@ class Mailer
 /*
     if ( isset($GLOBALS['phpmail']) && $GLOBALS['phpmail'] )
     {
-      $rfc = new Mail_RFC822();
+      $rfc = new \Mail_RFC822();
       $pureAddresses = $rfc->parseAddressList($email->to());
       foreach( $pureAddresses as $address )
       {

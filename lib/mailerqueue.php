@@ -1,5 +1,7 @@
 <?php
 
+namespace Kiki;
+
 /**
  * Class to manage the e-mail queue.
  *

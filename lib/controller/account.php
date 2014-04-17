@@ -98,7 +98,7 @@ class Account extends \Kiki\Controller
 				else
 				{
 					\Kiki\Core::setUser($user);
-					Auth::setCookie($userId);
+					\Kiki\Auth::setCookie($userId);
 
 					$this->status = 303;
 			    $this->content = $this->getBaseUri();
