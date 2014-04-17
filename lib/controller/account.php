@@ -202,7 +202,7 @@ class Account extends \Kiki\Controller
 					{
 	  		    $from = \Kiki\Config::$mailSender;
 	  		    $to = $email;
-	  		    $email = new Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
+	  		    $email = new \Kiki\Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
       
   	  		  $msg = "Please verify your account:\n\n";
 
@@ -213,7 +213,7 @@ class Account extends \Kiki\Controller
 						$msg .= $url;
 
 		      	$email->setPlain( $msg );
-		      	Mailer::send($email);
+		      	\Kiki\Mailer::send($email);
 					}
 
 					$template->assign( 'accountCreated', true );
