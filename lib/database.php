@@ -120,19 +120,20 @@ class Database
 		Log::beginTimer('db');
 
 		$cacheId = md5($q);
-		$rs = Core::cacheAvailable() ? $memcache->get($cacheId) : null;
-		if ( !$rs )
+		$rs = Core::cacheAvailable() ? Core::getMemcache()->get($cacheId) : false;
+		if ( $rs === false )
 		{
 			$this->lastQuery = $q;
 			$rs = $this->mysqli->query($q);
-			if ( Core::cacheAvailable() )
+
+			if ( $rs === false )
+				Log::error( "no rs for query [$q]" );
+			else if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);
 		}
 
 		Log::endTimer('db');
 
-		if ( $rs === FALSE )
-			Log::error( "no rs for query [$q]" );
 		return $rs;
 	}
 
