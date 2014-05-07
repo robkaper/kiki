@@ -19,7 +19,6 @@ class FlashBag
 
 		if ( !isset($_SESSION['kiki.flashBag']) || !is_array($_SESSION['kiki.flashBag']) )
 		{
-			\Kiki\Log::debug( "init flashbag session" );
 			$_SESSION['kiki.flashBag'] = array();
 		}
 	}
@@ -32,9 +31,13 @@ class FlashBag
 		$_SESSION['kiki.flashBag'][$type][] = $msg;
 	}
 
-	public function getData()
+	public function get( $type, $clear = true )
 	{
-		return $_SESSION['kiki.flashBag'];
+		$data = isset($_SESSION['kiki.flashBag'][$type]) ? $_SESSION['kiki.flashBag'][$type] : null;
+		if ( $clear )
+			unset($_SESSION['kiki.flashBag'][$type]);
+
+		return $data;
 	}
 
 	public function reset()

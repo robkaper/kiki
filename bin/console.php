@@ -21,6 +21,7 @@
 
   $_SERVER['SERVER_NAME'] = isset($argv[1]) ? $argv[1] : die('SERVER_NAME argument missing'. PHP_EOL);
 	$_SERVER['REQUEST_URI'] = isset($argv[2]) ? $argv[2] : die('REQUEST_URI argument missing'. PHP_EOL);
+	$_SERVER['SCRIPT_URL'] = $_SERVER['REQUEST_URI'];
 
   require_once preg_replace('~/bin/(.*)\.php~', '/lib/init.php', __FILE__ );
 

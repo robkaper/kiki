@@ -123,6 +123,12 @@ class Log
 		fclose( $fp );
 	}
 
+	public static function fatal( $msg )
+	{
+		Log::error( $msg );
+		exit;
+	}
+
 	/**
 	* @deprecated Still referenced by the Daemon class which expects a
 	* syslog compatible Log class, which Kiki currently doesn't provide.

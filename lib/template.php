@@ -19,9 +19,6 @@
  * Internationalisation will probably fail in combination with other
  * modifiers.
  *
- * // FIXME: Internationalisation probably will fail anyway, as template
- * texts won't be recognised by gettext.
- *
  * --> Conditions:
  * {if $var} ... {/if}
  * {if !$var} ... {/if}
@@ -109,9 +106,17 @@ class Template
     return self::$instance;
   }
   
-	public function data()
+	public function data( $stripFlattened = false )
 	{
-		return $this->data;
+		if ( !$stripFlattened )
+			return $this->data;
+
+		$data = array();
+		foreach( $this->data as $key => $value )
+			if ( !strstr( $key, "." ) )
+				$data[$key] = $value;
+
+		return $data;
 	}
 
   /**
@@ -274,8 +279,11 @@ class Template
 
     // Log::debug( "content: ". $this->content );
 
-		$this->data['kiki']['flashBag'] = \Kiki\Core::getFlashBag()->getData();
-		Log::debug( "flashbag: ". print_r($this->data['kiki']['flashBag'], true) );
+		$this->data['kiki']['flashBag'] = array(
+			'notice' => \Kiki\Core::getFlashBag()->get('notice', false),
+			'warning' => \Kiki\Core::getFlashBag()->get('warning', false),
+			'error' => \Kiki\Core::getFlashBag()->get('error', false)
+		);
 
     $this->normalise( $this->data );
 		$this->preparse();
@@ -512,12 +520,8 @@ class Template
 
   private function modify( $input, $mods )
   {
-		// echo "input: $input, mods: $mods". PHP_EOL;
-
     if ( ! ($mods = trim($mods)) )
       return $input;
-
-		// $input = (string) $input;
 
     $mods = explode( ',', $mods );
 

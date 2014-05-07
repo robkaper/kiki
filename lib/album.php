@@ -209,7 +209,7 @@ class Album extends Object
     {
       $pictureId = $picture['id'];
       $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
-			$q = $db->buildQuery( "INSERT INTO album_pictures (album_id, picture_id, sortorder) SELECT %d, %d, MAX(sortorder+1) FROM album_pictures WHERE album_id=%d", $this->id, $pictureId, $this->id );
+			$q = $this->db->buildQuery( "INSERT INTO album_pictures (album_id, picture_id, sortorder) SELECT %d, %d, MAX(sortorder+1) FROM album_pictures WHERE album_id=%d", $this->id, $pictureId, $this->id );
       $this->db->query($q);
     }
 

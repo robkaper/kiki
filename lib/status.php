@@ -40,7 +40,12 @@ class Status
 
     foreach( $requirements as $requirement )
     {
-      if ( isset($requirement['function']) )
+			if ( isset($requirement['Config']) )
+			{
+				$property = $requirement['Config'];
+				$loaded = ( Config::${$property} !== null );
+			}
+      else if ( isset($requirement['function']) )
         $loaded = function_exists($requirement['function']);
       else if ( isset($requirement['include']) )
         $loaded = @include_once($requirement['include']);

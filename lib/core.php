@@ -67,7 +67,7 @@ class Core
 	public static function getMemcache()
 	{
 		if ( !isset(Config::$memcachedHost) ) 
-			return;
+			return null;
 
 		if ( !isset(self::$memcache) )
 		{
@@ -77,6 +77,8 @@ class Core
 			$cacheAvailable = self::$memcache->connect( Config::$memcachedHost, Config::$memcachedPort );
 			Log::endTimer( "initMemcache" );
 		}
+
+		return self::$memcache;
 	}
 
 	public static function cacheAvailable()
@@ -147,7 +149,8 @@ class Core
 		// the internal fallback in the Kiki controller.
 		$accountServices = array_values( Router::getBaseUris('account') );
 		$baseUri = isset($accountServices[0]) ? $accountServices[0]->base_uri : Config::$kikiPrefix. "/account";
-		self::$templateData['accountService'] = array( 'url' => $baseUri );
+		$title = isset($accountServices[0]) ? $accountServices[0]->title : _("Account");
+		self::$templateData['accountService'] = array( 'url' => $baseUri, 'title' => $title );
 		
 		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
     self::$templateData['activeConnections'] = array();

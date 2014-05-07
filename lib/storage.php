@@ -111,6 +111,8 @@ class Storage
         return 'text/css';
       case 'gif':
         return 'image/gif';
+			case 'html':
+				return 'text/html';
       case 'jpg':
         return 'image/jpeg';
       case 'js':
