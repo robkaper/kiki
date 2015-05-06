@@ -6,7 +6,7 @@ use Kiki\Log;
 
 if ( isset(\Kiki\Config::$twitterOAuthPath) )
 {
-  require_once \Kiki\Config::$twitterOAuthPath. "/twitteroauth/twitteroauth.php";
+  require_once \Kiki\Config::$twitterOAuthPath. "/autoload.php";
 }
 
 class Twitter extends External
