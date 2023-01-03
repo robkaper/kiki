@@ -20,17 +20,21 @@ Create required files and directories
 Kiki assumes a domain-based site root under /var/www/$server_name
 Create it with read access for your web server user.
 
-  mkdir -p /var/www/example.com
-  chgrp www-data /var/www/example.com && chmod g+r /var/www/example.com
+  mkdir -p /var/www/example.com/htdocs
+  chgrp www-data /var/www/example.com/htdocs && chmod g+r /var/www/example.com/htdocs
+
+You should link the Kiki router file into your web root.
+
+  cd /var/www/example.com/htdocs && ln -s /var/www/kiki/htdocs/router.php
 
 * Required: configuration file
 
 Directly in your site root, create a file called config.php with read access
 for your web server user.
 
-cd /var/www/example.com
-touch config.php
-chgrp www-data config.php && chmod g+r config.php
+  cd /var/www/example.com
+  touch config.php
+  chgrp www-data config.php && chmod g+r config.php
 
 See: config/config.php-sample
 
@@ -39,18 +43,18 @@ See: config/config.php-sample
 Directly in your site root, create a file storage directory with write
 access for your web server user.
 
-cd /var/www/example.com
-mkdir storage
-chgrp www-data storage && chmod g+w storage
+  cd /var/www/example.com
+  mkdir storage
+  chgrp www-data storage && chmod g+w storage
 
 * Optional: debug file(s)
 
 To a log/ directory in your site root, create a directory with write access
 for your webserver user.
 
-cd /var/www/example.com
-mkdir log
-chgrp www-data log && chmod g+w log
+  cd /var/www/example.com
+  mkdir log
+  chgrp www-data log && chmod g+w log
 
 Kiki works pretty well as console framework as well. The Log class will use
 kiki-debug-www.txt for all webserver activity and kiki-debug-$user.txt when
@@ -64,10 +68,10 @@ the webserver through error_log().
 
 You can (and are encouraged to) use your own classes and templates by placing them into the appropriate paths:
 
-cd /var/www/example.com
-mkdir -p lib/controller/
-mkdir -p templates
-chgrp -R www-data lib templates && chmod -R g+w lib templates
+  cd /var/www/example.com
+  mkdir -p lib/controller/
+  mkdir -p templates
+  chgrp -R www-data lib templates && chmod -R g+w lib templates
 
 Kiki's class loader checks your local path before the Kiki installation
 path, so you cannot just add classes or templates, but also override the
