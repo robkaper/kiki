@@ -3,32 +3,32 @@
 Potential users are advised to update and test in a development or staging
 environment prior to deployment.
 
-Kiki is not intended to be installed by end users, but any LAMP
-administrator should be able to figure it out with these instructions.
+Kiki is not intended to be installed by end users, but with basic skills you 
+should be able to figure it out with these instructions.
 
 Install source files
 --------------------
 
 Place the Kiki source tree somewhere on your filesystem. Any location is
-fine, as long as your Apache user (usually www-data) has read access.
+fine, as long as your web server user (usually www-data) has read access.
 
 Create required files and directories
 -------------------------------------
 
-* Required: document root
+* Required: website root
 
-Kiki assumes a domain-based site root under /www, create it with read access
-for your Apache user.
+Kiki assumes a domain-based site root under /var/www/$server_name
+Create it with read access for your web server user.
 
-mkdir -p /www/example.com
-chgrp www-data /www/example.com && chmod g+r 
+  mkdir -p /var/www/example.com
+  chgrp www-data /var/www/example.com && chmod g+r /var/www/example.com
 
 * Required: configuration file
 
 Directly in your site root, create a file called config.php with read access
-for your Apache user and configure your database settings.
+for your web server user.
 
-cd /www/example.com
+cd /var/www/example.com
 touch config.php
 chgrp www-data config.php && chmod g+r config.php
 
@@ -37,40 +37,56 @@ See: config/config.php-sample
 * Recommended: storage directory
 
 Directly in your site root, create a file storage directory with write
-access for your Apache user.
+access for your web server user.
 
-cd /www/example.com
+cd /var/www/example.com
 mkdir storage
-chgrp www-data storage && chmod g+w 
+chgrp www-data storage && chmod g+w storage
 
-* Optional: debug file
+* Optional: debug file(s)
 
-Directly in your site root, create a file called debug.txt with write access
-for your Apache user.
+To a log/ directory in your site root, create a directory with write access
+for your webserver user.
 
-cd /www/example.com
-touch debug.txt
-chgrp www-data debug.txt && chmod g+w debug.txt
+cd /var/www/example.com
+mkdir log
+chgrp www-data log && chmod g+w log
+
+Kiki works pretty well as console framework as well. The Log class will use
+kiki-debug-www.txt for all webserver activity and kiki-debug-$user.txt when
+included in CLI scripts.
+
+Config::$debug must be set to true to enable debug logging. If you do so
+without having a writeable log/ directory, Kiki will send debug messages to
+the webserver through error_log().
 
 * Optional: paths for custom classes and template files
 
-You can use your own classes and templates by placing them into the appropriate paths:
+You can (and are encouraged to) use your own classes and templates by placing them into the appropriate paths:
 
-cd /www/example.com
+cd /var/www/example.com
 mkdir -p lib/controller/
 mkdir -p templates
+chgrp -R www-data lib templates && chmod -R g+w lib templates
 
-Your local path is tried before the Kiki path, so you cannot just add
-classes or templates, but even override the Kiki defaults where desired.
+Kiki's class loader checks your local path before the Kiki installation
+path, so you cannot just add classes or templates, but also override the
+Kiki defaults where desired.
 
 Configure your virtual host
 ---------------------------
+
+// FIXME: these instructions need to be updated for nginx which I am
+// currently using (and thus supporting).  These Apache instructions might
+// still work, though.
 
 Edit config/htaccess and adjust to match your Kiki install path and site
 root. Then place the contents in your VirtualHost directive.
 
 Note: this setup has only been tested within the Apache configuration
-itself, not as .htaccess file.
+itself, not as .htaccess file.  I don't intent to support .htaccess files,
+or in general, environments where there is no full control over the web
+server environment.
 
 Install required modules and database schema
 --------------------------------------------
@@ -96,11 +112,14 @@ You can easily create your own custom controller modules within Kiki.
 
 To create a module named Foo, the following are required:
 
-- A file /www/example.com/lib/controller/foo.php (check lib/controller/examples/helloworld.php for an example)
+- A file /var/www/example.com/lib/controller/foo.php (check lib/controller/examples/helloworld.php for an example)
 - A class named Foo within that file, extending the Kiki\Controller class
 
 See lib/controller/examples/ in the Kiki install path.
 
 To start using a custom module, create a route to it in the sections table.
 
-FIXME: this should be automated with an Add Section CMS module.
+// FIXME: this should be automated with an Add Section CMS module.
+
+// FIXME: no, actually, this should probably be a configuration file as this
+// framework should be useable without a database.
