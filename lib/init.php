@@ -18,36 +18,36 @@
 
   // Find and store the Kiki install path
   $installPath = str_replace( "/lib/init.php", "", __FILE__ );
-	include_once $installPath. "/lib/core.php";
-	Kiki\Core::setInstallPath( $installPath );
+  include_once $installPath. "/lib/core.php";
+  Kiki\Core::setInstallPath( $installPath );
 
-  // FIXME: rjkcust, we shouldn't assume /home/www/server_name/ as site root.
+  // FIXME: rjkcust, we shouldn't assume /var/www/server_name/ as site root.
   // FIXME: allow setups where Config, Log, Storage and Template are part of DOCUMENT_ROOT.
-  Kiki\Core::setRootPath( "/home/www/". $_SERVER['SERVER_NAME'] );
+  Kiki\Core::setRootPath( "/var/www/". $_SERVER['SERVER_NAME'] );
 
   function __autoload( $className )
   {
-		include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
+    include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
 
-		if ( !Kiki\ClassHelper::isInKikiNamespace($className) )
-			return;
+    if ( !Kiki\ClassHelper::isInKikiNamespace($className) )
+      return;
    
-		$classFile = Kiki\ClassHelper::classToFile($className);
+    $classFile = Kiki\ClassHelper::classToFile($className);
 
     // Try local customisations first, but fallback no Kiki's base classes,
     // allows developers to easily rewrite/extend.
-		$classPaths = array( Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() );
+    $classPaths = array( Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() );
 
-		foreach( $classPaths as $classPath )
-		{
-			$includeFile = $classPath. "/lib/". $classFile;
-			// echo "$includeFile". PHP_EOL;
-	    if ( file_exists($includeFile) )
-	    {
-  	    include_once "$includeFile";
+    foreach( $classPaths as $classPath )
+    {
+      $includeFile = $classPath. "/lib/". $classFile;
+      // echo "$includeFile". PHP_EOL;
+      if ( file_exists($includeFile) )
+      {
+        include_once "$includeFile";
 
-				if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
-		      return;
+        if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
+          return;
 
 				trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
 				exit;
@@ -62,11 +62,16 @@
   }
 
 	// SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
-  $requestPath = isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : $argv[0];
+  $requestPath = isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : isset($argv) ? $argv[0] : null;
+  if ( !$requestPath )
+  {
+    $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
+    $requestPath = $urlParts['path'];
+  }
 
   Kiki\Log::init();
   Kiki\Config::init();
-    
+  
   if ( isset($staticFile) && $staticFile )
     return; 
 
