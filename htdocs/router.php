@@ -1,4 +1,5 @@
 <?php
+  namespace Kiki;
 
 /**
  * Router script for Kiki. By the grace of mod_rewrite, it is called for all
@@ -25,11 +26,10 @@
  * @todo extend to minimise mod_rewrite even further, or totally make mod_rewrite optional
  */
 
-	namespace Kiki;
-
   // Optimisation: pre-recognise built-in static files (skips i18n, database
   // and user handling in init.php)
-  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['REQUEST_URI'] );
+  // $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
 
   require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
