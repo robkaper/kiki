@@ -178,6 +178,7 @@ class Config
 		{
 			// This should probably be an error, no configuration means no database means no functional website.
 			// On the other hand, the framework itself should run just fine without any data available.
+			Log::fatal( "configuration file not found: $file" );
 			Log::debug( "configuration file not found: $file" );
 			return;
 		}
