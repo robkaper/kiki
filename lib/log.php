@@ -67,6 +67,18 @@ class Log
 	}
 
 	/**
+	* Logs an error and generates a fatal exit.
+	* @param string $msg message to log
+	* @param boolean $alsoDebug (optional) whether to also record the message in the debug log
+	*/
+	public static function fatal( $msg, $alsoDebug = true )
+	{
+		self::error( $msg, $alsoDebug );
+		echo "<hr><strong>Kiki fatal error:</strong><br /><blockquote>$msg</blockquote><hr>". PHP_EOL;
+		exit;
+	}
+
+	/**
 	* Logs a message to Kiki's debug log file, including request method,
 	* URI and execution times since init() and previous log entry.
 	* @param string $msg message to log
@@ -107,7 +119,14 @@ class Log
 
 	private static function write()
 	{
-		$logFile = Core::getRootPath(). "/debug.txt";
+		if ( php_sapi_name() == "cli" )
+		{
+			$processUser = posix_getpwuid(posix_geteuid());
+			$logFile = Core::getRootPath(). "/log/kiki-debug-". $processUser['name']. ".txt";
+		}
+		else
+			$logFile = Core::getRootPath(). "/log/kiki-debug-www.txt";
+
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
 		{
@@ -121,12 +140,6 @@ class Log
 		}
 
 		fclose( $fp );
-	}
-
-	public static function fatal( $msg )
-	{
-		Log::error( $msg );
-		exit;
 	}
 
 	/**
