@@ -1,8 +1,19 @@
 Kiki is a website framework.
 
-    * based on LAMP (Linux, Apache, MySQL/MariaDB and PHP)
+    * based on LNMP (Linux, nginx, MariaDB and PHP)
 
     * completely HTML5 with CSS
+
+It is probably not very suitable for general use.  This is not Wordpress,
+it's a collection of helper classes to build upon.
+
+After abandoning this project in 2011 I have only recently (late 2022, early
+2023) started using it again for my personal website.
+
+In due time any and all customisations and actual website delivery will
+likely disappear from this repository.
+
+Old notes:
 
     * extensive use of Ajax and JSON using JQuery
       * Javascript currently required, but the aim is to make all non-admin
@@ -21,7 +32,3 @@ Kiki is a website framework.
     * comment system
     * custom URL shortener
     * mail-to-social update channel
-
-For more information please see:
-
-http://robkaper.nl/webdev/kiki/
