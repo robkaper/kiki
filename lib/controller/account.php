@@ -77,14 +77,15 @@ class Account extends \Kiki\Controller
 		$errors = array();
 
 		$user = \Kiki\Core::getUser();
+		if ( !count($errors) )
+		{
+			$email = $_POST['email'] ?? null;
+			$$password = $_POST['password'] ?? null; 
+		}
 
 		if ( $user->id() )
 			\Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
 
-		if ( !count($errors) && $_POST )
-		{
-	    $email = $_POST['email'];
-	    $password = $_POST['password']; 
 
   	  $userId = $user->getIdByLogin( $email, $password );
   	  if ( $userId )
