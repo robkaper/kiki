@@ -16,7 +16,7 @@
 
 namespace Kiki;
 
-class Article extends Object
+class Article extends BaseObject
 {
   private $ipAddr = null;
   // private $title = null;

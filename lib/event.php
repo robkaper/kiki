@@ -13,7 +13,7 @@
 
 namespace Kiki;
 
-class Event extends Object
+class Event extends BaseObject
 {
   private $start = null;
   private $end = null;

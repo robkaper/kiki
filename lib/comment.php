@@ -20,7 +20,7 @@ namespace Kiki;
 
 use Kiki\Object;
 
-class Comment extends Object
+class Comment extends BaseObject
 {
   private $ipAddr = '0.0.0.0';
 

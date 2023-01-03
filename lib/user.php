@@ -2,7 +2,7 @@
 
 namespace Kiki;
 
-class User extends Object
+class User extends BaseObject
 {
   private $email = null;
   private $password = null;

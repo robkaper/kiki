@@ -2,7 +2,7 @@
 
 namespace Kiki;
 
-class SocialUpdate extends Object
+class SocialUpdate extends BaseObject
 {
 	private $body = null;
 

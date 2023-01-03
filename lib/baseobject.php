@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Object base class.
+ * BaseObject base class.
  *
- * Provides all properties and methods shared by all Objects.
+ * Provides all properties and methods shared by all BaseObjects.
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
@@ -15,7 +15,7 @@
 
 namespace Kiki;
 
-abstract class Object
+abstract class BaseObject
 {
   protected $db;
 

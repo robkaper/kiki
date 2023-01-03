@@ -15,7 +15,7 @@
 
 namespace Kiki;
 
-class Album extends Object
+class Album extends BaseObject
 {
   public $title;
   private $system;
