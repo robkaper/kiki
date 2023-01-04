@@ -395,16 +395,6 @@ form textarea {
 	height: 20em;
 }
 
-.cleditorMain textarea {
-	float: none;
-	width: auto;
-}
-
-.cleditorMain {
-        width: 70%;
-        float: left;
-}
-
 form label span.remaining {
 	font-size: 0.875em;
 	font-weight: bold;

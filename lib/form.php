@@ -75,11 +75,6 @@ class Form
     }
 
     $template = Template::getInstance();
-    if ( Config::$clEditor )
-    {
-      $template->append( 'stylesheets', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.css" );
-      $template->append( 'scripts', Config::$kikiPrefix. "/scripts/cleditor/jquery.cleditor.min.js" );
-    }
 
     // $label .= "<a class=\"button toggleWysiwyg\" href=\"#\">Toggle WYSIWYG</a>";
     $content = "<p class=\"clear\"><label for=\"${id}\">${label}</label>\n";

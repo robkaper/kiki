@@ -60,7 +60,6 @@ class Config
 	public static $responsive = false;
 	public static $customCss = null;
 
-	public static $clEditor = false;
 	public static $i18n = true;
 
 	public static $iconSetColor = "black";

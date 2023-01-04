@@ -179,7 +179,6 @@ class Article extends BaseObject
     if ( $type!='pages' )
       $content .= Form::datetime( "ctime", $date, "Date" );
 
-    $class = Config::$clEditor ? "cleditor" : null;
     $content .= Form::textarea( "body", preg_replace( '~\r?\n~', '&#010;', htmlspecialchars($this->body) ), "Body", null, 0, $class );
 
     if ( $type!='pages' )
