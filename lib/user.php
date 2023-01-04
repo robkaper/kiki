@@ -76,6 +76,12 @@ class User extends BaseObject
       $this->id = $id;
       $this->objectId = 0;
     }
+    
+    if ( !$this->id )
+    {
+      $this->reset();
+      return;
+    }
 
 		$fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'email', 'auth_token', 'mail_auth_token', 'admin' );
 
