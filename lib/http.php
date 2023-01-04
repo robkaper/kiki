@@ -44,6 +44,10 @@ class Http
         header( $_SERVER['SERVER_PROTOCOL']. ' 303 See Other', 303 );
         break;
 
+      case 403:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 403 Forbidden', 403 );
+        break;
+
       case 404:
         header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
         break;
