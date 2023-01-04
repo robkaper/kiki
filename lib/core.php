@@ -147,7 +147,8 @@ class Core
 		// Account service(s). Although multiple routing entries are technically
 		// possible, templateData currently only populates one: the first found or else
 		// the internal fallback in the Kiki controller.
-		$accountServices = array_values( Router::getBaseUris('account') );
+		// FIXME: disabled for now, this shouldn't be db-populated anyway
+		// $accountServices = array_values( Router::getBaseUris('account') );
 		$baseUri = isset($accountServices[0]) ? $accountServices[0]->base_uri : Config::$kikiPrefix. "/account";
 		$title = isset($accountServices[0]) ? $accountServices[0]->title : _("Account");
 		self::$templateData['accountService'] = array( 'url' => $baseUri, 'title' => $title );
@@ -189,8 +190,9 @@ class Core
 		// option for children to reimplement or amend) should do through a Menu
 		// class.
 
-    self::$templateData['menu'] = Boilerplate::navMenu(self::$user);
-    self::$templateData['subMenu'] = Boilerplate::navMenu(self::$user, 2);
+		// FIXME: shouldn't be db-populated with new routing
+//    self::$templateData['menu'] = Boilerplate::navMenu(self::$user);
+//    self::$templateData['subMenu'] = Boilerplate::navMenu(self::$user, 2);
 
 		// @todo Allow starttime and execution time from Log(::init) to be
 		// queried and assign them.  Just in case someone wants to output it in
