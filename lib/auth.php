@@ -59,16 +59,16 @@ class Auth
    *
    * @return void
    */
-  public static function setCookie( $id )
+  public static function setCookie( $id, $beyondSession = false )
   {
     // TODO: make cookie length configurable (preferably by end user, with
     // available options configurable by site administrator)
 
-    $expires = time() + ( 14 * 86400 );
+    $expires = $beyondSession ? ( time() + (14*86400) ) : 0;
     $cookie = self::generateCookie( $id, $expires );
 
     Log::debug( "setting cookie: id($id), expires($expires), cookie($cookie)" );
-    setcookie( Config::$authCookieName, $cookie, $expires, '/', $_SERVER['HTTP_HOST'], ($_SERVER['HTTPS'] == 'on') );
+    setcookie( Config::$authCookieName, $cookie, $expires, '/', $_SERVER['HTTP_HOST'], ($_SERVER['HTTPS'] == 'on'), true );
   }
 
   /**
@@ -86,7 +86,7 @@ class Auth
 
     list( $id, $expires, $hmac )  = explode( '|', $_COOKIE[Config::$authCookieName] );
 
-    if ( time() > $expires )
+    if ( $expires!=0 && time() > $expires )
     {
       Log::debug( "Auth::validateCookie: expired, time(". time(). "), expires($expires)" );
       return 0;
@@ -99,8 +99,8 @@ class Auth
     if ( $valid )
     {
       // Refresh cookie if it's more than a day old
-      if ( time() + 86400 > $expires )
-        setCookie($id);
+      if ( $expires!=0 && time() + 86400 > $expires )
+        self::setCookie($id, true);
 
       return $id;
     }
@@ -108,5 +108,3 @@ class Auth
     return 0;
   }
 }
-
-?>
