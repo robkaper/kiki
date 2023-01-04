@@ -61,10 +61,12 @@
 		}
   }
 
-	// SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
-  $requestPath = isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : isset($argv) ? $argv[0] : null;
-  if ( !$requestPath )
+  // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
+  if ( php_sapi_name() == "cli" )
+    $requestPath = $argv[0] ?? null;
+  else
   {
+    // TODO: duplicate from router.php
     $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
     $requestPath = $urlParts['path'];
   }

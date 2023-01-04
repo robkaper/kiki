@@ -28,15 +28,29 @@
 
   // Optimisation: pre-recognise built-in static files (skips i18n, database
   // and user handling in init.php)
-  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['REQUEST_URI'] );
-  // $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $_SERVER['SCRIPT_URL'] );
+  // TODO: why call init at all for static files?!
+  $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
+  $requestPath = $urlParts['path'];
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $requestPath );
 
   require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-	if ( !$staticFile )
-	{
-	  Log::debug( "START router: $requestPath", $staticFile );
-	}
+  if ( !$staticFile )
+    Log::debug( "START router: $requestPath", $staticFile );
+  else
+    Log::debug( "START router: $requestPath", $staticFile );
+
+  // FIXME: This feels ugly, but I cannot seem to get nginx to handle extensionless
+  // PHP files while also falling back to this router file.
+  // nginx strips ugly stuff like ../ so this might be safe, but not sure
+  // what happens in Apache.
+  $phpFile = Core::getRootPath(). "/htdocs${requestPath}.php";
+  if ( file_exists($phpFile) )
+  {
+    Log::debug( "SOURCE router: $phpFile" );
+    include_once "$phpFile";
+    exit;
+  }
 
   // Redirect requests with parameters we don't want visible for the user or
   // Analytics.
