@@ -1,8 +1,14 @@
 <?php
-  namespace Kiki;
 
-  Config::$dbHost = "localhost";
-  Config::$dbPort = 3306;
-  Config::$dbName = "example_com";
-  Config::$dbUser = "user";
-  Config::$dbPass = "password";
+namespace Kiki;
+
+Config::$dbHost = "localhost";
+Config::$dbPort = 3306;
+Config::$dbName = "example_com";
+Config::$dbUser = "user";
+Config::$dbPass = "password";
+
+Config::$routing = array(
+  '/hello/' => 'HelloController',
+  '/bye' => 'HelloController::bye'
+);

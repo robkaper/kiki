@@ -41,6 +41,9 @@ class Router
    */
   public static function getBaseURIs( $type = null, $sort = false )
   {
+    // FIXME: port to routing config, or get rid entirely database-based
+    // routes are probably going to be abandoned
+
     $db = Core::getDb();
 
     $baseUris = array();

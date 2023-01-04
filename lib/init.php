@@ -1,5 +1,7 @@
 <?php
 
+  ini_set( 'display_errors', true );
+
 /**
  * Initialisation/bootloader script for Kiki.
  *
@@ -14,51 +16,54 @@
  * @license Released under the terms of the MIT license.
  */
 
-	// echo "<pre>";
-
   // Find and store the Kiki install path
   $installPath = str_replace( "/lib/init.php", "", __FILE__ );
   include_once $installPath. "/lib/core.php";
   Kiki\Core::setInstallPath( $installPath );
 
-  // FIXME: rjkcust, we shouldn't assume /var/www/server_name/ as site root.
-  // FIXME: allow setups where Config, Log, Storage and Template are part of DOCUMENT_ROOT.
-  Kiki\Core::setRootPath( "/var/www/". $_SERVER['SERVER_NAME'] );
+  if ( php_sapi_name() == "cli" )
+  {
+    // FIXME: we shouldn't assume /var/www/server_name/ as site root.
+    Kiki\Core::setRootPath( "/var/www/". $_SERVER['SERVER_NAME'] );
+  }
+  else
+  {
+    $rootPath = str_replace( "/htdocs", "", $_SERVER['DOCUMENT_ROOT'] );
+    Kiki\Core::setRootPath( $rootPath );
+  }
+  $installPath = str_replace( "/lib/init.php", "", __FILE__ );
+
+  // Classhelper already needs this
+  include_once $installPath. "/lib/config.php";
 
   function __autoload( $className )
   {
     include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
 
-    if ( !Kiki\ClassHelper::isInKikiNamespace($className) )
-      return;
-   
+    if ( Kiki\ClassHelper::isInKikiNamespace($className) )
+      $classPath = Kiki\Core::getInstallPath();
+    else if( Kiki\ClassHelper::isInCustomNamespace($className) )
+      $classPath = Kiki\Core::getRootPath();
+
     $classFile = Kiki\ClassHelper::classToFile($className);
 
-    // Try local customisations first, but fallback no Kiki's base classes,
-    // allows developers to easily rewrite/extend.
-    $classPaths = array( Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() );
-
-    foreach( $classPaths as $classPath )
+    $includeFile = $classPath. "/lib/". $classFile;
+    if ( file_exists($includeFile) )
     {
-      $includeFile = $classPath. "/lib/". $classFile;
-      // echo "$includeFile". PHP_EOL;
-      if ( file_exists($includeFile) )
-      {
-        include_once "$includeFile";
+      include_once "$includeFile";
 
-        if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
-          return;
+      if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
+        return;
 
-				trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
-				exit;
-    	}
-		}
+      trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
+      exit;
+    }
 
-		if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
-		{
-				trigger_error( sprintf( "could not load class %s from local path %s nor Kiki install path %s", $className, Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() ), E_USER_ERROR );
-				exit;
-		}
+    if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
+    {
+      trigger_error( sprintf( "could not load class %s from local path %s nor Kiki install path %s", $className, Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() ), E_USER_ERROR );
+      exit;
+    }
   }
 
   // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
@@ -73,7 +78,10 @@
 
   Kiki\Log::init();
   Kiki\Config::init();
-  
+
+  Kiki\Log::beginTimer( $requestPath );
+
+  // When called from router, don't do stuff.
   if ( isset($staticFile) && $staticFile )
     return; 
 
@@ -105,12 +113,14 @@
 	Kiki\Core::getMemcache();
 
   // User(s)
-  // FIXME: is this where we want this..
-  $q = "select id from users where admin=1"; // and verified=1
+  // FIXME: this should be part of core, not here...
+  /*
+  $q = "SELECT id FROM users WHERE admin=1"; // AND verified=1";
   $rs = $db->query($q);
   if ( $rs && $db->numRows($rs) )
     while( $o = $db->fetchObject($rs) )
       Kiki\Config::$adminUsers[] = $o->id;
+  */
 
   $user = Kiki\Core::getUser();
   $user->authenticate();

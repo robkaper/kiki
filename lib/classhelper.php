@@ -25,6 +25,11 @@ class ClassHelper
 		return preg_match( '#^Kiki\\\#', $className );
 	}
 
+	public static function isInCustomNamespace( $className )
+	{
+		return preg_match( '#^'. \Kiki\Config::$namespace. '\\\#', $className );
+	}
+
 	public static function classToType( $className )
 	{
 		return str_replace("\\", "/", strtolower($className));
@@ -35,7 +40,7 @@ class ClassHelper
 	{
 		$partName = self::classToType($className);
 		$fileName = str_replace("\\", "/", $partName). ".php";
-		$fileName = preg_replace("#^kiki/#", "", $fileName );
+		$fileName = preg_replace("#^(kiki|". strtolower(\Kiki\Config::$namespace). ")/#", "", $fileName );
 		return $fileName;
 	}
 

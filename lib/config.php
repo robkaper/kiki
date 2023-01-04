@@ -20,8 +20,12 @@ namespace Kiki;
 
 class Config
 {
+	public static $namespace = null;
 	public static $debug = false;
+
 	public static $offlineMode = false;
+
+	public static $routing = null;
 
 	public static $siteName = null;
 	public static $copyOwner = "Kiki website framework";
@@ -126,6 +130,8 @@ class Config
 	*/
 	private static function setDefaults()
 	{
+		self::$routing = array();
+
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
 
@@ -184,5 +190,3 @@ class Config
 		include_once "$file";
 	}
 }
-
-?>

@@ -17,13 +17,17 @@ class Controller
 {
   protected $instanceId = 0;
   protected $objectId = 0;
-	protected $contentType = 'html';
+  protected $action = null;
+
+  protected $contentType = 'html';
 
   protected $status = 404;
   protected $altContentType = null;
   protected $title = '404 Not found';
   protected $template = 'pages/404';
   protected $content = null;
+
+  protected $errors = null;
 
   protected $subController = null;
   protected $extraScripts = null;
@@ -37,14 +41,17 @@ class Controller
 
   public static function factory($type)
   {
-    $className = __NAMESPACE__. "\\". ClassHelper::typeToClass($type);
+    $className = \Kiki\Config::$namespace. "\\". ClassHelper::typeToClass($type);
 
-		if ( !class_exists($className) )
-		{
-			$classFile = ClassHelper::classToFile($className);
-			Log::error( "class $className not defined in $classFile" );
-			return new Controller();
-		}
+    if ( !class_exists($className) )
+      $className = __NAMESPACE__. "\\". ClassHelper::typeToClass($type);
+
+    if ( !class_exists($className) )
+    {
+      $classFile = ClassHelper::classToFile($className);
+      Log::error( "class $className not defined in $classFile" );
+      return new Controller();
+    }
 
     return new $className;
   }
@@ -53,6 +60,12 @@ class Controller
 	{
 		return ClassHelper::classToType( get_called_class() );
 	}
+
+	public function setAction( $action )
+	{
+	  $this->action = $action;
+	}
+	public function action() { return $this->action; }
 
   public function setInstanceId( $instanceId )
   {
@@ -70,9 +83,19 @@ class Controller
 
 	public function actionHandler()
 	{
-    $urlParts = parse_url($this->objectId);
-    if ( isset($urlParts['path']) && !empty($urlParts['path']) )
-		{
+	  $remainder = null;
+
+	  if ( $this->action )
+	  {
+	    $actionMethod = $this->action. 'Action';
+	    
+	    // FIXME: not handling remainder. But maybe that's okay when the config has an explicit action.
+	  }
+	  else
+	  {
+            $urlParts = parse_url($this->objectId);
+            if ( isset($urlParts['path']) && !empty($urlParts['path']) )
+            {
 			$pathParts = explode( '/', $urlParts['path'] );
 			$action = array_shift($pathParts);
 			$actionMethod = $action. 'Action';
@@ -84,6 +107,7 @@ class Controller
 			$actionMethod = 'indexAction';
 			$remainder = $this->objectId;
 		}
+            }
 
 		if ( !method_exists($this, $actionMethod) )
 			return false;
@@ -97,10 +121,23 @@ class Controller
 		return $this->$actionMethod($remainder);
 	}
 
-  public function exec() {}
+  // FIXME: For overloading?? What did this do?
+  public function exec()
+  {
+  }
 
   public function output()
   {
+        $template = Template::getInstance();
+    
+        $template->load( $this->template() );
+
+        \Kiki\Http::sendHeaders( $this->status(), $this->altContentType() );
+
+        include_once $template->file( $this->template() );
+
+        return;
+        
 		if ( PHP_SAPI == 'cli' )
 		{
 			$template = Template::getInstance();
@@ -138,6 +175,7 @@ class Controller
         $template->assign( 'footerText', Boilerplate::copyright() );
     
         $template->load( $this->template() );
+
         $template->assign( 'title', $this->title() );
         $template->assign( 'content', $this->content() );
 
