@@ -253,6 +253,21 @@ class Template
   {
     // Log::debug( "begin template engine" );
 
+    if ( !$this->template )
+      $this->template = 'pages/default';
+      
+    ob_start();
+    include_once $this->file($this->template);
+    $this->content = ob_get_contents();
+    ob_end_clean();
+
+    // FIXME: why?
+    \Kiki\Core::getFlashBag()->reset();
+    
+    return $this->content;
+
+    // LEGACY
+
     // TODO: don't always auto-include html framework, desired template
     // output could just as well be another format (json, xml, ...)
     $content = null;
