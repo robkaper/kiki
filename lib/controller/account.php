@@ -24,10 +24,12 @@ class Account extends \Kiki\Controller
 {
   public function exec()
 	{
+		\Kiki\Log::debug( "accountcontroller exec" );
 		if ( $this->actionHandler() )
 			return true;
 
 		$this->subController = new Kiki();
+
 		// No trailing slash: for htdocs/foo/bar.php
     $this->subController->setObjectId( "account/". $this->objectId );
 		$result = $this->subController->fallback();
@@ -87,32 +89,31 @@ class Account extends \Kiki\Controller
 			\Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
 
 
-  	  $userId = $user->getIdByLogin( $email, $password );
-  	  if ( $userId )
+		$userId = $user->getIdByLogin( $email, $password );
+		if ( $userId )
+		{
+			$user->load($userId);
+
+			if ( !$user->isVerified() )
 			{
-				$user->load($userId);
-
-				if ( !$user->isVerified() )
-				{
-					$errors[] = "Your e-mail address has not been verified yet.";
-				}
-				else
-				{
-					\Kiki\Core::setUser($user);
-					\Kiki\Auth::setCookie($userId);
-
-					$this->status = 303;
-			    $this->content = $this->getBaseUri();
-					return true;
-				}
+				$errors[] = "Your e-mail address has not been verified yet.";
 			}
 			else
 			{
-  	    $errors[] = "Invalid email/password combination";
+				\Kiki\Core::setUser($user);
+				\Kiki\Auth::setCookie($userId);
+
+				$this->status = 303;
+				$this->content = $this->getBaseUri();
+				return true;
 			}
 		}
+		else
+		{
+			$errors[] = "Invalid email/password combination";
+		}
 
-		$template = new \Kiki\Template( 'content/account-login' );
+		$template = new Template( 'content/account-login' );
 		$template->assign( 'errors', $errors );
 
 		$this->content = $template->fetch();
@@ -130,7 +131,7 @@ class Account extends \Kiki\Controller
 		return true;
 	}
 
-	public function createAction()
+	public function signupAction()
 	{
 	  $this->title = _("Create account");
 		$this->status = 200;
@@ -150,17 +151,13 @@ class Account extends \Kiki\Controller
 
 	    $email = $_POST['email'];
 			$template->assign('email', $email );
-	    $password = $_POST['password']; 
-	    $password2 = $_POST['password-repeat'];
-	    $adminPassword = isset($_POST['password-admin']) ? $_POST['password-admin'] : null;
+	    $password = $_POST['password'] ?? null; 
 
 	   	$validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
 			if ( !$validEmail )
 	      $errors[] = _("You did not enter a valid e-mail address.");
 	    if ( !$password )
 	      $errors[] = _("Your password cannot be empty.");
-	    if ( $password != $password2 )
-	      $errors[] = _("The passwords entered did not match.");
 
 			$createAdmin = false;
 			if ( isset($adminPassword) )
