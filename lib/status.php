@@ -65,7 +65,7 @@ class Status
   public static function dbVersion()
   {
     $db = Core::getDb();
-    $q = "select value from config where `key`='dbVersion'";
+    $q = "SELECT `value` FROM `config` WHERE `key`='dbVersion'";
     return $db->getSingleValue($q);
   }
 
