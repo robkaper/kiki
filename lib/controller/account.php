@@ -103,6 +103,7 @@ class Account extends \Kiki\Controller
         \Kiki\Core::setUser($user);
         \Kiki\Auth::setCookie($userId);
 
+        // FIXME: this is rather specific. But local namespaced class can override it...
         $this->status = 303;
         $this->content = '/'; // $this->getBaseUri();
         return true;
@@ -158,9 +159,9 @@ class Account extends \Kiki\Controller
 
        $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
       if ( !$validEmail )
-        $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+        $this->errors[] = array( 'msg' => _("<p>You did not enter a valid e-mail address.</p>") );
       if ( !$password )
-        $this->errors[] = array( 'msg' => _("Your password cannot be empty.") );
+        $this->errors[] = array( 'msg' => _("<p>Your password cannot be empty.</p>") );
 
       $createAdmin = false;
       if ( isset($adminPassword) )
@@ -170,7 +171,7 @@ class Account extends \Kiki\Controller
           $createAdmin = ($adminPassword==\Kiki\Config::$adminPassword);
           if (!$createAdmin )
           {
-            $this->errors[] = array( 'msg' => "You did not enter the correct administration password. Try again, or leave it empty to create a regular account." );
+            $this->errors[] = array( 'msg' => "<p>You did not enter the correct administration password. Try again, or leave it empty to create a regular account.</p>" );
           }
         }
       }
@@ -180,7 +181,7 @@ class Account extends \Kiki\Controller
         $userId = $user->getIdByEmail( $email );
         // Disable to send email despite existing account
         if ( $userId )
-          $this->errors[] = array( 'msg' => "An account with that e-mail address already exists. [Forgot your password?]" );
+          $this->errors[] = array( 'msg' => "<p>An account with that e-mail address already exists. [Forgot your password?]</p>" );
       }
     
       if ( !count($this->errors) )
@@ -193,7 +194,7 @@ class Account extends \Kiki\Controller
   
         if ( !$user->id() )
         {
-          $this->errors[] = array( 'msg' => "Account created failed." );
+          $this->errors[] = array( 'msg' => "<p>Account created failed.</p>" );
         }
         else
         {
@@ -202,7 +203,7 @@ class Account extends \Kiki\Controller
 
           if ( !isset(\Kiki\Config::$smtpHost) )
           {
-            $this->errors[] = array( 'msg' => "Your account was created, but we could not send the verification mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>." );
+            $this->errors[] = array( 'msg' => "<p>Your account was created, but we could not send the verification mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>.</p>" );
           }
           else
           {
@@ -223,6 +224,8 @@ class Account extends \Kiki\Controller
               $mail->setPlain( strip_tags($html) );
 
             $rs = \Kiki\Mailer::send($mail);
+            
+            $this->notices[] = array( 'msg' => "<p>Your account was succesfully created. A verification e-mail has been sent to <strong>". htmlspecialchars($email). "</strong>, you will be able to log in once your e-mail address has been verified.</p>" );
           }
 
           $template->assign( 'accountCreated', true );
