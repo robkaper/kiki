@@ -129,7 +129,7 @@ class Database
 			{
 				Log::error( "no rs for query [$q]" );
 				Log::error( $this->mysqli->errno. ": ". $this->mysqli->error );
-				exit;
+				// exit;
 			}
 			else if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);
