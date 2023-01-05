@@ -47,8 +47,8 @@ class Auth
    */
   private static function generateCookie( $id, $expires )
   {
-    $key = hash_hmac( 'md5', $id. $expires, Config::$authCookiePepper );
-    $hash = hash_hmac( 'md5', $id. $expires, $key );
+    $key = hash_hmac( 'sha256', $id. $expires, Config::$authCookiePepper );
+    $hash = hash_hmac( 'sha256', $id. $expires, $key );
     return $id. '|'. $expires. '|'. $hash;
   }
 
@@ -92,10 +92,10 @@ class Auth
       return 0;
     }
 
-    $key = hash_hmac( 'md5', $id. $expires, Config::$authCookiePepper );
-    $hash = hash_hmac( 'md5', $id. $expires, $key );
+    $key = hash_hmac( 'sha256', $id. $expires, Config::$authCookiePepper );
+    $hash = hash_hmac( 'sha256', $id. $expires, $key );
 
-    $valid = ($hmac==$hash);
+    $valid = hash_equals($hmac, $hash);
     if ( $valid )
     {
       // Refresh cookie if it's more than a day old
