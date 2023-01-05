@@ -44,6 +44,11 @@
       $classPath = Kiki\Core::getInstallPath();
     else if( Kiki\ClassHelper::isInCustomNamespace($className) )
       $classPath = Kiki\Core::getRootPath();
+    else
+    {
+      // Don't handle other namespaces.
+      return;
+    }
 
     $classFile = Kiki\ClassHelper::classToFile($className);
 
