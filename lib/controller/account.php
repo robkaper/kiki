@@ -23,271 +23,283 @@ namespace Kiki\Controller;
 class Account extends \Kiki\Controller
 {
   public function exec()
-	{
-		\Kiki\Log::debug( "accountcontroller exec" );
-		if ( $this->actionHandler() )
-			return true;
+  {
+    \Kiki\Log::debug( "accountcontroller exec" );
+    if ( $this->actionHandler() )
+      return true;
 
-		$this->subController = new Kiki();
+    $this->subController = new Kiki();
 
-		// No trailing slash: for htdocs/foo/bar.php
+    // No trailing slash: for htdocs/foo/bar.php
     $this->subController->setObjectId( "account/". $this->objectId );
-		$result = $this->subController->fallback();
-		if ( !$result )
-		{
-			// Trailing slash: for htdocs/foo/bar/index.php
-	    $this->subController->setObjectId( "account/". $this->objectId. "/" );
-			$result = $this->subController->fallback();
-		}
+    $result = $this->subController->fallback();
+    if ( !$result )
+    {
+      // Trailing slash: for htdocs/foo/bar/index.php
+      $this->subController->setObjectId( "account/". $this->objectId. "/" );
+      $result = $this->subController->fallback();
+    }
 
-		return $result;
-	}
+    return $result;
+  }
 
-	public function getBaseUri( $action = null )
-	{
-		$uri = $this->instanceId ? \Kiki\Router::getBaseUri('account', $this->instanceId) : \Kiki\Config::$kikiPrefix. "/account";
-		if ( !empty($action) )
-		{
-			if ( $uri[strlen($uri)-1] != '/' )
-				$uri .= "/";
+  public function getBaseUri( $action = null )
+  {
+    $uri = $this->instanceId ? \Kiki\Router::getBaseUri('account', $this->instanceId) : \Kiki\Config::$kikiPrefix. "/account";
+    if ( !empty($action) )
+    {
+      if ( $uri[strlen($uri)-1] != '/' )
+        $uri .= "/";
 
-			$uri .= $action;
-		}
-		return $uri;
-	}
+      $uri .= $action;
+    }
+    return $uri;
+  }
 
-	public function indexAction()
-	{
-		$user = \Kiki\Core::getUser();
+  public function indexAction()
+  {
+    $user = \Kiki\Core::getUser();
 
-		$this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
-		$this->status = 200;
-		$this->title = _("Your Account");
+    $this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
+    $this->status = 200;
+    $this->title = _("Your Account");
 
-		$template = new \Kiki\Template( 'content/account-summary' );
-		$this->content = $template->fetch();
+    $template = new \Kiki\Template( 'content/account-summary' );
+    $this->content = $template->fetch();
 
-		return true;
-	}
+    return true;
+  }
 
-	public function loginAction()
-	{
-		// $this->template = 'pages/default';
-		$this->status = 200;
-		$this->title = _("Login");
+  public function loginAction()
+  {
+    $this->template = 'pages/login';
+    $this->status = 200;
+    $this->title = _("Login");
 
-		$errors = array();
+    $user = \Kiki\Core::getUser();
+    if ( !count($this->errors) )
+    {
+      $email = $_POST['email'] ?? null;
+      $password = $_POST['password'] ?? null; 
+    }
 
-		$user = \Kiki\Core::getUser();
-		if ( !count($errors) )
-		{
-			$email = $_POST['email'] ?? null;
-			$$password = $_POST['password'] ?? null; 
-		}
+    if ( $user->id() )
+      \Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
 
-		if ( $user->id() )
-			\Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
+    $userId = $user->getIdByLogin( $email, $password );
+    if ( $userId )
+    {
+      $user->load($userId);
 
+      if ( !$user->isVerified() )
+      {
+        $this->errors[] = array( 'msg' => "Your e-mail address has not been verified yet." );
+      }
+      else
+      {
+        \Kiki\Core::setUser($user);
+        \Kiki\Auth::setCookie($userId);
 
-		$userId = $user->getIdByLogin( $email, $password );
-		if ( $userId )
-		{
-			$user->load($userId);
+        $this->status = 303;
+        $this->content = '/'; // $this->getBaseUri();
+        return true;
+      }
+    }
+    else if ( $_POST )
+    {
+      $this->errors[] = array( 'msg' => "Invalid email/password combination" );
+    }
 
-			if ( !$user->isVerified() )
-			{
-				$errors[] = "Your e-mail address has not been verified yet.";
-			}
-			else
-			{
-				\Kiki\Core::setUser($user);
-				\Kiki\Auth::setCookie($userId);
+    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
+    return true;
 
-				$this->status = 303;
-				$this->content = $this->getBaseUri();
-				return true;
-			}
-		}
-		else
-		{
-			$errors[] = "Invalid email/password combination";
-		}
+    $template = new \Kiki\Template( 'content/account-login' );
+    $template->assign( 'errors', $this->errors );
 
-		$template = new Template( 'content/account-login' );
-		$template->assign( 'errors', $errors );
+    $this->content = $template->fetch();
 
-		$this->content = $template->fetch();
+    return true;
+  }
 
-		return true;
-	}
+  public function logoutAction()
+  {
+    \Kiki\Auth::setCookie(0);
 
-	public function logoutAction()
-	{
-		\Kiki\Auth::setCookie(0);
+    $this->status = 303;
+    $this->content = '/login'; // $this->getBaseUri('login');
 
-		$this->status = 302;
-		$this->content = $this->getBaseUri('login');
+    return true;
+  }
 
-		return true;
-	}
+  public function signupAction()
+  {
+    $this->title = _("Create account");
+    $this->status = 200;
 
-	public function signupAction()
-	{
-	  $this->title = _("Create account");
-		$this->status = 200;
+    $template = new \Kiki\Template('content/account-create');
+    $template->assign('postUrl', $this->getBaseUri('create') );
 
-		$template = new \Kiki\Template('content/account-create');
-		$template->assign('postUrl', $this->getBaseUri('create') );
+    $user = \Kiki\Core::getUser();
 
-		$user = \Kiki\Core::getUser();
+    if ( $user->id() )
+    {
+    }
+    else if ( $_POST )
+    {
 
-    $errors = array();
+      $email = $_POST['email'];
+      $template->assign('email', $email );
+      $password = $_POST['password'] ?? null; 
 
-		if ( $user->id() )
-		{
-		}
-	  else if ( $_POST )
-	  {
+       $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
+      if ( !$validEmail )
+        $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+      if ( !$password )
+        $this->errors[] = array( 'msg' => _("Your password cannot be empty.") );
 
-	    $email = $_POST['email'];
-			$template->assign('email', $email );
-	    $password = $_POST['password'] ?? null; 
+      $createAdmin = false;
+      if ( isset($adminPassword) )
+      {
+        if ( isset(\Kiki\Config::$adminPassword) )
+        {
+          $createAdmin = ($adminPassword==\Kiki\Config::$adminPassword);
+          if (!$createAdmin )
+          {
+            $this->errors[] = array( 'msg' => "You did not enter the correct administration password. Try again, or leave it empty to create a regular account." );
+          }
+        }
+      }
 
-	   	$validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
-			if ( !$validEmail )
-	      $errors[] = _("You did not enter a valid e-mail address.");
-	    if ( !$password )
-	      $errors[] = _("Your password cannot be empty.");
-
-			$createAdmin = false;
-			if ( isset($adminPassword) )
-    	{
-      	if ( isset(\Kiki\Config::$adminPassword) )
-      	{
-        	$createAdmin = ($adminPassword==\Kiki\Config::$adminPassword);
-        	if (!$createAdmin )
-        	{
-        	  $errors[] = "You did not enter the correct administration password. Try again, or leave it empty to create a regular account.";
-        	}
-      	}
-    	}
-
-			if ( !count($errors) )
-			{
-				$userId = $user->getIdByEmail( $email );
-	  	  if ( $userId )
-	  	    $errors[] = "An account with that e-mail address already exists. [Forgot your password?]";
-			}
+      if ( !count($this->errors) )
+      {
+        $userId = $user->getIdByEmail( $email );
+        // Disable to send email despite existing account
+        if ( $userId )
+          $this->errors[] = array( 'msg' => "An account with that e-mail address already exists. [Forgot your password?]" );
+      }
     
-	    if ( !count($errors) )
-			{
-	      $user->storeNew( $email, $password, $createAdmin );
-	
-				if ( !$user->id() )
-				{
-					$errors[] = "Account created failed.";
-				}
-				else
-				{
-					$authToken = $user->getAuthToken();
-		     	$user->reset();
+      if ( !count($this->errors) )
+      {
+        $user->storeNew( $email, $password, $createAdmin );
 
-					if ( !isset(\Kiki\Config::$smtpHost) )
-					{
-						$errors[] = "Your account was created, but we could not send the verification mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>.";
-					}
-					else
-					{
-	  		    $from = \Kiki\Config::$mailSender;
-	  		    $to = $email;
-	  		    $email = new \Kiki\Email( $from, $to, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
-      
-  	  		  $msg = "Please verify your account:\n\n";
+        // Disable to send email despite existing account
+        // if ( !$user->id() )
+         //  $user->setId( $userId );
+  
+        if ( !$user->id() )
+        {
+          $this->errors[] = array( 'msg' => "Account created failed." );
+        }
+        else
+        {
+          $authToken = $user->getAuthToken();
+          $user->reset();
 
-						// Yes, send the actual auth token here. That's fine, because with
-						// access to that e-mail address people could gain access to the
-						// account anyway through the forget password mechanics.
-						$url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], $this->getBaseUri('verify'), $authToken );
-						$msg .= $url;
+          if ( !isset(\Kiki\Config::$smtpHost) )
+          {
+            $this->errors[] = array( 'msg' => "Your account was created, but we could not send the verification mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>." );
+          }
+          else
+          {
+            $from = \Kiki\Config::$mailSender;
+            // $url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], $this->getBaseUri('verify'), $authToken );
+            $url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], '/verify', $authToken );
 
-		      	$email->setPlain( $msg );
-		      	\Kiki\Mailer::send($email);
-					}
+            $mail = new \Kiki\Email( $from, $email, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
 
-					$template->assign( 'accountCreated', true );
-	    	}
-			}
-	  }
-	  else
-	  {
-	    $adminsExist = count(\Kiki\Config::$adminUsers);
+            $template = new \Kiki\Template( 'email/signup', true );
 
-			$template->assign( 'adminsExist', $adminsExist );
-	  }
+            $template->assign( 'url', $url );
+            $html = $template->content( false );
 
-		if ( count($errors) )
-		{
-			$template->assign('errors', $errors);
-		}
+            if ( $html )
+              $mail->setHtml( $html );
+            else
+              $mail->setPlain( strip_tags($html) );
 
-	  $this->content = $template->fetch();
+            $rs = \Kiki\Mailer::send($mail);
+          }
 
-		return true;
-	}
+          $template->assign( 'accountCreated', true );
+        }
+      }
+    }
+    else
+    {
+      $adminsExist = count(\Kiki\Config::$adminUsers);
 
-	public function verifyAction()
-	{
-		$this->status = 200;
-		$this->template = 'pages/default';
-		$this->title = _("Verify account");
+      $template->assign( 'adminsExist', $adminsExist );
+    }
 
-		$template = new \Kiki\Template('content/account-verify');
+    if ( count($this->errors) )
+    {
+      $template->assign('errors', $this->errors);
+    }
 
-		$errors = array();
-		$warnings = array();
+    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
+    return true;
 
-		$user = \Kiki\Core::getUser();
+    $this->content = $template->fetch();
 
-		$token = isset($_GET['token']) ? $_GET['token'] : null;
-		if ( empty($token) )
-		{
-			$errors[] = "Auth token missing.";
-		}
-		else
-		{
-			// Get user by auth token.
-			$verifyUserId = $user->getIdByToken( $token );
-			if ( !$verifyUserId )
-			{
-				$errors[] = "Invalid auth token. Auth tokens expire. [Send new verification e-mail]";
-			}
-			else
-			{
-				$verifyUser = new \Kiki\User($verifyUserId);
-				$verifyUser->setIsVerified(true);
-				$verifyUser->save();
+    return true;
+  }
 
-				if ( $user->id() && $user->id() != $verifyUser->id() )
-				{
-					$warnings[] = sprintf( "Because you verified account <strong>%s</strong> (%d), you are no longer logged in as <strong>%s</strong> (%d).", $verifyUser->email(), $verifyUser->id(), $user->email(), $user->id() );
-				}
-				else
-				{
-					Auth::setCookie( $verifyUser->id() );
-					$user = $verifyUser;
+  public function verifyAction()
+  {
+    $this->status = 200;
+    $this->template = 'pages/login';
+    $this->title = _("Verify account");
 
-					\Kiki\Core::setUser($verifyUser);
-					$mainTemplate = \Kiki\Template::getInstance();
-					$mainTemplate->assign('user', $user->templateData() );
-				}
-			}
-		}
+    // Does nothing but errors, warnings and notices...
+    $template = new \Kiki\Template('content/account-verify');
 
-		$template->assign('warnings', $warnings);
-		$template->assign('errors', $errors);
-	  $this->content = $template->fetch();
+    $user = \Kiki\Core::getUser();
 
-		return true;
-	}
+    $token = isset($_GET['token']) ? $_GET['token'] : null;
+    if ( empty($token) )
+    {
+      $this->errors[] = array( 'msg' => "<p>E-mail address verification token missing.</p>" );
+    }
+    else
+    {
+      // Get user by auth token.
+      $verifyUserId = $user->getIdByToken( $token );
+      if ( !$verifyUserId )
+      {
+        $this->errors[] = array( 'msg' => "<p>Invalid e-mail address verification token. These tokens expire. [// TODO: Send new verification e-mail].</p>" );
+      }
+      else
+      {
+        $verifyUser = new \Kiki\User($verifyUserId);
+        $verifyUser->setIsVerified(true);
+        $verifyUser->save();
 
+        if ( $user->id() && $user->id() != $verifyUser->id() )
+        {
+          $this->warnings[] = array( 'msg' => sprintf( "<p>Because you verified account <strong>%s</strong> (%d), you are no longer logged in as <strong>%s</strong> (%d).</p>", $verifyUser->email(), $verifyUser->id(), $user->email(), $user->id() ) );
+        }
+        else
+        {
+          // Disabled, users should still login after e-mail verification.
+          // \Kiki\Auth::setCookie( $verifyUser->id() );
+          // $user = $verifyUser;
+          // \Kiki\Core::setUser($verifyUser);
+          $this->notices[] = array( 'msg' => "<p>Your e-mail address was succesfully verified. You can now log in.</p>" );
+
+          $mainTemplate = \Kiki\Template::getInstance();
+          $mainTemplate->assign('user', $user->templateData() );
+        }
+      }
+    }
+
+    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
+    return true;
+
+    $template->assign('warnings', $this->warnings);
+    $template->assign('errors', $this->errors);
+
+    $this->content = $template->fetch();
+
+    return true;
+  }
 }
