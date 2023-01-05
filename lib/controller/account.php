@@ -84,7 +84,10 @@ class Account extends \Kiki\Controller
     }
 
     if ( $user->id() )
+    {
+      $this->warnings[] = array( 'msg' => "<p>You are already logged in.</p>" );
       \Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
+    }
 
     $userId = $user->getIdByLogin( $email, $password );
     if ( $userId )
@@ -143,6 +146,8 @@ class Account extends \Kiki\Controller
 
     if ( $user->id() )
     {
+      $this->warnings[] = array( 'msg' => "<p>You are already logged in.</p>" );
+      \Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
     }
     else if ( $_POST )
     {
