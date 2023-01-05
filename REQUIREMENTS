@@ -6,6 +6,18 @@ control over:
 
 - a root structure outside of the actual document root (typically htdocs/).
 
+----------------------------------------------------------------------------
+
+For sending e-mail, Kiki requires PHPMailer and assumes it's location is:
+
+  ${rootPath}/vendor/PHPMailer
+  (e.g. /var/www/example.com/vendor/PHPMailer)
+
+Kiki only supports sending e-mail through SMTP, to ensure MTA's can properly
+set DKIM signatures.
+
+----------------------------------------------------------------------------
+
 Old notes:
 
 Facebook PHP SDK >= 3.1.1
