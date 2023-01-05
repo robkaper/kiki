@@ -55,6 +55,8 @@ class Template
   private static $instance;
 
   private $template = null;
+  private $noDefault = false;
+
   private $data = array();
   private $content = null;
 
@@ -67,11 +69,12 @@ class Template
 
   private $db;
 
-  public function __construct( $template = null )
+  public function __construct( $template = null, $noDefault=false )
   {
     $this->db = Core::getDb();
 
     $this->template = $template;
+    $this->noDefault = $noDefault;
 
 		$data = Core::getTemplateData();
 
@@ -253,9 +256,10 @@ class Template
   {
     // Log::debug( "begin template engine" );
 
-    if ( !$this->template )
+    if ( !$this->template && !$this->noDefault )
       $this->template = 'pages/default';
       
+/* reenable template parsing 
     ob_start();
     include_once $this->file($this->template);
     $this->content = ob_get_contents();
@@ -265,6 +269,7 @@ class Template
     \Kiki\Core::getFlashBag()->reset();
     
     return $this->content;
+*/
 
     // LEGACY
 
@@ -277,13 +282,22 @@ class Template
       $content .= "{include 'head'}". PHP_EOL;
     }
 
-    if ( !$this->template )
+    if ( !$this->template && !$this->noDefault )
       $this->template = 'pages/default';
 
     // Log::beginTimer( "Template::content ". $this->template );
 
     // Don't load a template when setContent has been used.
-    $content .= $this->content ? $this->content : file_get_contents($this->file($this->template)). PHP_EOL;
+    if ( $this->content )
+      $content .= $content;
+    else
+    {
+      $file = $this->file($this->template);
+      if ( file_exists($file) )
+        $content .= file_get_contents($file);
+      else
+        \Kiki\Log::fatal( "could not load template file $file" );
+    }
 
     if ( $fullHTML )
     {
@@ -322,7 +336,8 @@ class Template
 
   private function legacy( $input )
   {
-    return eval($input[1]);
+    return $input[1];
+    return eval('?>'. $input[1]. '<?php');
     return "[legacy:". htmlspecialchars($input[1]). "]";
   }
 
