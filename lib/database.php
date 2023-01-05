@@ -255,7 +255,8 @@ class Database
 		if ( $this->mysqli->field_count == 1 )
 		{
 			$row = $rs->fetch_row();
-			return $row[0];
+			if ( $row )
+				return $row[0];
 		}
 		return null;
 	}
