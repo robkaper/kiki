@@ -159,6 +159,8 @@ class Email
     $this->htmlMessage = $html;
   }
 
+  public function html() { return $this->htmlMessage; }
+
   public function addFileAttachment( $fileName )
   {
     if ( file_exists($fileName) )
