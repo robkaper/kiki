@@ -49,6 +49,7 @@ class Config
 	public static $mailerQueue = false;
 
 	public static $mailSender = null;
+	public static $mailSenderName = null;
 	public static $smtpHost = null;
 	public static $smtpPort = 25;
 	public static $smtpUser = null;
