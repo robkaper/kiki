@@ -17,7 +17,9 @@ class Controller
 {
   protected $instanceId = 0;
   protected $objectId = 0;
+
   protected $action = null;
+  protected $context = null;
 
   protected $contentType = 'html';
 
@@ -27,6 +29,9 @@ class Controller
   protected $template = 'pages/404';
   protected $content = null;
 
+  // FIXME: refactor to template data, or Core class
+  protected $notices = null;
+  protected $warnings = null;
   protected $errors = null;
 
   protected $subController = null;
@@ -37,6 +42,10 @@ class Controller
   {
     $this->extraScripts = array();
     $this->extraStyles = array();
+    
+    $this->notices = array();
+    $this->warnings = array();
+    $this->errors = array();
   }
 
   public static function factory($type)
@@ -56,102 +65,101 @@ class Controller
     return new $className;
   }
 
-	public function type()
-	{
-		return ClassHelper::classToType( get_called_class() );
-	}
+  public function type()
+  {
+    return ClassHelper::classToType( get_called_class() );
+  }
 
-	public function setAction( $action )
-	{
-	  $this->action = $action;
-	}
-	public function action() { return $this->action; }
+  public function setAction( $action )
+  {
+    $this->action = $action;
+  }
+  public function action() { return $this->action; }
+
+  public function setContext( $context )
+  {
+    $this->context = $context;
+  }
+  public function context() { return $this->context; }
 
   public function setInstanceId( $instanceId )
   {
     $this->instanceId = $instanceId;
   }
 
-	public function instanceId() { return $this->instanceId; }
+  public function instanceId() { return $this->instanceId; }
 
   public function setObjectId( $objectId )
   {
     $this->objectId = $objectId;
   }
 
-	public function objectId() { return $this->objectId; }
+  public function objectId() { return $this->objectId; }
 
-	public function actionHandler()
-	{
-	  $remainder = null;
+  public function actionHandler()
+  {
+    $remainder = null;
 
-	  if ( $this->action )
-	  {
-	    $actionMethod = $this->action. 'Action';
-	    
-	    // FIXME: not handling remainder. But maybe that's okay when the config has an explicit action.
-	  }
-	  else
-	  {
+    if ( $this->action )
+    {
+      $actionMethod = $this->action. 'Action';
+      
+      // FIXME: not handling remainder. But maybe that's okay when the config has an explicit action.
+    }
+    else
+    {
             $urlParts = parse_url($this->objectId);
             if ( isset($urlParts['path']) && !empty($urlParts['path']) )
             {
-			$pathParts = explode( '/', $urlParts['path'] );
-			$action = array_shift($pathParts);
-			$actionMethod = $action. 'Action';
+      $pathParts = explode( '/', $urlParts['path'] );
+      $action = array_shift($pathParts);
+      $actionMethod = $action. 'Action';
 
-			$remainder = preg_replace( "#^$action/?#", "", $this->objectId );
-		}
-		else
-		{
-			$actionMethod = 'indexAction';
-			$remainder = $this->objectId;
-		}
+      $remainder = preg_replace( "#^$action/?#", "", $this->objectId );
+    }
+    else
+    {
+      $actionMethod = 'indexAction';
+      $remainder = $this->objectId;
+    }
             }
 
-		if ( !method_exists($this, $actionMethod) )
-			return false;
+    if ( !method_exists($this, $actionMethod) )
+      return false;
 
-		Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
+    Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
 
-		// $this->status = 200;
-		$this->title = $actionMethod;
-		$this->template = 'pages/default';
+    // $this->status = 200;
+    $this->title = $actionMethod;
+    $this->template = 'pages/default';
 
-		return $this->$actionMethod($remainder);
-	}
+    return $this->$actionMethod($remainder);
+  }
 
   // FIXME: For overloading?? What did this do?
   public function exec()
   {
+    \Kiki\Log::debug( "defaultcontroller exec" );
+    if ( $this->actionHandler() )
+      return true;
   }
 
   public function output()
   {
-        $template = Template::getInstance();
-    
-        $template->load( $this->template() );
+    if ( PHP_SAPI == 'cli' )
+    {
+      $template = Template::getInstance();
+      $template->assign( 'footerText', Boilerplate::copyright() );
+      $template->load( $this->template() );
+      $template->assign( 'title', $this->title() );
+      $template->assign( 'content', $this->content() );
 
-        \Kiki\Http::sendHeaders( $this->status(), $this->altContentType() );
+      $template->fetch();
 
-        include_once $template->file( $this->template() );
+      print_r( $template->data() );
 
-        return;
-        
-		if ( PHP_SAPI == 'cli' )
-		{
-			$template = Template::getInstance();
-			$template->assign( 'footerText', Boilerplate::copyright() );
-			$template->load( $this->template() );
-			$template->assign( 'title', $this->title() );
-			$template->assign( 'content', $this->content() );
-
-			$template->fetch();
-
-			print_r( $template->data() );
-
-			return;
-		}
+      return;
+    }
 
     Http::sendHeaders( $this->status(), $this->altContentType() );
 
@@ -159,31 +167,33 @@ class Controller
     {
       case 301:
       case 302:
-			case 303:
+      case 303:
         Router::redirect( $this->content(), $this->status() );
-        break;
-
-      default:
-
-				if ( isset($_REQUEST['dialog']) || !$this->template() )
-				{
-					echo $this->content();
-					return;
-				}
-
-        $template = Template::getInstance();
-        $template->assign( 'footerText', Boilerplate::copyright() );
-    
-        $template->load( $this->template() );
-
-        $template->assign( 'title', $this->title() );
-        $template->assign( 'content', $this->content() );
-
-        echo $template->content();
-
-        break;
+        return;
     }
 
+    if ( isset($_REQUEST['dialog']) || !$this->template() )
+    {
+      echo $this->content();
+      return;
+    }
+
+    $template = Template::getInstance();
+
+    // For web, just assume PHP files for now until templates support {block} and {extend}
+    include_once $template->file( $this->template() );
+
+    // Return true to avoid fallback
+    return;
+
+    $template->assign( 'footerText', Boilerplate::copyright() );
+    
+    $template->load( $this->template() );
+
+    $template->assign( 'title', $this->title() );
+    $template->assign( 'content', $this->content() );
+
+    echo $template->content();
   }
 
   public function status()
