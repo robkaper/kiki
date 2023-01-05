@@ -104,7 +104,6 @@ abstract class BaseObject
 //      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->userId, $this->sectionId );
       $q = "INSERT INTO objects (`name`) values('%s')";
       $q = $this->db->buildQuery( $q, $this->name );
-//      echo $q. PHP_EOL;
       Log::debug( $q );
       $rs = $this->db->query($q);
       if ( $rs )
