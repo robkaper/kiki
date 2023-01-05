@@ -27,6 +27,7 @@ class Controller
   protected $altContentType = null;
   protected $title = '404 Not found';
   protected $template = 'pages/404';
+  protected $data = null;
   protected $content = null;
 
   // FIXME: refactor to template data, or Core class
@@ -42,7 +43,9 @@ class Controller
   {
     $this->extraScripts = array();
     $this->extraStyles = array();
-    
+
+    $this->data = array();
+
     $this->notices = array();
     $this->warnings = array();
     $this->errors = array();
@@ -129,11 +132,21 @@ class Controller
 
     Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
 
-    // $this->status = 200;
-    $this->title = $actionMethod;
-    $this->template = 'pages/default';
+    $ret = $this->$actionMethod($remainder);
+    if  ( $ret )
+    {
+      // Fallbacks for when template doesn't do it
+      if ( $this->status == 404 )
+        $this->status = 200;
 
-    return $this->$actionMethod($remainder);
+      if ( !$this->title )
+        $this->title = $actionMethod;
+
+      if ( $this->template == 'pages/404' )
+        $this->template = 'pages/default';
+    }
+
+    return $ret;
   }
 
   // FIXME: For overloading?? What did this do?
@@ -181,14 +194,13 @@ class Controller
     $template = Template::getInstance();
 
     // For web, just assume PHP files for now until templates support {block} and {extend}
-    include_once $template->file( $this->template() );
+    include_once $template->file( $this->template );
 
-    // Return true to avoid fallback
     return;
 
     $template->assign( 'footerText', Boilerplate::copyright() );
     
-    $template->load( $this->template() );
+    $template->load( $this->template );
 
     $template->assign( 'title', $this->title() );
     $template->assign( 'content', $this->content() );
