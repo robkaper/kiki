@@ -39,11 +39,10 @@ class Database
 	function connect()
 	{
 		$this->mysqli = new \mysqli( $this->host, $this->user, $this->pass, $this->name, $this->port );
-
-		if ( !$this->mysqli )
+		
+		if ( isset($this->mysqli->connect_errno) && !empty($this->mysqli->connect_error) )
 		{
-			Log::error( "connection to database failed" );
-			return;
+			Log::fatal( "connection to database failed: [". $this->mysqli->connect_errno. "] ". $this->mysqli->connect_error );
 		}
 
 		// @$this->mysqli->select_db( $this->name, $this->mysqli );
@@ -127,7 +126,11 @@ class Database
 			$rs = $this->mysqli->query($q);
 
 			if ( $rs === false )
+			{
 				Log::error( "no rs for query [$q]" );
+				Log::error( $this->mysqli->errno. ": ". $this->mysqli->error );
+				exit;
+			}
 			else if ( Core::cacheAvailable() )
 				$memcache->set($cacheId, $rs);
 		}
@@ -231,6 +234,11 @@ class Database
 		return $this->mysqli->real_escape_string($str);
 	}
 
+	static function nullable( $val )
+	{
+		return isset($val) ? $val : 'null';
+	}
+	
 	/**
 	* Executes a query an returns a single object
 	* @param string $q query
@@ -266,15 +274,20 @@ class Database
 	* @param string $q query
 	* @return array an array of database objects
 	*/
-	public function getObjects( $q )
+	public function getObjects( $q, $keyField=null )
 	{
 		$ret = array();
 		$rs = $this->query($q);
 		if ( $rs && $this->numRows($rs) )
 			while( $o = $this->fetchObject($rs) )
-				$ret[] = $o;
+			{
+				if ( $keyField && isset($o->{$keyField}) )
+					$ret[$o->{$keyField}] = $o;
+				else
+					$ret[] = $o;
+			}
 
-		return array_values($ret);
+		return $keyField ? $ret : array_values($ret);
 	}
 
 	/**
