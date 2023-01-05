@@ -54,6 +54,11 @@ class User extends BaseObject
     return $this->connections[key($this->connections)]->name();
   }
 
+  public function objectName()
+  {
+    return $this->name;
+  }
+
   public function picture()
   {
     if ( !count($this->connections) )
@@ -88,7 +93,7 @@ class User extends BaseObject
       $this->object_id = 0;
     }
 
-    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin' );
+    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin' );
 
     $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->object_id );
     $o = $this->db->getSingleObject($q);
@@ -295,7 +300,7 @@ class User extends BaseObject
     // TODO: implement verification of email
 
     // Save to get an ID to generate a temporary name
-    if ( !$this->name )
+    if ( empty($this->name) )
     {
       $this->save();
       $this->name = 'u'. $this->id;
