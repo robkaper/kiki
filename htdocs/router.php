@@ -95,6 +95,7 @@ foreach( Config::$routing as $route => $routeController )
       $controller->setContext($capture);
     if ( $action )
       $controller->setAction($action);
+    break;
   }
 }
 
