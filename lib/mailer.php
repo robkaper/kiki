@@ -107,7 +107,7 @@ class Mailer
     {
       // echo 'Message could not be sent.';
       // echo 'Mailer Error: ' . $mail->ErrorInfo;
-      return $mail->errorInfo;
+      return $mail->ErrorInfo;
     }
 
     // $mail->addAttachment('path/to/invoice1.pdf', 'invoice1.pdf');
