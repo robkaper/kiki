@@ -105,27 +105,26 @@ class Controller
 
     if ( $this->action )
     {
-      $actionMethod = $this->action. 'Action';
-      
       // FIXME: not handling remainder. But maybe that's okay when the config has an explicit action.
+      $actionMethod = str_replace( '-', '_', $this->action ). 'Action';
     }
     else
     {
-            $urlParts = parse_url($this->objectId);
-            if ( isset($urlParts['path']) && !empty($urlParts['path']) )
-            {
-      $pathParts = explode( '/', $urlParts['path'] );
-      $action = array_shift($pathParts);
-      $actionMethod = $action. 'Action';
+      $urlParts = parse_url($this->objectId);
+      if ( isset($urlParts['path']) && !empty($urlParts['path']) )
+      {
+        $pathParts = explode( '/', $urlParts['path'] );
+        $action = array_shift($pathParts);
+        $actionMethod = str_replace( '-', '_', $action ). 'Action';
 
-      $remainder = preg_replace( "#^$action/?#", "", $this->objectId );
+        $remainder = preg_replace( "#^$action/?#", "", $this->objectId );
+      }
+      else
+      {
+        $actionMethod = 'indexAction';
+        $remainder = $this->objectId;
+      }
     }
-    else
-    {
-      $actionMethod = 'indexAction';
-      $remainder = $this->objectId;
-    }
-            }
 
     if ( !method_exists($this, $actionMethod) )
       return false;
