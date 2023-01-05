@@ -2,6 +2,9 @@
 
 namespace Kiki;
 
+include_once "baseobject.php";
+include_once "auth.php";
+
 class User extends BaseObject
 {
   private $email = null;
@@ -9,16 +12,17 @@ class User extends BaseObject
 
   private $authToken;
   public $mailAuthToken;
+
+  private $isVerified = false;
   private $isAdmin = false;
-	private $isVerified = false;
 
   private $connections = array();
   private $identifiedConnections = null;
 
 /*
-  public function __construct( $id = 0, $objectId = 0 )
+  public function __construct( $id = 0, $object_id = 0 )
   {
-		parent::__construct( $id, $objectId );
+		parent::__construct( $id, $object_id );
 
 		$this->getStoredConnections();
 	}
@@ -28,10 +32,17 @@ class User extends BaseObject
   {
     parent::reset();
 
-    $this->authToken = "";
-    $this->mailAuthToken = "";
+    $this->email = null;
+    $this->password = null;
+
+    $this->authToken = null;
+    $this->mailAuthToken = null;
+
+    $this->isVerified = false;
     $this->isAdmin = false;
-		$this->isVerified = false;
+
+    $this->connections = array();
+    $this->identifiedConnections = null;
   }
 
   public function name()
@@ -61,12 +72,12 @@ class User extends BaseObject
     return $this->connections[key($this->connections)]->serviceName();
   }
 
-	public function email() { return $this->email; }
+  public function email() { return $this->email; }
 
-	public function getAuthToken() { return $this->authToken; }
-	public function setIsAdmin( $isAdmin ) { $this->isAdmin = $isAdmin; }
+  public function getAuthToken() { return $this->authToken; }
+  public function setIsAdmin( $isAdmin ) { $this->isAdmin = $isAdmin; }
   public function isAdmin() { return $this->isAdmin; }
-	public function setIsVerified( $isVerified ) { $this->isVerified = $isVerified; }
+  public function setIsVerified( $isVerified ) { $this->isVerified = $isVerified; }
   public function isVerified() { return $this->isVerified; }
 
   public function load( $id = 0 )
@@ -74,27 +85,18 @@ class User extends BaseObject
     if ( $id )
     {
       $this->id = $id;
-      $this->objectId = 0;
+      $this->object_id = 0;
     }
-    
-    if ( !$this->id )
+
+    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin' );
+
+    $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->object_id );
+    $o = $this->db->getSingleObject($q);
+    if ( !$o )
     {
       $this->reset();
       return;
     }
-
-		$fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'email', 'auth_token', 'mail_auth_token', 'admin' );
-
-		if ( version_compare(Status::dbVersion(), '0.1.33') >= 0 )
-			$fields[] = 'verified';
-
-    $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->objectId );
-    $o = $this->db->getSingleObject($q);
-    if ( !$o )
-		{
-			$this->reset();
-      return;
-		}
     
     $this->setFromObject( $o );
 
@@ -123,7 +125,7 @@ class User extends BaseObject
 
     $q = $this->db->buildQuery(
       "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d WHERE id=%d",
-      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->id
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->id
     );
 
     $this->db->query($q);
@@ -133,7 +135,7 @@ class User extends BaseObject
   {
     $q = $this->db->buildQuery(
       "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified) VALUES (%d, '%s', '%s', '%s', %d, %d)",
-      $this->objectId, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified
     );
 
 		// FIXME: add verified 
@@ -147,6 +149,7 @@ class User extends BaseObject
 
   public function getStoredConnections()
   {
+    return false;
     $this->connections = array();
 
     $q = $this->db->buildQuery( "select external_id, service from connections where user_id=%d order by ctime asc", $this->id );
@@ -291,6 +294,13 @@ class User extends BaseObject
   {
     // TODO: implement verification of email
 
+    // Save to get an ID to generate a temporary name
+    if ( !$this->name )
+    {
+      $this->save();
+      $this->name = 'u'. $this->id;
+    }
+
     $this->email = $email;
     $this->password = $password;
     $this->authToken = Auth::passwordHash( $password );
@@ -377,5 +387,3 @@ class User extends BaseObject
     );
 	}
 }
-
-?>
