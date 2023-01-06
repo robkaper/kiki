@@ -16,16 +16,20 @@ class User extends BaseObject
   private $isVerified = false;
   private $isAdmin = false;
 
+  private $name = null;
+
   private $connections = array();
   private $identifiedConnections = null;
 
 /*
   public function __construct( $id = 0, $object_id = 0 )
   {
-		parent::__construct( $id, $object_id );
-
-		$this->getStoredConnections();
-	}
+    parent::__construct( $id, $object_id );
+    
+    $this->reset();
+    
+    // $this->getStoredConnections();
+  }
 */
 
   public function reset()
@@ -45,18 +49,18 @@ class User extends BaseObject
     $this->identifiedConnections = null;
   }
 
+  public function setName( $name ) { $this->name = $name; }
+
   public function name()
   {
-    if ( !count($this->connections) )
+    if ( !count($this->connections) && empty($this->name) )
       return "User ". $this->id;
+    
+    if ( !empty($this->name) )
+      return $this->name;
 
     reset($this->connections);
     return $this->connections[key($this->connections)]->name();
-  }
-
-  public function objectName()
-  {
-    return $this->name;
   }
 
   public function picture()
@@ -93,7 +97,7 @@ class User extends BaseObject
       $this->object_id = 0;
     }
 
-    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin' );
+    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'name' );
 
     $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->object_id );
     $o = $this->db->getSingleObject($q);
@@ -110,6 +114,15 @@ class User extends BaseObject
     $this->getStoredConnections();
   }
 
+  public function loadByObjectName( $object_name )
+  {
+    $q = "SELECT u.id FROM `users` u LEFT JOIN `objects` o ON o.object_id=u.object_id WHERE o.object_name = '%s'";
+    $q = $this->db->buildQuery( $q, $object_name );
+    $uid = $this->db->getSingleValue($q);
+    if ( $uid )
+      $this->load($uid);
+  }
+
   public function setFromObject( $o )
   {
     parent::setFromObject($o);
@@ -121,7 +134,9 @@ class User extends BaseObject
     $this->authToken = $o->auth_token;
     $this->mailAuthToken = $o->mail_auth_token;
     $this->isAdmin = $o->admin;
-		$this->isVerified = $o->verified;
+    $this->isVerified = $o->verified;
+    
+    $this->name = $o->name;
   }
 
   public function dbUpdate()
@@ -129,8 +144,10 @@ class User extends BaseObject
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d WHERE id=%d",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->id
+      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d,
+        name='%s'
+        WHERE id=%d",
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->name, $this->id
     );
 
     $this->db->query($q);
@@ -139,12 +156,10 @@ class User extends BaseObject
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified) VALUES (%d, '%s', '%s', '%s', %d, %d)",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified
+      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified, name) VALUES (%d, '%s', '%s', '%s', %d, %d, '%s')",
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->name
     );
 
-		// FIXME: add verified 
-   
     $rs = $this->db->query($q);
     if ( $rs )
       $this->id = $this->db->lastInsertId($rs);
@@ -256,7 +271,7 @@ class User extends BaseObject
           // Register new user. Use random password, user must change it
           // (and set email) before he/she can login with just a local ID.
           $this->storeNew( uniqid(), uniqid() );
-					Auth::setCookie($this->id);
+          Auth::setCookie($this->id);
 
           // Link the connection
           $user->loadRemoteData();
@@ -300,11 +315,9 @@ class User extends BaseObject
     // TODO: implement verification of email
 
     // Save to get an ID to generate a temporary name
-    if ( empty($this->name) )
-    {
-      $this->save();
-      $this->name = 'u'. $this->id;
-    }
+    $this->save();
+    $this->name = 'User '. $this->id;
+    $this->setObjectName( 'u'. $this->id );
 
     $this->email = $email;
     $this->password = $password;

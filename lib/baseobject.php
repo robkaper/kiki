@@ -27,7 +27,7 @@ abstract class BaseObject
   protected $ctime = null;
   protected $mtime = null;
 
-  protected $name = null;
+  protected $object_name = null;
 //  protected $uriAlias = null;
   
 
@@ -56,7 +56,7 @@ abstract class BaseObject
     $this->ctime = null;
     $this->mtime = null;
 
-    $this->name = null;
+    $this->object_name = null;
     
     return;
 
@@ -85,7 +85,7 @@ abstract class BaseObject
     $this->ctime = $o->ctime;
     $this->mtime = $o->mtime;
     
-    $this->name = $o->name ?? null;
+    $this->object_name = $o->object_name ?? null;
     
     return;
 
@@ -102,8 +102,8 @@ abstract class BaseObject
       $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
 
 //      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->userId, $this->sectionId );
-      $q = "INSERT INTO objects (`name`) values('%s')";
-      $q = $this->db->buildQuery( $q, $this->name );
+      $q = "INSERT INTO objects (`object_name`) values('%s')";
+      $q = $this->db->buildQuery( $q, $this->object_name );
       Log::debug( $q );
       $rs = $this->db->query($q);
       if ( $rs )
@@ -123,8 +123,8 @@ abstract class BaseObject
 */
 
     $q = $this->db->buildQuery(
-      "UPDATE objects SET name='%s' WHERE object_id=%d",
-      $this->name, $this->object_id
+      "UPDATE objects SET object_name='%s' WHERE object_id=%d",
+      $this->object_name, $this->object_id
     );
 
     Log::debug( $q );
@@ -139,8 +139,8 @@ abstract class BaseObject
   final public function setCtime( $ctime ) { $this->ctime = $ctime; }
   final public function ctime() { return $this->ctime; }
 
-  final public function setName( $name ) { $this->name = $name; }
-  public function name() { return $this->name; }
+  final public function setObjectName( $object_name ) { $this->object_name = $object_name; }
+  public function objectName() { return $this->object_name; }
 
   final public function type() { return get_class($this); }
 
