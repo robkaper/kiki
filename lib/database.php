@@ -46,8 +46,8 @@ class Database
 		}
 
 		// @$this->mysqli->select_db( $this->name, $this->mysqli );
-		$this->mysqli->set_charset('utf8');
-		$this->query("set names 'utf8'" );
+		$this->mysqli->set_charset('utf8mb4');
+//		$this->query("set names utf8mb4" );
 	}
 
 	/**
