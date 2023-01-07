@@ -67,9 +67,6 @@ class Config
 
 	public static $i18n = true;
 
-	public static $iconSetColor = "black";
-	public static $iconPrefix = null;
-
 	public static $googleSiteVerification = null;
 	public static $googleAnalytics = null;
 	public static $googleAdSense = null;
@@ -139,8 +136,6 @@ class Config
 		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
 
 		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
-
-		self::$iconPrefix = self::$kikiPrefix. "/img/iconic/". Config::$iconSetColor;
 	}
 
 	public static function loadDbConfig( &$db )

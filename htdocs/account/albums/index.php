@@ -24,7 +24,7 @@
     echo "<thead>\n";
 
     echo "<tr>\n"; 
-    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"></a></td>\n";
+    echo "<td colspan=\"3\"><a href=\"?id=0\">New</a></td>\n";
     echo "<td>". _("Create a new album"). "</td>\n";
     echo "</tr>\n";
 
@@ -42,9 +42,9 @@
         $album = new \Kiki\Album( $o->id );
         $class = ""; // $album->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
-        echo "<td><a href=\"?id=". $album->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\"></a></td>\n";
-        echo "<td><a href=\"". $album->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\"></a></td>\n";
-        echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\"></a></td>\n";
+        echo "<td><a href=\"?id=". $album->id(). "\">Edit</a></td>\n";
+        echo "<td><a href=\"". $album->url(). "\">View</a></td>\n";
+        echo "<td><a href=\"\">Delete</a></td>\n";
         echo "<td>". $album->title(). "</td>\n";
         echo "</tr>\n";
       }

@@ -59,7 +59,7 @@ class Boilerplate
     $class = $o->class;
     $class .= ($match ? " active" : null);
     $class .= ($o->icon ? " icon" : null);
-    $style = $o->icon ? " style=\"background-image: url(". Config::$iconPrefix. "/$o->icon);\"" : null;
+    $style = null;
 
     // return "<li class=\"$class\"${style}><a href=\"$o->url\">$o->title</a></li>\n";
 

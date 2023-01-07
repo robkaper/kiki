@@ -46,7 +46,7 @@
 
 		echo "<ul>";
 		echo "<li>";
-    echo "<a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"> ". _("Create a new page"). "</a>\n";
+    echo "<a href=\"?id=0\">". _("Create a new page"). "</a>\n";
 		echo "</li>";
 		echo "</ul>";
 
@@ -66,9 +66,9 @@
         $section = new Section( $article->sectionId() );
         $class = $article->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
-        echo "<td><a href=\"?id=". $article->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\"></a></td>\n";
-        echo "<td><a href=\"". $article->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\"></a></td>\n";
-        echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\"></a></td>\n";
+        echo "<td><a href=\"?id=". $article->id(). "\">Edit</a></td>\n";
+        echo "<td><a href=\"". $article->url(). "\">View</a></td>\n";
+        echo "<td><a href=\"\">Delete</a></td>\n";
         if ( $section->baseURI() )
         {
           echo "<td>". $section->baseURI(). "</td>\n";

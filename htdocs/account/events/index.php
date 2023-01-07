@@ -43,7 +43,7 @@
     echo "<thead>\n";
 
     echo "<tr>\n"; 
-    echo "<td colspan=\"3\"><a href=\"?id=0\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"New\"></a></td>\n";
+    echo "<td colspan=\"3\"><a href=\"?id=0\">New</a></td>\n";
     echo "<td colspan=\"2\">". _("Create a new event"). "</td>\n";
     echo "</tr>\n";
 
@@ -61,9 +61,9 @@
         $event = new Event( $o->id );
         $class = $event->visible() ? "" : "disabled";
         echo "<tr class=\"$class\">\n"; 
-        echo "<td><a href=\"?id=". $event->id(). "\"><img src=\"/kiki/img/iconic/black/pen_alt_fill_16x16.png\" alt=\"Edit\"></a></td>\n";
-        echo "<td><a href=\"". $event->url(). "\"><img src=\"/kiki/img/iconic/black/magnifying_glass_16x16.png\" alt=\"View\"></a></td>\n";
-        echo "<td><a href=\"\"><img src=\"/kiki/img/iconic/black/trash_stroke_16x16.png\" alt=\"Delete\"></a></td>\n";
+        echo "<td><a href=\"?id=". $event->id(). "\">Edit</a></td>\n";
+        echo "<td><a href=\"". $event->url(). "\">View</a></td>\n";
+        echo "<td><a href=\"\">Delete</a></td>\n";
         echo "<td>". $event->start(). "</td>\n";
         echo "<td>". $event->title(). "</td>\n";
         echo "</tr>\n";

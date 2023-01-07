@@ -505,34 +505,6 @@ button.large span.buttonImg, a.button.large span.buttonImg {
   height: 32px;
 }
 
-button.Facebook span.buttonImg, a.button span.buttonImg.Facebook {
-  background: url('/kiki/img/komodo/social_networking_iconpack/facebook_16.png') no-repeat 0px 0px;
-}
-button.Facebook.large span.buttonImg, a.button.large span.buttonImg.Facebook {
-  background: url('/kiki/img/komodo/social_networking_iconpack/facebook_32.png') no-repeat 0px 0px;
-}
-
-button.Twitter span.buttonImg, a.button span.buttonImg.Twitter {
-  background: url('/kiki/img/komodo/social_networking_iconpack/twitter_16.png') no-repeat 0px 0px;
-}
-button.Twitter.large span.buttonImg, a.button.large span.buttonImg.Twitter {
-  background: url('/kiki/img/komodo/social_networking_iconpack/twitter_32.png') no-repeat 0px 0px;
-}
-
-button span.buttonImg.GooglePlus, a.button span.buttonImg.GooglePlus {
-  background: url('/kiki/img/komodo/social_networking_iconpack/google_plus_16.png') no-repeat 0px 0px;
-}
-button.large span.buttonImg.GooglePlus, a.button.large span.buttonImg.GooglePlus {
-  background: url('/kiki/img/komodo/social_networking_iconpack/google_plus_32.png') no-repeat 0px 0px;
-}
-
-button span.buttonImg.Email, a.button span.buttonImg.Email {
-  background: url('/kiki/img/komodo/social_networking_iconpack/email_16.png') no-repeat 0px 0px;
-}
-button.large span.buttonImg.Email, a.button.large span.buttonImg.Email {
-  background: url('/kiki/img/komodo/social_networking_iconpack/email_32.png') no-repeat 0px 0px;
-}
-
 .box a.button {
 	display: block;
 	font-size: 1em;
