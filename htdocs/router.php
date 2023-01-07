@@ -57,7 +57,7 @@ foreach( Config::$routing as $route => $routeController )
     $controller = is_array($routeController) ? $routeController[0] : $routeController;
     $capture = null;
     $action = is_array($routeController) ? ( $routeController[1] ?? null ) : null;
-    // print_r( $matches );
+    // Log::debug( print_r( $matches, true ) );
     // echo "<br>[". count($matches). "]";
     switch( count($matches) )
     {
@@ -73,8 +73,8 @@ foreach( Config::$routing as $route => $routeController )
         $capture = $matches[1];
         break;
       case 3:
-        // SNH: Exact match, but action(s) given
-        $controller = 'NotFound404'; 
+        // SNH: Match, but action(s) given
+        $action = $matches[2];
         break;
       case 4:
         // Match, capture in route itself, action(s) given
@@ -183,6 +183,7 @@ else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
 // cleared at any time.
 
 else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $requestPath, $matches) )
+//else if ( preg_match('#^/storage/#', $requestPath, $matches) )
 {
   $controller = Controller::factory('Thumbnails');
   $controller->setObjectId($matches);
