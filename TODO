@@ -1,11 +1,8 @@
 This TODO file lists outstanding work towards a completely brandless and
 installable Kiki. It does not include outstanding work in the codebase
-itself, which should be documented through FIXME, TODO and Doxygen comments.
+itself, which should be documented through FIXME and TODO comments.
 
 - Make all remaining customisations in the code configurable
-
-- Finish installation documentation in .doxygen.php (or better yet, provide
-  a simple install.php to be placed in the document root)
 
 - Don't include third-party scripts (scripts/, other than default.js) but
   reference them through configuration
