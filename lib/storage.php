@@ -53,6 +53,21 @@ class Storage
     return $o ? sprintf( "%s%s.%s", $o->hash, $extra, $o->extension ) : null;
   }
 
+  public static function hash( $id )
+  {
+    $db = Core::getDb();
+
+    $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE hash='%s'", $id );
+    $o = $db->getSingleObject($q);
+    if ( !$o )
+    {
+      $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE id=%d", $id );
+      $o = $db->getSingleObject($q);
+    }
+
+    return $o->hash ?? null;
+  }
+
   /**
    * Splits a filename into a base part and extension.
    *
@@ -111,8 +126,8 @@ class Storage
         return 'text/css';
       case 'gif':
         return 'image/gif';
-			case 'html':
-				return 'text/html';
+      case 'html':
+	return 'text/html';
       case 'jpg':
         return 'image/jpeg';
       case 'js':
@@ -143,7 +158,7 @@ class Storage
    * @param boolean $secure Return a HTTPS resource instead of HTTP
    * @return string Full URL (protocol, host, local URI) of the resource
    */
-  public static function url( $id, $w=0, $h=0, $crop=false, $secure = false )
+  public static function url( $id, $w=0, $h=0, $crop=false, $secure = true )
   {
     return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id,$w,$h,$crop);
   }
@@ -155,7 +170,7 @@ class Storage
    * @param string $data file data
    * @return int ID of the database entry created
    */
-  public static function save( $fileName, $data )
+  public static function save( $fileName, $data, $size=0 )
   {
     $db = Core::getDb();
 
@@ -169,13 +184,15 @@ class Storage
     $qHash = $db->escape( $hash );
     $qName = $db->escape( $fileName );
     $qExt = $db->escape( $extension );
-    $qSize = $db->escape( sizeof($data) );
+    $qSize = $db->escape( $size );
 
     $q = "insert into storage(hash, original_name, extension, size) values('$qHash', '$qName', '$qExt', $qSize)";
+    Log::debug($q);
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
 
     $fileName = self::localFile($id);
+    Log::debug( $fileName );
     file_put_contents( $fileName, $data );
     chmod( $fileName, 0644 );
 
@@ -189,13 +206,13 @@ class Storage
     switch($ext)
     {
       case "gif":
-        $image = imagecreatefromgif($fileName);
+        $image = \imagecreatefromgif($fileName);
         break;
       case "jpg":
-        $image = imagecreatefromjpeg($fileName);
+        $image = \imagecreatefromjpeg($fileName);
         break;
       case "png":
-        $image = imagecreatefrompng($fileName);
+        $image = \imagecreatefrompng($fileName);
         break;
       default:;
     }
