@@ -20,15 +20,6 @@ IN THE SOFTWARE.
 
 ----------------------------------------------------------------------------
 
-lib/s3.php: Amazon S3 SDK
-
-Copyright (c) 2008 Donovan Schönknecht
-
-Included under the terms of the Simplified BSD license.
-(http://www.opensource.org/licenses/bsd-license)
-
-----------------------------------------------------------------------------
-
 lib/base62.php: Base 62 Encoder/Decoder
 
 Copyright (c) 2009 Andy Huang
