@@ -30,9 +30,8 @@ abstract class BaseObject
   protected $object_name = null;
 //  protected $uriAlias = null;
   
-
-//  protected $visible = false;
-//  protected $userId = 0;
+  protected $visible = false;
+  protected $userId = 0;
 //  protected $sectionId = 0;
 
 //  protected $publications;
