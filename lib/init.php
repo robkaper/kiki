@@ -40,33 +40,55 @@
   {
     include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
 
+    $classPaths = array();
+    // echo "<br>1$className";
     if ( Kiki\ClassHelper::isInKikiNamespace($className) )
-      $classPath = Kiki\Core::getInstallPath();
+    {
+      // echo "<br>2$className";
+      $classPaths[] = Kiki\Core::getInstallPath();
+    }
     else if( Kiki\ClassHelper::isInCustomNamespace($className) )
-      $classPath = Kiki\Core::getRootPath();
+    {
+      // echo "<br>3$className";
+      $classPaths[] = Kiki\Core::getRootPath();
+    }
     else
     {
       // Don't handle other namespaces.
-      return;
+      $classPaths[Kiki\Config::$namespace] = Kiki\Core::getRootPath();
+      $classPaths['Kiki'] = Kiki\Core::getInstallPath();
+      // return;
     }
 
-    $classFile = Kiki\ClassHelper::classToFile($className);
-
-    $includeFile = $classPath. "/lib/". $classFile;
-    if ( file_exists($includeFile) )
+    $trueClassName = $className;
+    foreach( $classPaths as $key => $classPath )
     {
-      include_once "$includeFile";
+      $className = $key ? ($key. '\\'. $trueClassName) : $trueClassName;
+      $classFile = Kiki\ClassHelper::classToFile($className);
+      // echo "<br>4$classPath/lib/$classFile";
 
-      if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
-        return;
+      $includeFile = $classPath. "/lib/". $classFile;
+      if ( file_exists($includeFile) )
+      {
+        include_once "$includeFile";
 
-      trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
-      exit;
+        // if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
+        if ( class_exists($className) )
+        {
+          // echo "<br>5$className";
+          return;
+        }
+
+        trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
+        exit;
+      }
+      // echo "<br>6$className, $trueClassName";
     }
+
 
     if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
     {
-      trigger_error( sprintf( "could not load class %s from local path %s nor Kiki install path %s", $className, Kiki\Core::getRootPath(), Kiki\Core::getInstallPath() ), E_USER_ERROR );
+      trigger_error( sprintf( "could not load class %s from local path %s nor %s from Kiki install path %s", $className, Kiki\Core::getRootPath(), 'Kiki\\'. $className, Kiki\Core::getInstallPath() ), E_USER_ERROR );
       exit;
     }
   }

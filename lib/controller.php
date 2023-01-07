@@ -53,14 +53,21 @@ class Controller
 
   public static function factory($type)
   {
-    $className = \Kiki\Config::$namespace. "\\". ClassHelper::typeToClass($type);
+    $className = ClassHelper::typeToClass($type);
+    // echo "<br>a$className";
 
     if ( !class_exists($className) )
+      $className = \Kiki\Config::$namespace. "\\". ClassHelper::typeToClass($type);
+    // echo "<br>b$className";
+
+    if ( !class_exists($className, false) )
       $className = __NAMESPACE__. "\\". ClassHelper::typeToClass($type);
+    // echo "<br>c$className";
 
     if ( !class_exists($className) )
     {
       $classFile = ClassHelper::classToFile($className);
+      // SNH because class loader would've already called it?
       Log::error( "class $className not defined in $classFile" );
       return new Controller();
     }

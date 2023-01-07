@@ -38,9 +38,12 @@ class ClassHelper
 
 	public static function classToFile( $className )
 	{
+		// echo "<br>ch: $className";
 		$partName = self::classToType($className);
 		$fileName = str_replace("\\", "/", $partName). ".php";
+		// echo "<br>fn: $className";
 		$fileName = preg_replace("#^(kiki|". strtolower(\Kiki\Config::$namespace). ")/#", "", $fileName );
+		// echo "<br>fn: $className";
 		return $fileName;
 	}
 
