@@ -36,6 +36,7 @@ class Controller
   protected $errors = null;
 
   protected $subController = null;
+
   protected $extraScripts = null;
   protected $extraStyles = null;
 
@@ -200,6 +201,7 @@ class Controller
     $template = Template::getInstance();
 
     // For web, just assume PHP files for now until templates support {block} and {extend}
+    // TODO: template could figure this out itself: include for .php, render for .tpl
     include_once $template->file( $this->template );
 
     return;
