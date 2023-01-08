@@ -28,10 +28,11 @@ abstract class BaseObject
   protected $mtime = null;
 
   protected $object_name = null;
+  protected $user_id = 0;
+
 //  protected $uriAlias = null;
   
   protected $visible = false;
-  protected $userId = 0;
 //  protected $sectionId = 0;
 
 //  protected $publications;
@@ -56,13 +57,13 @@ abstract class BaseObject
     $this->mtime = null;
 
     $this->object_name = null;
+    $this->user_id = 0;
     
     return;
 
     $this->uriAlias = null;
 
     $this->visible = false;
-    $this->userId = 0;
     $this->sectionId = 0;
 
     $this->publications = null;
@@ -85,12 +86,12 @@ abstract class BaseObject
     $this->mtime = $o->mtime;
     
     $this->object_name = $o->object_name ?? null;
+    $this->user_id = $o->user_id ?? 0;
     
     return;
 
     // FIXME: issets are necessary because not all Object child classes have these set in their queries e.g. load(), i.e. User.
     $this->visible = isset($o->visible) ? $o->visible : false;
-    $this->userId = isset($o->user_id) ? $o->user_id : 0;
     $this->sectionId = isset($o->section_id) ? $o->section_id : 0;
   }
 
@@ -100,9 +101,9 @@ abstract class BaseObject
     {
       $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
 
-//      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->userId, $this->sectionId );
-      $q = "INSERT INTO objects (`object_name`) values('%s')";
-      $q = $this->db->buildQuery( $q, $this->object_name );
+//      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
+      $q = "INSERT INTO objects (`object_name`, `user_id`) values('%s', %d)";
+      $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id );
       Log::debug( $q );
       $rs = $this->db->query($q);
       if ( $rs )
@@ -117,13 +118,13 @@ abstract class BaseObject
 /*
     $q = $this->db->buildQuery(
       "UPDATE objects SET ctime='%s', mtime=now(), visible=%d, user_id=%d, section_id=%d WHERE object_id=%d",
-      $this->ctime, $this->visible, $this->userId, $this->sectionId, $this->object_id
+      $this->ctime, $this->visible, $this->user_id, $this->sectionId, $this->object_id
     );
 */
 
     $q = $this->db->buildQuery(
-      "UPDATE objects SET object_name='%s' WHERE object_id=%d",
-      $this->object_name, $this->object_id
+      "UPDATE objects SET object_name='%s', user_id=%d WHERE object_id=%d",
+      $this->object_name, $this->user_id, $this->object_id
     );
 
     Log::debug( $q );
@@ -145,8 +146,8 @@ abstract class BaseObject
 
   final public function setVisible( $visible ) { $this->visible = $visible; }
   final public function visible() { return $this->visible; }
-  final public function setUserId( $userId ) { $this->userId = $userId; }
-  final public function userId() { return $this->userId; }
+  final public function setUserId( $user_id ) { $this->user_id = $user_id; }
+  final public function userId() { return $this->user_id; }
   final public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
   final public function sectionId() { return $this->sectionId; }
 
