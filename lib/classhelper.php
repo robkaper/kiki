@@ -57,6 +57,29 @@ class ClassHelper
 		return $className;
 	}
 
+	// TODO: isn't this basically ::factory()
+	public static function bareToNamespace( $className )
+	{
+		// echo "<br>z1". $className;
+
+		if ( class_exists( $className ) )
+			return $className;
+					
+		$tryClassName = '\\'. Config::$namespace. '\\'. $className;
+		// echo "<br>zl". $tryClassName;
+		if ( class_exists( $tryClassName ) )
+			return $tryClassName;
+
+		$tryClassName = '\\Kiki\\'. $className;
+		// echo "<br>zk". $tryClassName;
+		if ( class_exists( $tryClassName ) )
+			return $tryClassName;
+
+		// echo "<br>zd". $className;
+		
+		return $className;
+	}
+
 	public static function typeToClass( $type )
 	{
 		// echo "typeToClass for $type". PHP_EOL;

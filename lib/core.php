@@ -90,7 +90,8 @@ class Core
 	{
 		if ( !isset(self::$user) )
 		{
-			self::$user = new \Kiki\User();
+			$className = ClassHelper::bareToNamespace( 'User' );
+			self::$user = new $className();
 		}
 
 		return self::$user;
