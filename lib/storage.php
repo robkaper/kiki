@@ -203,17 +203,25 @@ class Storage
   {
     list( $base, $ext ) = self::splitExtension($fileName);
     $image = null;
-    switch($ext)
+
+    $mimeType = mime_content_type($fileName);
+    switch($mimeType)
     {
-      case "gif":
+      case "image/gif":
         $image = \imagecreatefromgif($fileName);
+        $ext = 'gif';
         break;
-      case "jpg":
+
+      case "image/jpeg":
         $image = \imagecreatefromjpeg($fileName);
         break;
-      case "png":
+        $ext = 'jpg';
+
+      case "image/png":
         $image = \imagecreatefrompng($fileName);
+        $ext = 'png';
         break;
+
       default:;
     }
         
@@ -261,16 +269,16 @@ class Storage
     if ( file_exists($scaledFile) )
       chmod( $scaledFile, 0664 );
 
-    switch($ext)
+    switch($mimeType)
     {
-      case "gif": 
-        imagegif( $scaled, $scaledFile );
+      case "image/gif": 
+        \imagegif( $scaled, $scaledFile );
         break;
-      case "jpg": 
-        imagejpeg( $scaled, $scaledFile, 95 );
+      case "image/jpeg": 
+        \imagejpeg( $scaled, $scaledFile, 95 );
         break;
-      case "png": 
-        imagepng( $scaled, $scaledFile, 1 );
+      case "image/png": 
+        \imagepng( $scaled, $scaledFile, 1 );
         break;
       default:;
     }
