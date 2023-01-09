@@ -41,17 +41,18 @@ class Album extends BaseObject
 		if ( $id )
 		{
 			$this->id = $id;
-			$this->objectId = 0;
+			$this->object_id = 0;
 		}
 
 		$qFields = "id, o.object_id, o.ctime, o.mtime, o.section_id, o.user_id, title, system, o.visible";
-		$q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->objectId );
+		$qFields = "id, o.object_id, o.ctime, o.mtime, o.user_id, title, system";
+		$q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->object_id );
 		$this->setFromObject( $this->db->getSingleObject($q) );
   }
   
   public function setFromObject( $o )
   {
-		parent::setFromObject($o);
+    parent::setFromObject($o);
 
     if ( !$o )
       return;
@@ -60,29 +61,31 @@ class Album extends BaseObject
     $this->system = $o->system;
   }
 
-	public function dbUpdate()
-	{
-		parent::dbUpdate();
+  public function dbUpdate()
+  {
+    parent::dbUpdate();
 
-		$q = $this->db->buildQuery(
-			"UPDATE albums set object_id=%d, title='%s',system=%d WHERE id=%d",
-			$this->title, $this->system, $this->id
-		);
+    $q = $this->db->buildQuery(
+      "UPDATE albums set object_id=%d, title='%s', system=%d WHERE id=%d",
+      $this->object_id, $this->title, $this->system, $this->id
+    );
 
-		$this->db->query($q);
-	}
+    $this->db->query($q);
+  }
 
-	public function dbInsert()
-	{
-    $q = $this->db->buildQuery( "INSERT INTO albums (object_id,title,system) VALUES (%d, '%s', %d)",
-			$this->objectId, $this->title, $this->system
-		);
+  public function dbInsert()
+  {
+    $q = $this->db->buildQuery(
+      "INSERT INTO albums (object_id,title,system) VALUES (%d, '%s', %d)",
+      $this->object_id, $this->title, $this->system
+    );
 
     $rs = $this->db->query($q);
-		if ( $rs )
-	    $this->id = $this->db->lastInsertId($rs);
+    
+    if ( $rs )
+      $this->id = $this->db->lastInsertId($rs);
 
-		return $this->id;
+    return $this->id;
   }
   
   /**
@@ -151,11 +154,9 @@ class Album extends BaseObject
 			'picture' => $picture
     );
       
-		Log::debug( print_r($album,true) );
-
     $template->assign( 'album', $album );
-		$template->assign( 'picture', $picture );
-    $template->assign( 'objectId', 0 );
+    $template->assign( 'picture', $picture );
+    $template->assign( 'object_id', 0 );
     $template->assign( 'comments', array() );
 
     return $template->fetch();
@@ -199,7 +200,8 @@ class Album extends BaseObject
     {
       $qTitle = $this->db->escape( $title );
       $qDesc = $this->db->escape( $description );
-      $q = "insert into pictures (title, description, storage_id) values ('$qTitle', '$qDesc', $storageId)";
+      $q = "INSERT INTO `pictures` (title, description, storage_id) VALUES ('%s', '%s', %d)";
+      $q = $this->db->buildQuery( $q, $title, $description, $storageId );
       $rs = $this->db->query($q);
       $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'title' => $title, 'description' => $description );
     }
@@ -209,7 +211,7 @@ class Album extends BaseObject
     {
       $pictureId = $picture['id'];
       $q = "insert into album_pictures (album_id,picture_id) values ($this->id, $pictureId)";
-			$q = $this->db->buildQuery( "INSERT INTO album_pictures (album_id, picture_id, sortorder) SELECT %d, %d, MAX(sortorder+1) FROM album_pictures WHERE album_id=%d", $this->id, $pictureId, $this->id );
+      $q = $this->db->buildQuery( "INSERT INTO album_pictures (album_id, picture_id, sortorder) SELECT %d, %d, IFNULL(MAX(sortorder+1), 1) FROM album_pictures WHERE album_id=%d", $this->id, $pictureId, $this->id );
       $this->db->query($q);
     }
 
