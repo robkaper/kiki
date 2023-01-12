@@ -110,7 +110,7 @@ abstract class BaseObject
         $this->object_id = $this->db->lastInsertId($rs);
     }
 
-    $this->id ? $this->dbUpdate() : $this->dbInsert();
+    $this->id > 0 ? $this->dbUpdate() : $this->dbInsert();
   }
 
   protected function dbUpdate()
