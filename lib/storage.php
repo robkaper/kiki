@@ -191,12 +191,23 @@ class Storage
     $rs = $db->query($q);
     $id = $db->lastInsertId($rs);
 
-    $fileName = self::localFile($id);
-    Log::debug( $fileName );
-    file_put_contents( $fileName, $data );
-    chmod( $fileName, 0644 );
+    $localFile = self::localFile($id);
+    file_put_contents( $localFile, $data );
+    chmod( $localFile, 0644 );
 
     return $id;    
+  }
+
+  public static function delete( $id )
+  {
+    $db = Core::getDb();
+
+    $localFile = self::localFile($id);
+    unlink($localFile);
+
+    $q = "DELETE FROM storage WHERE id=%d";
+    $q = $db->buildQuery( $q, $id );
+    $db->query($q);
   }
 
   public static function generateThumb( $fileName, $w, $h, $crop=false )
