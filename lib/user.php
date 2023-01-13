@@ -322,7 +322,8 @@ class User extends BaseObject
     $this->email = $email;
     $this->password = $password;
     $this->authToken = Auth::passwordHash( $password );
-    $this->admin = (int) $admin;
+    $this->isAdmin = (int) $admin;
+    $this->isVerified = (int) $verified;
     
     $this->save();
   }
