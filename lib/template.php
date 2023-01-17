@@ -245,6 +245,11 @@ class Template
     $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
+  public function include()
+  {
+    include_once $this->file($this->template);
+  }
+
   public function fetch()
   {
     return $this->content( false );
