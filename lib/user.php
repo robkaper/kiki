@@ -116,9 +116,13 @@ class User extends BaseObject
 
   public function loadByObjectName( $object_name )
   {
+    $this->id = 0;
+    $this->object_id = 0;
+
     $q = "SELECT u.id FROM `users` u LEFT JOIN `objects` o ON o.object_id=u.object_id WHERE o.object_name = '%s'";
     $q = $this->db->buildQuery( $q, $object_name );
     $uid = $this->db->getSingleValue($q);
+
     if ( $uid )
       $this->load($uid);
   }
