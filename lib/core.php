@@ -49,9 +49,9 @@ class Core
 		self::$baseUrl = $baseUrl;
 	}
 
-	public static function getDb()
+	public static function getDb( $forceNew = false )
 	{
-		if ( !isset(self::$db) )
+		if ( !isset(self::$db) || $forceNew )
 		{
 			self::$db = new Database( Config::$db );
 		}
