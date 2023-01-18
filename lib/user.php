@@ -310,7 +310,7 @@ class User extends BaseObject
   }
 
   // TODO: deprecate, or refactor
-  public function storeNew( $email, $password, $admin = false, $verified = false )
+  public function storeNew( $email, $password, $admin = false, $verified = false, $passwordIsHash = false )
   {
     // TODO: implement verification of email
 
@@ -321,7 +321,7 @@ class User extends BaseObject
 
     $this->email = $email;
     $this->password = $password;
-    $this->authToken = Auth::passwordHash( $password );
+    $this->authToken = $passwordIsHash ? $password : Auth::passwordHash( $password );
     $this->isAdmin = (int) $admin;
     $this->isVerified = (int) $verified;
     
