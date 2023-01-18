@@ -347,8 +347,14 @@ class Album extends BaseObject
     }
   }
 
-  public function setTitle( $title ) { $this->title = $title; }
+  public function setTitle( $title )
+  {
+    $this->title = $title;
+    $this->object_name = $title;
+  }
+
   public function title() { return $this->title; }
   public function setSystem( $system ) { $this->system  = $system; }
   public function system() { return $this->system; }
+
 }
