@@ -1,5 +1,10 @@
 <?php
 
+namespace Kiki;
+
+use Kiki\Core;
+use Kiki\Log;
+
 declare( ticks = 1 );
 
 /**
