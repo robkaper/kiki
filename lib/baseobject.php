@@ -104,7 +104,6 @@ abstract class BaseObject
 //      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
       $q = "INSERT INTO objects (`object_name`, `user_id`) values('%s', %d)";
       $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id );
-      Log::debug( $q );
       $rs = $this->db->query($q);
       if ( $rs )
         $this->object_id = $this->db->lastInsertId($rs);
@@ -126,8 +125,6 @@ abstract class BaseObject
       "UPDATE objects SET object_name='%s', user_id=%d WHERE object_id=%d",
       $this->object_name, $this->user_id, $this->object_id
     );
-
-    Log::debug( $q );
 
     $this->db->query($q);
   }
