@@ -119,11 +119,13 @@ class Database
 		Log::beginTimer('db');
 
 		$cacheId = md5($q);
+
 		$rs = Core::cacheAvailable() ? Core::getMemcache()->get($cacheId) : false;
+
 		if ( $rs === false )
 		{
 			$this->lastQuery = $q;
-			$rs = $this->mysqli->query($q);
+			$rs = $this->mysqli ? $this->mysqli->query($q) : null;
 
 			if ( $rs === false )
 			{
