@@ -52,6 +52,10 @@ class Http
         header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
         break;
 
+      case 422:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 422 Unproccesable Entity', 422 );
+        break;
+
       case 503:
         header( $_SERVER['SERVER_PROTOCOL']. ' 503 Service Unavailable', 503 );
         break;
