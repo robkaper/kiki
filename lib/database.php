@@ -63,6 +63,11 @@ class Database
 		return $this->mysqli ? true : false;
 	}
 
+	public function ping()
+	{
+		return $this->mysqli->ping();
+	}
+
 	/**
 	* Retrieves the database connection link.
 	* @return resource the connection
