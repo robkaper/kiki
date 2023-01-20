@@ -57,8 +57,11 @@ class Database
 	*/
 	public function connected()
 	{
-		if ( !$this->mysqli )
+		if ( !$this->mysqli || !is_resource($this->mysqli) || get_resource_type($this->mysqli !== 'mysql link') )
+		{
+			Log::debug( "reconnecting mysql" );
 			$this->connect();
+		}
 
 		return $this->mysqli ? true : false;
 	}
