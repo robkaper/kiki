@@ -138,11 +138,9 @@ class Config
 		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 	}
 
-	public static function loadDbConfig( &$db )
+	public static function loadConnectionServices()
 	{
-		// FIXME: name and purpose of this method are totally unrelated...
-
-		// TODO: make this more dynamic, and store the actual services directly, not just by name
+		// TODO: make this more dynamic, and store the actual service instances, not by name
 		if ( isset(self::$facebookSdkPath) && isset(self::$facebookApp) )
 		{
 			$service = new ConnectionService\Facebook();

@@ -93,6 +93,12 @@
     }
   } );
 
+  use Kiki\Core;
+  use Kiki\Config;
+  use Kiki\Log;
+
+  use Kiki\I18n;
+
   // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
   if ( php_sapi_name() == "cli" )
     $requestPath = $argv[0] ?? null;
@@ -103,23 +109,23 @@
     $requestPath = $urlParts['path'];
   }
 
-  Kiki\Log::init();
-  Kiki\Config::init();
+  Log::init();
+  Config::init();
 
-  Kiki\Log::beginTimer( $requestPath );
+  Log::beginTimer( $requestPath );
 
   // When called from router, don't do stuff.
   if ( isset($staticFile) && $staticFile )
     return; 
 
-  Kiki\I18n::init();
+  I18n::init();
 
   // Set locale when URI starts with a two-letter country code.
   // TODO: support locale setting by TLD or subdomain.
   // TODO: adjust element lang attributes based on chosen locale.
   if ( preg_match('#^/([a-zA-Z]{2})/#', $requestPath, $matches) )
   {
-    if ( Kiki\I18n::setLocale($matches[1]) )
+    if ( I18n::setLocale($matches[1]) )
     {
       // TODO: finish the Kiki controller and/or let the rewrite rule take
       // locale URIs into account.  Also, rewrite Kiki\Config::kikiPrefix based on
@@ -129,15 +135,17 @@
   }
   else
   {
-    Kiki\I18n::setLocale( Kiki\Config::$language );
+    I18n::setLocale( Kiki\Config::$language );
   }
 
   // Database
-  $db = Kiki\Core::getDb();
-  Kiki\Config::loadDbConfig($db);
+  $db = Core::getDb();
 
-	// Memcache
-	Kiki\Core::getMemcache();
+  // Connection services
+  Config::loadConnectionServices();
+
+  // Memcache
+  Core::getMemcache();
 
   // User(s)
   // FIXME: this should be part of core, not here...
@@ -146,8 +154,8 @@
   $rs = $db->query($q);
   if ( $rs && $db->numRows($rs) )
     while( $o = $db->fetchObject($rs) )
-      Kiki\Config::$adminUsers[] = $o->id;
+      Config::$adminUsers[] = $o->id;
   */
 
-  $user = Kiki\Core::getUser();
+  $user = Core::getUser();
   $user->authenticate();
