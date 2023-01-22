@@ -36,7 +36,7 @@
   // Classhelper already needs this
   include_once $installPath. "/lib/config.php";
 
-  function __autoload( $className )
+  spl_autoload_register( function($className)
   {
     include_once Kiki\Core::getInstallPath(). "/lib/classhelper.php";
 
@@ -91,7 +91,7 @@
       trigger_error( sprintf( "could not load class %s from local path %s nor %s from Kiki install path %s", $className, Kiki\Core::getRootPath(), 'Kiki\\'. $className, Kiki\Core::getInstallPath() ), E_USER_ERROR );
       exit;
     }
-  }
+  } );
 
   // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
   if ( php_sapi_name() == "cli" )
