@@ -27,17 +27,6 @@ namespace Kiki;
  * @todo extend to minimise mod_rewrite even further, or totally make mod_rewrite optional
  */
 
-// Optimisation: pre-recognise built-in static files (skips i18n, database
-// and user handling in init.php)
-// TODO: why call init at all for static files?!
-// answer: to make resized images based on filename convention, but
-// currently nginx configuration doesn't seem to pass these requests
-// through router anyway, so I need to figure some stuff out.
-
-$urlParts = parse_url( $_SERVER['REQUEST_URI'] );
-$requestPath = $urlParts['path'];
-$staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $requestPath );
-
 require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
 if ( !$staticFile )

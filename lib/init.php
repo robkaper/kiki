@@ -114,7 +114,15 @@
 
   Log::beginTimer( $requestPath );
 
-  // When called from router, don't do stuff.
+  // Optimisation: pre-recognise built-in static files (skips i18n, database
+  // and user handling in init.php)
+  //
+  // Init has to be called though, for semi-static files such as Thumbnails
+  // which require the class autoloader, for example.
+  //
+  // TODO: remove?  static files can be excluded from web server
+  // configuration and needn't be served by framework
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png)#', $requestPath );
   if ( isset($staticFile) && $staticFile )
     return; 
 
