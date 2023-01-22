@@ -123,7 +123,7 @@ class Event extends BaseObject
   public function url()
   {
     $sectionBaseUri = "/kiki/event/";
-    $urlPrefix = "http://". $_SERVER['SERVER_NAME'];
+    $urlPrefix = "https://". $_SERVER['SERVER_NAME'];
     $url = $urlPrefix. $sectionBaseUri. $this->cname;
     return $url;
   }
