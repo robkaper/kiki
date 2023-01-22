@@ -140,12 +140,10 @@ abstract class External
   private function loadKikiUserIds()
   {
     $this->kikiUserIds = array();
+    
+    $class = get_class($this);
 
-		// TODO: remove backwards compatibility in 1.0
-		$class = get_class($this);
-		$oldClass = str_replace("Kiki\\User\\", "User_", $class);
-
-    $q = $this->db->buildQuery( "SELECT user_id FROM connections WHERE (service='%s' OR service='%s') AND external_id='%s'", $oldClass, $class, $this->externalId );
+    $q = $this->db->buildQuery( "SELECT user_id FROM connections WHERE service='%s' AND external_id='%s'", $class, $this->externalId );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numrows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -178,14 +176,12 @@ abstract class External
 
   private function load( $kikiUserId = 0 )
   {
-		// TODO: remove backwards compatibility in 1.0
-		$class = get_class($this);
-		$oldClass = str_replace("Kiki\\User\\", "User_", $class);
+    $class = get_class($this);
 
     if ( $kikiUserId )
-      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE (service='%s' OR service='%s') AND external_id=%d AND user_id=%d", $oldClass, $class, $this->externalId, $kikiUserId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE service='%s' AND external_id=%d AND user_id=%d", $class, $this->externalId, $kikiUserId );
     else
-      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE (service='%s' OR service='%s') AND external_id=%d", $oldClass, $class, $this->externalId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE service='%s' AND external_id=%d", $class, $this->externalId );
     
     $o = $this->db->getSingleObject($q);
     if ( !$o )
