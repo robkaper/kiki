@@ -91,6 +91,8 @@ class Config
 
 	public static $adminUsers = array();
 
+	public static $cspNonce = null;
+
 	// FIXME: Add check in setup, pepper *must* be changed from the
 	// defaults to avoid rainbow table lookups.
 	// WARNING: Changing these values will invalidate all user

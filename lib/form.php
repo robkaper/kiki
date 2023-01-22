@@ -111,7 +111,7 @@ class Form
     $content .= "<input type=\"text\" name=\"${id}\" value=\"${value}\" class=\"datetimepicker\"></p>\n";
     ob_start();
 ?>
-<script>
+<script nonce="<?php echo Config::$cspNonce; ?>">
 $( function() {
   $(".datetimepicker").datetimepicker( {
     dateFormat: 'dd-mm-yy',
