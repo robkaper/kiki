@@ -60,7 +60,6 @@ class Form
     return self::text( $id, $value, $label, $placeholder, true );
   }
 
-  // TODO: remove id=, use textarea[name=...] selector instead
   public static function textarea( $id, $value=null, $label=null, $placeholder=null, $maxLength=0, $class=null )
   {
     $placeholder = $placeholder ? " placeholder=\"$placeholder\"" : "";
