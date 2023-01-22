@@ -104,7 +104,6 @@
     $requestPath = $argv[0] ?? null;
   else
   {
-    // TODO: duplicate from router.php
     $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
     $requestPath = $urlParts['path'];
   }
