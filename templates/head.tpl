@@ -3,7 +3,6 @@
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="{$description}">
 
-{include 'parts/icmb/geo-location'}
 {include 'parts/google/meta-site-verification'}
 
 {foreach $stylesheets as $url}
