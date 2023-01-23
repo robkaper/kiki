@@ -142,7 +142,7 @@ class Database
 				// exit;
 			}
 			else if ( Core::cacheAvailable() )
-				$memcache->set($cacheId, $rs);
+				Core::getMemcache()->set($cacheId, $rs);
 		}
 
 		Log::endTimer('db');
