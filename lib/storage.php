@@ -213,6 +213,14 @@ class Storage
   public static function generateThumb( $fileName, $w, $h, $crop=false )
   {
     list( $base, $ext ) = self::splitExtension($fileName);
+    $c = $crop ? "c." : null;
+    $scaledFile = "${base}.${w}x${h}.${c}${ext}";
+
+    if ( file_existS($scaledFile) )
+    {
+      return $scaledFile;
+    }
+
     $image = null;
 
     $mimeType = mime_content_type($fileName);
@@ -274,7 +282,6 @@ class Storage
     imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
 
-    $c = $crop ? "c." : null;
     $scaledFile = "${base}.${w}x${h}.${c}${ext}";
 
     if ( file_exists($scaledFile) )
