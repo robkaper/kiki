@@ -101,7 +101,7 @@
 
   // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
   if ( php_sapi_name() == "cli" )
-    $requestPath = $argv[0] ?? null;
+    $requestPath = $argv[2] ?? null;
   else
   {
     $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
