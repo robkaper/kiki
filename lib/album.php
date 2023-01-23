@@ -203,7 +203,7 @@ class Album extends BaseObject
       $q = "INSERT INTO `pictures` (title, description, storage_id) VALUES ('%s', '%s', %d)";
       $q = $this->db->buildQuery( $q, $title, $description, $storageId );
       $rs = $this->db->query($q);
-      $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'title' => $title, 'description' => $description );
+      $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'storage_id' => $storageId, 'title' => $title, 'description' => $description );
     }
 
     // Link pictures into album
