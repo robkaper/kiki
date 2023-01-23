@@ -85,8 +85,6 @@ class Router
 
   public static function findSection( $uri )
   {
-    $db = Core::getDb();
-
     $baseUris = self::getBaseUris();
     if ( !count($baseUris) )
       return null;

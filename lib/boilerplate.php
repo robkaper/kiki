@@ -78,13 +78,8 @@ class Boilerplate
     $requestUri = isset($_GET['uri']) ? $_GET['uri'] : isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
     preg_match( '#(/(.*))/((.*)(\.php)?)#', $requestUri, $matches );
     
-    $active = null;
     if ( count($matches) )
-    {
       $context = $matches[2];
-      $active = $matches[4];
-    }
-    $paths = explode( "/", $context );
 
     $db = Core::getDb();
 
@@ -108,5 +103,3 @@ class Boilerplate
   }
 
 }
-
-?>

@@ -99,9 +99,7 @@ abstract class BaseObject
   {
     if ( !$this->object_id )
     {
-      $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
-
-//      $q = $this->db->buildQuery( "INSERT INTO objects (type,ctime,mtime,visible,user_id,section_id) values('%s',$qCtime,now(),%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
+      // $q = $this->db->buildQuery( "INSERT INTO objects (type,visible,user_id,section_id) values('%s',%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
       $q = "INSERT INTO objects (`object_name`, `user_id`) values('%s', %d)";
       $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id );
       $rs = $this->db->query($q);
@@ -116,8 +114,8 @@ abstract class BaseObject
   {
 /*
     $q = $this->db->buildQuery(
-      "UPDATE objects SET ctime='%s', mtime=now(), visible=%d, user_id=%d, section_id=%d WHERE object_id=%d",
-      $this->ctime, $this->visible, $this->user_id, $this->sectionId, $this->object_id
+      "UPDATE objects SET visible=%d, user_id=%d, section_id=%d WHERE object_id=%d",
+      $this->visible, $this->user_id, $this->sectionId, $this->object_id
     );
 */
 

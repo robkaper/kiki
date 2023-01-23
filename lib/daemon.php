@@ -99,7 +99,7 @@ abstract class Daemon
     {
     case SIGTERM:
       Log::info( "received SIGTERM" );
-      if ( $count = count($this->childPids) )
+      if ( count($this->childPids) )
       {
         // Parent
         $this->shutdown = true;

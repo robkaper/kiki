@@ -198,9 +198,6 @@ class User extends BaseObject
     $this->identifiedConnections = array();
     foreach( Config::$connectionServices as $service )
     {
-			$oldClass = str_replace("Kiki\\User\\", "User_", $service);
-			// Log::debug( "user factory for $service (oldClass: $oldClass)" );
-
       $user = User\Factory::getInstance($service);
       if ( !$user || !$user->externalId() )
         continue;

@@ -105,7 +105,7 @@ class Storage
    */
   public static function getExtension( $name )
   {
-    list( $base, $ext ) = self::splitExtension($name);
+    list( , $ext ) = self::splitExtension($name);
     return $ext;
   }
 
