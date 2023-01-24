@@ -118,16 +118,10 @@ create table storage (
   size int unsigned not null default 0
 ) default charset=utf8;
 
+drop table if exists album_pictures;
 drop table if exists albums;
-create table albums (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned not null,
-  title varchar(255) not null,
-  system boolean default false
-) default charset=utf8;
-
 drop table if exists pictures;
+
 create table pictures (
   id int unsigned not null auto_increment,
   primary key(id),
@@ -136,7 +130,15 @@ create table pictures (
   storage_id int unsigned not null
 ) default charset=utf8;
 
-drop table if exists album_pictures;
+create table albums (
+  id int unsigned not null auto_increment,
+  primary key(id),
+  object_id bigint unsigned not null,
+  title varchar(255) not null,
+  system boolean default false,
+  `highlight_id` INT UNSIGNED DEFAULT NULL REFERENCES `pictures`(`id`)
+) default charset=utf8;
+
 create table album_pictures (
   album_id int unsigned not null,
   picture_id int unsigned not null,
