@@ -80,12 +80,13 @@ Kiki defaults where desired.
 Configure your virtual host
 ---------------------------
 
-// FIXME: these instructions need to be updated for nginx which I am
-// currently using (and thus supporting).  These Apache instructions might
-// still work, though.
+Nginx: you might have to tweak things a little bit, but an example based on
+what I'm using myself is included as config/nginx/site.conf
 
-Edit config/htaccess and adjust to match your Kiki install path and site
-root. Then place the contents in your VirtualHost directive.
+Apache: these instructions haven't been updated since I've moved to Nginx,
+but should be somewhat accurate.  Edit config/apache/htaccess and adjust to
+match your Kiki install path and site root.  Then place the contents in your
+VirtualHost directive.
 
 Note: this setup has only been tested within the Apache configuration
 itself, not as .htaccess file.  I don't intent to support .htaccess files,
