@@ -20,7 +20,7 @@ class Misc
   * @param int $time the time to compare the current time to
   * @return string description of the difference in time
   * @warning Only supports comparison to times in the past.
-  * @bug rjkcust: returns strings in Dutch.
+  * @todo add i18n support
   */
   public static function relativeTime( $time, $now = null )
   {
@@ -32,21 +32,21 @@ class Misc
     $absDelta = abs($delta);
 
     if ( $absDelta < 60 )
-      return "minder dan een minuut";
+      return "less than a minute";
     else if ( $absDelta < 120 )
-      return "een minuut";
+      return "one minute";
     else if ( $absDelta < (4*60) )
-      return "een paar minuten";
+      return "a few minutes";
     else if ( $absDelta < (60*60) )
-      return (int)($absDelta/60). " minuten";
+      return (int)($absDelta/60). " minutes";
     else if ( $absDelta < (120*60) )
-      return "een uur";
+      return "one hour";
     else if ( $absDelta < (24*60*60) )
-      return (int)($absDelta/3600). " uur";
+      return (int)($absDelta/3600). " hour";
     else if ( $absDelta < (48*60*60) )
-      return "een dag";
+      return "one day";
     else
-      return (int)($absDelta/86400). " dagen";
+      return (int)($absDelta/86400). " days";
   }
 
   /**
