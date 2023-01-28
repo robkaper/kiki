@@ -42,7 +42,7 @@ class Misc
     else if ( $absDelta < (120*60) )
       return "one hour";
     else if ( $absDelta < (24*60*60) )
-      return (int)($absDelta/3600). " hour";
+      return (int)($absDelta/3600). " hours";
     else if ( $absDelta < (48*60*60) )
       return "one day";
     else
