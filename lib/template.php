@@ -131,13 +131,23 @@ class Template
   */
   public static function file( $template )
   {
-    // Try site-specific version of template
+    // Try site-specific template
     $file = Core::getRootPath(). '/templates/'. $template. '.tpl';
     if ( file_exists($file) )
       return $file;
 
-    // Fallback to Kiki base version of template
-    return Core::getInstallPath(). '/templates/'. $template. '.tpl';
+    // Try site-specific PHP file
+    $file = Core::getRootPath(). '/templates/'. $template. '.php';
+    if ( file_exists($file) )
+      return $file;
+
+    // Kiki fallback template
+    $file = Core::getInstallPath(). '/templates/'. $template. '.tpl';
+    if ( file_exists($file) )
+      return $file;
+
+    // Kiki fallback PHP file
+    return Core::getInstallPath(). '/templates/'. $template. '.php';
   }
 
   public function load( $template )
@@ -263,20 +273,20 @@ class Template
 
     if ( !$this->template && !$this->noDefault )
       $this->template = 'pages/default';
-      
-/* reenable template parsing 
-    ob_start();
-    include_once $this->file($this->template);
-    $this->content = ob_get_contents();
-    ob_end_clean();
 
-    // FIXME: why?
-    \Kiki\Core::getFlashBag()->reset();
+    $ext = pathinfo( $this->file($this->template), PATHINFO_EXTENSION );
+    if ( $ext == 'php' )
+    {
+      ob_start();
+      include_once $this->file($this->template);
+      $this->content = ob_get_contents();
+      ob_end_clean();
+
+      // FIXME: why?
+      \Kiki\Core::getFlashBag()->reset();
     
-    return $this->content;
-*/
-
-    // LEGACY
+      return $this->content;
+    }
 
     // TODO: don't always auto-include html framework, desired template
     // output could just as well be another format (json, xml, ...)
