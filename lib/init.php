@@ -105,7 +105,7 @@
   else
   {
     $urlParts = parse_url( $_SERVER['REQUEST_URI'] );
-    $requestPath = $urlParts['path'];
+    $requestPath = $urlParts['path'] ?? null;
   }
 
   Log::init();
