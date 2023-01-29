@@ -57,7 +57,6 @@ class ClassHelper
 		return $className;
 	}
 
-	// TODO: isn't this basically ::factory()
 	public static function bareToNamespace( $className )
 	{
 		// echo "<br>z1". $className;

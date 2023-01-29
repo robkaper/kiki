@@ -33,14 +33,13 @@ class SocialUpdate extends BaseObject
   {
     parent::setFromObject($o);
 
-		// FIXME: rjkcust assuming only User 1 posts updates. Should be derived from publication connection reference.
     $this->userId = $o->user_id;
 
-		$body = @unserialize($o->body);
-		if ( $body !== false )
-			$this->body = $body['message'];
-		else
-			$this->body = $o->body;
+    $body = @unserialize($o->body);
+    if ( $body !== false )
+      $this->body = $body['message'];
+    else
+      $this->body = $o->body;
   }
 
   public function dbUpdate()
@@ -57,9 +56,9 @@ class SocialUpdate extends BaseObject
     return 'socialupdate-'. $this->id;
   }
 
-	public function templateData()
-	{
-		$uAuthor = ObjectCache::getByType( '\Kiki\User', $this->userId );
+  public function templateData()
+  {
+    $uAuthor = ObjectCache::getByType( '\Kiki\User', $this->userId );
 
     $data = array(
       'id' => $this->id,
@@ -84,6 +83,6 @@ class SocialUpdate extends BaseObject
     return $data;
   }
 
-	public function title() {	return \Kiki\Misc::textSummary( $this->body, 40 ); }
-	public function body() { return $this->body; }
+  public function title() { return \Kiki\Misc::textSummary( $this->body, 40 ); }
+  public function body() { return $this->body; }
 }
