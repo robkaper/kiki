@@ -22,6 +22,9 @@ class Thumbnails extends \Kiki\Controller
     if ( !file_exists($scaleFile) )
       return false;
 
+    // FIXME: duplicate from nginx config... how to keep this in sync?
+    header( 'Expires: '. gmdate( 'D, d M Y H:i:s \G\M\T', time() + (60*60*24*365) ) ); // 365d
+
     $this->altContentType = \Kiki\Storage::getMimeType( \Kiki\Storage::getExtension($scaleFile) );
     $this->template = null; // Send content directly, without a template.
     $this->status = 200;
