@@ -139,6 +139,16 @@ class Database
 			{
 				Log::error( "no rs for query [$q]" );
 				Log::error( $this->mysqli->errno. ": ". $this->mysqli->error );
+				if( $this->mysqli->errno == 1927 )
+				{
+					// Connection was killed
+					unset($this->mysqli);
+				}
+				else if( $this->mysqli->errno == 2006 )
+				{
+					// MySQL server has gone away
+					unset($this->mysqli);
+				}
 				// exit;
 			}
 			else if ( Core::cacheAvailable() )
