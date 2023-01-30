@@ -96,10 +96,12 @@ class User extends BaseObject
       $this->id = $id;
       $this->object_id = 0;
     }
+    else if ( !$this->id && !$this->object_id )
+      return;
 
     $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'name' );
 
-    $q = $this->db->buildQuery( "SELECT %s FROM users u LEFT JOIN objects o ON o.object_id=u.object_id WHERE u.id=%d OR o.object_id=%d", implode( ', ', $fields), $this->id, $this->object_id );
+    $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND (u.id=%d OR o.object_id=%d)", implode( ', ', $fields), $this->id, $this->object_id );
     $o = $this->db->getSingleObject($q);
     if ( !$o )
     {
@@ -119,7 +121,7 @@ class User extends BaseObject
     $this->id = 0;
     $this->object_id = 0;
 
-    $q = "SELECT u.id FROM `users` u LEFT JOIN `objects` o ON o.object_id=u.object_id WHERE o.object_name = '%s'";
+    $q = "SELECT u.id FROM `users` u, `objects` o WHERE o.object_id=u.object_id AND o.object_name = '%s'";
     $q = $this->db->buildQuery( $q, $object_name );
     $uid = $this->db->getSingleValue($q);
 
