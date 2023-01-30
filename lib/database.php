@@ -150,6 +150,33 @@ class Database
 		return $rs;
 	}
 
+	function begin()
+	{
+		if ( !$this->mysqli )
+			$this->connect();
+
+		$this->mysqli->autocommit(false);
+	}
+
+	function commit( $alsoEnd = false )
+	{
+		if ( !$this->mysqli )
+			return false;
+
+		$this->mysqli->commit();
+
+		if ( $alsoEnd )
+			$this->end();
+	}
+
+	function end()
+	{
+		if ( !$this->mysqli )
+			return false;
+
+		$this->mysqli->autocommit(true);
+	}
+
 	/**
 	* Retrieves the next object of a resource/result set returned by a succesful query.
 	* @todo Research if the (re)connection attempt can be removed, if
