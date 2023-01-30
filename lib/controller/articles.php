@@ -16,7 +16,6 @@ class Articles extends \Kiki\Controller
     $user = Core::getUser();
 
     $template = Template::getInstance();
-    $template->append( 'stylesheets', \Kiki\Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND ((o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
     $articleIds = $db->getObjectIds($q);

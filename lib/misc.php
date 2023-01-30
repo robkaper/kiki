@@ -110,9 +110,6 @@ class Misc
     // Replace [image]1-based id in gallery[/image]
     $text = preg_replace_callback( '~(\[image\]([^\[\]]+)\[/image\])~', array('self', 'markupImages'), $text );
 
-    // Replace [code]text[/code] for use with prettify.js
-    $text = preg_replace( '(\[code\]([^\[\]]+)\[/code\])', "<pre><code>\\1</code></pre>", $text );
-
     if ( $authorMode )
     {
         // Replace [img]img[/img]

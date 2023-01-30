@@ -13,7 +13,6 @@ class Page extends \Kiki\Controller
     $this->title = $article->title();
 
     $template = \Kiki\Template::getInstance();
-    $template->append( 'stylesheets', \Kiki\Config::$kikiPrefix. "/scripts/prettify/prettify.css" );
 
     if ( $article->visible() || $article->userId() == $user->id() )
     {

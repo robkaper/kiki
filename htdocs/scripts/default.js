@@ -181,16 +181,6 @@ function fileUploadHandler( target, id, uri, html )
 }
 
 $( function() { 
-  var prettify = false;
-  $("pre code").each(function() {
-    $(this).parent().addClass('prettyprint');
-    prettify = true;
-  } );
-
-  if ( prettify ) {
-    $.getScript( kikiPrefix + '/scripts/prettify/prettify.js', function() { prettyPrint() } );
-  }
-
   $('input[placeholder], textarea[placeholder]').placeholder();
 
   $('label a.toggleWysiwyg').live('click', function() {
