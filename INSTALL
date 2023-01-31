@@ -12,6 +12,18 @@ Install source files
 Place the Kiki source tree somewhere on your filesystem. Any location is
 fine, as long as your web server user (usually www-data) has read access.
 
+  git clone https://github.com/robkaper/kiki.git
+
+or
+
+  git clone git@github.com:robkaper/kiki.git
+
+or download:
+
+  https://github.com/robkaper/kiki/archive/refs/heads/master.zip
+
+and unzip it where you want it to be.
+
 Create required files and directories
 -------------------------------------
 
