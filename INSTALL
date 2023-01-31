@@ -139,8 +139,8 @@ This also applies to Controller classes.  To use a controller class named
 Bar, the following is required:
 
 - Setting Config::$namespace to your namespace (e.g. MyProject)
-- A file /var/www/example.com/lib/controller/foo.php
-- A class named MyProject\Controller\Foo within that file, extending the
+- A file /var/www/example.com/lib/controller/bar.php
+- A class named MyProject\Controller\Bar within that file, extending the
   Kiki\Controller class
 
 See lib/controller/examples/ in the Kiki install path.
