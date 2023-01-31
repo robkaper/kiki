@@ -216,7 +216,7 @@ class Storage
     $c = $crop ? "c." : null;
     $scaledFile = "${base}.${w}x${h}.${c}${ext}";
 
-    if ( file_existS($scaledFile) )
+    if ( file_exists($scaledFile) )
     {
       return $scaledFile;
     }
