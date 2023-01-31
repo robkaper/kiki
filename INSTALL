@@ -125,18 +125,25 @@ itself in all requests.  You just cannot leave it empty.
 Custom modules
 --------------
 
-You can easily create your own custom controller modules within Kiki. 
+You can easily use your own classes with Kiki.  It's class handler first
+your local namespace and then Kiki's, in that order.
 
-To create a module named Foo, the following are required:
+To use a class named Foo, the following is required:
 
-- A file /var/www/example.com/lib/controller/foo.php (check lib/controller/examples/helloworld.php for an example)
-- A class named Foo within that file, extending the Kiki\Controller class
+- Setting Config::$namespace to your namespace (e.g. MyProject)
+- A file /var/www/example.com/lib/foo.php
+- A class named MyProject\Foo within that file (possibly extending Kiki\Foo,
+  if you're building upon what Kiki had to offer)
+
+This also applies to Controller classes.  To use a controller class named
+Bar, the following is required:
+
+- Setting Config::$namespace to your namespace (e.g. MyProject)
+- A file /var/www/example.com/lib/controller/foo.php
+- A class named MyProject\Controller\Foo within that file, extending the
+  Kiki\Controller class
 
 See lib/controller/examples/ in the Kiki install path.
 
-To start using a custom module, create a route to it in the sections table.
-
-// FIXME: this should be automated with an Add Section CMS module.
-
-// FIXME: no, actually, this should probably be a configuration file as this
-// framework should be useable without a database.
+To start using a custom module, create a route to it in the Config::$routing
+array. See config/config.php-sample for an example.
