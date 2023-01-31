@@ -12,3 +12,5 @@ Config::$routing = array(
   '/hello/' => 'HelloController',
   '/bye' => 'HelloController::bye'
 );
+
+// See lib/config.php for all public static members to be configured.
