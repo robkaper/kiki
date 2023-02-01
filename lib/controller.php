@@ -37,11 +37,13 @@ class Controller
 
   protected $subController = null;
 
+  protected $extraMeta = null;
   protected $extraScripts = null;
   protected $extraStyles = null;
 
   public function __construct()
   {
+    $this->extraMeta = array();
     $this->extraScripts = array();
     $this->extraStyles = array();
 

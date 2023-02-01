@@ -56,6 +56,10 @@ class Http
         header( $_SERVER['SERVER_PROTOCOL']. ' 422 Unproccesable Entity', 422 );
         break;
 
+      case 451:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 451 Unavailable For Legal Reasons', 451 );
+        break;
+
       case 503:
         header( $_SERVER['SERVER_PROTOCOL']. ' 503 Service Unavailable', 503 );
         break;

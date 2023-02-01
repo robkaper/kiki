@@ -10,6 +10,7 @@ enum PrivacyLevel: int
     case Public = 2;
     case Network = 3;
     case Private = 4;
+    case LegalHold = 5;
 }
 */
 
@@ -19,6 +20,7 @@ class PrivacyLevel
     public const Public = 2;
     public const Network = 3;
     public const Private = 4;
+    public const LegalHold = 5;
 
     static public function getConstants()
     {
