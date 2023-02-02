@@ -20,11 +20,6 @@ namespace Kiki;
 
 class Boilerplate
 {
-  public static function address()
-  {
-    return "<address>". nl2br( Config::$address ). "</address>\n";
-  }
-
   public static function copyright()
   {
     return '<a href="/copyright.php">&copy; Copyright</a> '. Config::$copySince. '-'. date("Y"). ' '. Config::$copyOwner. '.';

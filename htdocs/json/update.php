@@ -32,9 +32,6 @@
     case 'accountLink':
       $data = User::anyUser() ? Boilerplate::accountLink() : null;
       break;
-    case 'address':
-      $data = User::anyUser() ? Boilerplate::address() : Boilerplate::login();
-      break;
     default:
       if ( preg_match( '/^commentFormWrapper_/', $id ) )
       {
