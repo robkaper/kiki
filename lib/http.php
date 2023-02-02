@@ -52,6 +52,10 @@ class Http
         header( $_SERVER['SERVER_PROTOCOL']. ' 404 Not Found', 404 );
         break;
 
+      case 410:
+        header( $_SERVER['SERVER_PROTOCOL']. ' 404 Gone', 410 );
+        break;
+
       case 422:
         header( $_SERVER['SERVER_PROTOCOL']. ' 422 Unproccesable Entity', 422 );
         break;
