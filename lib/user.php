@@ -101,7 +101,10 @@ class User extends BaseObject
 
     $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'name' );
 
-    $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND (u.id=%d OR o.object_id=%d)", implode( ', ', $fields), $this->id, $this->object_id );
+    if ( $this->id )
+      $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND u.id=%d", implode( ', ', $fields), $this->id );
+    else
+      $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_id=%d", implode( ', ', $fields), $this->object_id );
     $o = $this->db->getSingleObject($q);
     if ( !$o )
     {
