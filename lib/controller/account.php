@@ -232,12 +232,6 @@ class Account extends \Kiki\Controller
         }
       }
     }
-    else
-    {
-      $adminsExist = count(\Kiki\Config::$adminUsers);
-
-      $template->assign( 'adminsExist', $adminsExist );
-    }
 
     if ( count($this->errors) )
     {

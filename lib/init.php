@@ -89,7 +89,6 @@
       // echo "<br>6$className, $trueClassName";
     }
 
-
     if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
     {
       trigger_error( sprintf( "could not load class %s from local path %s nor %s from Kiki install path %s", $className, Kiki\Core::getRootPath(), 'Kiki\\'. $className, Kiki\Core::getInstallPath() ), E_USER_ERROR );
@@ -159,14 +158,5 @@
   Core::getMemcache();
 
   // User(s)
-  // FIXME: this should be part of core, not here...
-  /*
-  $q = "SELECT id FROM users WHERE admin=1"; // AND verified=1";
-  $rs = $db->query($q);
-  if ( $rs && $db->numRows($rs) )
-    while( $o = $db->fetchObject($rs) )
-      Config::$adminUsers[] = $o->id;
-  */
-
   $user = Core::getUser();
   $user->authenticate();

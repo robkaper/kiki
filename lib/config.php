@@ -87,8 +87,6 @@ class Config
 
 	public static $mailToSocialAddress = null;
 
-	public static $adminUsers = array();
-
 	public static $cspNonce = null;
 
 	// FIXME: Add check in setup, pepper *must* be changed from the

@@ -33,10 +33,8 @@
 
   $this->template = 'pages/admin';
 
-  $adminsExist = count(Config::$adminUsers);
   $dbVersion = Status::dbVersion();
-  Log::debug( "adminUsers: ". print_r( Config::$adminUsers, true) );
-  $checkStatus = ( $user->isAdmin() || !$adminsExist );
+  $checkStatus = $user->isAdmin();
 
   if ( !$checkStatus )
   {
