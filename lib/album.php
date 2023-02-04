@@ -228,11 +228,12 @@ class Album extends BaseObject
     return $pictures;
   }
 
-	public function firstPicture()
-	{
-		$q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
-		return $this->db->getSingleValue($q);
-	}
+  // FIXME: this should honour sortorder
+  public function firstPicture()
+  {
+    $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
+    return $this->db->getSingleValue($q);
+  }
 
   public function setHighlightId( $pictureId )
   {
@@ -252,6 +253,7 @@ class Album extends BaseObject
    *
    * @return ID of the previous picture (null if none)
    */
+  // FIXME: this should honour sortorder
   public static function findPrevious( $albumId, $pictureId )
   {
     $db = Core::getDb();
@@ -268,6 +270,7 @@ class Album extends BaseObject
    *
    * @return ID of the next picture (null if none)
    */
+  // FIXME: this should honour sortorder
   public static function findNext( $albumId, $pictureId )
   {
     $db = Core::getDb();
