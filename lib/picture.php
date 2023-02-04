@@ -7,7 +7,7 @@ use Kiki\Storage;
 
 class Picture
 {
-    function delete( $id )
+    static function delete( $id )
     {
         $db = Core::getDb();
         $user = Core::getUser();

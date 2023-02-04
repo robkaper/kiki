@@ -358,7 +358,7 @@ class Database
 	 * @param array an array of IDs
 	 * @return string a comma-separated list of IDs, or null if the array was empty
 	 */
-	public function implode( $arrIds )
+	static public function implode( $arrIds )
 	{
 		return count($arrIds) ? implode( ",", $arrIds ) : "null";
 	}
