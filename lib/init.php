@@ -114,6 +114,9 @@
   Log::init();
   Config::init();
 
+  if ( Config::$defaultTimezone )
+    date_default_timezone_set( Config::$defaultTimezone );
+
   Log::beginTimer( $requestPath );
 
   // Optimisation: pre-recognise built-in static files (skips i18n, database

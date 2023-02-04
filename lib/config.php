@@ -33,6 +33,7 @@ class Config
 	public static $address = null;
 
 	public static $language = "en";
+	public static $defaultTimezone = null;
 
 	public static $dbHost = "localhost";
 	public static $dbPort = 3306;
