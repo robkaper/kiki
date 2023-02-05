@@ -124,6 +124,8 @@ class User extends BaseObject
     $this->id = 0;
     $this->object_id = 0;
 
+    $this->reset();
+
     $q = "SELECT u.id FROM `users` u, `objects` o WHERE o.object_id=u.object_id AND o.object_name = '%s'";
     $q = $this->db->buildQuery( $q, $object_name );
     $uid = $this->db->getSingleValue($q);
