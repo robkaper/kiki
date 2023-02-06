@@ -91,8 +91,8 @@
 
     if ( !class_exists($className, false) && !class_exists('Kiki\\'. $className, false) )
     {
-      trigger_error( sprintf( "could not load class %s from local path %s nor %s from Kiki install path %s", $className, Kiki\Core::getRootPath(), 'Kiki\\'. $className, Kiki\Core::getInstallPath() ), E_USER_ERROR );
-      exit;
+      // trigger_error( sprintf( "could not load class %s from local path %s nor %s from Kiki install path %s", $className, Kiki\Core::getRootPath(), 'Kiki\\'. $className, Kiki\Core::getInstallPath() ), E_USER_ERROR );
+      // exit;
     }
   } );
 
