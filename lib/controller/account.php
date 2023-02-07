@@ -70,7 +70,7 @@ class Account extends \Kiki\Controller
     return true;
   }
 
-  public function loginAction()
+  public function loginAction( $cookieConsent = false )
   {
     $this->template = 'pages/login';
     $this->status = 200;
@@ -101,7 +101,7 @@ class Account extends \Kiki\Controller
       else
       {
         \Kiki\Core::setUser($user);
-        \Kiki\Auth::setCookie($userId);
+        \Kiki\Auth::setCookie($userId, $cookieConsent );
 
         // FIXME: this is rather specific. But local namespaced class can override it...
         $this->status = 303;
