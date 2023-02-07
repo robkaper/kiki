@@ -124,7 +124,6 @@ class Article extends BaseObject
     if ( !$sectionBaseUri )
       $sectionBaseUri = "/";
 
-    // TODO: support HTTPS
     $urlPrefix = ($addSchema ? "https" : null). "//". $_SERVER['SERVER_NAME'];
 
     // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page
