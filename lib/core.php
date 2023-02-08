@@ -158,22 +158,29 @@ class Core
     self::$templateData['activeConnections'] = array();
 
     $connectedServices = array();
-		if ( self::$user )
-		{
-	    foreach( self::$user->connections() as $connection )
-	    {
-	      self::$templateData['activeConnections'][] = array( 'serviceName' => $connection->serviceName(), 'screenName' => $connection->screenName(), 'userName' => $connection->name(), 'pictureUrl' => $connection->picture(), 'subAccounts' => $connection->subAccounts(), 'permissions' => $connection->permissions() );
-	      $connectedServices[] = $connection->serviceName();
-	    }
-		}
+    if ( self::$user )
+    {
+      foreach( self::$user->connections() as $connection )
+      {
+        self::$templateData['activeConnections'][] = array(
+          'serviceName' => $connection->serviceName(),
+          'screenName' => $connection->screenName(),
+          'userName' => $connection->name(),
+          'pictureUrl' => $connection->picture()
+        );
 
-		// Log::debug( "user cons: ". print_r(self::$user->connections(),true) );
-		// Inactive connections. Might as well be in {$user) as well,
-		// potentially in {$user.connections} with an {active} switch, although
-		// the separation at this level is not the worst.
+        $connectedServices[] = $connection->serviceName();
+      }
+    }
 
-		// Log::debug( "config: ". print_r(Config::$connectionServices, true) );
-		// Log::debug( "connected: ". print_r($connectedServices,true) );
+    // Log::debug( "user cons: ". print_r(self::$user->connections(),true) );
+
+    // Inactive connections. Might as well be in {$user) as well,
+    // potentially in {$user.connections} with an {active} switch, although
+    // the separation at this level is not the worst.
+
+    // Log::debug( "config: ". print_r(Config::$connectionServices, true) );
+    // Log::debug( "connected: ". print_r($connectedServices,true) );
 
     foreach( Config::$connectionServices as $name )
     {
@@ -187,27 +194,27 @@ class Core
     // Log::debug( "active Con: ". print_r(self::$templateData['activeConnections'],true) );
     // Log::debug( "inactive Con: ". print_r(self::$templateData['inactiveConnections'],true) );
 
-		// Menu and submenu. This feels like it the default controller (with the
-		// option for children to reimplement or amend) should do through a Menu
-		// class.
+    // Menu and submenu. This feels like it the default controller (with the
+    // option for children to reimplement or amend) should do through a Menu
+    // class.
 
-		// FIXME: shouldn't be db-populated with new routing
-//    self::$templateData['menu'] = Boilerplate::navMenu(self::$user);
-//    self::$templateData['subMenu'] = Boilerplate::navMenu(self::$user, 2);
+    // FIXME: shouldn't be db-populated with new routing
+    // self::$templateData['menu'] = Boilerplate::navMenu(self::$user);
+    // self::$templateData['subMenu'] = Boilerplate::navMenu(self::$user, 2);
 
-		// @todo Allow starttime and execution time from Log(::init) to be
-		// queried and assign them.  Just in case someone wants to output it in
-		// a template.
+    // @todo Allow starttime and execution time from Log(::init) to be
+    // queried and assign them.  Just in case someone wants to output it in
+    // a template.
 
-		self::$templateData['now'] = time();
-	}
+    self::$templateData['now'] = time();
+  }
 
-	public static function getFlashBag()
-	{
-		if ( !isset(self::$flashBag) )
-			self::$flashBag = new \Kiki\FlashBag();
+  public static function getFlashBag()
+  {
+    if ( !isset(self::$flashBag) )
+      self::$flashBag = new \Kiki\FlashBag();
 
-		return self::$flashBag;
-	}
+    return self::$flashBag;
+  }
 
 }

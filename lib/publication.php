@@ -59,7 +59,7 @@ class Publication
   {
     $qCtime = (isset($this->ctime) && is_numeric($this->ctime) && $this->ctime) ? sprintf( "'%s'", date("Y-m-d H:i:s", $this->ctime) ) : "now()";
 
-    $q = $this->db->buildQuery( "INSERT INTO publications (ctime,object_id,connection_id,external_id,body,response) values ($qCtime, %d, %d, %d, '%s', '%s')",
+    $q = $this->db->buildQuery( "INSERT INTO publications (ctime,object_id,connection_id,external_id,body,response) values ($qCtime, %d, %d, '%s', '%s', '%s')",
       $this->objectId, $this->connectionId, $this->externalId, $this->body, $this->response
     );
 
@@ -95,17 +95,10 @@ class Publication
   {
     switch( $this->service() )
     {
-      case 'Twitter':
-      case 'Kiki\User\Twitter':
-        return "//www.twitter.com/$this->connectionId/statuses/$this->externalId";
-        break;
-
-      case 'Facebook':
-      case 'Kiki\User\Facebook':
-        return "//www.facebook.com/$this->connectionId/posts/$this->externalId";
-        break;
+      default:
+        return null;
     }
-    return false;
+    return null;
   }
 
   public function templateData()

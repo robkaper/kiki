@@ -25,11 +25,6 @@ class Boilerplate
     return '<a href="/copyright.php">&copy; Copyright</a> '. Config::$copySince. '-'. date("Y"). ' '. Config::$copyOwner. '.';
   }
 
-  static function login()
-  {
-    return "<p>\n<a href=\"#login\">Log in</a> via Facebook of Twitter om deze content te zien.</p>\n";
-  }
-
   static function commentForm( $objectId )
   {
     $template = new Template( 'forms/comment' );

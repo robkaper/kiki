@@ -43,14 +43,7 @@
         {
           $rs = $connection->post( $update->objectId(), $msg );
           if ( isset($rs->id) )
-					{
             echo "<p>". $connection->serviceName(). " status geupdate: <a target=\"_blank\" href=\"". $rs->url. "\">". $rs->url. "</a></p>\n";
-					}
-          else if ( $rs->error == 'Read-only application cannot POST' )
-          {
-						$template = new Template('parts/connections/twitter/insufficient-rights');
-						echo $template->content();
-          }
           else
             echo "<p>\nEr is een fout opgetreden bij het updaten van je ". $connection->serviceName(). " status:</p>\n<pre>". print_r( $rs->error, true ). "</pre>\n";
         }
@@ -74,17 +67,6 @@
     echo Form::select( "sectionId", $sections, "Section", $sectionId );
 
     echo Form::textarea( "msg", null, "Message", "Waar denk je aan?", 140 );
-
-    foreach ( $user->connections() as $connection )
-    {
-      if ( $connection->serviceName() == 'Facebook' )
-      {
-        // TODO: inform user that, and why, these are required.
-        if ( !$connection->hasPerm('publish_stream') )
-         continue;
-      }
-      echo Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-    }
 
     echo Form::button( "submit", "submit", "Update status" );
     echo Form::close();

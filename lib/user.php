@@ -180,10 +180,12 @@ class User extends BaseObject
 
   public function getStoredConnections()
   {
-    return false;
     $this->connections = array();
 
-    $q = $this->db->buildQuery( "select external_id, service from connections where user_id=%d order by ctime asc", $this->id );
+    if ( !$this->db || !$this->db->connected() )
+      return;
+
+    $q = $this->db->buildQuery( "SELECT external_id, service FROM user_connections WHERE user_id=%d ORDER BY ctime ASC", $this->id );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numRows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -219,10 +221,12 @@ class User extends BaseObject
     }
   }
 
-  public function identify()
+  public function authenticate()
   {
     if ( !$this->id )
     {
+      // FIXME: disallow login when $this->getSetting('privacy_profile')->value == PrivacyLevel::LegalHold ??
+      // TODO: reimplement identify() or move getSetting(s) to Kiki
       $this->id = Auth::validateCookie();
       $this->load($this->id);
       // Log::debug( "cookie: ". $this->id );
@@ -291,9 +295,9 @@ class User extends BaseObject
           // deducted user, rerun self so unknown connections can be stored
           $this->id = $possibleUsers[0];
           $this->load();
-          Log::debug( "deducted user ". $this->id. " recalling identify to check for unstored connections" );
+          Log::debug( "deducted user ". $this->id. " recalling authenticate to check for unstored connections" );
           Auth::setCookie($this->id);
-          $this->identify();
+          $this->authenticate();
           return;
           break;
 
@@ -309,12 +313,6 @@ class User extends BaseObject
     }
 
     // Log::debug( "id: ". $this->id );
-  }
-
-  // WARNING: deprecated
-  public function authenticate()
-  {
-    $this->identify();
   }
 
   // TODO: deprecate, or refactor

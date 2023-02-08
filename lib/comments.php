@@ -30,10 +30,10 @@ class Comments
     $comments = array();
 
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
-    $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, u.id as local_user_id, o.user_id, c.user_connection_id, con.service, con.external_id
+    $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, u.id as local_user_id, o.user_id, c.user_connection_id, uc.service, uc.external_id
       FROM comments c
       LEFT JOIN objects o ON o.object_id=c.object_id
-      LEFT JOIN connections con ON c.user_connection_id=con.id
+      LEFT JOIN user_connections uc ON c.user_connection_id=uc.id
 			LEFT JOIN users u ON u.id=o.user_id
       WHERE c.in_reply_to_id=%d $qLast
       ORDER BY o.ctime ASC", $objectId );

@@ -75,14 +75,10 @@ class Config
 
 	public static $connectionServices = array();
 
-	public static $facebookSdkPath = null;
-	public static $facebookApp = null;
-	public static $facebookSecret = null;
-
-	public static $twitterOAuthPath = null;
-	public static $twitterApp = null;
-	public static $twitterSecret = null;
-
+	public static $googleApiClientPath = null;
+	public static $googleApiClientId = null;
+	public static $googleApiClientSecret = null;
+	
 	public static $mailToSocialAddress = null;
 
 	public static $cspNonce = null;
@@ -137,18 +133,11 @@ class Config
 	public static function loadConnectionServices()
 	{
 		// TODO: make this more dynamic, and store the actual service instances, not by name
-		if ( isset(self::$facebookSdkPath) && isset(self::$facebookApp) )
+		if ( isset(self::$googleApiClientPath) && isset(self::$googleApiClientId) )
 		{
-			$service = new ConnectionService\Facebook();
+			$service = new ConnectionService\Google();
 			if ( $service->enabled() )
-				self::$connectionServices[] = 'Facebook';
-		}
-
-		if ( isset(self::$twitterOAuthPath) && isset(self::$twitterApp) )
-		{
-			$service = new ConnectionService\Twitter();
-			if ( $service->enabled() )
-				self::$connectionServices[] = 'Twitter';
+				self::$connectionServices[] = 'Google';
 		}
 	}
 

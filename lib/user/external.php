@@ -23,7 +23,7 @@ abstract class External
 {
   protected $db;
 
-  protected $api = null;
+  protected $client = null;
 
   protected $token = null;
   protected $secret = null;
@@ -32,12 +32,10 @@ abstract class External
   protected $externalId = 0;
   protected $kikiUserIds = array();
 
+  protected $email = null;
   protected $name = null;
   protected $screenName = null;
   protected $picture = null;
-
-  protected $subAccounts = null;
-	protected $permissions = null;
 
   protected $connected = false;
   protected $authenticated = false;
@@ -54,38 +52,30 @@ abstract class External
     }
     else
     {
-      $this->identify();
+      $this->authenticate();
       $this->load();
       $this->loadKikiUserIds();
     }
   }
 
   abstract protected function connect();
-  abstract public function identify();
   abstract public function authenticate();
   abstract protected function cookie();
   abstract protected function detectLoginSession();
   abstract public function verifyToken();
 
-  abstract public function getSubAccounts();
-	abstract public function getPermissions();
-
   // abstract public function getLoginUrl();
-  abstract protected function post( $objectId, $msg, $link='', $name='', $caption='', $description = '', $picture = '' );
-  abstract protected function postArticle( &$article );
-  abstract protected function createEvent( $objectId, $title, $start, $end, $location, $description, $picture=null );
-
-  public function api()
+  public function client()
   {
-    if ( !$this->api )
+    if ( !$this->client )
       $this->connect();
 
-    if ( !$this->api )
+    if ( !$this->client )
     {
-      throw new Exception( 'External user API for '. $this->serviceName(). ' called but not available' );
+      throw new Exception( 'Client API for external user service '. $this->serviceName(). ' called but not available' );
     }
 
-    return $this->api;
+    return $this->client;
   }
 
   public function id()
@@ -100,8 +90,8 @@ abstract class External
   
   public function serviceName()
   {
-		$parts = explode( "\\", get_class($this) );
-		return end( $parts );
+    $parts = explode( "\\", get_class($this) );
+    return end( $parts );
   }
   
   public function uniqId()
@@ -114,6 +104,13 @@ abstract class External
   public function name()
   {
     return $this->name;
+  }
+
+  public function setEmail( $email ) { $this->email = $email; }
+
+  public function email()
+  {
+    return $this->email;
   }
 
   public function setScreenName( $screenName ) { $this->screenName = $screenName; }
@@ -143,7 +140,7 @@ abstract class External
     
     $class = get_class($this);
 
-    $q = $this->db->buildQuery( "SELECT user_id FROM connections WHERE service='%s' AND external_id='%s'", $class, $this->externalId );
+    $q = $this->db->buildQuery( "SELECT user_id FROM user_connections WHERE service='%s' AND external_id='%s'", $class, $this->externalId );
     $rs = $this->db->query($q);
     if ( $rs && $this->db->numrows($rs) )
       while( $o = $this->db->fetchObject($rs) )
@@ -179,9 +176,9 @@ abstract class External
     $class = get_class($this);
 
     if ( $kikiUserId )
-      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE service='%s' AND external_id=%d AND user_id=%d", $class, $this->externalId, $kikiUserId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, email, name, screen_name, picture FROM user_connections WHERE service='%s' AND external_id='%s' AND user_id=%d", $class, $this->externalId, $kikiUserId );
     else
-      $q = $this->db->buildQuery( "SELECT id, token, secret, name, screenname, picture FROM connections WHERE service='%s' AND external_id=%d", $class, $this->externalId );
+      $q = $this->db->buildQuery( "SELECT id, token, secret, email, name, screen_name, picture FROM user_connections WHERE service='%s' AND external_id='%s'", $class, $this->externalId );
     
     $o = $this->db->getSingleObject($q);
     if ( !$o )
@@ -197,63 +194,44 @@ abstract class External
     if ( !$this->secret )
       $this->secret = $o->secret;
 
+    $this->email = $o->email;
     $this->name = $o->name;
-    $this->screenName = $o->screenname;
-
-    if ( get_class($this) == '\Kiki\User\Twitter' )
-      $this->picture = str_replace( "_normal.", "_bigger.", $o->picture );
-    else
-      $this->picture = $o->picture;
+    $this->screenName = $o->screen_name;
+    $this->picture = $o->picture;
   }
 
   public function link( $kikiUserId = null )
   {
-
-		if ( $kikiUserId === null )
-		{
-			$kikiUserId = $this->kikiUserId();
-		}
-		else
-		{
-			$this->kikiUserIds[] = $kikiUserId;
-		}
+    if ( $kikiUserId === null )
+    {
+      $kikiUserId = $this->kikiUserId();
+    }
+    else
+    {
+      $this->kikiUserIds[] = $kikiUserId;
+    }
 
     if ( $this->id )
     {
       $q = $this->db->buildQuery(
-        "UPDATE connections set user_id=%d, external_id=%d, service='%s', mtime=now(), token='%s', secret='%s', name='%s', screenname='%s', picture='%s' WHERE id=%d",
-        $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture, $this->id
+        "UPDATE user_connections SET user_id=%d, external_id='%s', service='%s', mtime=now(), token='%s', secret='%s', email='%s', name='%s', screen_name='%s', picture='%s' WHERE id=%d",
+        $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->email, $this->name, $this->screenName, $this->picture, $this->id
       );
       
       $this->db->query($q);
     }
     else
     {
-      $q = $this->db->buildQuery( "insert into connections(user_id, external_id, service, ctime, mtime, token, secret, name, screenname, picture ) values ( %d, %d, '%s', now(), now(), '%s', '%s', '%s', '%s', '%s' )", $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->name, $this->screenName, $this->picture );
+      $q = $this->db->buildQuery(
+        "INSERT INTO user_connections (user_id, external_id, service, ctime, mtime, token, secret, email, name, screen_name, picture)
+          VALUES (%d, '%s', '%s', now(), now(), '%s', '%s', '%s', '%s', '%s', '%s')
+        ",
+        $kikiUserId, $this->externalId, get_class($this), $this->token, $this->secret, $this->email, $this->name, $this->screenName, $this->picture
+      );
 
       $rs = $this->db->query($q);
       if ( $rs )
         $this->id = $this->db->lastInsertId($rs);
     }
   }
-
-  public function subAccounts()
-  {
-    if ( !isset($this->subAccounts) )
-    {
-      $this->getSubAccounts();
-    }
-    return $this->subAccounts;
-  }
-
-	public function permissions()
-	{
-		if ( !isset($this->permissions) )
-		{
-			$this->getPermissions();
-		}
-		return $this->permissions;
-	}
 }
-
-?>

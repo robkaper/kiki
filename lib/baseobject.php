@@ -150,7 +150,7 @@ abstract class BaseObject
   {
     $this->publications = array();
 
-    $q = $this->db->buildQuery( "SELECT publication_id, p.connection_id, p.external_id, c.service FROM publications p LEFT join connections c ON c.external_id=p.connection_id WHERE p.object_id=%d", $this->object_id );
+    $q = $this->db->buildQuery( "SELECT publication_id, p.connection_id, p.external_id, uc.service FROM publications p LEFT JOIN user_connections uc ON uc.external_id=p.connection_id WHERE p.object_id=%d", $this->object_id );
     $rs = $this->db->query($q);
     while( $o = $this->db->fetchObject($rs) )
     {
@@ -163,17 +163,18 @@ abstract class BaseObject
   // FIXME: should not directly return templateData, but Like objects (which have a templatData method)
   final public function likes()
   {
-    $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN connections ON likes.user_connection_id=connections.id WHERE object_id=%d", $this->object_id );
+    // FIXME: refactor to internal likes
+    $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN user_connections uc ON likes.user_connection_id=uc.id WHERE object_id=%d", $this->object_id );
     $likeUsers = $this->db->getObjectIds($q);
 
     $likes = array();
     foreach( $likeUsers as $externalId )
     {
-      $fbUser = User\Factory::getInstance( 'Facebook', $externalId );
+      $likeUser = User\Factory::getInstance( 'Deprecated', $externalId );
       $likes[] = array(
-        'userName' => $fbUser->name(),
-        'serviceName' => 'Facebook',
-        'pictureUrl' => $fbUser->picture()
+        'userName' => $likeUser->name(),
+        'serviceName' => 'Deprecated',
+        'pictureUrl' => $likeUser->picture()
       );
     }
     return $likes;

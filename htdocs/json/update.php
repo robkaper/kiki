@@ -6,8 +6,7 @@
  * @fixme This is quite a mess. Mostly because Boilerplate handling is
  * akward, but the entire idea of updating page parts and content by JSON
  * needs to be rethought.  It was originally intended for fluid
- * Javascript-based Facebook logins, but thosde are disabled pending a good
- * review of the multiple authentication methods.
+ * Javascript-based Facebook logins, but those are deprecated anyway.
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>

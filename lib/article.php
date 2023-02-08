@@ -191,26 +191,6 @@ class Article extends BaseObject
       $content .= "<a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a>\n";
     }
 
-    // TODO: Make this generic, difference with social update is the check
-    // against an already stored external URL.
-
-    foreach ( $user->connections() as $connection )
-    {
-      if ( $connection->serviceName() == 'Facebook' )
-      {
-        // TODO: inform user that, and why, these are required.
-        if ( !$connection->hasPerm('publish_stream') )
-         continue;
-
-        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-      }
-      else if (  $connection->serviceName() == 'Twitter' )
-      {
-        $content .= Form::checkbox( "connections[". $connection->uniqId(). "]", false, $connection->serviceName(), $connection->name() );
-        $content .= Form::text( "hashtags", $this->hashtags, "Hashtags" );
-      }
-    }
-
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
 

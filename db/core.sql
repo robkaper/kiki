@@ -25,14 +25,6 @@ create table runtime (
   value varchar(255) default null
 ) default charset=utf8;
 
-drop table if exists facebook_user_perms;
-create table facebook_user_perms (
-  facebook_user_id bigint unsigned not null,
-  perm_key varchar(255) not null,
-  perm_value boolean not null default false,
-  unique key (facebook_user_id, perm_key)
-) default charset=utf8;
-
 drop table if exists users;
 create table users (
   id bigint unsigned not null auto_increment,
@@ -176,19 +168,20 @@ create table mail_queue (
   body text not null
 ) default charset=utf8;
 
-drop table if exists connections;
-create table connections (
+drop table if exists user_connections;
+create table user_connections (
   id int unsigned not null auto_increment,
   primary key(id),
   user_id int unsigned not null,
-  external_id bigint unsigned not null,
+  external_id varchat(64) not null default '',
   service varchar(32) not null,
   ctime datetime not null,
   mtime datetime not null,
   token text default null,
   secret text default null,
+  email varchar(255) default null,
   name varchar(255) default null,
-  screenname varchar(255) default null,
+  screen_name varchar(255) default null,
   picture varchar(255) default null,
   key(external_id),
   key(user_id)
@@ -231,7 +224,7 @@ create table publications (
 	ctime datetime not null,
   object_id bigint unsigned not null,
   connection_id bigint unsigned not null,
-  external_id bigint unsigned not null,
+  external_id varchar(64) not null default '',
   body text not null,
   response text not null,
   key(object_id)

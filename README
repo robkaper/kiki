@@ -20,15 +20,12 @@ Old notes:
       * Javascript currently required, but the aim is to make all non-admin
         functionality fully functional without
 
-    * single sign-on for Facebook and Twitter
-      * supports publish and offline permissions
+    * single sign-on for Google
 
     * blog/article system
       * HTML or BBCode-like markup (including Youtube video embeds)
-      * publish integration with Facebook and Twitter
 
     * picture/album system
-      * publish integration with Facebook and Twitter
 
     * comment system
     * custom URL shortener

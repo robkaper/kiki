@@ -195,7 +195,7 @@ class Misc
   * @param int $maxLength maximum output length
   * @param bool $lengthInParagraphs whether the specified length means paragraphs or characters
   * @return string plain text version of the string
-  * @todo keep for phrases that need to be shortened for Twitter/SMS/etc,
+  * @todo keep for phrases that need to be shortened for SMS/etc,
   *   but deprecate in article overviews and write teaster/cutoff
   *   functionality there
   */

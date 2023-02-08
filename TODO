@@ -21,7 +21,7 @@ Old notes:
 	- admin creates a user
 	- through site when Config::allowUserCreation is true and email verification is finished
 
-	- Facebook and Twitter connection user accounts cannot be logged into when
-		Config::allowUserCreation is disabled (the non-usable user accounts will
-		exist however for the sake of their connections from comment
-		synchronisation)
+	- Google connection user accounts cannot be logged into when
+	  Config::allowUserCreation is disabled (the non-usable user accounts will
+	  exist however for the sake of their connections from comment
+	  synchronisation)
