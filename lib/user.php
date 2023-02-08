@@ -280,13 +280,28 @@ class User extends BaseObject
         case 0:
           Log::debug( "register new user for found connections" );
 
+          $email = null;
+          foreach( $this->identifiedConnections as $id => $user )
+          {
+              $email = $user->email();
+              if ( $email )
+                break;
+          }
+
           // Register new user. Use random password, user must change it
-          // (and set email) before he/she can login with just a local ID.
-          $this->storeNew( uniqid(), uniqid() );
+          // before he/she can login with just a local ID.
+          $this->storeNew( $email ?? uniqid(), uniqid() );
           Auth::setCookie($this->id);
 
-          // Link the connection
+          // Inherit name from remote
           $user->loadRemoteData();
+          if ( $user->name() )
+          {
+            $this->setName( $user->name() );
+            $this->save();
+          }
+
+          // Link the connection
           $user->link($this->id);
           $this->connections[] = $user;
           break;
