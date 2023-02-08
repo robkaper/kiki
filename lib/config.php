@@ -83,9 +83,6 @@ class Config
 	public static $twitterApp = null;
 	public static $twitterSecret = null;
 
-	public static $flickrApp = null;
-	public static $flickrSecret = null;
-
 	public static $mailToSocialAddress = null;
 
 	public static $cspNonce = null;
