@@ -83,15 +83,12 @@ class Config
 
 	public static $cspNonce = null;
 
-	// FIXME: Add check in setup, pepper *must* be changed from the
-	// defaults to avoid rainbow table lookups.
-	// WARNING: Changing these values will invalidate all user
-	// passwords already stored as hash.
+
+	// WARNING: Changing these values will invalidate all user passwords
+	// already stored as hash.
 	public static $passwordHashPepper = '';
 	public static $passwordHashIterations = 5;
 
-	// FIXME: Add check in setup, pepper *must* be changed from the
-	// defaults to avoid rainbow table lookups.
 	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
 
@@ -105,6 +102,18 @@ class Config
 	{
 		self::setDefaults();
 		self::load();
+
+		// Fatal because it's preferable to have installations without
+		// users setting a dummy value, than having any
+		// installations with unsafe settings.
+		if ( empty(self::$passwordHashPepper) )
+		{
+			Log::fatal( "Config::\$passwordHashPepper is empty: user account password hashes are susceptible to rainbow table lookups." );
+		}
+		if ( empty(self::$authCookiePepper) )
+		{
+			Log::fatal( "Config::\$authCookiePepper is empty: cookie hashes are susceptible to rainbow table lookups." );
+		}
 
 		// TODO: error-handling, a database might not be configured
 		// (which is noted on the /kiki/ status page, but such a
