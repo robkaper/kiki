@@ -4,6 +4,7 @@ namespace Kiki\User;
 
 use Kiki\Config;
 use Kiki\Log;
+use Kiki\Router;
 
 if ( isset(Config::$googleApiClientPath) )
 {
@@ -23,10 +24,17 @@ class Google extends External
       return;
 
     // FIXME: use ConnectionService\Google instead, it has - or should have - all of this
+
+    // Redirect URI could any page calling $user->authenticate() (basically
+    // everything that's routed), but attempt Account::login with fallback
+    // to /
+    $route = Router::getBaseUri( 'Account', 'login' );
+    $redirectUri = 'https://'. $_SERVER['HTTP_HOST']. ($route ?? '/');
+
     $this->client = new \Google_Client();
     $this->client->setClientId( Config::$googleApiClientId );
     $this->client->setClientSecret( Config::$googleApiClientSecret );
-    $this->client->setRedirectUri( 'https://'. $_SERVER['HTTP_HOST']. '/login' );
+    $this->client->setRedirectUri( $redirectUri );
     $this->client->addScope("email");
     $this->client->addScope("profile");
 

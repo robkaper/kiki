@@ -77,6 +77,17 @@ class Router
    */
   public static function getBaseUri( $type, $id )
   {
+    foreach( Config::$routing as $route => $controller )
+    {
+      $controllerType = $controller[0] ?? null;
+      $controllerId = $controller[1] ?? null;
+      if ( $controllerType == $type && $controllerId == $id )
+        return $route;
+    }
+
+    // FIXME: remove if we go back to db-based routing
+    return null;
+
     $db = Core::getDb();
 
     $q = $db->buildQuery( "select base_uri from sections where type='%s' and id=%d", $type, $id );

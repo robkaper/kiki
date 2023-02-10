@@ -4,6 +4,7 @@ namespace Kiki\ConnectionService;
 
 use Kiki\Log;
 use Kiki\Config;
+use Kiki\Router;
 
 if ( isset(Config::$googleApiClientPath) )
 {
@@ -28,9 +29,11 @@ class Google
     if ( !isset( Config::$googleApiClientId ) || !isset( Config::$googleApiClientSecret ) )
       return;
 
-    // Redirect URI could technically be anything as all routed pages end up in $user->authenticate()
-    // FIXME: /login is hardcoded, instead use router config for Controller\Account::loginAction with / as fallback
-    $redirectUri = 'https://'. $_SERVER['HTTP_HOST']. '/login';
+    // Redirect URI could any page calling $user->authenticate() (basically
+    // everything that's routed), but attempt Account::login with fallback
+    // to /
+    $route = Router::getBaseUri( 'Account', 'login' );
+    $redirectUri = 'https://'. $_SERVER['HTTP_HOST']. ($route ?? '/');
   
     $this->api = new \Google_Client();
     $this->api->setClientId( Config::$googleApiClientId );
