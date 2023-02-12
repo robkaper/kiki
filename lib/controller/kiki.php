@@ -36,6 +36,7 @@ class Kiki extends Controller
         case 'jpg':
         case 'js':
         case 'png':
+        case 'webp':
 
           $this->altContentType = Storage::getMimeType($ext);
           $this->template = null;

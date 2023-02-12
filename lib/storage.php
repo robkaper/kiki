@@ -134,6 +134,8 @@ class Storage
         return 'application/javascript';
       case 'png':
         return 'image/png';
+      case 'webp':
+        return 'image/webp';
       default:;
     }
 
@@ -241,6 +243,11 @@ class Storage
         $ext = 'png';
         break;
 
+      case "image/webp":
+        $image = \imagecreatefromwebp($fileName);
+        $ext = 'webp';
+        break;
+
       default:;
     }
         
@@ -297,6 +304,9 @@ class Storage
         break;
       case "image/png": 
         \imagepng( $scaled, $scaledFile, 1 );
+        break;
+      case "image/webp":
+        \imagewebp( $scaled, $scaledFile, 1 );
         break;
       default:;
     }
