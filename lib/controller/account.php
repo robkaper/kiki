@@ -20,6 +20,8 @@
 
 namespace Kiki\Controller;
 
+use Kiki\Router;
+
 class Account extends \Kiki\Controller
 {
   public function exec()
@@ -208,8 +210,7 @@ class Account extends \Kiki\Controller
           else
           {
             $from = \Kiki\Config::$mailSender;
-            // $url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], $this->getBaseUri('verify'), $authToken );
-            $url = sprintf( "http://%s%s?token=%s", $_SERVER['SERVER_NAME'], '/verify', $authToken );
+            $url = sprintf( "https://%s%s?token=%s", $_SERVER['SERVER_NAME'], Router::getBaseUri( 'Account', 'verify' ), $authToken );
 
             $mail = new \Kiki\Email( $from, $email, "Verify your ". $_SERVER['SERVER_NAME']. " account" );
 

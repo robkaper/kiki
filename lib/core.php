@@ -140,7 +140,9 @@ class Core
 
 		// Is that all we want?
     self::$templateData['server'] = array(
-      'requestUri' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ""
+      'host' => $_SERVER['HTTP_HOST'] ?? null,
+      'name' => $_SERVER['SERVER_NAME'] ?? null,
+      'requestUri' => $_SERVER['REQUEST_URI'] ?? null,
     );
 
     self::$templateData['user'] = self::$user ? self::$user->templateData() : null;

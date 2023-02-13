@@ -153,11 +153,19 @@ class Config
 	/**
 	* Provides the full path of the configuration file.
 	* @return string full path of the configuration file
-	* @todo Search multiple locations and don't assume config.php is in
-	*   Core::getRootPath().
 	*/
 	public static function configFile()
 	{
+		if ( isset($_SERVER['SERVER_NAME']) )
+		{
+			$file = Core::getRootPath(). "/config-". $_SERVER['SERVER_NAME']. ".php";
+			if ( file_exists($file) )
+				return $file;
+
+			$file = "/etc/kiki/config-". $_SERVER['SERVER_NAME']. ".php";
+			if ( file_exists($file) )
+				return $file;
+		}
 		return Core::getRootPath(). "/config.php";
 	}
 

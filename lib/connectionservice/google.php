@@ -33,7 +33,7 @@ class Google
     // everything that's routed), but attempt Account::login with fallback
     // to /
     $route = Router::getBaseUri( 'Account', 'login' );
-    $redirectUri = 'https://'. $_SERVER['HTTP_HOST']. ($route ?? '/');
+    $redirectUri = 'https://'. $_SERVER['SERVER_NAME']. ($route ?? '/');
   
     $this->api = new \Google_Client();
     $this->api->setClientId( Config::$googleApiClientId );
