@@ -148,7 +148,7 @@ abstract class Daemon
         break;
       default:
         // Parent
-        exit;
+        exit(0);
     }
   }
 
