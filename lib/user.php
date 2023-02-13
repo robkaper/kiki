@@ -2,9 +2,6 @@
 
 namespace Kiki;
 
-include_once "baseobject.php";
-include_once "auth.php";
-
 class User extends BaseObject
 {
   private $email = null;
@@ -374,9 +371,8 @@ class User extends BaseObject
 
   public function url()
   {
-    // FIXME: made-up, implement the actual URL, preferably using a
-    // conroller with configurable base URI and not hardcoded inside Kiki htdocs.
-    return Config::$kikiPrefix. "/users/". $this->id;
+    // TODO: document that 'Profile' is the expected Controller for user profiles
+    return preg_replace( '/\(.*\)/', $this->objectName(), Router::getBaseUri( 'Profile', null ) );
   }
   
   public function emailUploadAddress( $target = null )
