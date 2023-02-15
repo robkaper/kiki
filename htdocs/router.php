@@ -78,7 +78,7 @@ foreach( Config::$routing as $route => $routeController )
         }
         break;
     }
-    Log::debug( "routing table match [controller:$controller][capture:$capture][action:$action]" );
+    Log::debug( "routing table match [controller:$controller][capture:$capture][action:$action] from [path:$requestPath][route:$route][matches:". count($matches). "]" );
     $controller = Controller::factory($controller);
     if ( $capture )
       $controller->setContext($capture);
