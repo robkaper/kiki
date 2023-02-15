@@ -58,20 +58,6 @@ class Account extends \Kiki\Controller
     return $uri;
   }
 
-  public function indexAction()
-  {
-    $user = \Kiki\Core::getUser();
-
-    $this->template = $user->isAdmin() ? 'pages/admin' : 'pages/default';
-    $this->status = 200;
-    $this->title = _("Your Account");
-
-    $template = new \Kiki\Template( 'content/account-summary' );
-    $this->content = $template->fetch();
-
-    return true;
-  }
-
   public function loginAction( $cookieConsent = false )
   {
     $this->template = 'pages/login';
