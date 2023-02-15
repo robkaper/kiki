@@ -59,6 +59,11 @@ access for your web server user.
   mkdir storage
   chgrp www-data storage && chmod g+w storage
 
+It is recommend to set the set-user-ID and set-group-ID bits on the storage
+directory:
+
+  chmod +s storage
+
 * Optional: debug file(s)
 
 To a log/ directory in your site root, create a directory with write access
