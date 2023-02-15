@@ -25,6 +25,7 @@ class Storage
    */
   public static function localFile( $id )
   {
+    // FIXME: support split-directories (/storage/1/f/ etc)
     return sprintf( "%s/storage/%s", Core::getRootPath(), self::uri($id) );
   }
 
@@ -216,6 +217,9 @@ class Storage
   {
     list( $base, $ext ) = self::splitExtension($fileName);
     $c = $crop ? "c." : null;
+
+    // FIXME: store thumbs in different directory than original
+    // /storage/thumbs/ ? /storage/cache/ ? also keep splits (/1/f/ etc) in mind
     $scaledFile = "${base}.${w}x${h}.${c}${ext}";
 
     if ( file_exists($scaledFile) )
