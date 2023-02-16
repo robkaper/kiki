@@ -264,31 +264,24 @@ class Storage
 
     list( $dstW, $dstH, $scaleRatio ) = self::calculateScaleSize( $srcW, $srcH, $w, $h, !$crop );
 
-    if ( $scaleRatio !=1 )
+    if ( $crop )
     {
-      if ( $crop )
-      {
-        // Returned image is larger than dimensions, therefore we need to crop the the original image.
-        if ( $dstW > $w )
-        {
-          $dstX = ($w-$dstW)/2;
-        }
-        else
-        {
-          $dstY = ($h-$dstH)/2;
-        }
-      }
+      // Returned image is larger than dimensions, therefore we need to crop the the original image.
+      if ( $dstW > $w )
+        $dstX = ($w-$dstW)/2;
       else
-      {
-        // Returned is smaller than dimensions, therefore we need to offset the target.
-        if ( $dstW < $w )
-          $dstX = ($w-$dstW)/2;
-        else
-          $dstY = ($h-$dstH)/2;
-      }
+        $dstY = ($h-$dstH)/2;
+    }
+    else
+    {
+      // Returned is smaller than dimensions, therefore we need to offset the target.
+      if ( $dstW < $w )
+        $dstX = ($w-$dstW)/2;
+      else
+        $dstY = ($h-$dstH)/2;
     }
 
-    Log::debug( "resampling $fileName: dstX: $dstX, dstY: $dstY, srcX: $srcY, srcY: $srcY, dstW: $dstW, dstH: $dstH, srcW: $srcW, srcH: $srcH" );
+    Log::debug( "resampling $fileName: w: $w, h: $h, dstX: $dstX, dstY: $dstY, srcX: $srcY, srcY: $srcY, dstW: $dstW, dstH: $dstH, srcW: $srcW, srcH: $srcH" );
     $scaled = imagecreatetruecolor( $w, $h );
     imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
