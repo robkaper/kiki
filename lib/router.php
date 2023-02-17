@@ -19,16 +19,13 @@ class Router
    * @param string URL of target location
    * @param boolean whether redirect is permanent
    * @return boolean true when redirect header was sent
-   *
-   * @todo add header to (new) Http object instead of sending it here
    */
   public static function redirect( $url, $statusCode = 302 )
   {
     if ( !$url )
       return false;
 
-    Log::debug( "EXIT: redirect to $url [$statusCode]" );
-    header( "Location: $url", true, $statusCode );
+    Http::redirect( $url, $statusCode );
     return true;
   }
 
