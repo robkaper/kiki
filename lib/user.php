@@ -80,6 +80,7 @@ class User extends BaseObject
 
   public function email() { return $this->email; }
 
+  public function setAuthToken( $authToken ) { $this->authToken = $authToken; }
   public function getAuthToken() { return $this->authToken; }
   public function setIsAdmin( $isAdmin ) { $this->isAdmin = $isAdmin; }
   public function isAdmin() { return $this->isAdmin; }

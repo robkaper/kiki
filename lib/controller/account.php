@@ -20,6 +20,9 @@
 
 namespace Kiki\Controller;
 
+use Kiki\Core;
+use Kiki\Auth;
+
 use Kiki\Router;
 
 class Account extends \Kiki\Controller
@@ -123,6 +126,89 @@ class Account extends \Kiki\Controller
     return true;
   }
 
+  public function request_password_resetAction()
+  {
+    if ( !isset(\Kiki\Config::$smtpHost) )
+      $this->errors[] = array( 'msg' => "This website does not have the correct settings configured to send e-mail. Please contact <strong>". \Kiki\Config::$mailSender. "</strong>." );
+
+    if ( !$_POST )
+      return true;
+
+    $user = Core::getUser();
+
+    $email = $_POST['email'] ?? null;
+
+    $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
+    if ( !$validEmail )
+      $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+
+    $this->data['emailSent'] = true;
+
+    if ( count($this->errors) )
+      return true;
+
+    // Always say something was sent, don't disclose existance of account/e-mail
+    $this->notices[] = array( 'msg' => "An e-mail with a link to reset your password has been sent to <strong>". htmlspecialchars($email). "</strong>." );
+    $this->data['emailSent'] = true;
+
+    $userId = $user->getIdByEmail($email);
+    if ( !$userId )
+      return true;
+
+    $user->load( $userId );
+    $authToken = $user->getAuthToken();
+    $user->reset();
+
+    $from = \Kiki\Config::$mailSender;
+    $url = sprintf( "https://%s%s?token=%s", $_SERVER['SERVER_NAME'], Router::getBaseUri( 'Account', 'reset_password' ), $authToken );
+
+    $mail = new \Kiki\Email( $from, $email, "Password reset request for your ". $_SERVER['SERVER_NAME']. " account" );
+
+    $template = new \Kiki\Template( 'email/request-password-reset', true );
+
+    $template->assign( 'url', $url );
+    $html = $template->content( false );
+
+    if ( $html )
+      $mail->setHtml( $html );
+    else
+      $mail->setPlain( strip_tags($html) );
+
+    $rs = \Kiki\Mailer::send($mail);
+
+    return true;
+  }
+
+  public function reset_passwordAction()
+  {
+    $token = $_REQUEST['token'] ?? null;
+    $this->data['token'] = $token;
+
+    $user = Core::getUser();
+    $userId = $user->getIdByToken($token);
+
+    if ( !$userId )
+      $this->errors[] = array( 'msg' => 'Invalid or expired token.' );
+
+    $user->load($userId);
+
+    $this->data['email'] = $user->email();
+
+    if ( $_POST && !count($this->errors) )
+    {
+      $user->setAuthToken( Auth::passwordHash( $_POST['password'] ) );
+      $user->save();
+
+      $this->data['resetSuccessful'] = true;
+
+      $this->notices[] = array( 'msg' => 'Password saved!' );
+    }
+
+    $user->reset();
+
+    return true;
+  }
+
   public function signupAction()
   {
     $this->title = _("Create account");
@@ -141,11 +227,11 @@ class Account extends \Kiki\Controller
     else if ( $_POST )
     {
 
-      $email = $_POST['email'];
+      $email = $_POST['email'] ?? null;
       $template->assign('email', $email );
       $password = $_POST['password'] ?? null; 
 
-       $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
+      $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
       if ( !$validEmail )
         $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
       if ( !$password )
