@@ -286,7 +286,7 @@ class Database
 
 	static function nullable( $val )
 	{
-		return isset($val) ? $val : 'null';
+		return isset($val) && !empty($val) ? $val : 'null';
 	}
 	
 	/**
