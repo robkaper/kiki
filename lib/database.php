@@ -95,7 +95,10 @@ class Database
 
 	/**
 	* Builds a database query. Query parameters are properly guarded against SQL injections.
-	* @todo Research how to properly document variable arguments.
+	*
+	* Works like (s)printf, for example:
+	*
+	* $q = $db->buildQuery( "SELECT id FROM table WHERE foo=%s AND bar=%d", $strFoo, $intBar );
 	*/
 	public function buildQuery()
 	{

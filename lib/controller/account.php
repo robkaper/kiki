@@ -341,7 +341,8 @@ class Account extends \Kiki\Controller
       $verifyUserId = $user->getIdByToken( $token );
       if ( !$verifyUserId )
       {
-        $this->errors[] = array( 'msg' => "Invalid e-mail address verification token. These tokens expire. [// TODO: Send new verification e-mail]." );
+        // TODO: offer way to send new verification e-mail
+        $this->errors[] = array( 'msg' => "Invalid e-mail address verification token. These tokens expire." );
       }
       else
       {

@@ -1,7 +1,5 @@
 <?php
 
-  // TODO: finalise error handling for twitter post with insufficient permissions
-  // TODO: add follow me/friend me buttons/links to external social sites
   // FIXME: make jsonable
   // TODO: error handling when message empty or no social network selected (requires: form validation)
 

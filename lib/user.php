@@ -331,8 +331,6 @@ class User extends BaseObject
   // TODO: deprecate, or refactor
   public function storeNew( $email, $password, $admin = false, $verified = false, $passwordIsHash = false )
   {
-    // TODO: implement verification of email
-
     // Save to get an ID to generate a temporary name
     $this->save();
     $this->name = 'User '. $this->id;
