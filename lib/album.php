@@ -228,10 +228,9 @@ class Album extends BaseObject
     return $pictures;
   }
 
-  // FIXME: this should honour sortorder
   public function firstPicture()
   {
-    $q = "select p.id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by p.storage_id desc limit 1";
+    $q = "SELECT p.id FROM pictures p, album_pictures ap WHERE p.id=ap.picture_id AND ap.album_id=$this->id ORDER BY ap.sortorder ASC LIMIT 1";
     return $this->db->getSingleValue($q);
   }
 
@@ -253,13 +252,17 @@ class Album extends BaseObject
    *
    * @return ID of the previous picture (null if none)
    */
-  // FIXME: this should honour sortorder
   public static function findPrevious( $albumId, $pictureId )
   {
     $db = Core::getDb();
-    $qAlbumId = $db->escape( $albumId );
-    $qPictureId = $db->escape( $pictureId );
-    return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id>$qPictureId order by picture_id asc limit 1" );
+
+    $q = "SELECT sortorder FROM album_pictures WHERE album_id=%d AND picture_id=%d";
+    $q = $db->buildQuery( $q, $albumId, $pictureId );
+    $sortOrder = $db->getSingleValue( $q );
+
+    $q = "SELECT picture_id FROM album_pictures WHERE album_id=%d AND sortorder=%d";
+    $q = $db->buildQuery( $q, $albumId, $sortOrder-1 );
+    return $db->getSingleValue( $q );
   }
 
   /**
@@ -270,13 +273,17 @@ class Album extends BaseObject
    *
    * @return ID of the next picture (null if none)
    */
-  // FIXME: this should honour sortorder
   public static function findNext( $albumId, $pictureId )
   {
     $db = Core::getDb();
-    $qAlbumId = $db->escape( $albumId );
-    $qPictureId = $db->escape( $pictureId );
-    return $db->getSingleValue( "select picture_id from album_pictures where album_id=$qAlbumId and picture_id<$qPictureId order by picture_id desc limit 1" );
+
+    $q = "SELECT sortorder FROM album_pictures WHERE album_id=%d AND picture_id=%d";
+    $q = $db->buildQuery( $q, $albumId, $pictureId );
+    $sortOrder = $db->getSingleValue( $q );
+
+    $q = "SELECT picture_id FROM album_pictures WHERE album_id=%d AND sortorder=%d";
+    $q = $db->buildQuery( $q, $albumId, $sortOrder+1 );
+    return $db->getSingleValue( $q );
   }
 
   /**
