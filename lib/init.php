@@ -127,7 +127,7 @@
   //
   // TODO: remove?  static files can be excluded from web server
   // configuration and needn't be served by framework
-  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|js|png|webp)#', $requestPath );
+  $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|jpeg|js|png|webp)#', $requestPath );
   if ( isset($staticFile) && $staticFile )
     return; 
 
