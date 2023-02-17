@@ -72,9 +72,12 @@ foreach( Config::$routing as $route => $routeController )
         
         if ( !$action && $matches[2] )
         {
-          // FIXME: doesn't support query string
-          Router::redirect( rtrim($requestPath, '/'), 301 );
-          exit;
+          $url = sprintf( '%s%s%s',
+            rtrim($requestPath, '/'),
+            isset($urlParts['query']) ? '?' : null,
+            $urlParts['query'] ?? null
+          );
+          Router::redirect( $url, 301 );
         }
         break;
     }
