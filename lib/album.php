@@ -97,7 +97,20 @@ class Album extends BaseObject
 
     return $this->id;
   }
-  
+
+  public function delete()
+  {
+    $pictureClassName = ClassHelper::bareToNamespace('Picture');
+
+    $pictureIds = $this->getPictures();
+    foreach( $pictureIds as $pictureId )
+      $pictureClassName::delete( $pictureId );
+
+    $q = "DELETE from `albums` WHERE `id` = %d";
+    $q = $this->db->buildQuery( $q, $this->id );
+    $this->db->query($q);
+  }
+
   /**
    * Provides the full URL of the album to be used in external references.
    *
@@ -170,6 +183,13 @@ class Album extends BaseObject
     $template->assign( 'comments', array() );
 
     return $template->fetch();
+  }
+
+  public function getPictures()
+  {
+    $q = "SELECT picture_id AS id FROM album_pictures WHERE album_id = %d";
+    $q = $this->db->buildQuery( $q, $this->id );
+    return $this->db->getObjectIds($q);
   }
 
 	public function imageUrls()
@@ -304,6 +324,8 @@ class Album extends BaseObject
   {
     $db = Core::getDb();
 
+    $albumClassName = get_called_class();
+
     // Find
     $qTitle = $db->escape($title);
     $q = "select id from albums where title='$qTitle'";
@@ -312,13 +334,13 @@ class Album extends BaseObject
     // Create if it doesn't exist
     if ( !$id && $create )
     {
-      $album = new Album();
+      $album = new $albumClassName();
       $album->setTitle($title);
       $album->save();
       return $album;
     }
 
-    return new Album($id);
+    return new $albumClassName($id);
   }
 
   public function formItem( $pictureId )
