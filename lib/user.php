@@ -12,6 +12,7 @@ class User extends BaseObject
 
   private $isVerified = false;
   private $isAdmin = false;
+  private $disabled = false;
 
   private $name = null;
 
@@ -41,6 +42,7 @@ class User extends BaseObject
 
     $this->isVerified = false;
     $this->isAdmin = false;
+    $this->disabled = false;
 
     $this->connections = array();
     $this->identifiedConnections = null;
@@ -86,6 +88,8 @@ class User extends BaseObject
   public function isAdmin() { return $this->isAdmin; }
   public function setIsVerified( $isVerified ) { $this->isVerified = $isVerified; }
   public function isVerified() { return $this->isVerified; }
+  public function setDisabled( $disabled ) { $this->disabled = $disabled; }
+  public function disabled() { return $this->disabled; }
 
   public function load( $id = 0 )
   {
@@ -97,7 +101,7 @@ class User extends BaseObject
     else if ( !$this->id && !$this->object_id )
       return;
 
-    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'name' );
+    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'disabled', 'name' );
 
     if ( $this->id )
       $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND u.id=%d", implode( ', ', $fields), $this->id );
@@ -144,6 +148,7 @@ class User extends BaseObject
     $this->mailAuthToken = $o->mail_auth_token;
     $this->isAdmin = $o->admin;
     $this->isVerified = $o->verified;
+    $this->disabled = $o->disabled;
     
     $this->name = $o->name;
   }
@@ -153,10 +158,10 @@ class User extends BaseObject
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d,
+      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d, disabled=%d
         name='%s'
         WHERE id=%d",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->name, $this->id
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name, $this->id
     );
 
     $this->db->query($q);
@@ -165,8 +170,8 @@ class User extends BaseObject
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified, name) VALUES (%d, '%s', '%s', '%s', %d, %d, '%s')",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->name
+      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified, disabled, name) VALUES (%d, '%s', '%s', '%s', %d, %d, %d, '%s')",
+      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name
     );
 
     $rs = $this->db->query($q);
@@ -223,11 +228,14 @@ class User extends BaseObject
   {
     if ( !$this->id )
     {
-      // FIXME: disallow login when $this->getSetting('privacy_profile')->value == PrivacyLevel::LegalHold ??
-      // TODO: reimplement identify() or move getSetting(s) to Kiki
       $this->id = Auth::validateCookie();
       $this->load($this->id);
-      // Log::debug( "cookie: ". $this->id );
+    }
+
+    if ( $this->disabled )
+    {
+      $this->reset();
+      return false;
     }
 
     $this->identifyConnections();

@@ -35,7 +35,8 @@ create table users (
   auth_token varchar(40) not null default '',
   mail_auth_token varchar(40) not null default '',
   admin boolean not null default false,
-	verified boolean not null default false,
+  verified boolean not null default false,
+  disabled boolean not null default false,
   unique key(email)
 ) default charset=utf8;
 
