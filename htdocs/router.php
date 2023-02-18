@@ -168,7 +168,7 @@ else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
 //
 // This is one of the nicer and more useful features built-in features of
 // Kiki: templates can request any dimension of storage items (currently
-// Storage::generateThumb only supports images) and this controller will
+// Storage::getThumbnail only supports images) and this controller will
 // simply create it.  This makes the very first request to such a resource
 // more expensive, but also makes it much easier to actually make changes:
 // any newly requested format instantly works and the cache can be safely

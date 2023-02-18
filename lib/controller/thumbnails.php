@@ -18,7 +18,7 @@ class Thumbnails extends \Kiki\Controller
     if ( !file_exists($fileName) )
       return false;
 
-    $scaleFile = \Kiki\Storage::generateThumb( $fileName, $w, $h, $crop );
+    $scaleFile = \Kiki\Storage::getThumbnail( $fileName, $w, $h, $crop );
     if ( !file_exists($scaleFile) )
       return false;
 

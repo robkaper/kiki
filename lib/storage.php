@@ -213,23 +213,36 @@ class Storage
     $db->query($q);
   }
 
-  public static function generateThumb( $fileName, $w, $h, $crop=false )
+  private static function getThumbnailFileName( $fileName, $w, $h, $crop )
   {
     list( $base, $ext ) = self::splitExtension($fileName);
     $c = $crop ? "c." : null;
 
     // FIXME: store thumbs in different directory than original
     // /storage/thumbs/ ? /storage/cache/ ? also keep splits (/1/f/ etc) in mind
-    $scaledFile = "${base}.${w}x${h}.${c}${ext}";
+    return "${base}.${w}x${h}.${c}${ext}";
+  }
 
-    if ( file_exists($scaledFile) )
-    {
-      return $scaledFile;
-    }
+  public static function getThumbnail( $fileName, $w, $h, $crop=false )
+  {
+    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
+    if ( !file_exists($scaledFile) )
+      self::generateThumbnail( $fileName, $w, $h, $crop );
+
+    if ( !file_exists($scaledFile) )
+      return null;
+
+    return $scaledFile;
+  }
+
+  public static function generateThumbnail( $fileName, $w, $h, $crop )
+  {
     $image = null;
 
+    list( $base, $ext ) = self::splitExtension($fileName);
     $mimeType = mime_content_type($fileName);
+
     switch($mimeType)
     {
       case "image/gif":
@@ -282,11 +295,12 @@ class Storage
     }
 
     Log::debug( "resampling $fileName: w: $w, h: $h, dstX: $dstX, dstY: $dstY, srcX: $srcY, srcY: $srcY, dstW: $dstW, dstH: $dstH, srcW: $srcW, srcH: $srcH" );
+
     $scaled = imagecreatetruecolor( $w, $h );
     imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
 
-    $scaledFile = "${base}.${w}x${h}.${c}${ext}";
+    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
     if ( file_exists($scaledFile) )
       chmod( $scaledFile, 0664 );
