@@ -158,7 +158,7 @@ class User extends BaseObject
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d, disabled=%d
+      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d, disabled=%d,
         name='%s'
         WHERE id=%d",
       $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name, $this->id
