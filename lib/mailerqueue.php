@@ -65,11 +65,7 @@ class MailerQueue
     $q = $this->db->buildQuery( "update mail_queue set lock_id='%s' where id=%d and lock_id is null", $lockId, $id );
     $rs = $this->db->query($q);
     
-    if ( !$this->db->affectedRows($rs) )
-    {
-      // TODO: Error handing for no rows affected: either the mail was not
-      // found, or it already had a lock.
-    }
+    return $this->db->affectedRows($rs);
   }
 
   /**
@@ -82,11 +78,7 @@ class MailerQueue
     $q = $this->db->buildQuery( "update mail_queue set lock_id=null where id=%d and lock_id is not null", $id );
     $rs = $this->db->query($q);
 
-    if ( !$this->db->affectedRows($rs) )
-    {
-      // TODO: Error handing for no rows affected: either the mail was not
-      // found, or it didn't have a lock.
-    }
+    return $this->db->affectedRows($rs);
   }  
 
   /**
