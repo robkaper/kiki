@@ -193,17 +193,6 @@ class Core
       }
     }
 
-    // Log::debug( "active Con: ". print_r(self::$templateData['activeConnections'],true) );
-    // Log::debug( "inactive Con: ". print_r(self::$templateData['inactiveConnections'],true) );
-
-    // Menu and submenu. This feels like it the default controller (with the
-    // option for children to reimplement or amend) should do through a Menu
-    // class.
-
-    // FIXME: shouldn't be db-populated with new routing
-    // self::$templateData['menu'] = Boilerplate::navMenu(self::$user);
-    // self::$templateData['subMenu'] = Boilerplate::navMenu(self::$user, 2);
-
     // @todo Allow starttime and execution time from Log(::init) to be
     // queried and assign them.  Just in case someone wants to output it in
     // a template.

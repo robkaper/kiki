@@ -37,11 +37,6 @@
         list( $dummy, $objectId ) = explode( '_', $id );
         $data = $user->id() ? Boilerplate::commentForm($user, $objectId) : Boilerplate::login();
       }
-      else if ( preg_match( '/^navMenu-/', $id) )
-      {
-        list( $dummy, $level ) = explode( '-', $id );
-        $data = Boilerplate::navMenu( $user, $level );
-      }
       break;
     }
 
