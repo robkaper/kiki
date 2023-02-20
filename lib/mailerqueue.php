@@ -10,7 +10,6 @@ namespace Kiki;
  * @copyright 2011 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  *
- * @todo Add sent_time for tracking deliveries?
  */
 
 class MailerQueue
