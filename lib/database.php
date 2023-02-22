@@ -192,78 +192,52 @@ class Database
 
 	/**
 	* Retrieves the next object of a resource/result set returned by a succesful query.
-	* @todo Research if the (re)connection attempt can be removed, if
-	*   not, document it.  It seems likely that the provided resource is
-	*   no longer valid and will not return any objects if the
-	*   connection is interrupted between executing the query and
-	*   retrieving the results.
 	* @param resource $rs resource/result set
 	* @return object the retrieved object, or null if none is available.
 	*/
 	function fetchObject( $rs )
 	{
 		if ( !$this->mysqli )
-			$this->connect();
+			return null;
 
 		return $rs->fetch_object();
 	}
 
 	/**
 	* Retrieves the amount of results for a resource/result set.
-	* @todo Research if the (re)connection attempt can be removed, if
-	*   not, document it.  It seems likely that the provided resource is
-	*   no longer valid and will not return anything useful if the
-	*   connection is interrupted between executing the query and
-	*   retrieving the results.
 	* @param resource $rs resource/result set
 	* @return int number of rows/results
 	*/
 	function numRows( $rs )
 	{
-		if ( !$rs )
+		if ( !$rs || !$this->mysqli )
 			return 0;
-		if ( !$this->mysqli )
-			$this->connect();
 
 		return $rs->num_rows;
 	}
 
 	/**
 	* Retrieves the ID of the resource inserted with the last insert query (to be used with MySQL's auto_increment statement).
-	* @todo Research if the (re)connection attempt can be removed, if
-	*   not, document it.  It seems likely that the provided resource is
-	*   no longer valid and will not return anything useful if the
-	*   connection is interrupted between executing the query and
-	*   retrieving the results.
 	* @param resource $rs resource/result set
 	* @return int ID of the inserted resource, or zero in case the resource is invalid.
 	*/
 	function lastInsertId( $rs )
 	{
-		if ( !$rs )
+		if ( !$rs || !$this->mysqli )
 			return 0;
-		if ( !$this->mysqli )
-			$this->connect();
 		
 		return $this->mysqli->insert_id;
 	}
 
 	/**
 	* Retrieves the number of rows affected by the last insert or update query.
-	* @todo Research if the (re)connection attempt can be removed, if
-	*   not, document it.  It seems likely that the provided resource is
-	*   no longer valid and will not return anything useful if the
-	*   connection is interrupted between executing the query and
-	*   retrieving the results.
 	* @param resource $rs resource/result set
 	* @return int number of rows affected, zero is the resource is invalid.
 	*/
 	function affectedRows( $rs )
 	{
-		if ( !$rs )
+		if ( !$rs || !$this->mysqli )
 			return 0;
-		if ( !$this->mysqli )
-			$this->connect();
 
 		return $this->mysqli->affected_rows;
 	}
