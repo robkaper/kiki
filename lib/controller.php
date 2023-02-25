@@ -109,7 +109,7 @@ class Controller
 
   public function objectId() { return $this->objectId; }
 
-  public function actionHandler()
+  protected function actionHandler()
   {
     $remainder = null;
 
@@ -150,12 +150,10 @@ class Controller
     return $ret;
   }
 
-  // FIXME: For overloading?? What did this do?
+  // Exists because actionHandler is protected
   public function exec()
   {
-    \Kiki\Log::debug( "defaultcontroller exec" );
-    if ( $this->actionHandler() )
-      return true;
+    return $this->actionHandler();
   }
 
   public function output()
