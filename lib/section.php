@@ -47,6 +47,15 @@ class Section
     $q = $this->db->buildQuery( "SELECT $qFields FROM sections WHERE id=%d", $this->id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
+  
+  public static function getIdFromBaseUri( $baseURI )
+  {
+    $db = Core::getDb();
+
+    $q = "SELECT id FROM sections WHERE base_uri='%s'";
+    $q = $db->buildQuery( $q, $baseURI );
+    return $db->getSingleValue($q);
+  }
 
   public function setFromObject( $o )
   {

@@ -69,7 +69,7 @@ foreach( Config::$routing as $route => $routeController )
         // Match, capture in route itself, action(s) given
         $capture = $matches[1];
         $action = $matches[3];
-        
+
         if ( !$action && $matches[2] )
         {
           $url = sprintf( '%s%s%s',

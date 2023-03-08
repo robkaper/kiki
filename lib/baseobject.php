@@ -30,12 +30,15 @@ abstract class BaseObject
   protected $object_name = null;
   protected $user_id = 0;
 
-//  protected $uriAlias = null;
+  // protected $uriAlias = null;
   
   protected $visible = false;
-//  protected $sectionId = 0;
 
-//  protected $publications;
+  // FIXME: is this generic enough for BaseObject? Historically made sense for Article/Page when Kiki was primarily used for simple sites and blogs
+  protected $sectionId = 0;
+
+  // FIXME: deprecate or reinstate
+  // protected $publications;
 
   public function __construct( $id = 0, $object_id = 0 )
   {
@@ -150,6 +153,10 @@ abstract class BaseObject
   {
     $this->publications = array();
 
+    // FIXME: deprecate? currently Kiki has no connections that actually allow for publications
+    // TODO: check Mastodon API
+    return;
+
     $q = $this->db->buildQuery( "SELECT publication_id, p.connection_id, p.external_id, uc.service FROM publications p LEFT JOIN user_connections uc ON uc.external_id=p.connection_id WHERE p.object_id=%d", $this->object_id );
     $rs = $this->db->query($q);
     while( $o = $this->db->fetchObject($rs) )
@@ -164,6 +171,8 @@ abstract class BaseObject
   final public function likes()
   {
     // FIXME: refactor to internal likes
+    return array();
+
     $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN user_connections uc ON likes.user_connection_id=uc.id WHERE object_id=%d", $this->object_id );
     $likeUsers = $this->db->getObjectIds($q);
 

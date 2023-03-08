@@ -17,9 +17,9 @@
     </ul>
 
 	  <span class="author">{$article.author}</span>
-		<time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} geleden</time>
+		<time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} ago</time>
 
-		<a href="{$article.url}">{$article.comments} reacties, {$article.likes|count} likes</a>
+		<a href="{$article.url}">{$article.comments} comments, {$article.likes|count} likes</a>
   </footer>
 
 </article>

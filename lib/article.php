@@ -44,11 +44,11 @@ class Article extends BaseObject
     if ( $id )
     {
       $this->id = $id;
-      $this->objectId = 0;
+      $this->object_id = 0;
     }
 
     $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, o.section_id, o.user_id, title, cname, body, featured, o.visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->objectId, $this->objectId );
+    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->object_id, $this->object_id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
@@ -77,7 +77,7 @@ class Article extends BaseObject
 
     $q = $this->db->buildQuery(
       "UPDATE articles SET object_id=%d, ip_addr='%s', title='%s', cname='%s', body='%s', featured=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->objectId, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId, $this->id
+      $this->object_id, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId, $this->id
     );
     Log::debug($q);
 
@@ -93,7 +93,7 @@ class Article extends BaseObject
 
     $q = $this->db->buildQuery(
       "INSERT INTO articles (object_id, ip_addr, title, cname, body, featured, hashtags, album_id) VALUES (%d, '%s', '%s', '%s', '%s', %d, '%s', %d)",
-      $this->objectId, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId
+      $this->object_id, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId
     );
 
     $rs = $this->db->query($q);
@@ -229,7 +229,7 @@ class Article extends BaseObject
 
   public function templateData()
   {
-    $uAuthor = ObjectCache::getByType( '\Kiki\User', $this->userId );
+    $uAuthor = ObjectCache::getByType( '\Kiki\User', $this->user_id );
 
     $prevArticle = $this->getPrev();
     $nextArticle = $this->getNext();
@@ -245,9 +245,9 @@ class Article extends BaseObject
       'images' => array(),
       'publications' => array(),
       'likes' => $this->likes(),
-			'comments' => Comments::count( $this->objectId ),
+      'comments' => Comments::count( $this->object_id ),
       'html' => array(
-        'comments' => Comments::show( $this->objectId ),
+        'comments' => Comments::show( $this->object_id ),
         'editform' => $this->form( true, 'articles' )
       )
     );

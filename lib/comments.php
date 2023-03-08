@@ -13,14 +13,17 @@ namespace Kiki;
 
 class Comments
 {
-	public static function count( $objectId )
-	{
+  public static function count( $objectId )
+  {
+    // FIXME: refactor to object_comments;
+    return 0;
+
     $db = Core::getDb();
     $user = Core::getUser();
     
-		$q = $db->buildQuery( "SELECT count(*) FROM comments WHERE in_reply_to_id=%d", $objectId );
-		return $db->getSingleValue($q);
-	}
+    $q = $db->buildQuery( "SELECT count(*) FROM comments WHERE in_reply_to_id=%d", $objectId );
+    return $db->getSingleValue($q);
+  }
 
   public static function show( $objectId, $jsonLast=null )
   {
@@ -29,12 +32,15 @@ class Comments
 
     $comments = array();
 
+    // FIXME: refactor to object_comments;
+    return $comments;
+
     $qLast = $jsonLast ? ("and c.id>". $db->escape($jsonLast)) : "";
     $q = $db->buildQuery( "SELECT c.id, c.body, o.ctime, u.id as local_user_id, o.user_id, c.user_connection_id, uc.service, uc.external_id
       FROM comments c
       LEFT JOIN objects o ON o.object_id=c.object_id
       LEFT JOIN user_connections uc ON c.user_connection_id=uc.id
-			LEFT JOIN users u ON u.id=o.user_id
+      LEFT JOIN users u ON u.id=o.user_id
       WHERE c.in_reply_to_id=%d $qLast
       ORDER BY o.ctime ASC", $objectId );
     $rs = $db->query($q);
@@ -47,8 +53,8 @@ class Comments
         {
           if ( $o->external_id )
           {
-						// HACK: should not always have to load this, but this is quicker than getStoredConnections for User 0
-						$connection = User\Factory::getInstance( $o->service, $o->external_id, 0 );
+            // HACK: should not always have to load this, but this is quicker than getStoredConnections for User 0
+            $connection = User\Factory::getInstance( $o->service, $o->external_id, 0 );
             // $connection = $commentAuthor->getConnection($o->service. "_". $o->external_id, true);
 
             if ( $connection )

@@ -6,18 +6,25 @@ use Kiki\Core;
 use Kiki\Template;
 
 use Kiki\Article;
+use Kiki\Section;
 use Kiki\SocialUpdate;
 
 class Articles extends \Kiki\Controller
 {
   public function exec()
   {
+    if ( !$this->context )
+      return false;
+
     $db = Core::getDb();
     $user = Core::getUser();
 
     $template = Template::getInstance();
+    
+    $this->instanceId = Section::getIdFromBaseUri($this->context);
 
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND ((o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
+
     $articleIds = $db->getObjectIds($q);
     $articles = array();
     foreach ( $articleIds as $articleId )
