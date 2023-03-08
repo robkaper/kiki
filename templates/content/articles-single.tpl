@@ -1,6 +1,6 @@
 <article id="article_{$article.id}">
-
   <header>
+    <h1>{$article.title}</h1>
 		{if $article.images.0}
 		<div class="slider">
 	    {foreach $article.images as $image}
@@ -8,8 +8,8 @@
   	  {/foreach}
 		</div>
 		{/if}
-    <span class="author">{$article.author}</span>
-    <time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} geleden</time>
+    <time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} ago</time> &mdash;
+    by <span class="author">{$article.author}</span>
   </header>
 
   <div class="body">{$article.body|markup}</div>
@@ -49,7 +49,9 @@
 
   <hr class="clear">
   <h3>{"Comments"|i18n}</h3>
-  {$article.html.comments}
+  {foreach $article.html.comments as $comment}
+    {$comment}
+  {/foreach}
 
   {if $article.publications|count}
 		<p>Je kunt ook reageren via:</p>

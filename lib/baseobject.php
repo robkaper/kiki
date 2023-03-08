@@ -91,7 +91,8 @@ abstract class BaseObject
     $this->object_name = $o->object_name ?? null;
     $this->user_id = $o->user_id ?? 0;
     
-    return;
+    // FIXME: should these be here
+    // return;
 
     // FIXME: issets are necessary because not all Object child classes have these set in their queries e.g. load(), i.e. User.
     $this->visible = isset($o->visible) ? $o->visible : false;

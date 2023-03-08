@@ -16,6 +16,8 @@ class Articles extends \Kiki\Controller
     if ( !$this->context )
       return false;
 
+    $this->objectId = $this->action ?? null;
+
     $db = Core::getDb();
     $user = Core::getUser();
 
@@ -71,7 +73,7 @@ class Articles extends \Kiki\Controller
         $this->template = 'pages/default';
 
         $template = new Template( 'content/articles-single' );
-				$GLOBALS['articleAlbumId'] = $article->albumId();
+	$GLOBALS['articleAlbumId'] = $article->albumId();
         $template->assign( 'article', $article->templateData() );
 
         $this->content = $template->fetch();
@@ -122,6 +124,7 @@ class Articles extends \Kiki\Controller
 						$article->reset();
 						$article->setObjectId( $o->object_id );
 						$article->load();
+						$article->setSectionId( $this->context );
 
 						$template = new Template( 'content/articles-summary' );
 						$template->assign( 'article', $article->templateData() );
@@ -151,5 +154,3 @@ class Articles extends \Kiki\Controller
   }
 
 }
-  
-?>

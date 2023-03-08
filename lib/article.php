@@ -120,7 +120,8 @@ class Article extends BaseObject
 
   public function url( $addSchema = false )
   {
-    $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( $this->sectionId ) : null;
+    // FIXME: sectionId is numerical, Router only knows cname...
+    $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( 'Articles', $this->sectionId ) : null;
     if ( !$sectionBaseUri )
       $sectionBaseUri = "/";
 
