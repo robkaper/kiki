@@ -104,8 +104,8 @@ abstract class BaseObject
     if ( !$this->object_id )
     {
       // $q = $this->db->buildQuery( "INSERT INTO objects (type,visible,user_id,section_id) values('%s',%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
-      $q = "INSERT INTO objects (`object_name`, `user_id`) values('%s', %d)";
-      $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id );
+      $q = "INSERT INTO objects (`object_name`, `user_id`, `type`) values('%s', %d, '%s')";
+      $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id, get_class($this) );
       $rs = $this->db->query($q);
       if ( $rs )
         $this->object_id = $this->db->lastInsertId($rs);
