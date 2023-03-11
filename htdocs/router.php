@@ -142,6 +142,7 @@ else if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $requestPath) )
 
 else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
 {
+  $moduleMatches = array();
   if ( preg_match('#^(album|event)/(.*)#', $matches[1], $moduleMatches) )
   {
     // This targets individual albums and events. For proper referencing,
@@ -188,7 +189,7 @@ else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $request
 
 // FIXME: disabled for now.  Would be nice if users can create routed items
 // from the database, but need to rethink all of that now that main routing
-// has been moved *away*
+// has been moved to Config array
 else // if ( !($controller = Router::findPage($requestPath)) && !($controller = Router::findSection($requestPath)) )
 {
   // Nothing? 404.
