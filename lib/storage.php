@@ -25,8 +25,31 @@ class Storage
    */
   public static function localFile( $id )
   {
-    // FIXME: support split-directories (/storage/1/f/ etc)
-    return sprintf( "%s/storage/%s", Core::getRootPath(), self::uri($id) );
+    $uri = self::uri($id);
+
+    $fileName = sprintf( "%s/storage/%s/%s/%s", Core::getRootPath(), $uri[0], $uri[1], $uri );
+
+    // Move files directly under storage/ to better-scaling storage/1/f/ parallel directory structure
+    $legacyFileName = sprintf( "%s/storage/%s", Core::getRootPath(), $uri );
+    if ( !file_exists($fileName) && file_exists($legacyFileName) )
+    {
+      $dirName = self::makeDirectory($fileName);
+      if ( file_exists($dirName) && is_dir($dirName) )
+      {
+        rename( $legacyFileName, $fileName);
+        Log::debug( "moved $legacyFileName to $fileName" );
+      }
+    }
+
+    return $fileName;
+  }
+
+  private static function makeDirectory( $fileName )
+  {
+    $dirName = dirname( $fileName );
+    if ( !file_exists($dirName) )
+      mkdir($dirName, 0770, true);
+    return $dirName;
   }
 
   /**
@@ -195,8 +218,10 @@ class Storage
     $id = $db->lastInsertId($rs);
 
     $localFile = self::localFile($id);
+
+    self::makeDirectory($localFile);
     file_put_contents( $localFile, $data );
-    chmod( $localFile, 0644 );
+    chmod( $localFile, 0660 );
 
     return $id;    
   }
@@ -216,10 +241,9 @@ class Storage
   private static function getThumbnailFileName( $fileName, $w, $h, $crop )
   {
     list( $base, $ext ) = self::splitExtension($fileName);
+    $base = preg_replace( "#/storage/#", "/storage/thumbnails/", $base );
     $c = $crop ? "c." : null;
 
-    // FIXME: store thumbs in different directory than original
-    // /storage/thumbs/ ? /storage/cache/ ? also keep splits (/1/f/ etc) in mind
     return "${base}.${w}x${h}.${c}${ext}";
   }
 
@@ -303,7 +327,9 @@ class Storage
     $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
     if ( file_exists($scaledFile) )
-      chmod( $scaledFile, 0664 );
+      chmod( $scaledFile, 0660 );
+    else
+      self::makeDirectory($scaledFile);
 
     switch($mimeType)
     {
@@ -322,7 +348,7 @@ class Storage
       default:;
     }
 
-    chmod( $scaledFile, 0664 );
+    chmod( $scaledFile, 0660 );
     return $scaledFile;
   }
 
