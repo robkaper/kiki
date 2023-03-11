@@ -29,7 +29,7 @@ class Storage
 
     $fileName = sprintf( "%s/storage/%s/%s/%s", Core::getRootPath(), $uri[0], $uri[1], $uri );
 
-    // Move files directly under storage/ to better-scaling storage/1/f/ parallel directory structure
+    // Move files directly under storage/ to better-scaling storage/0/f/ parallel directory structure
     $legacyFileName = sprintf( "%s/storage/%s", Core::getRootPath(), $uri );
     if ( !file_exists($fileName) && file_exists($legacyFileName) )
     {
