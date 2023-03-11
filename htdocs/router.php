@@ -108,29 +108,6 @@ else if ( $phpFile )
   include_once "$phpFile";
 }
 
-// TinyURLs
-//
-// @warning This hardcoded pattern prevents all other controllers from
-// handling URLs of exactly three alphanumeric characters.  This is only
-// really a problem for top-level pages, but a serious one.  Simply
-// degrading the priority would on the other hand could leave some
-// tinyURLs inaccessible.  That would seems closer to a solution, but
-// would also be harder to predict and trace.  Multi-domain use for
-// tinyURLs is not yet supported, but this would be a nice feature anyway
-// that could solve this (the tinyURL domain would be recognised here in
-// the router).
-//
-// A temporary fix could be to let the page saving handler check the cname
-// for top-level pages and force the user to choose between picking
-// another name, or showing the target and opting to remove or rename the
-// tinyURL reference.
-
-else if ( preg_match('#^/[0-9a-zA-Z]{3}$#', $requestPath) )
-{
-  $controller = Controller::factory('TinyUrl');
-  $controller->setObjectId( substr($requestPath, 1) );
-}
-
 // Kiki built-in modules and files
 //
 // Two built-in modules that could be matched dynamically outside of Kiki

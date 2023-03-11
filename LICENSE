@@ -20,14 +20,6 @@ IN THE SOFTWARE.
 
 ----------------------------------------------------------------------------
 
-lib/base62.php: Base 62 Encoder/Decoder
-
-Copyright (c) 2009 Andy Huang
-
-Included under the terms as specified in the source file.
-
-----------------------------------------------------------------------------
-
 htdocs/scripts/jquery.placeholder.js: jQuery Placeholder plugin
 
 Copyright (c) 2010 Daniel Stock (http://webcloud.se/)

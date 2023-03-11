@@ -78,14 +78,6 @@ create table articles (
   album_id int unsigned not null
 ) default charset=utf8;
 
-drop table if exists tinyurl;
-create table tinyurl (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  url varchar(255) not null,
-  unique key(url)
-) default charset=utf8;
-
 drop table if exists menu_items;
 create table menu_items (
   id bigint unsigned not null auto_increment,
