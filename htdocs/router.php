@@ -96,15 +96,12 @@ $phpFile = !$controller ? Core::getRootPath(). "/htdocs${requestPath}.php" : nul
 if ( $phpFile == $_SERVER['SCRIPT_FILENAME'] || !file_exists($phpFile) )
   $phpFile = null;
 
-// Dummy entry to avoid legacy handling since new routing from Config found a controller already
+// Dummy entry to avoid further handling when a controller from Config was found
 if ( $controller )
 {
 }
 
-// FIXME: This feels ugly, but I cannot seem to get nginx to handle extensionless
-// PHP files while also falling back to this router file.
-// nginx strips ugly stuff like ../ so this might be safe, but not sure
-// what happens in Apache.
+// Source local PHP files
 else if ( $phpFile )
 {
   Log::debug( "SOURCE router: $phpFile" );
