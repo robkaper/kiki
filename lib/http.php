@@ -204,7 +204,7 @@ class Http
         break;
     }
 
-    header( $_SERVER['SERVER_PROTOCOL']. ' '. $status. ' '. $msg, $status );
+    header( $_SERVER['SERVER_PROTOCOL']. ' '. $status. ' '. $msg, true, $status );
     header( 'Content-Type: '. ($altContentType ? $altContentType : 'text/html; charset=utf-8') );
   }
 
