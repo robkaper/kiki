@@ -48,7 +48,7 @@ class Storage
   {
     $dirName = dirname( $fileName );
     if ( !file_exists($dirName) )
-      mkdir($dirName, 0770, true);
+      mkdir($dirName, 0777, true);
     return $dirName;
   }
 
@@ -221,7 +221,7 @@ class Storage
 
     self::makeDirectory($localFile);
     file_put_contents( $localFile, $data );
-    chmod( $localFile, 0660 );
+    chmod( $localFile, 0666 );
 
     return $id;    
   }
@@ -327,7 +327,7 @@ class Storage
     $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
     if ( file_exists($scaledFile) )
-      chmod( $scaledFile, 0660 );
+      chmod( $scaledFile, 0666 );
     else
       self::makeDirectory($scaledFile);
 
@@ -348,7 +348,7 @@ class Storage
       default:;
     }
 
-    chmod( $scaledFile, 0660 );
+    chmod( $scaledFile, 0666 );
     return $scaledFile;
   }
 
