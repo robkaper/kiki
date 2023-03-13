@@ -57,7 +57,8 @@ access for your web server user.
 
   cd /var/www/example.com
   mkdir storage
-  chgrp www-data storage && chmod g+w storage
+  for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f; for j in 0 1 2 3 4 5 6 7 8 9 a b c d e f; do mkdir -p storage/$i/$j ; done; done
+  chgrp -R www-data storage && chmod -R g+w storage
 
 It is recommend to set the set-user-ID and set-group-ID bits on the storage
 directory:
