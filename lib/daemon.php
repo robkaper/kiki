@@ -163,11 +163,13 @@ abstract class Daemon
         $pid = $this->childPids[$i];
 
         // Check child status
+        $status = null;
         $rv = pcntl_waitpid( $pid, $status, WNOHANG );
         if ( $rv == -1 )
         {
           // Child disappeared
           $ok = pcntl_wifexited( $status );
+
           if ( $ok )
           {
             // Normal exit
@@ -257,11 +259,11 @@ abstract class Daemon
         $usleep = (int) $this->main();
 
         if ( $this->shutdown )
-          exit();
+          exit(0);
 
         usleep($usleep);
       }
-      exit();
+      exit(0);
     }
     return $pid;
   }
