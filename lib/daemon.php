@@ -168,7 +168,8 @@ abstract class Daemon
         if ( $rv == -1 )
         {
           // Child disappeared
-          $ok = pcntl_wifexited( $status );
+          $ok = pcntl_wifexited($status);
+          $exitstatus = pcntl_wexitstatus($status);
 
           if ( $ok )
           {
@@ -259,10 +260,14 @@ abstract class Daemon
         $usleep = (int) $this->main();
 
         if ( $this->shutdown )
+        {
+          Log::info( "shutting down" );
           exit(0);
+        }
 
         usleep($usleep);
       }
+      Log::error( "SNH: post-loop exit" );
       exit(0);
     }
     return $pid;
