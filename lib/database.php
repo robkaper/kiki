@@ -43,11 +43,12 @@ class Database
 		if ( isset($this->mysqli->connect_errno) && !empty($this->mysqli->connect_error) )
 		{
 			Log::fatal( "connection to database failed: [". $this->mysqli->connect_errno. "] ". $this->mysqli->connect_error );
+			$this->mysqli = null;
+			return false;
 		}
 
-		// @$this->mysqli->select_db( $this->name, $this->mysqli );
 		$this->mysqli->set_charset('utf8mb4');
-//		$this->query("set names utf8mb4" );
+		// $this->query("set names utf8mb4" );
 	}
 
 	/**
@@ -120,7 +121,7 @@ class Database
 	*/
 	function query( $q )
 	{
-		if ( !$this->mysqli )
+		if ( !$this->connected() )
 		{
 			$this->connect();
 			if ( !$this->mysqli )
@@ -136,7 +137,7 @@ class Database
 		if ( $rs === false )
 		{
 			$this->lastQuery = $q;
-			$rs = $this->mysqli ? $this->mysqli->query($q) : null;
+			$rs = $this->connected() ? $this->mysqli->query($q) : null;
 
 			if ( $rs === false )
 			{
