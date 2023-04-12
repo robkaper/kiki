@@ -18,6 +18,8 @@ namespace Kiki;
 class Album extends BaseObject
 {
   public $title;
+
+  private $linked_object_id;
   private $system;
 
   private $highlight_id;
@@ -27,7 +29,7 @@ class Album extends BaseObject
    */
   public function reset()
   {
-		parent::reset();
+    parent::reset();
 
     $this->title = null;
     $this->system = false;
@@ -42,16 +44,16 @@ class Album extends BaseObject
    */
   public function load( $id = 0 )
   {
-		if ( $id )
-		{
-			$this->id = $id;
-			$this->object_id = 0;
-		}
+    if ( $id )
+    {
+      $this->id = $id;
+      $this->object_id = 0;
+    }
 
-		$qFields = "id, title, system, highlight_id, o.object_id, o.ctime, o.mtime, o.section_id, o.user_id, o.visible";
-		$qFields = "id, title, system, highlight_id, o.object_id, o.ctime, o.mtime, o.user_id, title, system";
-		$q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->object_id );
-		$this->setFromObject( $this->db->getSingleObject($q) );
+    $qFields = "id, title, linked_object_id, system, highlight_id, o.object_id, o.ctime, o.mtime, o.section_id, o.user_id, o.visible";
+    $qFields = "id, title, linked_object_id, system, highlight_id, o.object_id, o.ctime, o.mtime, o.user_id, title, system";
+    $q = $this->db->buildQuery( "SELECT $qFields FROM albums a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d", $this->id, $this->object_id );
+    $this->setFromObject( $this->db->getSingleObject($q) );
   }
   
   public function setFromObject( $o )
@@ -62,6 +64,8 @@ class Album extends BaseObject
       return;
 
     $this->title = $o->title;
+
+    $this->linked_object_id = $o->linked_object_id;
     $this->system = $o->system;
     
     $this->highlight_id = $o->highlight_id;
@@ -71,11 +75,12 @@ class Album extends BaseObject
   {
     parent::dbUpdate();
 
+    $qLinkedObjectId = Database::nullable($this->highlight_id);
     $qHighLightId = Database::nullable($this->highlight_id);
 
     $q = $this->db->buildQuery(
-      "UPDATE albums set object_id=%d, title='%s', system=%d, highlight_id=%s WHERE id=%d",
-      $this->object_id, $this->title, $this->system, $qHighLightId, $this->id
+      "UPDATE albums set object_id=%d, title='%s', linked_object_id=%s, system=%d, highlight_id=%s WHERE id=%d",
+      $this->object_id, $this->title, $qLinkedObjectId, $this->system, $qHighLightId, $this->id
     );
 
     $this->db->query($q);
@@ -83,11 +88,12 @@ class Album extends BaseObject
 
   public function dbInsert()
   {
+    $qLinkedObjectId = Database::nullable($this->highlight_id);
     $qHighLightId = Database::nullable($this->highlight_id);
 
     $q = $this->db->buildQuery(
-      "INSERT INTO albums (object_id, title, system, highlight_id) VALUES (%d, '%s', %d, %s)",
-      $this->object_id, $this->title, $this->system, $qHighLightId
+      "INSERT INTO albums (object_id, title, linked_object_id, system, highlight_id) VALUES (%d, '%s', %s, %d, %s)",
+      $this->object_id, $this->title, $qLinkedObjectId, $this->system, $qHighLightId
     );
 
     $rs = $this->db->query($q);
@@ -254,15 +260,6 @@ class Album extends BaseObject
     return $this->db->getSingleValue($q);
   }
 
-  public function setHighlightId( $pictureId )
-  {
-    $this->highlight_id = $pictureId;
-  }
-
-  public function getHighlightId()
-  {
-    return $this->highlight_id;
-  }
   
   /**
    * Finds the previous picture in an album.
@@ -320,15 +317,38 @@ class Album extends BaseObject
    * @return Album loaded instance when found/created, otherwise a bare
    * instance
    */
-  public static function findByTitle( $title, $create=false )
+  public static function findByTitle( $title, $create = false )
   {
     $db = Core::getDb();
 
     $albumClassName = get_called_class();
 
     // Find
-    $qTitle = $db->escape($title);
-    $q = "select id from albums where title='$qTitle'";
+    $q = "select id from albums where title='%s'";
+    $q = $db->buildQuery( $q, $title );
+    $id = $db->getSingleValue($q);
+
+    // Create if it doesn't exist
+    if ( !$id && $create )
+    {
+      $album = new $albumClassName();
+      $album->setTitle($title);
+      $album->save();
+      return $album;
+    }
+
+    return new $albumClassName($id);
+  }
+
+  public static function findByLinkedObjectId( $linkedObjectId, $create = false, $title = null )
+  {
+    $db = Core::getDb();
+
+    $albumClassName = get_called_class();
+
+    // Find
+    $q = "SELECT `id` FROM `albums` WHERE `linked_object_id`=%d";
+    $q = $db->buildQuery( $q, $linkedObjectId );
     $id = $db->getSingleValue($q);
 
     // Create if it doesn't exist
@@ -406,7 +426,28 @@ class Album extends BaseObject
   }
 
   public function title() { return $this->title; }
+
+  public function setLinkedObjectId( $objectId )
+  {
+    $this->linked_object_id = $objectId;
+  }
+
+  public function getLinkedObjectId()
+  {
+    return $this->linked_object_id;
+  }
+
   public function setSystem( $system ) { $this->system  = $system; }
   public function system() { return $this->system; }
+
+  public function setHighlightId( $pictureId )
+  {
+    $this->highlight_id = $pictureId;
+  }
+
+  public function getHighlightId()
+  {
+    return $this->highlight_id;
+  }
 
 }
