@@ -29,6 +29,9 @@ class Database
 	*/
 	public function __construct( &$confArray )
 	{
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		// mysqli_report(MYSQLI_REPORT_STRICT | MYSQLI_REPORT_ALL);
+
 		list( $this->host, $this->port, $this->name, $this->user, $this->pass ) = array_values($confArray);
 		$this->connect();
 	}
@@ -137,7 +140,12 @@ class Database
 		if ( $rs === false )
 		{
 			$this->lastQuery = $q;
-			$rs = $this->connected() ? $this->mysqli->query($q) : null;
+			try {
+				$rs = $this->connected() ? $this->mysqli->query($q) : null;
+			}
+			catch (mysqli_sql_exception $e) {
+				Log::error($e);
+			}
 
 			if ( $rs === false )
 			{
