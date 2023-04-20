@@ -75,7 +75,7 @@ class Album extends BaseObject
   {
     parent::dbUpdate();
 
-    $qLinkedObjectId = Database::nullable($this->highlight_id);
+    $qLinkedObjectId = Database::nullable($this->linked_object_id);
     $qHighLightId = Database::nullable($this->highlight_id);
 
     $q = $this->db->buildQuery(
@@ -88,7 +88,7 @@ class Album extends BaseObject
 
   public function dbInsert()
   {
-    $qLinkedObjectId = Database::nullable($this->highlight_id);
+    $qLinkedObjectId = Database::nullable($this->linked_object_id);
     $qHighLightId = Database::nullable($this->highlight_id);
 
     $q = $this->db->buildQuery(
@@ -356,6 +356,7 @@ class Album extends BaseObject
     {
       $album = new $albumClassName();
       $album->setTitle($title);
+      $album->setLinkedObjectId( $linkedObjectId );
       $album->save();
       return $album;
     }
