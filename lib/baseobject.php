@@ -17,7 +17,7 @@ namespace Kiki;
 
 abstract class BaseObject
 {
-  protected $db;
+  protected $db = null;
 
   protected $type = null;
   
