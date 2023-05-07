@@ -40,12 +40,15 @@ abstract class BaseObject
   // FIXME: deprecate or reinstate
   // protected $publications;
 
+  private $metaData;
+
   public function __construct( $id = 0, $object_id = 0 )
   {
     $this->db = Core::getDb();
 
     $this->id = $id;
     $this->object_id = $object_id;
+
     if ( $this->id || $this->object_id )
       $this->load();
     else
@@ -61,7 +64,9 @@ abstract class BaseObject
 
     $this->object_name = null;
     $this->user_id = 0;
-    
+
+    $this->metaData = null;
+
     return;
 
     $this->uriAlias = null;
@@ -149,6 +154,14 @@ abstract class BaseObject
   final public function userId() { return $this->user_id; }
   final public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
   final public function sectionId() { return $this->sectionId; }
+
+  final public function getMetaData()
+  {
+    if ( !isset($this->metaData) )
+      $this->metaData = new ObjectMetaData( $this->id );
+
+    return $this->metaData;
+  }
 
   final public function loadPublications()
   {
