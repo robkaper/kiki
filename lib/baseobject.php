@@ -158,7 +158,7 @@ abstract class BaseObject
   final public function getMetaData()
   {
     if ( !isset($this->metaData) )
-      $this->metaData = new ObjectMetaData( $this->id );
+      $this->metaData = new ObjectMetaData( $this->object_id );
 
     return $this->metaData;
   }
