@@ -126,7 +126,7 @@ class Album extends BaseObject
    */
   public function url( $pictureId=0 )
   {
-    return "http://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
+    return "https://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
   }
 
   /**
