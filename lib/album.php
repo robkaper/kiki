@@ -198,21 +198,17 @@ class Album extends BaseObject
     return $this->db->getObjectIds($q);
   }
 
-	public function imageUrls()
-	{
+  public function imageUrls()
+  {
     $q = "select p.storage_id as id from pictures p, album_pictures ap where p.id=ap.picture_id and ap.album_id=$this->id order by ap.sortorder ASC, p.storage_id asc";
-		$storageIds = $this->db->getObjectIds($q);
-		// echo "<pre>";
-		// echo $q;
-		// print_r( $storageIds );
+    $storageIds = $this->db->getObjectIds($q);
 
-		$urls = array();
-		foreach( $storageIds as $storageId )
-			$urls[] = Storage::url($storageId, 724, 406, true );
-		// print_r( $urls );
+    $urls = array();
+    foreach( $storageIds as $storageId )
+      $urls[] = Storage::url($storageId, 724, 406, true );
 
-		return $urls;		
-	}
+    return $urls;
+  }
 
   /**
    * Adds pictures to the album. All pictures get the same title/description,
@@ -234,12 +230,13 @@ class Album extends BaseObject
     $pictures = array();
     foreach( $storageIds as $storageId )
     {
-      $qTitle = $this->db->escape( $title );
-      $qDesc = $this->db->escape( $description );
-      $q = "INSERT INTO `pictures` (title, description, storage_id) VALUES ('%s', '%s', %d)";
-      $q = $this->db->buildQuery( $q, $title, $description, $storageId );
-      $rs = $this->db->query($q);
-      $pictures[]= array( 'id' => $this->db->lastInsertId($rs), 'storage_id' => $storageId, 'title' => $title, 'description' => $description );
+      $picture = new Picture();
+      $picture->setTitle( $title );
+      $picture->setDescription( $description );
+      $picture->setStorageId( $storageId );
+      $picture->save();
+
+      $pictures[] = array( 'id' => $picture->id(), 'storage_id' => $storageId, 'title' => $title, 'description' => $description );
     }
 
     // Link pictures into album
