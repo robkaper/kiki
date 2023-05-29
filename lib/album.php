@@ -224,13 +224,14 @@ class Album extends BaseObject
    * @return array the pictures (themselves an array: id, title, decription)
    * inserted
    */
-  public function addPictures( $title, $description, $storageIds )
+  public function addPictures( $userId, $title, $description, $storageIds )
   {
     // Stores pictures into the database
     $pictures = array();
     foreach( $storageIds as $storageId )
     {
       $picture = new Picture();
+      $picture->setUserId( $userId );
       $picture->setTitle( $title );
       $picture->setDescription( $description );
       $picture->setStorageId( $storageId );

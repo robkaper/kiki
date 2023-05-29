@@ -43,7 +43,7 @@ class Picture extends BaseObject
     $this->title = $o->title;
     $this->description = $o->description;
 
-    $this-storageId = $o->storage_id;
+    $this->storageId = $o->storage_id;
   }
 
   public function dbUpdate()
@@ -77,7 +77,7 @@ class Picture extends BaseObject
   {
     $user = Core::getUser();
 
-    if ( $user->id() != $this->id )
+    if ( $user->id() != $this->user_id )
       return false;
 
     // Delete picture from album(s)
@@ -95,6 +95,8 @@ class Picture extends BaseObject
 
     return true;
   }
+
+  public function url() { return null; }
 
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }

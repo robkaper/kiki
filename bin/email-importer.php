@@ -188,7 +188,7 @@
       $album = Album::findByTitle('Mobile uploads', true );
     }
 
-    $pictures = $album->addPictures( $subject, $body, $pictureAttachments );
+    $pictures = $album->addPictures( $userId, $subject, $body, $pictureAttachments );
 
     $requestType = "album update";
 

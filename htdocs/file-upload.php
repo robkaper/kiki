@@ -25,7 +25,7 @@
   if ( $albumId && $id )
   {
     $album = new Album($albumId);
-    $pictures = $album->addPictures( null, null, array($id) );
+    $pictures = $album->addPictures( $user->id(), null, null, array($id) );
 
     $html = $album->formItem($pictures[0]['id']);
   }
