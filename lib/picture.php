@@ -84,6 +84,10 @@ class Picture extends BaseObject
     $qAlbumPictures = $this->db->buildQuery( "DELETE FROM album_pictures WHERE picture_id=%d", $this->id );
     $this->db->query($qAlbumPictures);
 
+    // Remove highlight ID
+    $qHighlight = $this->db->buildQuery( "UPDATE albums SET highlight_id=NULL WHERE highlight_id=%d", $this->id );
+    $this->db->query($qHighlight);
+
     // Delete storage item
     $qStorageId = $this->db->buildQuery( "SELECT storage_id FROM pictures WHERE id=%d", $this->id );
     $storageId = $this->db->getSingleValue( $qStorageId );
