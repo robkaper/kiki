@@ -136,6 +136,15 @@ abstract class BaseObject
     $this->db->query($q);
   }
 
+  protected function delete()
+  {
+    $oMeta = $this->getMetaData();
+    $oMeta->delete();
+
+    $q = $this->db->buildQuery( "DELETE FROM `objects` WHERE `object_id` = %d", $this->object_id );
+    $this->db->query($q);
+  }
+
   final public function setId( $id ) { $this->id = $id; }
   final public function id() { return $this->id; }
   final public function setObjectId( $object_id ) { $this->object_id = $object_id; }
@@ -213,5 +222,3 @@ abstract class BaseObject
 
   abstract public function url();
 }
-
-?>

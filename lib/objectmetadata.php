@@ -58,7 +58,6 @@ class ObjectMetaData
 
         $q = "DELETE FROM `object_metadata` WHERE object_id = %d";
         $q = $db->buildQuery( $q, $this->objectId );
-
         $db->query($q);
 
         $this->reset();
@@ -67,6 +66,17 @@ class ObjectMetaData
     public function setValue( $key, $value )
     {
         $this->data[$key] = $value;
+    }
+
+    public function deleteValue( $key )
+    {
+        $db = Core::getDb();
+
+        $q = "DELETE FROM `object_metadata` WHERE object_id = %d AND `key` = '%s'";
+        $q = $db->buildQuery( $q, $this->objectId, $key );
+        $db->query($q);
+
+        unset( $this->data[$key] );
     }
 
     public function getValue( $key )

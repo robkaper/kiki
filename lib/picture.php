@@ -80,6 +80,8 @@ class Picture extends BaseObject
     if ( $user->id() != $this->user_id )
       return false;
 
+    parent::delete();
+
     // Delete picture from album(s)
     $qAlbumPictures = $this->db->buildQuery( "DELETE FROM album_pictures WHERE picture_id=%d", $this->id );
     $this->db->query($qAlbumPictures);
