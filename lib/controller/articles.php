@@ -36,34 +36,34 @@ class Articles extends \Kiki\Controller
     }
     $template->assign( 'latestArticles', $articles );
 
-		if ( preg_match( '/^page-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
-		{
-			$this->objectId = null;
-			$currentPage = $matches[1];
-		}
+    if ( preg_match( '/^page-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
+    {
+      $this->objectId = null;
+      $currentPage = $matches[1];
+    }
 
     if ( isset($this->objectId) && $this->objectId )
     {
-			$matches = array();
-			if ( preg_match( '/^socialupdate-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
-			{
-				$updateId = $matches[1];
-				$update = new SocialUpdate( $updateId );
+      $matches = array();
+      if ( preg_match( '/^socialupdate-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
+      {
+        $updateId = $matches[1];
+        $update = new SocialUpdate( $updateId );
 
-				if ( !$update->id() )
-				  return;
-				
-				$this->status = 200;
-				$this->title  = \Kiki\Misc::textSummary( $update->body(), 50 );
-				$this->template = 'pages/default';
+        if ( !$update->id() )
+          return;
+
+        $this->status = 200;
+        $this->title  = \Kiki\Misc::textSummary( $update->body(), 50 );
+        $this->template = 'pages/default';
 
         $template = new Template( 'content/socialupdates-single' );
         $template->assign( 'update', $update->templateData() );
 
         $this->content = $template->fetch();
 
-				return;
-			}
+        return;
+      }
 
       $article = new Article( 0, $this->objectId);
       if ( $article->id() && $article->sectionId() == $this->instanceId && ( $article->visible() || $article->userId() == $user->id() ) )
@@ -73,7 +73,7 @@ class Articles extends \Kiki\Controller
         $this->template = 'pages/default';
 
         $template = new Template( 'content/articles-single' );
-	$GLOBALS['articleAlbumId'] = $article->albumId();
+        $GLOBALS['articleAlbumId'] = $article->albumId();
         $template->assign( 'article', $article->templateData() );
 
         $this->content = $template->fetch();
@@ -82,8 +82,8 @@ class Articles extends \Kiki\Controller
       {
         // $this->template = 'pages/default';
 
-				// $template = new Template( 'content/articles-404' );
-				// $this->content = $template->fetch();
+        // $template = new Template( 'content/articles-404' );
+        // $this->content = $template->fetch();
 
         return false;
       }
@@ -92,9 +92,9 @@ class Articles extends \Kiki\Controller
     {
       $section = new \Kiki\Section( $this->instanceId );
 
-			$itemsPerPage = 25;
-			if ( !isset($currentPage) )
-				$currentPage = 1;
+      $itemsPerPage = 25;
+      if ( !isset($currentPage) )
+        $currentPage = 1;
 
       $this->status = 200;
       $this->title = $section->title();
@@ -103,52 +103,55 @@ class Articles extends \Kiki\Controller
       $this->content = null; // MultiBanner::articles( $section->id() );
 
       $article = new Article();
-			$update = new SocialUpdate();
+      $update = new SocialUpdate();
 
-			$q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('%s', '%s', '%s', '%s') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", 'Article', 'Kiki\Article', 'SocialUpdate', 'Kiki\SocialUpdate', $this->instanceId, $user->id() );
-			$totalPosts = $db->getSingleValue($q);
+      $q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('%s', '%s', '%s', '%s') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", 'Article', 'Kiki\Article', 'SocialUpdate', 'Kiki\SocialUpdate', $this->instanceId, $user->id() );
+      $totalPosts = $db->getSingleValue($q);
 
-			$paging = new \Kiki\Paging();
-			$paging->setCurrentPage( $currentPage );
-			$paging->setItemsPerPage( $itemsPerPage );
-			$paging->setTotalItems( $totalPosts );
+      $paging = new \Kiki\Paging();
+      $paging->setCurrentPage( $currentPage );
+      $paging->setItemsPerPage( $itemsPerPage );
+      $paging->setTotalItems( $totalPosts );
 
       $q = $db->buildQuery( "SELECT object_id, ctime, type FROM objects WHERE type IN ('%s', '%s', '%s', '%s') AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", 'Article', 'Kiki\Article', 'SocialUpdate', 'Kiki\SocialUpdate', $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
-			$rs = $db->query($q);
-			while( $o = $db->fetchObject($rs) )
-			{
-				switch( $o->type )
-				{
-					case 'Article':
-					case 'Kiki\Article':
-						$article->reset();
-						$article->setObjectId( $o->object_id );
-						$article->load();
-						$article->setSectionId( $this->context );
+      $rs = $db->query($q);
+      if ( !$rs )
+        return false;
 
-						$template = new Template( 'content/articles-summary' );
-						$template->assign( 'article', $article->templateData() );
+      while( $o = $db->fetchObject($rs) )
+      {
+        switch( $o->type )
+        {
+          case 'Article':
+          case 'Kiki\Article':
+            $article->reset();
+            $article->setObjectId( $o->object_id );
+            $article->load();
+            $article->setSectionId( $this->context );
 
-						$this->content .= $template->fetch();
-						break;
+            $template = new Template( 'content/articles-summary' );
+            $template->assign( 'article', $article->templateData() );
 
-					case 'SocialUpdate':
-					case 'Kiki\SocialUpdate':
-						$update->reset();
-						$update->setObjectId( $o->object_id );
-						$update->load();
+            $this->content .= $template->fetch();
+            break;
 
-	          $template = new Template( 'content/socialupdates-summary' );
-	          $template->assign( 'update', $update->templateData() );
+          case 'SocialUpdate':
+          case 'Kiki\SocialUpdate':
+            $update->reset();
+            $update->setObjectId( $o->object_id );
+            $update->load();
 
-						$this->content .= $template->fetch();
-						break;
+            $template = new Template( 'content/socialupdates-summary' );
+            $template->assign( 'update', $update->templateData() );
 
-					default:;
-				}
+            $this->content .= $template->fetch();
+            break;
+
+          default:;
+        }
       }
 
-			$this->content .= $paging->html();
+      $this->content .= $paging->html();
     }
 
   }
