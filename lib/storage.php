@@ -203,6 +203,7 @@ class Storage
     $fileName = strtolower($fileName);
 
     // FIXME: care about actual mimetypes, not extensions
+    $fileName = preg_replace( '#(/)#', '', $fileName );
     $extension = self::getExtension( $fileName );
 
     $hash = sha1( uniqid(). $data );
