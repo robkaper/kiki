@@ -105,14 +105,6 @@ class Account extends \Kiki\Controller
       $this->errors[] = array( 'msg' => "Invalid email/password combination" );
     }
 
-    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
-    return true;
-
-    $template = new \Kiki\Template( 'content/account-login' );
-    $template->assign( 'errors', $this->errors );
-
-    $this->content = $template->fetch();
-
     return true;
   }
 
@@ -325,9 +317,6 @@ class Account extends \Kiki\Controller
     $this->template = 'pages/login';
     $this->title = _("Verify account");
 
-    // Does nothing but errors, warnings and notices...
-    $template = new \Kiki\Template('content/account-verify');
-
     $user = \Kiki\Core::getUser();
 
     $token = isset($_GET['token']) ? $_GET['token'] : null;
@@ -367,14 +356,6 @@ class Account extends \Kiki\Controller
         }
       }
     }
-
-    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
-    return true;
-
-    $template->assign('warnings', $this->warnings);
-    $template->assign('errors', $this->errors);
-
-    $this->content = $template->fetch();
 
     return true;
   }
