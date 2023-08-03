@@ -37,7 +37,10 @@ class ObjectMetaData
         $rs = $db->query($q);
         if ( $rs)
             while( $o = $db->fetchObject($rs) )
-                $this->data[$o->key] = $o->value;
+            {
+                if ( $o->value )
+                    $this->data[$o->key] = $o->value;
+            }
     }
 
     public function save()
