@@ -104,7 +104,7 @@ abstract class BaseObject
     $this->sectionId = isset($o->section_id) ? $o->section_id : 0;
   }
 
-  final public function save()
+  public function save()
   {
     if ( !$this->object_id )
     {

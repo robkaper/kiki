@@ -44,7 +44,6 @@ class StorageItem
 
         $q = "SELECT id, hash, original_name, extension, size FROM storage WHERE id=%d";
         $q = $db->buildQuery($q, $id );
-        Log::debug($q);
         $o = $db->getSingleObject($q);
 
         // Also allow loading by hash        
@@ -52,7 +51,6 @@ class StorageItem
         {
             $q = "SELECT id, hash, original_name, extension, size FROM storage WHERE hash='%s'";
             $q = $db->buildQuery($q, $id );
-            Log::debug($q);
             $o = $db->getSingleObject($q);
         }
 
@@ -81,7 +79,6 @@ class StorageItem
 
         $q = "INSERT INTO storage(hash, original_name, extension, size) VALUES('%s', '%s', '%s', %d)";
         $q = $db->buildQuery( $q, $this->hash, $this->original_name, $this->extension, $this->size );
-        Log::debug($q);
         $rs = $db->query($q);
 
         $this->id = $db->lastInsertId($rs);
@@ -104,7 +101,6 @@ class StorageItem
 
         $q = "UPDATE storage SET hash='%s', original_name='%s', extension='%s', size=%d WHERE id=%d";
         $q = $db->buildQuery( $q, $this->hash, $this->original_name, $this->extension, $this->size, $this->id );
-        Log::debug($q);
         $rs = $db->query($q);
     }
 

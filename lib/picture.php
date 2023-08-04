@@ -54,6 +54,20 @@ class Picture extends BaseObject
     $this->storageId = $o->storage_id;
   }
 
+  public function save()
+  {
+    if ( !$this->width || !$this->height )
+    {
+      $storageItem = new StorageItem( $this->storageId );
+      $size = getimagesize( $storageItem->localFile() );
+
+      $this->width = $size[0] ?? 0;
+      $this->height = $size[1] ?? 0;
+    }
+
+    return parent::save();
+  }
+
   public function dbUpdate()
   {
     parent::dbUpdate();
@@ -64,6 +78,8 @@ class Picture extends BaseObject
     );
 
     $this->db->query($q);
+
+    return $this->id;
   }
 
   public function dbInsert()
