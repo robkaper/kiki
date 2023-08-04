@@ -1,6 +1,6 @@
 <?php
 
-	use Kiki\Core;
+use Kiki\Core;
 
   $this->title = "Purify structure";
 
@@ -138,7 +138,7 @@
   echo "<li>Delete orphaned objects... ";
   echo "<ul>";
   $totalDeleted = 0;
-  $objectTables = array( 'users' => 'User', 'articles' => 'Article', 'publications' => 'SocialUpdate', 'comments' => 'Comment' );
+  $objectTables = array( 'users' => 'User', 'articles' => 'Article', 'comments' => 'Comment' );
   foreach( $objectTables as $table => $objectType )
   {
     echo "<li>$objectType... ";
@@ -154,4 +154,3 @@
   echo "</ul>";
 
   $this->content = ob_get_clean();
-?>

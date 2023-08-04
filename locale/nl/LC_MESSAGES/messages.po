@@ -21,10 +21,6 @@ msgstr ""
 msgid "Create a new section"
 msgstr "Nieuwe sectie"
 
-#: ../htdocs/account/social.php:8
-msgid "Social update"
-msgstr "Social update"
-
 #: ../htdocs/account/events/index.php:3
 msgid "Events"
 msgstr "Events"
@@ -153,6 +149,3 @@ msgstr "Bevestig wachtwoord"
 #: generated.php:23
 msgid "Administrator password"
 msgstr "Administrator wachtwoord"
-
-#~ msgid "Social demo"
-#~ msgstr "Social demo"

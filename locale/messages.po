@@ -21,10 +21,6 @@ msgstr ""
 msgid "Create a new section"
 msgstr ""
 
-#: ../htdocs/account/social.php:8
-msgid "Social update"
-msgstr ""
-
 #: ../htdocs/account/events/index.php:3
 msgid "Events"
 msgstr ""

@@ -232,11 +232,6 @@ class Misc
     return $str;
   }
 
-  public static function isMobileSafari()
-  {
-    return preg_match( '/(iPod|iPhone|iPad)/', $_SERVER['HTTP_USER_AGENT'] );
-  }
-
   // $dates = array( '2012' => '2012-08-06' );
   public static function countdown( $datesPerYear )
   {

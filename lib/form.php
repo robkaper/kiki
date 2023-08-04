@@ -136,14 +136,6 @@ $( function() {
 
   public static function file( $id, $label=null, $target = null )
   {
-    if ( Misc::isMobileSafari() )
-    {
-      $label .= "<br><span class=\"small\">Warning: Mobile Safari does not support file uploads.</span>";
-      global $user;
-      if ( $emailUploadAddress = $user->emailUploadAddress($target) )
-        $label .= "<br><span class=\"small\">To upload files to your CMS inbox, e-mail them to:<br><a href=\"mailto:$emailUploadAddress\">$emailUploadAddress</a></span>";
-    }
-
     $content = "<p><label>${label}</label>\n";
     $content .= "<input type=\"file\" name=\"${id}\"></p>\n";
     return $content;

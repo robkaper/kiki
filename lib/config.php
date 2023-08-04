@@ -79,10 +79,7 @@ class Config
 	public static $googleApiClientId = null;
 	public static $googleApiClientSecret = null;
 	
-	public static $mailToSocialAddress = null;
-
 	public static $cspNonce = null;
-
 
 	// WARNING: Changing these values will invalidate all user passwords
 	// already stored as hash.

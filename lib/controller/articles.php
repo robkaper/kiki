@@ -7,7 +7,6 @@ use Kiki\Template;
 
 use Kiki\Article;
 use Kiki\Section;
-use Kiki\SocialUpdate;
 
 class Articles extends \Kiki\Controller
 {
@@ -44,27 +43,6 @@ class Articles extends \Kiki\Controller
 
     if ( isset($this->objectId) && $this->objectId )
     {
-      $matches = array();
-      if ( preg_match( '/^socialupdate-([\d]+)$/', $this->objectId, $matches ) && isset($matches[1]) )
-      {
-        $updateId = $matches[1];
-        $update = new SocialUpdate( $updateId );
-
-        if ( !$update->id() )
-          return;
-
-        $this->status = 200;
-        $this->title  = \Kiki\Misc::textSummary( $update->body(), 50 );
-        $this->template = 'pages/default';
-
-        $template = new Template( 'content/socialupdates-single' );
-        $template->assign( 'update', $update->templateData() );
-
-        $this->content = $template->fetch();
-
-        return;
-      }
-
       $article = new Article( 0, $this->objectId);
       if ( $article->id() && $article->sectionId() == $this->instanceId && ( $article->visible() || $article->userId() == $user->id() ) )
       {
@@ -103,9 +81,15 @@ class Articles extends \Kiki\Controller
       $this->content = null; // MultiBanner::articles( $section->id() );
 
       $article = new Article();
-      $update = new SocialUpdate();
 
-      $q = $db->buildQuery( "SELECT count(*) FROM objects WHERE type IN ('%s', '%s', '%s', '%s') AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)", 'Article', 'Kiki\Article', 'SocialUpdate', 'Kiki\SocialUpdate', $this->instanceId, $user->id() );
+      $q = $db->buildQuery( "SELECT count(*)
+        FROM objects
+        WHERE type IN ('%s', '%s')
+          AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)",
+        'Article', 'Kiki\Article',
+        $this->instanceId,
+        $user->id()
+      );
       $totalPosts = $db->getSingleValue($q);
 
       $paging = new \Kiki\Paging();
@@ -113,7 +97,19 @@ class Articles extends \Kiki\Controller
       $paging->setItemsPerPage( $itemsPerPage );
       $paging->setTotalItems( $totalPosts );
 
-      $q = $db->buildQuery( "SELECT object_id, ctime, type FROM objects WHERE type IN ('%s', '%s', '%s', '%s') AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d) ORDER BY ctime DESC LIMIT %d,%d", 'Article', 'Kiki\Article', 'SocialUpdate', 'Kiki\SocialUpdate', $this->instanceId, $user->id(), $paging->firstItem()-1, $itemsPerPage );
+      $q = $db->buildQuery( "SELECT object_id, ctime, type
+        FROM objects
+        WHERE type IN ('%s', '%s')
+        AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d)
+        ORDER BY ctime DESC
+        LIMIT %d,%d",
+        'Article',
+        'Kiki\Article',
+        $this->instanceId,
+        $user->id(),
+        $paging->firstItem()-1,
+        $itemsPerPage
+      );
       $rs = $db->query($q);
       if ( !$rs )
         return false;
@@ -131,18 +127,6 @@ class Articles extends \Kiki\Controller
 
             $template = new Template( 'content/articles-summary' );
             $template->assign( 'article', $article->templateData() );
-
-            $this->content .= $template->fetch();
-            break;
-
-          case 'SocialUpdate':
-          case 'Kiki\SocialUpdate':
-            $update->reset();
-            $update->setObjectId( $o->object_id );
-            $update->load();
-
-            $template = new Template( 'content/socialupdates-summary' );
-            $template->assign( 'update', $update->templateData() );
 
             $this->content .= $template->fetch();
             break;

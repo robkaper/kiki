@@ -133,16 +133,6 @@ create table album_pictures (
   key(album_id,picture_id)
 ) default charset=utf8;
 
-drop table if exists social_updates;
-create table social_updates (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned not null,
-  network varchar(255) not null,
-  post text not null,
-  response text not null
-) default charset=utf8;
-
 drop table if exists mail_queue;
 create table mail_queue (
   id int unsigned not null auto_increment,

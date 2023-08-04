@@ -382,25 +382,6 @@ class User extends BaseObject
     return preg_replace( '/\(.*\)/', $this->objectName(), Router::getBaseUri( 'Profile', null ) );
   }
   
-  public function emailUploadAddress( $target = null )
-  {
-    if ( Config::$mailToSocialAddress )
-    {
-      if ( !$this->mailAuthToken )
-      {
-        // Not the most secure hash, but it doesn't matter because it
-        // doesn't lead to a password.
-        $this->mailAuthToken = sha1( uniqid(). $this->id );
-        $this->db->query( "update users set mail_auth_token='$this->mailAuthToken' where id=". $this->id );
-      } 
-
-      list( $localPart, $domain ) = explode( "@", Config::$mailToSocialAddress );
-      $targetPart = $target ? "+$target" : null;
-      return $localPart. "+". $this->mailAuthToken. $targetPart. "@". $domain;
-    }
-    return false;
-  }
-
 	public function getIdByEmail( $email )
 	{
 		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' LIMIT 1", $email );
@@ -426,7 +407,6 @@ class User extends BaseObject
       'admin' => $this->isAdmin,
       'activeConnections' => array(),
       'inactiveConnections' => array(),
-      'emailUploadAddress' => $this->emailUploadAddress()
     );
 	}
 }

@@ -19,7 +19,6 @@ function jsonUpdate()
   var ids = [];
   $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
   $('.jsonupdate').each( function() {
-    // TODO: Add a class to manage the opacity so it can be configured in the stylesheet.
     $(this).css( 'opacity', '0.7' );
     ids[ids.length] = $(this).attr('id');
   } );
@@ -309,7 +308,7 @@ $( function() {
 
   $( ".albumForm" ).disableSelection();
 
-	// Carousel
+  // Carousel
   var $slider = $('article header .slider'); // class or id of carousel slider
   var $slide = 'img'; // could also use 'img' if you're not using a ul
   var $transition_time = 2000; // 2 seconds
