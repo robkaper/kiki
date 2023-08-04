@@ -16,35 +16,49 @@ namespace Kiki;
 
 class Storage
 {
-
-  /**
-   * Looks up the local filename of a stored resource.
-   *
-   * @param int $id ID of the database entry
-   * @return string full path of the resource
-   */
-  public static function localFile( $id )
+  public static function findItemByName( $fileName )
   {
-    $uri = self::uri($id);
+    $db = Core::getDb();
 
-    $fileName = sprintf( "%s/storage/%s/%s/%s", Core::getRootPath(), $uri[0], $uri[1], $uri );
+    $q = "SELECT id FROM storage WHERE original_name='%s'";
+    $q = $db->buildQuery( $q, $fileName );
+    $storageId = $db->getSingleValue( $q );
 
-    // Move files directly under storage/ to better-scaling storage/0/f/ parallel directory structure
-    $legacyFileName = sprintf( "%s/storage/%s", Core::getRootPath(), $uri );
-    if ( !file_exists($fileName) && file_exists($legacyFileName) )
-    {
-      $dirName = self::makeDirectory($fileName);
-      if ( file_exists($dirName) && is_dir($dirName) )
-      {
-        rename( $legacyFileName, $fileName);
-        Log::debug( "moved $legacyFileName to $fileName" );
-      }
-    }
+    if ( $storageId )
+      return new StorageItem($storageId);
 
-    return $fileName;
+    return null;
   }
 
-  private static function makeDirectory( $fileName )
+  public static function findItemByHash( $hash )
+  {
+    $db = Core::getDb();
+
+    $q = "SELECT id FROM storage WHERE hash='%s'";
+    $q = $db->buildQuery( $q, $hash );
+    $storageId = $db->getSingleValue( $q );
+
+    if ( $storageId )
+      return new StorageItem($storageId);
+
+    return null;
+  }
+
+  public static function findItemByNameAndSize( $fileName, $size )
+  {
+    $db = Core::getDb();
+
+    $q = "SELECT id FROM storage WHERE original_name='%s' AND size=%d";
+    $q = $db->buildQuery( $q, $fileName, $size );
+    $storageId = $db->getSingleValue( $q );
+
+    if ( $storageId )
+      return new StorageItem($storageId);
+
+    return null;
+  }
+
+  public static function makeDirectory( $fileName )
   {
     $dirName = dirname( $fileName );
     if ( !file_exists($dirName) )
@@ -52,30 +66,6 @@ class Storage
     return $dirName;
   }
 
-  /**
-   * Looks up the local URI a stored resource.
-   *
-   * URI uses a stored hash instead of the ID to prevent resources from
-   * being discovered by simply incrementing the reference.
-   *
-   * @param int $id ID or hash of the database entry
-   * @return string local URI of the resource
-   */
-  public static function uri( $id, $w=0, $h=0, $crop=false )
-  {
-    $db = Core::getDb();
-
-    $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE hash='%s'", $id );
-    $o = $db->getSingleObject($q);
-    if ( !$o )
-    {
-      $q = $db->buildQuery( "SELECT hash,extension FROM storage WHERE id=%d", $id );
-      $o = $db->getSingleObject($q);
-    }
-
-    $extra = ($w && $h) ? ( ".${w}x${h}". ($crop ? ".c" : null) ) : null;
-    return $o ? sprintf( "%s%s.%s", $o->hash, $extra, $o->extension ) : null;
-  }
 
   public static function hash( $id )
   {
@@ -90,47 +80,6 @@ class Storage
     }
 
     return $o->hash ?? null;
-  }
-
-  /**
-   * Splits a filename into a base part and extension.
-   *
-   * @param string $name name of the file (should not contain a path)
-   * @return array base name and extension of the file
-   */
-  public static function splitExtension( $name )
-  {
-    $pos = strrpos( $name, '.' );
-    if ( $pos === FALSE )
-      return array( $name, null );
-
-    $base = substr( $name, 0, $pos );
-    $ext = substr( $name, $pos+1 );
-    return array( $base, $ext );
-  }
-
-  /**
-   * Retrieve the base part of a filename.
-   *
-   * @param string $name name of the file (should not contain a path)
-   * @return string base name of the file
-   */
-  public static function getBase( $name )
-  {
-    list( $base ) = self::splitExtension($name);
-    return $base;
-  }
-
-  /**
-   * Retrieve the extension part of a filename.
-   *
-   * @param string $name name of the file
-   * @return string extension of the file
-   */
-  public static function getExtension( $name )
-  {
-    list( , $ext ) = self::splitExtension($name);
-    return $ext;
   }
 
   /**
@@ -178,18 +127,6 @@ class Storage
   }
 
   /**
-   * Returns the full URL for a stored resource.
-   *
-   * @param int $id database ID of the resource
-   * @param boolean $secure Return a HTTPS resource instead of HTTP
-   * @return string Full URL (protocol, host, local URI) of the resource
-   */
-  public static function url( $id, $w=0, $h=0, $crop=false, $secure = true )
-  {
-    return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". self::uri($id,$w,$h,$crop);
-  }
-
-  /**
    * Stores a resource.
    *
    * @param string $fileName original filename
@@ -198,50 +135,29 @@ class Storage
    */
   public static function save( $fileName, $data, $size=0 )
   {
-    $db = Core::getDb();
+    $storageItem = new StorageItem();
 
     $fileName = strtolower($fileName);
-
-    // FIXME: care about actual mimetypes, not extensions
     $fileName = preg_replace( '#(/)#', '', $fileName );
-    $extension = self::getExtension( $fileName );
 
-    $hash = sha1( uniqid(). $data );
+    $storageItem->setOriginalName( $fileName );
+    $storageItem->setData( $data );
 
-    $qHash = $db->escape( $hash );
-    $qName = $db->escape( $fileName );
-    $qExt = $db->escape( $extension );
-    $qSize = $db->escape( $size );
+    $storageItem->save();
 
-    $q = "insert into storage(hash, original_name, extension, size) values('$qHash', '$qName', '$qExt', $qSize)";
-    Log::debug($q);
-    $rs = $db->query($q);
-    $id = $db->lastInsertId($rs);
-
-    $localFile = self::localFile($id);
-
-    self::makeDirectory($localFile);
-    file_put_contents( $localFile, $data );
-    chmod( $localFile, 0666 );
-
-    return $id;    
+    return $storageItem;
   }
 
   public static function delete( $id )
   {
-    $db = Core::getDb();
-
-    $localFile = self::localFile($id);
-    unlink($localFile);
-
-    $q = "DELETE FROM storage WHERE id=%d";
-    $q = $db->buildQuery( $q, $id );
-    $db->query($q);
+    $storageItem = new StorageItem($id);
+    if ( $storageItem->id() )
+      $storageItem->delete();
   }
 
   private static function getThumbnailFileName( $fileName, $w, $h, $crop )
   {
-    list( $base, $ext ) = self::splitExtension($fileName);
+    list( $base, $ext ) = StorageItem::splitExtension($fileName);
     $base = preg_replace( "#/storage/#", "/storage/thumbnails/", $base );
     $c = $crop ? "c." : null;
 
@@ -265,7 +181,7 @@ class Storage
   {
     $image = null;
 
-    list( $base, $ext ) = self::splitExtension($fileName);
+    list( $base, $ext ) = StorageItem::splitExtension($fileName);
     $mimeType = mime_content_type($fileName);
 
     switch($mimeType)
@@ -387,5 +303,3 @@ class Storage
   }
 
 }
-
-?>

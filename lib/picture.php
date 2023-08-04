@@ -69,7 +69,7 @@ class Picture extends BaseObject
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO pictures (object_id, width, height, title, description, storage_id) VALUES (%d, '%s', '%s', %d)",
+      "INSERT INTO pictures (object_id, width, height, title, description, storage_id) VALUES (%d, %d, %d, '%s', '%s', %d)",
       $this->object_id, $this->width, $this->height, $this->title, $this->description, $this->storageId
     );
 
@@ -88,8 +88,6 @@ class Picture extends BaseObject
     if ( $user->id() != $this->user_id )
       return false;
 
-    parent::delete();
-
     // Delete picture from album(s)
     $qAlbumPictures = $this->db->buildQuery( "DELETE FROM album_pictures WHERE picture_id=%d", $this->id );
     $this->db->query($qAlbumPictures);
@@ -107,13 +105,16 @@ class Picture extends BaseObject
     $qPicture = $this->db->buildQuery( "DELETE from pictures WHERE id=%d", $this->id );
     $this->db->query($qPicture);
 
+    // Can now delete BaseObject
+    parent::delete();
+
     return true;
   }
 
   public function url() { return null; }
 
   public function setWidth( $width ) { $this->width = $width; }
-  public fuction width() { return $this->width; }
+  public function width() { return $this->width; }
   public function setHeight( $height ) { $this->height = $height; }
   public function height() { return $this->height; }
 

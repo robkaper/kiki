@@ -215,8 +215,8 @@ class Album extends BaseObject
    * if this is not desired this method must be called separately for each
    * picture.
    *
-   * @todo don't use storage IDs but create an actual Picture class, this
-   * method should only link the pictures into the album.
+   * @todo don't use storage IDs but actual Picture class, this method
+   * should only link the pictures into the album.
    *
    * @param string $title title of the picture(s)
    * @param string $description decription of the picture(s)
@@ -224,20 +224,20 @@ class Album extends BaseObject
    * @return array the pictures (themselves an array: id, title, decription)
    * inserted
    */
-  public function addPictures( $userId, $title, $description, $storageIds )
+  public function addPictures( $userId, $title, $description, $storageItems )
   {
     // Stores pictures into the database
     $pictures = array();
-    foreach( $storageIds as $storageId )
+    foreach( $storageItems as $storageItem )
     {
       $picture = new Picture();
       $picture->setUserId( $userId );
       $picture->setTitle( $title );
       $picture->setDescription( $description );
-      $picture->setStorageId( $storageId );
+      $picture->setStorageId( $storageItem->id() );
       $picture->save();
 
-      $pictures[] = array( 'id' => $picture->id(), 'storage_id' => $storageId, 'title' => $title, 'description' => $description );
+      $pictures[] = array( 'id' => $picture->id(), 'storage_id' => $storageItem->id(), 'title' => $title, 'description' => $description );
     }
 
     // Link pictures into album
