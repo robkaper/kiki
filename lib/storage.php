@@ -169,7 +169,7 @@ class Storage
     $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
     if ( !file_exists($scaledFile) )
-      self::generateThumbnail( $fileName, $w, $h, $crop );
+      $scaledFile = self::generateThumbnail( $fileName, $w, $h, $crop );
 
     if ( !file_exists($scaledFile) )
       return null;
@@ -218,6 +218,15 @@ class Storage
 
     list( $dstW, $dstH, $scaleRatio ) = self::calculateScaleSize( $srcW, $srcH, $w, $h, !$crop );
 
+    if ( $w == 'auto' )
+      $w = $dstW;
+    if ( $h == 'auto' )
+      $h = $dstH;
+
+    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
+    if ( file_exists($scaledFile) )
+      return $scaledFile;
+
     if ( $crop )
     {
       // Returned image is larger than dimensions, therefore we need to crop the the original image.
@@ -240,8 +249,6 @@ class Storage
     $scaled = imagecreatetruecolor( $w, $h );
     imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
-
-    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
 
     if ( file_exists($scaledFile) )
       chmod( $scaledFile, 0666 );
@@ -285,8 +292,14 @@ class Storage
    */
   public static function calculateScaleSize( $w, $h, $newW, $newH, $panAndScan=false )
   {
-    $wScale = $w / $newW;
-    $hScale = $h / $newH;
+    $hScale = (int) $newH ? $h / $newH : 1;
+    $wScale = (int) $newW ? $w / $newW : 1;
+
+    if ( $newW == 'auto' )
+      $wScale = $hScale;
+
+    if ( $newH == 'auto' )
+      $hScale = $wScale;
 
     if ( $panAndScan )
         $scaleFactor = max( $wScale, $hScale );
