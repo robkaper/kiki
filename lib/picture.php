@@ -7,6 +7,8 @@ use Kiki\Storage;
 
 class Picture extends BaseObject
 {
+  private $width;
+  private $height;
   private $title;
   private $description;
   private $storageId;
@@ -14,6 +16,9 @@ class Picture extends BaseObject
   public function reset()
   {
     parent::reset();
+
+    $this->width = 0;
+    $this->height = 0;
 
     $this->title = null;
     $this->description = null;
@@ -28,7 +33,7 @@ class Picture extends BaseObject
       $this->object_id = 0;
     }
 
-    $qFields = "id, title, description, storage_id, o.object_id, o.ctime, o.mtime, o.user_id";
+    $qFields = "id, width, height, title, description, storage_id, o.object_id, o.ctime, o.mtime, o.user_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM pictures p LEFT JOIN objects o ON o.object_id=p.object_id WHERE p.id=%d", $this->id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
@@ -39,6 +44,9 @@ class Picture extends BaseObject
 
     if ( !$o )
       return;
+
+    $this->width = $o->width;
+    $this->height = $o->height;
 
     $this->title = $o->title;
     $this->description = $o->description;
@@ -51,8 +59,8 @@ class Picture extends BaseObject
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE pictures set object_id=%d, title='%s', description='%s', storage_id=%d WHERE id=%d",
-      $this->object_id, $this->title, $this->description, $this->storageId, $this->id
+      "UPDATE pictures set object_id=%d, width=%d, height=%d, title='%s', description='%s', storage_id=%d WHERE id=%d",
+      $this->object_id, $this->width, $this->height, $this->title, $this->description, $this->storageId, $this->id
     );
 
     $this->db->query($q);
@@ -61,8 +69,8 @@ class Picture extends BaseObject
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO pictures (object_id, title, description, storage_id) VALUES (%d, '%s', '%s', %d)",
-      $this->object_id, $this->title, $this->description, $this->storageId
+      "INSERT INTO pictures (object_id, width, height, title, description, storage_id) VALUES (%d, '%s', '%s', %d)",
+      $this->object_id, $this->width, $this->height, $this->title, $this->description, $this->storageId
     );
 
     $rs = $this->db->query($q);
@@ -103,6 +111,11 @@ class Picture extends BaseObject
   }
 
   public function url() { return null; }
+
+  public function setWidth( $width ) { $this->width = $width; }
+  public fuction width() { return $this->width; }
+  public function setHeight( $height ) { $this->height = $height; }
+  public function height() { return $this->height; }
 
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
