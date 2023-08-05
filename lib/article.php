@@ -139,7 +139,6 @@ class Article extends BaseObject
    * @fixme Should be integrated into a template.
    * @todo Traditional Page class is deprecated so we can now remove the $type argument hack and have a Page/Article class both deriving from Post.
    *
-   * @param User $user User object, used to show the proper connection links for publications.
    * @param boolean $hidden Hide the form initially.
    * @param string $type Defaults to 'articles'. When set to 'page', form treats this article as a page.
    *
@@ -169,12 +168,9 @@ class Article extends BaseObject
     $content .= Form::hidden( "albumId", $this->albumId );
     $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
     
-    $this->loadPublications();
-    
     $content .= Form::text( "title", $this->title, "Title" );
 
-    if ( !count($this->publications) )
-      $content .= Form::text( "cname", $this->cname, "URL name" );
+    $content .= Form::text( "cname", $this->cname, "URL name" );
 
     if ( $type!='pages' )
       $content .= Form::datetime( "ctime", $date, "Date" );
@@ -185,12 +181,6 @@ class Article extends BaseObject
       $content .= Form::checkbox( "featured", $this->featured, "Featured" );
 
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
-
-    $content .= "<label>Publications</label>";
-    foreach( $this->publications as $publication )
-    {
-      $content .= "<a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a>\n";
-    }
 
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
@@ -244,7 +234,6 @@ class Article extends BaseObject
       'body' => $this->body,
       'author' => $uAuthor->name(),
       'images' => array(),
-      'publications' => array(),
       'likes' => $this->likes(),
       'comments' => Comments::count( $this->object_id ),
       'html' => array(
@@ -271,19 +260,11 @@ class Article extends BaseObject
       );
     }
 
-    $publications = $this->publications();
-    foreach( $publications as $publication )
-      $data['publications'][] = $publication->templateData();
-
     $images = $this->images();
     foreach( $images as $image )
       $data['images'][] = Storage::url($image);
-
-		// print_r( $data['images'] );
 
     return $data;
   }
 
 }
-
-?>

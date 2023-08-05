@@ -1,9 +1,6 @@
 {$page.body|parse}
 
 <footer class="pageFooter"><ul>
-{foreach $page.publications as $publication}
-  <li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
-{/foreach}
 
 {if $user.admin}
   <li><a href="javascript:showArticleForm({$page.id});" class="button">Wijzigen</a></li>

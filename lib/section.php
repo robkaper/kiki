@@ -118,7 +118,6 @@ class Section
    *
    * @fixme Should be integrated into a template.
    *
-   * @param User $user User object, used to show the proper connection links for publications.
    * @return string The form HTML.
    */
   public function form( $hidden=false )

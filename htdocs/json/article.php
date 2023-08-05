@@ -9,12 +9,10 @@
  * @license Released under the terms of the MIT license.
  */
 
-	use Kiki\Article;
-	use Kiki\Album;
+use Kiki\Article;
+use Kiki\Album;
 
-	use Kiki\Router;
-
-//  require_once "../../lib/init.php";
+use Kiki\Router;
 
   if ($_POST)
   {
@@ -42,11 +40,8 @@
     else
       $showAsPage = true;
 
-    if ( isset($_POST['cname']) && !count($article->publications()) )
-    {
-      // TODO: allow changing when publications exist: 301 redirect must be created somewhere in this case.
+    if ( isset($_POST['cname']) )
       $article->setCname( $_POST['cname'] );
-    }
 
     $article->setTitle( $_POST['title'] );
     $article->setBody( $_POST['body'] );
@@ -131,4 +126,3 @@
     $template->assign( 'content',  "fouten bij opslaan:<pre>". print_r($errors,true). "</pre>" );
     echo $template->content();
   }
-?>

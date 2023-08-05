@@ -53,15 +53,6 @@
     {$comment}
   {/foreach}
 
-  {if $article.publications|count}
-		<p>Je kunt ook reageren via:</p>
-  	<ul>
-  		{foreach $article.publications as $publication}
-    		<li><a href="{$publication.url}" class="button"><span class="buttonImg {$publication.service}"></span> {$publication.service}</a></li>
-	  	{/foreach}
-  	<ul>
-  {/if}
-
   </footer>
 
 	{if $article.images|count}

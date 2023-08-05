@@ -37,9 +37,6 @@ abstract class BaseObject
   // FIXME: is this generic enough for BaseObject? Historically made sense for Article/Page when Kiki was primarily used for simple sites and blogs
   protected $sectionId = 0;
 
-  // FIXME: deprecate or reinstate
-  // protected $publications;
-
   private $metaData;
 
   public function __construct( $id = 0, $object_id = 0 )
@@ -73,8 +70,6 @@ abstract class BaseObject
 
     $this->visible = false;
     $this->sectionId = 0;
-
-    $this->publications = null;
   }
 
   abstract public function load();
@@ -172,24 +167,6 @@ abstract class BaseObject
     return $this->metaData;
   }
 
-  final public function loadPublications()
-  {
-    $this->publications = array();
-
-    // FIXME: deprecate? currently Kiki has no connections that actually allow for publications
-    // TODO: check Mastodon API
-    return;
-
-    $q = $this->db->buildQuery( "SELECT publication_id, p.connection_id, p.external_id, uc.service FROM publications p LEFT JOIN user_connections uc ON uc.external_id=p.connection_id WHERE p.object_id=%d", $this->object_id );
-    $rs = $this->db->query($q);
-    while( $o = $this->db->fetchObject($rs) )
-    {
-      $publication = new Publication();
-      $publication->setFromObject($o);
-      $this->publications[$o->publication_id] = $publication;
-    }    
-  }
-
   // FIXME: should not directly return templateData, but Like objects (which have a templatData method)
   final public function likes()
   {
@@ -210,14 +187,6 @@ abstract class BaseObject
       );
     }
     return $likes;
-  }
-
-  final public function publications()
-  {
-    if ( !isset($this->publications) )
-      $this->loadPublications();
-
-    return $this->publications;
   }
 
   abstract public function url();

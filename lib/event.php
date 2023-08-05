@@ -133,7 +133,6 @@ class Event extends BaseObject
    *
    * @fixme Should be integrated into a template.
    *
-   * @param User $user User object, used to show the proper connection links for publications.
    * @return string The form HTML.
    */
   public function form( $hidden=false )
@@ -155,14 +154,6 @@ class Event extends BaseObject
     $content .= Form::text( "location", $this->location, "Location" );
     $content .= Form::checkbox( "featured", $this->featured, "Featured" );
     $content .= Form::checkbox( "visible", $this->visible, "Visible" );
-
-    $this->loadPublications();
-
-    $content .= "<label>Publications</label>";
-    foreach( $this->publications as $publication )
-    {
-      $content .= "<a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a>\n";
-    }
 
     $content .= Form::button( "submit", "submit", "Opslaan" );
     $content .= Form::close();
@@ -199,12 +190,6 @@ class Event extends BaseObject
     $content .= "<ul>";
     $content .= "<li>Wanneer?<p class=\"small\">$start (over ". Misc::relativeTime($this->start). ")</p></li>";
     $content .= "<li>Waar?<p class=\"small\">". $this->location. "</p></li>";
-
-    $this->loadPublications();
-    foreach( $this->publications as $publication )
-    {
-      $content .= "<li><a href=\"". $publication->url(). "\" class=\"button\"><span class=\"buttonImg ". $publication->service(). "\"></span>". $publication->service(). "</a></li>\n";
-    }
 
     $content .= "</ul>";
 

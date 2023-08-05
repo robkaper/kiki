@@ -200,20 +200,6 @@ create table events (
   album_id int unsigned not null
 ) default charset=utf8;
 
-drop table if exists publications;
-create table publications (
-  publication_id int unsigned not null auto_increment,
-  primary key(publication_id),
-	ctime datetime not null,
-  object_id bigint unsigned not null,
-  connection_id bigint unsigned not null,
-  external_id varchar(64) not null default '',
-  body text not null,
-  response text not null,
-  key(object_id)
-) default charset=utf8;
-
-
 drop table if exists likes;
 create table likes (
   object_id bigint(20) unsigned not null,
