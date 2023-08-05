@@ -601,6 +601,10 @@ class Template
           $input = Misc::markup($input);
           break;
 
+        case 'break':
+          $input = preg_replace( '/(\r?\n)/', '<br>', $input );
+          break;
+
         case 'date':
           $input = date($fmt, $input);
           break;
@@ -634,6 +638,10 @@ class Template
 
         case 'lower':
           $input = strtolower($input);
+          break;
+
+        case 'upper':
+          $input = strtoupper($input);
           break;
 
         case 'count':
