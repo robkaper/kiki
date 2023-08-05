@@ -221,6 +221,7 @@ class Template
     $reLegacy = '~<\?=?([^>]+)\?>~';
     $reConditions = '~\n?\{if ([^\}]+)\}\n??(.*)\n?\{\/if\}\n?~sU';
     $re = '~\{([^}]+)\}~';
+    $reDouble = '~\{{([^}]+)\}}~';
 
     $this->content = preg_replace_callback( $reLegacy, array($this, 'legacy'), $this->content );
     // echo "<h2>post parse/legacy:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -243,6 +244,9 @@ class Template
     // echo "<h2>post parse/conditions:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     $this->content = preg_replace_callback( $re, array($this, 'replace'), $this->content );
+    // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+    $this->content = preg_replace_callback( $reDouble, array($this, 'replace'), $this->content );
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
 		// Log::endTimer( 'Template::parse '. $this->template );
@@ -520,7 +524,14 @@ class Template
 			//echo "<hr>replace". $replace;
 
       $tmp = preg_replace( $pattern, $replace, $tmp );
-			//echo "<hr>tmp: ". $tmp;
+
+      $replace = "{{\${1}}\"". $key. "\"\\3}";
+      // Log::debug( "pattern $i: $pattern" );
+      // Log::debug( "replace $i: $replace" );
+      //echo "<hr>pattern: $pattern";
+      //echo "<hr>replace". $replace;
+      $tmp = preg_replace( $pattern, $replace, $tmp );
+      //echo "<hr>tmp: ". $tmp;
 
 
 			$content .= $tmp;
