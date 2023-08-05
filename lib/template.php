@@ -585,7 +585,7 @@ class Template
     {
       $parts = explode( ":", $mod );
       $mod = array_shift($parts);
-      $fmt = array_shift($parts);
+      $fmt = implode( ":", $parts );
 
       switch($mod)
       {
