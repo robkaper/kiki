@@ -33,7 +33,7 @@ class Auth
 
       $hash = $password;
       for( $i=0; $i<$iterations; ++$i )
-        $hash = sha1( $salt. $pepper. $hash );
+        $hash = sha512( $salt. $pepper. $hash );
       return $hash;
   }
 
