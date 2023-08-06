@@ -2,8 +2,7 @@
 
 /**
  * Utility class to assist authentication. Provides cookie creation and
- * verification as well as password hashing with multiple pepper and salt
- * iterations.
+ * verification as well as password hashing with pepper.
  *
  * @see http://raza.narfum.org/post/1/user-authentication-with-a-secure-cookie-protocol-in-php/
  *
@@ -26,15 +25,12 @@ class Auth
    *
    * @return string The calculated hash.
    */
-  public static function passwordHash( $password, $salt = null )
+  public static function passwordHash( $password )
   {
-    $pepper =  Config::$passwordHashPepper;
-    $iterations = Config::$passwordHashIterations;
+    $pepperedPassword = hash_hmac( 'sha512', $password, Config::$passwordHashPepper );
+    $hashedPassword = password_hash( $pepperedPassword, PASSWORD_BCRYPT );
 
-      $hash = $password;
-      for( $i=0; $i<$iterations; ++$i )
-        $hash = sha512( $salt. $pepper. $hash );
-      return $hash;
+    return $hashedPassword;
   }
 
   /**

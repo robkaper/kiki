@@ -32,7 +32,7 @@ create table users (
   object_id bigint unsigned default null,
   name varchar(255) not null default '',
   email varchar(255) default null,
-  auth_token char(128) not null default '',
+  auth_token varchar(255) not null default '',
   admin boolean not null default false,
   verified boolean not null default false,
   disabled boolean not null default false,

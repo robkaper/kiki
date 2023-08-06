@@ -84,7 +84,6 @@ class Config
 	// WARNING: Changing these values will invalidate all user passwords
 	// already stored as hash.
 	public static $passwordHashPepper = '';
-	public static $passwordHashIterations = 5;
 
 	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
