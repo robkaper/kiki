@@ -8,7 +8,6 @@ class User extends BaseObject
   private $password = null;
 
   private $authToken;
-  public $mailAuthToken;
 
   private $isVerified = false;
   private $isAdmin = false;
@@ -38,7 +37,6 @@ class User extends BaseObject
     $this->password = null;
 
     $this->authToken = null;
-    $this->mailAuthToken = null;
 
     $this->isVerified = false;
     $this->isAdmin = false;
@@ -101,7 +99,7 @@ class User extends BaseObject
     else if ( !$this->id && !$this->object_id )
       return;
 
-    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'mail_auth_token', 'verified', 'admin', 'disabled', 'name' );
+    $fields = array( 'id', 'o.object_id', 'o.ctime', 'o.mtime', 'o.object_name', 'email', 'auth_token', 'verified', 'admin', 'disabled', 'name' );
 
     if ( $this->id )
       $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND u.id=%d", implode( ', ', $fields), $this->id );
@@ -145,7 +143,6 @@ class User extends BaseObject
 
     $this->email = $o->email;
     $this->authToken = $o->auth_token;
-    $this->mailAuthToken = $o->mail_auth_token;
     $this->isAdmin = $o->admin;
     $this->isVerified = $o->verified;
     $this->disabled = $o->disabled;
@@ -158,10 +155,10 @@ class User extends BaseObject
     parent::dbUpdate();
 
     $q = $this->db->buildQuery(
-      "UPDATE users SET object_id=%d, email='%s', mail_auth_token='%s', auth_token='%s', admin=%d, verified=%d, disabled=%d,
+      "UPDATE users SET object_id=%d, email='%s', auth_token='%s', admin=%d, verified=%d, disabled=%d,
         name='%s'
         WHERE id=%d",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name, $this->id
+      $this->object_id, $this->email, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name, $this->id
     );
 
     $this->db->query($q);
@@ -170,8 +167,8 @@ class User extends BaseObject
   public function dbInsert()
   {
     $q = $this->db->buildQuery(
-      "INSERT INTO users(object_id, email, mail_auth_token, auth_token, admin, verified, disabled, name) VALUES (%d, '%s', '%s', '%s', %d, %d, %d, '%s')",
-      $this->object_id, $this->email, $this->mailAuthToken, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name
+      "INSERT INTO users(object_id, email, auth_token, admin, verified, disabled, name) VALUES (%d, '%s', '%s', %d, %d, %d, '%s')",
+      $this->object_id, $this->email, $this->authToken, $this->isAdmin, $this->isVerified, $this->disabled, $this->name
     );
 
     $rs = $this->db->query($q);
