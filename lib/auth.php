@@ -25,12 +25,19 @@ class Auth
    *
    * @return string The calculated hash.
    */
-  public static function passwordHash( $password )
+  public static function hashPassword( $password )
   {
-    $pepperedPassword = hash_hmac( 'sha512', $password, Config::$passwordHashPepper );
-    $hashedPassword = password_hash( $pepperedPassword, PASSWORD_BCRYPT );
+    return password_hash( self::passwordPepper($password), PASSWORD_DEFAULT );
+  }
 
-    return $hashedPassword;
+  public static function passwordPepper( $password )
+  {
+    return hash_hmac( 'sha512', $password, Config::$passwordHashPepper );
+  }
+
+  public static function verifyPassword( $password, $hash )
+  {
+    return password_verify( self::passwordPepper($password), $hash );
   }
 
   /**

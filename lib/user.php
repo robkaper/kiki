@@ -378,32 +378,37 @@ class User extends BaseObject
     // TODO: document that 'Profile' is the expected Controller for user profiles
     return preg_replace( '/\(.*\)/', $this->objectName(), Router::getBaseUri( 'Profile', null ) );
   }
-  
-	public function getIdByEmail( $email )
-	{
-		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' LIMIT 1", $email );
-		return $this->db->getSingleValue($q);
-	}
 
-	public function getIdByLogin( $email, $password )
-	{
-		$q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' AND auth_token='%s'", $email, Auth::passwordHash($password) );
-		return $this->db->getSingleValue($q);
-	}
+  public function getIdByEmail( $email )
+  {
+    $q = $this->db->buildQuery( "SELECT id FROM users WHERE email='%s' LIMIT 1", $email );
+    return $this->db->getSingleValue($q);
+  }
 
-	public function getIdByToken( $token )
-	{
-		$q = $this->db->buildQuery( "SELECT id FROM users WHERE auth_token='%s' LIMIT 1", $token );
-		return $this->db->getSingleValue($q);
-	}
+  public function getIdByLogin( $email, $password )
+  {
+    $q = $this->db->buildQuery( "SELECT id, auth_token FROM users WHERE email='%s' LIMIT 1", $email );
+    $user = $this->db->getSingleObject($q);
 
-	public function templateData()
-	{
-		return array( 
+    if ( !$user )
+      return false;
+
+    return Auth::verifyPassword( $password, $user->auth_token ) ? $user->id : false;
+  }
+
+  public function getIdByToken( $token )
+  {
+    $q = $this->db->buildQuery( "SELECT id FROM users WHERE auth_token='%s' LIMIT 1", $token );
+    return $this->db->getSingleValue($q);
+  }
+
+  public function templateData()
+  {
+    return array(
       'id' => $this->id,
       'admin' => $this->isAdmin,
       'activeConnections' => array(),
       'inactiveConnections' => array(),
     );
-	}
+  }
 }

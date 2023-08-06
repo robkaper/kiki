@@ -188,7 +188,7 @@ class Account extends \Kiki\Controller
 
     if ( $_POST && !count($this->errors) )
     {
-      $user->setAuthToken( Auth::passwordHash( $_POST['password'] ) );
+      $user->setAuthToken( Auth::hashPassword( $_POST['password'] ) );
       $user->save();
 
       $this->data['resetSuccessful'] = true;
