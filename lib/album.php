@@ -110,7 +110,10 @@ class Album extends BaseObject
 
     $pictureIds = $this->getPictures();
     foreach( $pictureIds as $pictureId )
-      $pictureClassName::delete( $pictureId );
+    {
+      $picture = new $pictureClassName($pictureId);
+      $picture->delete( $pictureId );
+    }
 
     $q = "DELETE from `albums` WHERE `id` = %d";
     $q = $this->db->buildQuery( $q, $this->id );
