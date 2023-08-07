@@ -348,10 +348,11 @@ class Account extends \Kiki\Controller
         else
         {
           // Disabled, users should still login after e-mail verification.
-          // \Kiki\Auth::setCookie( $verifyUser->id() );
+          // Auth::setCookie( $verifyUser->id() );
           // $user = $verifyUser;
-          // \Kiki\Core::setUser($verifyUser);
+          // Core::setUser($verifyUser);
           $this->notices[] = array( 'msg' => "Your e-mail address was succesfully verified. You can now log in." );
+          Core::getFlashBag()->add( 'verifiedUser', $verifyUser->email() );
 
           $mainTemplate = \Kiki\Template::getInstance();
           $mainTemplate->assign('user', $user->templateData() );
