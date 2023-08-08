@@ -84,8 +84,9 @@ class Config
 	// already stored as hash.
 	public static $passwordHashPepper = '';
 
-	public static $authCookiePepper = '';
 	public static $authCookieName = 'kikiAuth';
+	public static $authCookiePepper = '';
+	public static $authCookieExpireTime = 14 * 86400;
 
 	const dbVersionRequired = "0.1.33";
 
