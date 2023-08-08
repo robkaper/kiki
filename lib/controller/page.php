@@ -2,17 +2,26 @@
 
 namespace Kiki\Controller;
 
+use Kiki\Core;
+use Kiki\Template;
+
 class Page extends \Kiki\Controller
 {
   public function exec()
   {
-    $db = \Kiki\Core::getDb();
-    $user = \Kiki\Core::getUser();
+    $db = Core::getDb();
+    $user = Core::getUser();
 
-    $article = new \Kiki\Article( $this->instanceId );
-    $this->title = $article->title();
+    $template = Template::getInstance();
+    $template->load( 'kiki/index' );
 
-    $template = \Kiki\Template::getInstance();
+    $this->title = 'Kiki';
+    $this->template = 'kiki/index';
+    $this->status = 200;
+
+    $this->content = '<p>Welcome to Kiki.</p>';
+
+    return true;
 
     if ( $article->visible() || $article->userId() == $user->id() )
     {
@@ -20,7 +29,7 @@ class Page extends \Kiki\Controller
       $this->status = 200;
       $this->template = 'pages/default';
 
-      $template = new \Kiki\Template( 'content/pages-single' );
+      $template = new Template( 'content/pages-single' );
       $template->assign( 'page', $article->templateData() );
 
       $this->content = $template->fetch();

@@ -186,9 +186,22 @@ class Template
   {
 		// Log::beginTimer( 'Template::preparse '. $this->template );
 
+    $reExtend = '~\{{extend \'([^\']+)\'\}}~';
     $reIncludes = '~\{include \'([^\']+)\'\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
     $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
+
+    // Template engine 2.0:
+    // TODO: ensure all captures are {{}} instead of {}
+    // TODO: support extend
+
+    // Capture and store blocks
+
+    // While extend, replace template with extend.
+    // Store extended file in array to avoid race condition
+    // Reparse for new blocks/includes
+
+    // $this->content = preg_replace_callback( $reExtend, array($this, 'extend'), $this->content );
 
     // echo "<h2>pre preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
