@@ -125,7 +125,9 @@ class Config
 	*/
 	private static function setDefaults()
 	{
-		self::$routing = array();
+		self::$routing = array(
+			'/' => array( 'Page', '_kiki/index' ),
+		);
 
 		self::$siteName = $_SERVER['SERVER_NAME'];
 		self::$copySince = date("Y");
