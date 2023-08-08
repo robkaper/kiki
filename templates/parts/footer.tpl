@@ -1,3 +1,3 @@
 <div id="fw">
-  <div class="footer">{$footerText}</div>
+  <div class="footer"></div>
 </div>

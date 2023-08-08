@@ -149,28 +149,6 @@ hr {
 	margin: 0.25em 0;
 }
 
-#jsonUpdate {
-	position: fixed;
-	top: 40%;
-	left: 40%;
-	width: 20%;
-	background: white;
-	padding: 5px;
-	border: 1px solid #deb;
-	border-radius: 5px;
-	display: none;
-}
-
-.jsonload {
-	float: right;
-	color: #666;
-}
-
-.jsonload img {
-	width: 16px;
-	height: 16px;
-}
-
 #kikiFlashbag ul {
 	list-style-type: none;
 }

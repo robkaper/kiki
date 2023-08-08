@@ -13,44 +13,6 @@
  */
 var submitClicked = false;
 
-/// Updates each element with class .jsonupdate through JSON.
-function jsonUpdate()
-{
-  var ids = [];
-  $('#jsonUpdate').html( boilerplates['jsonLoad'] ).fadeIn();
-  $('.jsonupdate').each( function() {
-    $(this).css( 'opacity', '0.7' );
-    ids[ids.length] = $(this).attr('id');
-  } );
-  if ( ids.length==0 )
-    return;
-
-  var json = { 'uri': requestUri, 'content': ids };
-  $.getJSON( kikiPrefix + '/json/update.php', json, function(data) {
-    $('#jsonUpdate').fadeOut().empty();
-    $.each(data.content, function(i,item) {
-      $('#' + item.id).html(item.html).css( 'opacity', '1' );
-    } );
-  } );
-}
-
-/**
- * Expands a specific comment form.
- * @param string $id full ID of the comment form outer div element (e.g. commentFormWrapper_1)
- */
-function growCommentForm( id )
-{
-  $('#' + id).removeClass( 'shrunk' );
-  $('#' + id + ' img.social').show();
-}
-
-/// Shrinks all comment forms on a page.
-function shrinkCommentForms()
-{
-  $('[id^=comments_] [id^=commentFormWrapper_]').addClass( 'shrunk' );
-  $('[id^=comments_] [id^=commentFormWrapper_] img.social').hide();
-}
-
 function showArticleForm( articleId )
 {
   if ($('#articleForm_' + articleId).is(":hidden"))
@@ -59,18 +21,8 @@ function showArticleForm( articleId )
     $('#articleForm_' + articleId).hide();
 }
 
-function showArticleComments( articleId )
-{
-  if ($('#comments_' + articleId).is(":hidden"))
-    $('#comments_' + articleId).show();
-  else
-    $('#comments_' + articleId).hide();
-}
-
 function fileUploadHandler( target, id, uri, html )
 {
-  $('#jsonUpdate').empty().fadeOut();
-
   if ( !target || !id )
     return;
 
@@ -104,25 +56,6 @@ $( function() {
   } );
 
 
-  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusin', function() {
-  if ( submitClicked )
-    submitClicked = false;
-
-    shrinkCommentForms();
-    growCommentForm( $(this).attr('id') );
-  } );
-
-  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'mousedown', function() {
-    submitClicked = true;
-  } );
-    
-  $('[id^=comments_] [id^=commentFormWrapper_]').live( 'focusout', function() {
-    if ( !submitClicked )
-     shrinkCommentForms();
-    else
-      submitClicked = false;
-  } );
-
   $('[id^=articleForm_]').live( 'submit', function() {
     // TODO: re-enable JSON posting when embedded file upload is remove for
     // a storage item selection
@@ -132,7 +65,6 @@ $( function() {
     if ( $submit.hasClass('disabled') )
       return false;
 
-    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     $submit.addClass('disabled');
 
     var json = { formId: $(this).attr('id'), json: 1 };
@@ -158,49 +90,12 @@ $( function() {
         // return;
       }
 
-      $('#jsonUpdate').empty().fadeOut();
-
       var $submit = $('[id^=articleForm_] button[name=submit]');
       $submit.removeClass('disabled');
     } );
 
     return false;
     
-  } );
-
-  $('[id^=comments_] div[id^=commentFormWrapper_]').live( 'submit', function() {
-    $('#' + $(this).attr('id') + ' textarea').attr( 'disabled', 'disabled' ).addClass('disabled');
-    // $('#' + $(this).attr('id') + ' :input').css( 'color', '#666' );
-    $('#' + $(this).attr('id') + ' button').attr( 'disabled', 'disabled' ).addClass('disabled');
-    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
-
-    var last = $('#' + $(this).parent().attr('id') + ' [id^=comment_]:last').attr('id');
-
-    var json = { formId: $(this).attr('id'), json: 1, last: last };
-
-    var $inputs = $('#' + $(this).attr('id') + ' :input');
-    $inputs.each( function() {
-      json[this.name] = $(this).val();
-    } );
-
-    $.post( kikiPrefix + '/json/comment.php', json, function(data) {
-      $('#jsonUpdate').empty().fadeOut();
-
-      $.each(data.comments, function(i,item) {
-        $('[id^=comment_' + data.objectId + '_]:last').after( item );
-      } );
-
-      $('div[id^=comments_] #comment').val( '' );
-      $('div[id^=comments_] button').attr( 'disabled', '' ).removeClass('disabled');
-      $('div[id^=comments_] textarea').attr( 'disabled', '' ).removeClass('disabled');;
-
-      shrinkCommentForms();
-
-      if ( data.comments.length )
-        $('.dummy[id^=comment_' + data.objectId + '_]').remove();
-    } );
-
-    return false;
   } );
 
   $('textarea.keyup').live( 'keyup', function() {
@@ -222,7 +117,6 @@ $( function() {
   } );
 
   $('#ajaxFileUpload').live( 'submit', function() {
-    $('#jsonUpdate').html( boilerplates['jsonSave'] ).fadeIn();
     return true;
   } );
 
@@ -250,7 +144,6 @@ $( function() {
     $.getJSON( kikiPrefix + '/json/album.php', json, function(data) { 
     if ( data.id )
       // FIXME: only do for relevant album
-      // TODO: update comment box
       $('.album .imgw >img').attr('id',data.id).attr('src',data.url); 
       $('.album span.pictureTitle').html(data.title);
 

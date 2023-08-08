@@ -161,7 +161,6 @@ class Controller
     if ( PHP_SAPI == 'cli' )
     {
       $template = Template::getInstance();
-      $template->assign( 'footerText', Boilerplate::copyright() );
       $template->load( $this->template() );
       $template->assign( 'title', $this->title() );
       $template->assign( 'content', $this->content() );
@@ -198,8 +197,6 @@ class Controller
 
     return;
 
-    $template->assign( 'footerText', Boilerplate::copyright() );
-    
     $template->load( $this->template );
 
     $template->assign( 'title', $this->title() );

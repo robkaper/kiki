@@ -28,8 +28,6 @@ class Config
 	public static $routing = null;
 
 	public static $siteName = null;
-	public static $copyOwner = "Kiki website framework";
-	public static $copySince = null;
 	public static $address = null;
 
 	public static $language = "en";
@@ -130,7 +128,6 @@ class Config
 		);
 
 		self::$siteName = $_SERVER['SERVER_NAME'];
-		self::$copySince = date("Y");
 
 		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
 
