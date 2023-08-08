@@ -129,17 +129,17 @@ class Log
 
 		$fp = @fopen( $logFile, "a" );
 		if ( !$fp )
-		{
-			Log::error( "cannot write to $logFile: $msg", false );
-			return;
-		}
+			Log::error( "cannot write to $logFile", false );
 
 		while( $str = array_shift(self::$queue) )
 		{
-			fwrite( $fp, $str );
+			if ( $fp )
+				fwrite( $fp, $str );
+			else
+				Log::error( $str );
 		}
-
-		fclose( $fp );
+		if ( $fp )
+			fclose( $fp );
 	}
 
 	/**
