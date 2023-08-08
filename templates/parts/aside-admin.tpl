@@ -8,7 +8,6 @@
 <ul style="list-style: none; margin: 0.5em; padding: 0;">
 <li><a href="{$kiki.accountService.url}/albums/">Albums</a></li>
 <li><a href="{$kiki.accountService.url}/articles/">Articles</a></li>
-<li><a href="{$kiki.accountService.url}/events/">Events</a></li>
 <li><a href="{$kiki.accountService.url}/pages/">Pages</a></li>
 </ul>
 

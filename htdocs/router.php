@@ -110,20 +110,20 @@ else if ( $phpFile )
 
 // Kiki built-in modules and files
 //
-// Two built-in modules that could be matched dynamically outside of Kiki
-// as well (configurable in database, section should perhaps have a
-// required flag for system modules that cannot be removed).  And all
-// sorts of static files, from PHP scripts (CMS modules are not true
-// modules yet lacking more sophisticated action and view recognition in
-// the controller) to built-in stylesheets, Javascript and images.
+// Could be matched dynamically outside of Kiki as well (configurable in
+// database, section should perhaps have a required flag for system modules
+// that cannot be removed).  And all sorts of static files, from PHP scripts
+// (CMS modules are not true modules yet lacking more sophisticated action
+// and view recognition in the controller) to built-in stylesheets,
+// Javascript and images.
 
 else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
 {
   $moduleMatches = array();
-  if ( preg_match('#^(album|event)/(.*)#', $matches[1], $moduleMatches) )
+  if ( preg_match('#^(album)/(.*)#', $matches[1], $moduleMatches) )
   {
-    // This targets individual albums and events. For proper referencing,
-    // Albums and Events container controllers should be written.  These
+    // This targets individual albums. For proper referencing,
+    // Album container controllers should be written.  These
     // could then be inserted here as default locations within Kiki
     // without setup, but there's no reason these should eventually not be
     // part of the database in the sections table.  Kiki does support that

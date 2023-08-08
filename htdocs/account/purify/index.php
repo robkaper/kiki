@@ -58,39 +58,22 @@ use Kiki\Core;
   }
   echo "done.<br>(albums updated: $updated)</li>";
 
-  // Update title of albums linked to events
-  echo "<li>Update title of albums linked to events... ";
-  $updated = 0;
-  $q = "select a.id,e.title from albums a, events e where a.id=e.album_id";
-  $rs = $db->query($q);
-  if ( $rs && $db->numRowS($rs) )
-  {
-    while( $o = $db->fetchObject($rs) )
-    {
-      $q = $db->buildQuery( "UPDATE albums set title='%s', system=true WHERE id=%d", $o->title, $o->id );
-      $rs2 = $db->query($q);
-      $updated += $db->affectedRows($rs2);
-    }
-  }
-  echo "done.<br>(albums updated: $updated)</li>";
-
-  // Delete all empty albums not linked to an article or event
-  echo "<li>Delete all empty albums not linked to an article or event... ";
+  // Delete all empty albums not linked to an article
+  echo "<li>Delete all empty albums not linked to an article... ";
   $articleAlbumIds = $db->getObjectIds( "SELECT DISTINCT album_id AS id FROM articles" );
-  $eventAlbumIds = $db->getObjectIds( "SELECT DISTINCT album_id AS id FROM events" );
-  $usedAlbumIds = array_merge( $articleAlbumIds, $eventAlbumIds );
+  $usedAlbumIds = array_merge( $articleAlbumIds );
   $qUsedAlbumIds = $db->implode( $usedAlbumIds );
   $q = "delete from albums where id not in ($qUsedAlbumIds) and id not in (select album_id from album_pictures)";
   $rs = $db->query($q);
   $deleted = $db->affectedRows($rs);
   echo "done.<br>(albums deleted: $deleted)</li>";
 
-	// Delete album/picture links for dereferenced albums
-	echo "<li>Delete album/picture links for dereferenced albums... ";
+  // Delete album/picture links for dereferenced albums
+  echo "<li>Delete album/picture links for dereferenced albums... ";
   $q = "delete from album_pictures where album_id not in (select id from albums)";
-	$rs = $db->query($q);
-	$deleted = $db->affectedRows($rs);
-	echo "done.<br>(links deleted: $deleted)</li>";
+  $rs = $db->query($q);
+  $deleted = $db->affectedRows($rs);
+  echo "done.<br>(links deleted: $deleted)</li>";
 
   // Delete orphaned pictures  
   echo "<li>Delete orphaned pictures... ";

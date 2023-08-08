@@ -181,24 +181,6 @@ create table objects (
 	visible boolean not null default false
 ) default charset=utf8;
 
-drop table if exists events;
-create table events (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned default null,
-  unique key(object_id),
-  start datetime not null,
-  end datetime not null,
-  title text not null,
-  cname varchar(255) not null,
-  unique key(cname),
-  description text not null,
-  location text not null,
-  featured boolean not null default false,
-  hashtags varchar(255) not null,
-  album_id int unsigned not null
-) default charset=utf8;
-
 drop table if exists likes;
 create table likes (
   object_id bigint(20) unsigned not null,

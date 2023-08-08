@@ -21,14 +21,6 @@ msgstr ""
 msgid "Create a new section"
 msgstr ""
 
-#: ../htdocs/account/events/index.php:3
-msgid "Events"
-msgstr ""
-
-#: ../htdocs/account/events/index.php:44
-msgid "Create a new event"
-msgstr ""
-
 #: ../htdocs/account/pages/index.php:48
 msgid "Create a new page"
 msgstr ""
