@@ -130,7 +130,10 @@
   // configuration and needn't be served by framework
   $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|jpeg|js|png|webp)#', $requestPath );
   if ( isset($staticFile) && $staticFile )
+  {
+    Log::debug( "STATICFILE still called for: [$staticFile][$requestPath]". PHP_EOL );
     return; 
+  }
 
   I18n::init();
 

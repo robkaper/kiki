@@ -88,7 +88,6 @@ class StorageItem
 
         $localFile = self::localFile($this->id);
 
-        Log::debug( "makeDirectory $localFile" );
         file_put_contents( $localFile, $this->data );
         chmod( $localFile, 0666 );
 
