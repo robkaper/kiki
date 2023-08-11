@@ -14,6 +14,4 @@
 
 {include 'parts/footer'}
 
-{include 'parts/piwik/piwik'}
-
 </body>

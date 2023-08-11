@@ -15,6 +15,4 @@ Login first.</p>
 
 {include 'parts/footer'}
 
-{include 'parts/piwik/piwik'}
-
 </body>
