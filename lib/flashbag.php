@@ -15,7 +15,7 @@ class FlashBag
 	public function __construct()
 	{
 		if ( !isset($_SESSION) )
-			session_start();
+			@session_start();
 
 		if ( !isset($_SESSION['kiki.flashBag']) || !is_array($_SESSION['kiki.flashBag']) )
 		{
