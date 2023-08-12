@@ -12,6 +12,12 @@
 <br class="spacer">
 </div></div>
 
+{{block 'content'}}
+<p>
+Default value from <q>templates/pages/default.tpl</q>. To replace this,
+extend this template.</p>
+{{/block}}
+
 {include 'parts/footer'}
 
 </body>

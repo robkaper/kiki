@@ -37,7 +37,13 @@
  * {* I won't be shown}
  *
  * --> Includes:
- * {include 'other/template/file.tpl'}
+ * {include 'other/template/file'}
+ *
+ * --> Extends:
+ * {extends 'other/template/file'}
+ *
+ * Both include and extends check .tpl and .php files in the templates/
+ * directory with first Core::getRootPath() and then Core::getInstallPath().
  *
  * @todo Add a {debug} statement showing the entire available variable scope to templaters.
  *
@@ -56,6 +62,8 @@ class Template
 
   private $template = null;
   private $noDefault = false;
+
+  private $blocks = array();
 
   private $data = array();
   private $content = null;
@@ -183,26 +191,52 @@ class Template
 
   public function preparse()
   {
-		// Log::beginTimer( 'Template::preparse '. $this->template );
+    // Log::beginTimer( 'Template::preparse '. $this->template );
 
-    $reExtend = '~\{{extend \'([^\']+)\'\}}~';
+    $reExtend = '~\{\{extends \'([^\']+)\'\}\}~';
     $reIncludes = '~\{include \'([^\']+)\'\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
     $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
 
     // Template engine 2.0:
     // TODO: ensure all captures are {{}} instead of {}
-    // TODO: support extend
 
-    // Capture and store blocks
+    $extendChain = array();
+    $matches = array();
 
-    // While extend, replace template with extend.
-    // Store extended file in array to avoid race condition
-    // Reparse for new blocks/includes
+    do
+    {
+      // Capture and store blocks
+      // echo "<h2>pre captureBlocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+      $this->captureBlocks();
 
-    // $this->content = preg_replace_callback( $reExtend, array($this, 'extend'), $this->content );
+      // While extending, replace template with extended template.
+      if ( count($matches) )
+      {
+        // Load the content of the extended template
+        $extendedTemplateName = $matches[1];
 
-    // echo "<h2>pre preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+        // Store extended file in array to avoid race condition
+        if ( in_array( $extendChain, $extendedTemplateName ) )
+          break;
+        $extendChain[] = $extendedTemplateName;
+
+        $fileName = self::file( $matches[1] );
+        $this->content = file_get_contents( $fileName );
+
+        // echo "<h2>post extends $this->template to $matches[1]: </h2><pre>". htmlspecialchars($this->content). "</pre>";
+      }
+    }
+    while( preg_match( $reExtend, $this->content, $matches) );
+
+    // echo "<h2>post captureBlocks/extends:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+    $this->fillBlocks();
+
+    // echo "<h2>post fullBlocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // print_r( $this->blocks );
+
+    // echo "<h2>post preparse blocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     while( preg_match($reIncludes, $this->content) )
     {
@@ -226,6 +260,24 @@ class Template
     // Log::endTimer( 'Template::preparse '. $this->template );
   }
 
+  public function captureBlocks()
+  {
+    $matches = array();
+    $reBlocks = '/\{\{block \'([^\']+)\'\}}(.*?)\{\{\/block\}\}/s';
+    preg_match_all($reBlocks, $this->content, $matches, PREG_SET_ORDER);
+    foreach( $matches as $match )
+    {
+      $blockName = $match[1];
+      $blockContent = $match[2];
+
+      // Store the block content in the $this->blocks array
+      $this->blocks[$blockName] = $blockContent;
+
+      // Remove the matched block tag and its content
+      $this->content = preg_replace($reBlocks, '', $this->content, 1);
+    }
+  }
+
   public function parse()
   {
 		// Log::beginTimer( 'Template::parse '. $this->template );
@@ -236,14 +288,15 @@ class Template
     $reDouble = '~\{{([^}]+)\}}~';
 
     $this->content = preg_replace_callback( $reLegacy, array($this, 'legacy'), $this->content );
+
     // echo "<h2>post parse/legacy:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
-		// echo "<hr>loop depth: ". print_r($this->maxLoopDepth,true);
+    // echo "<hr>loop depth: ". print_r($this->maxLoopDepth,true);
 
     for( $i=0; $i<=$this->maxLoopDepth; $i++ )
     {
       $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
-			// echo "<hr>reLoops: ". print_r($reLoops,true);
+      // echo "<hr>reLoops: ". print_r($reLoops,true);
       $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
     }
     // echo "<h2>post parse/loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -263,6 +316,24 @@ class Template
 
 		// Log::endTimer( 'Template::parse '. $this->template );
   }
+
+  public function fillBlocks()
+  {
+    $reBlocks = '/\{\{block \'([^\']+)\'\}}(.*?)\{\{\/block\}\}/s';
+
+    // Replace block contents from the $this->blocks array
+    foreach ( $this->blocks as $blockName => $blockContent )
+    {
+      $this->content = preg_replace( "/\{\{block '$blockName'\}\}.*?\{\{\/block\}\}/s", $blockContent, $this->content );
+      // echo "<h2>post fillBlocks replace for $blockName:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    }
+
+    // Remove block opening tags
+    $this->content = preg_replace( "/\{\{block '[^']+'\}\}/", '', $this->content );
+
+    // Remove block closing tags
+    $this->content = preg_replace( "/\{\{\/block\}\}/", '', $this->content );
+}
 
   public function setCleanup( $cleanup ) { $this->cleanup = $cleanup; }
 

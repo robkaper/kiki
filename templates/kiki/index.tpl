@@ -1,5 +1,6 @@
-{{extend 'pages/default'}}
+{{extends 'kiki/default'}}
 
 {{block 'content'}}
-content block
-{{/block}
+<p>
+Welcome to Kiki framework.</p>
+{{/block}}
