@@ -191,15 +191,16 @@ if ( !$phpFile && $controller )
 
 if ( !$staticFile )
 {
-  if ( $controller )
-    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "]" );
-
   $timers = Log::getTimers();
+  $timersStr = null;
   if ( count($timers) > 0 )
   {
     $times = array();
     foreach( $timers  as $timer => $time )
-      $times[] = sprintf("%s: %3.7f", $timer, $time);
-  Log::debug( "timers: ". implode( ", ", $times ) );
+      $times[] = sprintf("%s: %.7f", $timer, $time);
+    $timersStr = implode( ", ", $times );
   }
+
+  if ( $controller )
+    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "], timers[". $timersStr. "]" );
 }
