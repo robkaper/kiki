@@ -136,9 +136,22 @@ class StorageItem
 
     public static function getExtension( $fileName )
     {
-        // FIXME: care about actual mimetypes, not extensions
         list( , $ext ) = self::splitExtension( $fileName );
         return $ext;
+    }
+
+    public static function getMimeType( $fileName )
+    {
+        if ( !file_exists($fileName) )
+            return null;
+
+        $finfo = finfo_open( FILEINFO_MIME_TYPE );
+
+        $mimeType = finfo_file( $finfo, $fileName );
+
+        finfo_close( $finfo );
+
+        return $mimeType;
     }
 
     public function id() { return $this->id; }
@@ -147,6 +160,8 @@ class StorageItem
     public function setOriginalName( $originalName )
     {
         $this->original_name = $originalName;
+
+        // FIXME: care about actual mimetypes, not extensions
         $this->extension = $this->getExtension( $this->original_name );
     }
 
