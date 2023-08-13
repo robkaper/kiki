@@ -29,8 +29,8 @@ class Thumbnails extends \Kiki\Controller
     if ( !file_exists($scaleFile) )
       return false;
 
-    // FIXME: duplicate from nginx config... how to keep this in sync?
-    header( 'Expires: '. gmdate( 'D, d M Y H:i:s \G\M\T', time() + (60*60*24*365) ) ); // 365d
+    // For already cached files, you probably want a similar header sent in Nginx/Apache
+    header( 'Expires: '. gmdate( 'D, d M Y H:i:s \G\M\T', time() + (365*24*60*60) ) ); // 365d
 
     $this->altContentType = Storage::getMimeType( StorageItem::getExtension($scaleFile) );
     $this->template = null; // Send content directly, without a template.
@@ -40,5 +40,3 @@ class Thumbnails extends \Kiki\Controller
     return true;
   }
 }
-
-?>
