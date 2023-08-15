@@ -188,6 +188,12 @@ class Account extends \Kiki\Controller
 
     if ( $_POST && !count($this->errors) )
     {
+      Log::debug( sprintf( 'Updating password hash for user [%d][%s], identified by token [%s]',
+        $user->id(),
+        $user->objectName(),
+        $token,
+      ) );
+
       $user->setAuthToken( Auth::hashPassword( $_POST['password'] ) );
       $user->save();
 
