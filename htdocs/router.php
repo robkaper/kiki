@@ -202,5 +202,5 @@ if ( !$staticFile )
   }
 
   if ( $controller )
-    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "], timers[". $timersStr. "]" );
+    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->template(). "][". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "], timers[". $timersStr. "]" );
 }
