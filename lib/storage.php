@@ -44,12 +44,12 @@ class Storage
     return null;
   }
 
-  public static function findItemByNameAndSize( $fileName, $size )
+  public static function findItemByNameSizeAndUser( $fileName, $size, $userId )
   {
     $db = Core::getDb();
 
-    $q = "SELECT id FROM storage WHERE original_name='%s' AND size=%d";
-    $q = $db->buildQuery( $q, $fileName, $size );
+    $q = "SELECT id FROM storage WHERE original_name='%s' AND size=%d AND user_id=%d";
+    $q = $db->buildQuery( $q, $fileName, $size, $userId );
     $storageId = $db->getSingleValue( $q );
 
     if ( $storageId )

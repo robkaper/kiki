@@ -7,8 +7,9 @@ use Kiki\Storage;
 class StorageItem
 {
     private $id;
-
     private $hash;
+    private $userId;
+
     private $original_name;
     private $extension;
     private $size;
@@ -29,8 +30,9 @@ class StorageItem
     public function reset()
     {
         $this->id = 0;
-
         $this->hash = null;
+        $this->userId = null;
+
         $this->original_name = null;
         $this->extension = null;
         $this->size = 0;
@@ -42,14 +44,14 @@ class StorageItem
     {
         $db = Core::getDb();
 
-        $q = "SELECT id, hash, original_name, extension, size FROM storage WHERE id=%d";
+        $q = "SELECT id, hash, user_id, original_name, extension, size FROM storage WHERE id=%d";
         $q = $db->buildQuery($q, $id );
         $o = $db->getSingleObject($q);
 
         // Also allow loading by hash        
         if ( !$o )
         {
-            $q = "SELECT id, hash, original_name, extension, size FROM storage WHERE hash='%s'";
+            $q = "SELECT id, hash, user_id, original_name, extension, size FROM storage WHERE hash='%s'";
             $q = $db->buildQuery($q, $id );
             $o = $db->getSingleObject($q);
         }
@@ -61,8 +63,9 @@ class StorageItem
     public function setFromObject( $o )
     {
         $this->id = $o->id;
-
         $this->hash = $o->hash;
+        $this->userId = $o->user_id;
+
         $this->original_name = $o->original_name;
         $this->extension = $o->extension;
         $this->size = $o->size;
@@ -77,8 +80,10 @@ class StorageItem
     {
         $db = Core::getDb();
 
-        $q = "INSERT INTO storage(hash, original_name, extension, size) VALUES('%s', '%s', '%s', %d)";
-        $q = $db->buildQuery( $q, $this->hash, $this->original_name, $this->extension, $this->size );
+        $qUserId = Database::nullabable( $this->userId) ;
+
+        $q = "INSERT INTO storage(hash, user_id, original_name, extension, size) VALUES('%s', %s, '%s', '%s', %d)";
+        $q = $db->buildQuery( $q, $this->hash, $qUserId, $this->original_name, $this->extension, $this->size );
         $rs = $db->query($q);
 
         $this->id = $db->lastInsertId($rs);
@@ -98,8 +103,10 @@ class StorageItem
     {
         $db = Core::getDb();
 
-        $q = "UPDATE storage SET hash='%s', original_name='%s', extension='%s', size=%d WHERE id=%d";
-        $q = $db->buildQuery( $q, $this->hash, $this->original_name, $this->extension, $this->size, $this->id );
+        $qUserId = Database::nullabable( $this->userId) ;
+
+        $q = "UPDATE storage SET hash='%s', user_id=%s, original_name='%s', extension='%s', size=%d WHERE id=%d";
+        $q = $db->buildQuery( $q, $this->hash, $qUserId, $this->original_name, $this->extension, $this->size, $this->id );
         $rs = $db->query($q);
     }
 
@@ -156,6 +163,9 @@ class StorageItem
 
     public function id() { return $this->id; }
     public function hash() { return $this->hash; }
+
+    public function setUserId( $userId ) { $this->userId = $userId; }
+    public function userId() { return $this->userId; }
 
     public function setOriginalName( $originalName )
     {
