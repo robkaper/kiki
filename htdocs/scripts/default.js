@@ -21,32 +21,6 @@ function showArticleForm( articleId )
     $('#articleForm_' + articleId).hide();
 }
 
-function fileUploadHandler( target, id, uri, html )
-{
-  if ( !target || !id )
-    return;
-
-  if ( $target = $('#' + target) )
-  {
-    var re = /^albumForm_/;
-    if ( re.test(target) )
-    {
-      $('.albumSelectImage > .imageList').append(html);
-      $target.append(html);
-      $('.albumSelectImage > .imageList > .noImages').remove();
-    }
-    else if ( $target.is("textarea") )
-      $target.append( '[attachment]' + uri + '[/attachment]' );
-  }
-  else
-  {
-    return;
-    var val = $('input[name=' + target + ']').val();
-    val += ( ";" + uri );
-    $('input[name=' + target + ']').val(val);
-  }
-}
-
 $( function() { 
   $('input[placeholder], textarea[placeholder]').placeholder();
 
@@ -57,8 +31,7 @@ $( function() {
 
 
   $('[id^=articleForm_]').live( 'submit', function() {
-    // TODO: re-enable JSON posting when embedded file upload is remove for
-    // a storage item selection
+    // TODO: re-enable JSON posting when embedded file upload is removed for storage item selection
     return true;
 
     var $submit = $('#' + $(this).attr('id') + ' button[name=submit]');
@@ -114,10 +87,6 @@ $( function() {
       $(span).removeClass('error').removeClass('warning');
 
     $(span).html( remaining );
-  } );
-
-  $('#ajaxFileUpload').live( 'submit', function() {
-    return true;
   } );
 
   $('.xalbum .imgw').live('mouseenter', function() {

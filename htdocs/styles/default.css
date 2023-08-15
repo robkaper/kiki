@@ -523,12 +523,6 @@ form.hidden {
 	color: #aaa;
 }
 
-iframe#ajaxFileUploadTarget {
-	width: 0;
-	height: 0;
-	display: none;
-}
-
 div.banner {
   width: 780px;
   height: 250px;

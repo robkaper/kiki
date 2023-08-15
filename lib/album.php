@@ -404,7 +404,6 @@ class Album extends BaseObject
 
     echo "<div class=\"ui-dialog\" id=\"pictureDeleteConfirm\" title=\"Delete picture?\"><p>Are you sure you want to delete this picture?</p></div>";
 
-    include Template::file('forms/album-newpicture' );
     return;
 
     // UNUSED

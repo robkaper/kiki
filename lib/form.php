@@ -169,19 +169,4 @@ $( function() {
 
     return $template->fetch();
   }
-
-  // TODO: allow to be used inside a form instead of prior/afterwards
-  public static function ajaxFileUpload( $label=null, $target=null, $albumId = 0 )
-  {
-    $content = Form::open( "ajaxFileUpload", Config::$kikiPrefix. "/file-upload.php", 'POST', null, "multipart/form-data", "ajaxFileUploadTarget" );
-    $content .= Form::hidden( "target", $target );
-    $content .= Form::hidden( "albumId", $albumId );
-    $content .= Form::file( "attachment", $label, $albumId ? "album_$albumId" : null );
-    $content .= Form::button( "submitAttachment", "submit", "Upload file" );
-    $content .= "<iframe id=\"ajaxFileUploadTarget\" name=\"ajaxFileUploadTarget\" src=\"\"></iframe>\n";
-    $content .= Form::close();
-    return $content;
-  }
 }
-
-?>
