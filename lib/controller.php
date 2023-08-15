@@ -193,7 +193,7 @@ class Controller
 
     // For web, just assume PHP files for now until templates support {block} and {extend}
     // TODO: template could figure this out itself: include for .php, render for .tpl
-    include_once $template->file( $this->template );
+    include_once $template->file( $this->template() );
 
     return;
 
