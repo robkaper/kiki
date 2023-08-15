@@ -133,12 +133,14 @@ class Storage
    * @param string $data file data
    * @return int ID of the database entry created
    */
-  public static function save( $fileName, $data, $size=0 )
+  public static function save( $fileName, $data, $size=0, $userId=null  )
   {
     $storageItem = new StorageItem();
 
     $fileName = strtolower($fileName);
     $fileName = preg_replace( '#(/)#', '', $fileName );
+
+    $storageIten->setUserId( $userId );
 
     $storageItem->setOriginalName( $fileName );
     $storageItem->setData( $data );
