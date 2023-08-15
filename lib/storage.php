@@ -140,7 +140,7 @@ class Storage
     $fileName = strtolower($fileName);
     $fileName = preg_replace( '#(/)#', '', $fileName );
 
-    $storageIten->setUserId( $userId );
+    $storageItem->setUserId( $userId );
 
     $storageItem->setOriginalName( $fileName );
     $storageItem->setData( $data );

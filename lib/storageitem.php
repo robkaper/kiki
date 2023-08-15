@@ -80,7 +80,7 @@ class StorageItem
     {
         $db = Core::getDb();
 
-        $qUserId = Database::nullabable( $this->userId) ;
+        $qUserId = Database::nullable( $this->userId) ;
 
         $q = "INSERT INTO storage(hash, user_id, original_name, extension, size) VALUES('%s', %s, '%s', '%s', %d)";
         $q = $db->buildQuery( $q, $this->hash, $qUserId, $this->original_name, $this->extension, $this->size );
@@ -103,7 +103,7 @@ class StorageItem
     {
         $db = Core::getDb();
 
-        $qUserId = Database::nullabable( $this->userId) ;
+        $qUserId = Database::nullable( $this->userId) ;
 
         $q = "UPDATE storage SET hash='%s', user_id=%s, original_name='%s', extension='%s', size=%d WHERE id=%d";
         $q = $db->buildQuery( $q, $this->hash, $qUserId, $this->original_name, $this->extension, $this->size, $this->id );
