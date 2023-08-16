@@ -40,7 +40,7 @@
  * {include 'other/template/file'}
  *
  * --> Extends:
- * {extends 'other/template/file'}
+ * {{extends 'other/template/file'}}
  *
  * Both include and extends check .tpl and .php files in the templates/
  * directory with first Core::getRootPath() and then Core::getInstallPath().
