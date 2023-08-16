@@ -124,8 +124,17 @@ class Controller
     }
     else
     {
+      $action = 'index';
       $actionMethod = 'indexAction';
       $remainder = $this->objectId;
+    }
+
+    if ( $this->subController = $this->getActionController($action) )
+    {
+      $this->action = $remainder;
+
+      Log::debug( "found subController: ". get_class($this->subController). "->actionHandler, action: $action, remainder: $remainder" );
+      return $this->subController->actionHandler();
     }
 
     if ( !method_exists($this, $actionMethod) )
@@ -148,6 +157,16 @@ class Controller
     }
 
     return $ret;
+  }
+
+  public function getActionController($action)
+  {
+    $actionController = get_class($this). "\\". ucfirst($action);
+    Log::debug( "trying $actionController" );
+    if ( class_exists($actionController) )
+      return new $actionController();
+
+    return null;
   }
 
   // Exists because actionHandler is protected

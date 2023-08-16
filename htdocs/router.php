@@ -29,10 +29,10 @@ namespace Kiki;
 
 require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-if ( !$staticFile )
-  Log::debug( "START router: $requestPath", $staticFile );
-else
-  Log::debug( "START router: $requestPath", $staticFile );
+Log::debug( sprintf( 'START router [path:%s][staticFile:%d]',
+  $requestPath,
+  (int)$staticFile
+) );
 
 $controller = null;
 
