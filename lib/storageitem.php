@@ -180,8 +180,11 @@ class StorageItem
     public function setData( $data )
     {
         $this->data = $data;
-        $this->hash = sha1( uniqid(). $data );
         $this->size = strlen($data);
+
+        // Creates a unique hash.  It's somewhat predictable but that's okay
+        // for the purpose of storage items.
+        $this->hash = sha1( $this->size. Config::$namespace. $data );
     }
 
     public function localFile()
