@@ -30,13 +30,6 @@ abstract class BaseObject
   protected $object_name = null;
   protected $user_id = 0;
 
-  // protected $uriAlias = null;
-  
-  protected $visible = false;
-
-  // FIXME: is this generic enough for BaseObject? Historically made sense for Article/Page when Kiki was primarily used for simple sites and blogs
-  protected $sectionId = 0;
-
   private $metaData;
 
   public function __construct( $id = 0, $object_id = 0 )
@@ -63,13 +56,6 @@ abstract class BaseObject
     $this->user_id = 0;
 
     $this->metaData = null;
-
-    return;
-
-    $this->uriAlias = null;
-
-    $this->visible = false;
-    $this->sectionId = 0;
   }
 
   abstract public function load();
@@ -82,28 +68,17 @@ abstract class BaseObject
     $this->id = $o->id;
     $this->object_id = $o->object_id;
 
-    // $this->title = $o->title;
-    // $this->uriAlias = $o->uriAlias;
-
     $this->ctime = $o->ctime;
     $this->mtime = $o->mtime;
     
     $this->object_name = $o->object_name ?? null;
     $this->user_id = $o->user_id ?? 0;
-    
-    // FIXME: should these be here
-    // return;
-
-    // FIXME: issets are necessary because not all Object child classes have these set in their queries e.g. load(), i.e. User.
-    $this->visible = isset($o->visible) ? $o->visible : false;
-    $this->sectionId = isset($o->section_id) ? $o->section_id : 0;
   }
 
   public function save()
   {
     if ( !$this->object_id )
     {
-      // $q = $this->db->buildQuery( "INSERT INTO objects (type,visible,user_id,section_id) values('%s',%d,%d,%d)", get_class($this), $this->visible, $this->user_id, $this->sectionId );
       $q = "INSERT INTO objects (`object_name`, `user_id`, `type`) values('%s', %d, '%s')";
       $q = $this->db->buildQuery( $q, $this->object_name, $this->user_id, get_class($this) );
       $rs = $this->db->query($q);
@@ -116,13 +91,6 @@ abstract class BaseObject
 
   protected function dbUpdate()
   {
-/*
-    $q = $this->db->buildQuery(
-      "UPDATE objects SET visible=%d, user_id=%d, section_id=%d WHERE object_id=%d",
-      $this->visible, $this->user_id, $this->sectionId, $this->object_id
-    );
-*/
-
     $q = $this->db->buildQuery(
       "UPDATE objects SET object_name='%s', user_id=%d WHERE object_id=%d",
       $this->object_name, $this->user_id, $this->object_id
@@ -152,12 +120,8 @@ abstract class BaseObject
 
   final public function type() { return get_class($this); }
 
-  final public function setVisible( $visible ) { $this->visible = $visible; }
-  final public function visible() { return $this->visible; }
   final public function setUserId( $user_id ) { $this->user_id = $user_id; }
   final public function userId() { return $this->user_id; }
-  final public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
-  final public function sectionId() { return $this->sectionId; }
 
   final public function getMetaData()
   {
