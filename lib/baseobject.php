@@ -131,26 +131,11 @@ abstract class BaseObject
     return $this->metaData;
   }
 
-  // FIXME: should not directly return templateData, but Like objects (which have a templatData method)
-  final public function likes()
+  final public function likes( $userId = 0 )
   {
-    // FIXME: refactor to internal likes
-    return array();
-
-    $q = $this->db->buildQuery( "SELECT external_id AS id FROM likes LEFT JOIN user_connections uc ON likes.user_connection_id=uc.id WHERE object_id=%d", $this->object_id );
-    $likeUsers = $this->db->getObjectIds($q);
-
-    $likes = array();
-    foreach( $likeUsers as $externalId )
-    {
-      $likeUser = User\Factory::getInstance( 'Deprecated', $externalId );
-      $likes[] = array(
-        'userName' => $likeUser->name(),
-        'serviceName' => 'Deprecated',
-        'pictureUrl' => $likeUser->picture()
-      );
-    }
-    return $likes;
+    $qLikes = "SELECT SUM(1) AS count, SUM(user_id=%d) AS active, GROUP_CONCAT(user_id) as users FROM object_likes WHERE object_id = %d";
+    $qLikes = $this->db->buildQuery( $qLikes, $userId, $this->object_id );
+    return $this->db->getSingleObject( $qLikes );
   }
 
   abstract public function url();
