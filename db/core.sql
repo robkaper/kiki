@@ -176,15 +176,5 @@ create table objects (
   type varchar(32) not null,
   ctime datetime not null,
   mtime datetime not null,
-	section_id int unsigned not null default 0,
-	user_id int unsigned not null default 0,
-	visible boolean not null default false
+  user_id int unsigned not null default 0,
 ) default charset=utf8;
-
-drop table if exists likes;
-create table likes (
-  object_id bigint(20) unsigned not null,
-  user_connection_id bigint(20) unsigned not null,
-  ctime datetime not null,
-  unique key object_connection(object_id, user_connection_id)
-);
