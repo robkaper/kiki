@@ -193,10 +193,6 @@ class Core
       }
     }
 
-    // @todo Allow starttime and execution time from Log(::init) to be
-    // queried and assign them.  Just in case someone wants to output it in
-    // a template.
-
     self::$templateData['now'] = time();
   }
 
