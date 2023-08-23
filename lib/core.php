@@ -131,7 +131,7 @@ class Core
 			// parsed as template itself, through parsing recursion or otherwise. 
 			// Should mostly be careful about direct assignment of any of it to
 			// 'content'.
-      if ( !preg_match( '~(^db|pass|secret)~i', $configKey ) )
+      if ( !preg_match( '~(^db|pass|secret|pepper)~i', $configKey ) )
         self::$templateData['config'][$configKey] = $configValue;
     }
 
