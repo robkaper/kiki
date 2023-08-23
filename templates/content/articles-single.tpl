@@ -12,7 +12,7 @@
     by <span class="author">{$article.author}</span>
   </header>
 
-  <div class="body">{$article.body|markup}</div>
+  <div class="body">{$article.body}</div>
 
   <footer>
 

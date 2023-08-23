@@ -679,11 +679,6 @@ class Template
           $input = $template->fetch();
           break;
 
-        // Transform BB-code-like syntax to HTML.
-        case 'markup':
-          $input = Misc::markup($input);
-          break;
-
         case 'break':
           $input = preg_replace( '/(\r?\n)/', '<br>', $input );
           break;
@@ -696,11 +691,6 @@ class Template
         case 'thumb':
           list ($base, $ext) = Storage::splitExtension($input);
           $input = "${base}.${fmt}.${ext}";
-          break;
-
-        // Creates a summary of $fmt paragraphs.
-        case 'summary':
-          $input = Misc::textSummary( $input, $fmt, true );
           break;
 
         case 'escape':
