@@ -96,6 +96,29 @@ class StorageItem
         file_put_contents( $localFile, $this->data );
         chmod( $localFile, 0666 );
 
+        $mimeType = self::getMimeType( $localFile );
+        switch( $mimeType )
+        {
+            case 'image/jpeg':
+                $extension  = 'jpg';
+                break;
+
+            case 'image/png':
+                $extension  = 'png';
+                break;
+
+            default:
+                $extension = $this->extension;
+        }
+
+        if ( $extension != $this->extension )
+        {
+            $this->extension = $extension;
+            $this->update();
+
+            rename( $localFile, self::localFile($this->id) );
+        }
+
         return $this->id;
     }
     
@@ -171,8 +194,7 @@ class StorageItem
     {
         $this->original_name = $originalName;
 
-        // FIXME: care about actual mimetypes, not extensions
-        $this->extension = $this->getExtension( $this->original_name );
+        $this->extension = self::getExtension($originalName);
     }
 
     public function originalName() { return $this->original_name; }
