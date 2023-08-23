@@ -369,7 +369,6 @@ class Template
       $this->content = ob_get_contents();
       ob_end_clean();
 
-      // FIXME: why?
       \Kiki\Core::getFlashBag()->reset();
     
       return $this->content;
