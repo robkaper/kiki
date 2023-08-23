@@ -22,32 +22,10 @@ namespace Kiki\Controller;
 
 use Kiki\Core;
 use Kiki\Auth;
-
 use Kiki\Router;
 
 class Account extends \Kiki\Controller
 {
-  public function exec()
-  {
-    \Kiki\Log::debug( "accountcontroller exec" );
-    if ( $this->actionHandler() )
-      return true;
-
-    $this->subController = new Kiki();
-
-    // No trailing slash: for htdocs/foo/bar.php
-    $this->subController->setObjectId( "account/". $this->objectId );
-    $result = $this->subController->fallback();
-    if ( !$result )
-    {
-      // Trailing slash: for htdocs/foo/bar/index.php
-      $this->subController->setObjectId( "account/". $this->objectId. "/" );
-      $result = $this->subController->fallback();
-    }
-
-    return $result;
-  }
-
   public function getBaseUri( $action = null )
   {
     $uri = $this->instanceId ? \Kiki\Router::getBaseUri('account', $this->instanceId) : \Kiki\Config::$kikiPrefix. "/account";
