@@ -217,7 +217,7 @@ class Template
         $extendedTemplateName = $matches[1];
 
         // Store extended file in array to avoid race condition
-        if ( in_array( $extendChain, $extendedTemplateName ) )
+        if ( in_array( $extendedTemplateName, $extendChain ) )
           break;
         $extendChain[] = $extendedTemplateName;
 
