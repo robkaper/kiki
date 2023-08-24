@@ -1,4 +1,4 @@
-# Full (MySQL/MariaDB) database scheme for Kiki CMS
+# Full (MySQL/MariaDB) database scheme for Kiki.
 #
 # Although a new installation can easily be updated from the status page
 # (just reload it after installation), it is desired that this file is kept

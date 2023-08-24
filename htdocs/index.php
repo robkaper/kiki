@@ -91,7 +91,7 @@
 
       foreach( $versions as $version )
       {
-        $file = Core::getInstallPath(). "/db/update-${version}.sql";
+        $file = Core::getInstallPath(). "/data/db-update-${version}.sql";
         echo "<li>Running update script <tt>$file</tt>:\n";
 
         $error = Status::sourceSqlFile($db, $file);
@@ -118,7 +118,7 @@
       {
         echo "<li>Database tables not installed.</li>\n";
 
-        $file = Core::getInstallPath(). "/db/core.sql";
+        $file = Core::getInstallPath(). "/data/db-core.sql";
         echo "<li>Running install script <tt>$file</tt>:\n";
 
         $error = Status::sourceSqlFile($db, $file);
