@@ -416,7 +416,7 @@ class Template
     if ( $this->cleanup )
       $this->cleanup();
 
-    Log::debug( "done parsing, content: ". $this->content );
+    // Log::debug( "done parsing, content: ". $this->content );
 
 		if ( $fullHTML )
 		{

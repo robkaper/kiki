@@ -36,6 +36,7 @@ class Controller
   protected $errors = null;
 
   protected $subController = null;
+  protected $actionMethod = null;
 
   protected $extraMeta = null;
   protected $extraScripts = null;
@@ -78,9 +79,19 @@ class Controller
     return new $className;
   }
 
+  public function class()
+  {
+    return $this->subController ? $this->subController->class() : get_called_class();
+  }
+
   public function type()
   {
-    return ClassHelper::classToType( get_called_class() );
+    return $this->subController ? $this->subController->type() : ClassHelper::classToType( get_called_class() );
+  }
+
+  public function method()
+  {
+    return $this->subController ? $this->subController->method() : $this->actionMethod;
   }
 
   public function setAction( $action )
@@ -118,30 +129,29 @@ class Controller
     {
       $pathParts = explode( '/', $urlParts['path'] );
       $action = array_shift($pathParts);
-      $actionMethod = str_replace( '-', '_', $action ). 'Action';
+      $this->actionMethod = str_replace( '-', '_', $action ). 'Action';
 
       $remainder = implode( '/', $pathParts );
     }
     else
     {
       $action = 'index';
-      $actionMethod = 'indexAction';
+      $this->actionMethod = 'indexAction';
       $remainder = $this->objectId;
     }
 
     if ( $this->subController = $this->getActionController($action) )
     {
+      $this->subController->setcontext($this->context);
       $this->action = $remainder;
 
-      Log::debug( "found subController: ". get_class($this->subController). "->actionHandler, action: $action, remainder: $remainder" );
       return $this->subController->actionHandler();
     }
 
-    if ( !method_exists($this, $actionMethod) )
+    if ( !method_exists($this, $this->actionMethod) )
       return false;
 
-    Log::debug( "found actionMethod: ". get_class($this). "->$actionMethod, remainder: $remainder" );
-
+    $actionMethod = $this->actionMethod;
     $ret = $this->$actionMethod($remainder);
     if  ( $ret )
     {
@@ -150,7 +160,7 @@ class Controller
         $this->status = 200;
 
       if ( !$this->title )
-        $this->title = $actionMethod;
+        $this->title = $this->actionMethod;
 
       if ( $this->template == 'pages/404' )
         $this->template = 'pages/default';
@@ -162,7 +172,7 @@ class Controller
   public function getActionController($action)
   {
     $actionController = get_class($this). "\\". ucfirst($action);
-    Log::debug( "trying $actionController" );
+
     if ( class_exists($actionController) )
       return new $actionController();
 
@@ -170,7 +180,7 @@ class Controller
   }
 
   // Exists because actionHandler is protected
-  public function exec()
+  final public function exec()
   {
     return $this->actionHandler();
   }
@@ -192,6 +202,8 @@ class Controller
     }
 
     Http::sendHeaders( $this->status(), $this->altContentType() );
+
+    // Log::debug( sprintf( "status: %s, title: %s, template: %s", $this->status(), $this->title(), $this->template() ) );
 
     switch( $this->status() )
     {
@@ -227,7 +239,7 @@ class Controller
         break;
 
       case 'tpl2':
-        $template->load( $this->template );
+        $template->load( $this->template() );
 
         $template->assign( 'title', $this->title() );
         $template->assign( 'content', $this->content() );

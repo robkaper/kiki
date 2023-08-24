@@ -43,6 +43,7 @@ foreach( Config::$routing as $route => $routeController )
     $controller = is_array($routeController) ? $routeController[0] : $routeController;
     $capture = null;
     $action = is_array($routeController) ? ( $routeController[1] ?? null ) : null;
+    $context = $routeController['context'] ?? null;
     // Log::debug( print_r( $matches, true ) );
     // echo "<br>[". count($matches). "]";
     switch( count($matches) )
@@ -86,7 +87,9 @@ foreach( Config::$routing as $route => $routeController )
     Log::debug( "routing table match [controller:$controller][capture:$capture][action:$action] from [path:$requestPath][route:$route][matches:". count($matches). "]" );
 
     $controller = Controller::factory($controller);
-    if ( $capture )
+    if ( $context )
+      $controller->setContext($context);
+    else if ( $capture )
       $controller->setContext($capture);
     if ( $action )
       $controller->setAction($action);
@@ -195,5 +198,5 @@ if ( !$staticFile )
   }
 
   if ( $controller )
-    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->template(). "][". $controller->type(). "][". $controller->instanceId(). "][". $controller->objectId(). "], timers[". $timersStr. "]" );
+    Log::debug( "END router ". $controller->status(). ": $requestPath [". $controller->class(). "->". $controller->method(). "][". $controller->template(). "][". $controller->instanceId(). "][". $controller->objectId(). "], timers[". $timersStr. "]" );
 }
