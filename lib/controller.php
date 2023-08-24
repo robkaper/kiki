@@ -210,18 +210,35 @@ class Controller
 
     $template = Template::getInstance();
 
-    // For web, just assume PHP files for now until templates support {block} and {extend}
-    // TODO: template could figure this out itself: include for .php, render for .tpl
-    include_once $template->file( $this->template() );
+    $templateFile = $template->file( $this->template() );
+    if ( !file_exists($templateFile) )
+    {
+      Log::error( "cannot render template file '$templateFile': file not found" );
+      echo "ERROR: cannot render template file '$templateFile': file not found";
+      return;
+    }
 
-    return;
+    $extension = StorageItem::getExtension ( $templateFile );
 
-    $template->load( $this->template );
+    switch( $extension )
+    {
+      case 'tpl':
+        include_once $templateFile;
+        break;
 
-    $template->assign( 'title', $this->title() );
-    $template->assign( 'content', $this->content() );
+      case 'tpl2':
+        $template->load( $this->template );
 
-    echo $template->content();
+        $template->assign( 'title', $this->title() );
+        $template->assign( 'content', $this->content() );
+
+        echo $template->content();
+        break;
+
+      case 'php':
+        include_once $templateFile;
+        break;
+    }
   }
 
   public function status()

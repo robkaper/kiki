@@ -138,23 +138,20 @@ class Template
   */
   public static function file( $template )
   {
-    // Try site-specific template
-    $file = Core::getRootPath(). '/templates/'. $template. '.tpl';
-    if ( file_exists($file) )
-      return $file;
+    $supportedExtensions = [ '.tpl2', '.tpl', '.php' ];
+    $searchPaths = [ Core::getRootPath(). '/templates/', Core::getInstallPath(). '/templates/' ];
 
-    // Try site-specific PHP file
-    $file = Core::getRootPath(). '/templates/'. $template. '.php';
-    if ( file_exists($file) )
-      return $file;
+    foreach( $searchPaths as $searchPath )
+    {
+      foreach( $supportedExtensions as $extension )
+      {
+        $file = $searchPath. $template. $extension;
+        if ( file_exists($file) )
+          return $file;
+      }
+    }
 
-    // Kiki fallback template
-    $file = Core::getInstallPath(). '/templates/'. $template. '.tpl';
-    if ( file_exists($file) )
-      return $file;
-
-    // Kiki fallback PHP file
-    return Core::getInstallPath(). '/templates/'. $template. '.php';
+    return null;
   }
 
   public function load( $template )
@@ -342,10 +339,6 @@ class Template
     $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
-  public function include()
-  {
-    include_once $this->file($this->template);
-  }
 
   public function fetch()
   {
@@ -422,10 +415,7 @@ class Template
     if ( $this->cleanup )
       $this->cleanup();
 
-    // Log::debug( "done parsing" );
-    // Log::debug( "content: ". $this->content );
-
-		// Log::endTimer( "Template::content ". $this->template );
+    Log::debug( "done parsing, content: ". $this->content );
 
 		if ( $fullHTML )
 		{
@@ -520,10 +510,22 @@ class Template
 
   private function includes( $input )
   {
-    $re = '~\{([^}]+)\}~';
-    // $file = preg_replace_callback( $re, array($this, 'replace'), $input[1] );
-    // return trim( file_get_contents($file) );
-    return file_exists( $this->file($input[1]) ) ? trim( file_get_contents( $this->file($input[1]) ) ) : null;
+    $templateFile = $this->file($input[1]);
+    if ( !file_exists($templateFile) )
+      return sprintf( '<span class="red">template file <q>%s</q>: file not found</span>', $input[1] );
+
+    $extension = StorageItem::getExtension($templateFile);
+    switch( $extension )
+    {
+      case 'tpl2':
+        return file_get_contents( $templateFile );
+        break;
+
+      case 'tpl':
+      case 'php':
+        return file_get_contents( $templateFile );
+        break;
+    }
   }
 
   private function loops( $input )
