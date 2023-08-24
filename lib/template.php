@@ -523,8 +523,11 @@ class Template
         break;
 
       case 'tpl':
-      case 'php':
         return file_get_contents( $templateFile );
+        break;
+
+      case 'php':
+        include_once $templateFile;
         break;
     }
   }
