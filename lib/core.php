@@ -16,7 +16,7 @@ class Core
 
 	private static $user = null;
 
-	private static $templateData = null;
+	protected static $templateData = null;
 	private static $flashBag = null;
 
 	public static function getInstallPath()
@@ -105,17 +105,14 @@ class Core
 	public static function getTemplateData()
 	{
 		if ( !isset(self::$templateData) )
-		{
-			self::setTemplateData();
-		}
+			static::setTemplateData();
 
 		return self::$templateData;
 	}
 
 	public static function setTemplateData()
 	{
-    // Basic and fundamental variables that should always be available in templates.
-
+		// Basic and fundamental variables that should always be available in templates.
 		self::$templateData = array();
 
 		// Request values
@@ -123,7 +120,8 @@ class Core
 		self::$templateData['post'] = $_POST;
 
 		// Config values
-    self::$templateData['config'] = array();
+		self::$templateData['config'] = array();
+
     foreach( get_class_vars( 'Kiki\Config' ) as $configKey => $configValue )
     {
 			// Lame security check, but better safe than sorry until a proper

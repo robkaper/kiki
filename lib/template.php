@@ -84,7 +84,8 @@ class Template
     $this->template = $template;
     $this->noDefault = $noDefault;
 
-    $data = Core::getTemplateData();
+    $coreClassName = ClassHelper::bareToNamespace('Core');
+    $data = $coreClassName::getTemplateData();
 
     // @deprecated Assign into global namespace. For backwards compatibility
     // with <= 0.0.32, when the namespace kiki was introduced and populated
