@@ -10,8 +10,6 @@ declare( ticks = 1 );
 /**
  * Abstract class for daemon processes.
  *
- * @bug Mixed use of syslog and Log class, choose or merge syslog functionality into Log class.
- *
  * @class Daemon
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
@@ -23,23 +21,18 @@ abstract class Daemon
 {
   protected $db = null;
   private $name;
-  private $logFacility;
   protected $pid = 0;
   private $childPids = array();
   private $killPids = array();
   private $shutdown = false;
   private $killTime = 0;
 
-  public function __construct( $name, $logFacility=LOG_DAEMON )
+  public function __construct( $name )
   {
     $this->db = Core::getDb();
     
     $this->name = $name;
-    $this->logFacility = $logFacility;
-
     $this->pid = getmypid();
-
-    openlog( "$name", LOG_PID, $this->logFacility );
   }
 
   abstract protected function childInit();
