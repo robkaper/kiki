@@ -2,36 +2,33 @@
 
 namespace Kiki;
 
-/**
- * Router script for Kiki. By the grace of mod_rewrite, it is called for all
- * URI's where there is no direct local file or directory match in the
- * document root.
- * 
- * Finds a controller based on some built-in reserved patterns and database
- * section (shouldn't that just be called routing) entries and then executes
- * the controller and let it output content.
- *
- * There are some assumptions here and in the controllers that all requests
- * return content to a HTTP environment and HTML content (whereever template
- * content contains HTML), Kiki should detect PHP_CLI and optional other
- * request methods to return sane data even outside web requests.  This can
- * be a powerful debugging feature or step towards refactoring so that
- * extensions in the request can also lead to a different formatting of
- * output.
- *
- * @package Kiki
- * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011-2013 Rob Kaper <http://robkaper.nl/>
- * @license Released under the terms of the MIT license.
- *
- * @todo extend to minimise mod_rewrite even further, or totally make mod_rewrite optional
- */
+// @package Kiki
+// @author Rob Kaper <https://robkaper.nl/>
+// @copyright 2011-2023 Rob Kaper <https://robkaper.nl/>
+// @license Released under the terms of the MIT license.
+//
+// Router script for Kiki. By the grace of Nginx's try_files or Apache's
+// mod_rewrite, it should be called for all URI's where there is no direct
+// local file or directory match in the document root.
+//
+// Scans the routing array to find a controller, with some built-in reserved
+// patterns as fallback and ultimately defaults to the 404 controller if
+// nothing matches.
+//
+// Finally, the controller is excecuted and output is generated.
+//
+// There are some legacy assumptions in here and in the controllers
+// themselves, expecting a HTTP environment and defaulting to HTML output.
+// A main exception to this is a CLI environment: the output will then be a
+// print_r of template data. For alternate content type, controllers should
+// set a mime type in altContentType and output content directly with a hard
+// exit.
 
 require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
 Log::debug( sprintf( 'START router [path:%s][staticFile:%d]',
   $requestPath,
-  (int)$staticFile
+  (int) $staticFile
 ) );
 
 $controller = null;
@@ -52,19 +49,23 @@ foreach( Config::$routing as $route => $routeController )
     {
       case 0:
         // SNH, because regexp would've returned false
-        $controller = 'NotFound404'; 
+        $controller = 'NotFound404';
         break;
+
       case 1:
         // Exact match, no capture in route itself
         break;
+
       case 2:
         // Exact match, capture in route itself
         $capture = $matches[1];
         break;
+
       case 3:
         // SNH: Match, but action(s) given
         $action = $matches[2];
         break;
+
       case 4:
         // Match, capture in route itself, action(s) given
         $capture = $matches[1];
@@ -81,7 +82,9 @@ foreach( Config::$routing as $route => $routeController )
         }
         break;
     }
+
     Log::debug( "routing table match [controller:$controller][capture:$capture][action:$action] from [path:$requestPath][route:$route][matches:". count($matches). "]" );
+
     $controller = Controller::factory($controller);
     if ( $capture )
       $controller->setContext($capture);
@@ -170,16 +173,6 @@ else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $request
 else // if ( !($controller = Router::findPage($requestPath)) && !($controller = Router::findSection($requestPath)) )
 {
   // Nothing? 404.
-  //
-  // @todo Add an alias controller here, functioning quite like the
-  // tinyURL controller but then with database stored URI aliases.
-  //
-  // The CMS module (and possibly the site itself when an administrator is
-  // logged in) should then warn about aliases that conflict with
-  // top-level pages (and vice versa), and possibly tinyURLs but those
-  // might need a technical solution beyond risk management due to their
-  // automatic generation.
-
   $controller = new Controller\NotFound404();
 }
 
