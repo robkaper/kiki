@@ -25,20 +25,6 @@ create table runtime (
   value varchar(255) default null
 ) default charset=utf8;
 
-drop table if exists users;
-create table users (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned default null,
-  name varchar(255) not null default '',
-  email varchar(255) default null,
-  auth_token varchar(255) not null default '',
-  admin boolean not null default false,
-  verified boolean not null default false,
-  disabled boolean not null default false,
-  unique key(email)
-) default charset=utf8;
-
 drop table if exists comments;
 create table comments (
   id bigint unsigned not null auto_increment,
@@ -92,46 +78,6 @@ create table menu_items (
   key level_context_sortorder(level,context,sortorder)
 ) default charset=utf8;
 
-drop table if exists storage;
-create table storage (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  hash varchar(40) not null,
-  original_name varchar(255) not null,
-  extension varchar(255) not null,
-  size int unsigned not null default 0
-) default charset=utf8;
-
-drop table if exists album_pictures;
-drop table if exists albums;
-drop table if exists pictures;
-
-create table pictures (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  title varchar(255) not null,
-  description text not null,
-  storage_id int unsigned not null
-) default charset=utf8;
-
-create table albums (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned not null,
-  title varchar(255) not null,
-  system boolean default false,
-  `highlight_id` INT UNSIGNED DEFAULT NULL REFERENCES `pictures`(`id`)
-) default charset=utf8;
-
-create table album_pictures (
-  album_id int unsigned not null,
-  picture_id int unsigned not null,
-  sortorder tinyint unsigned not null,
-  key(album_id),
-  key(picture_id),
-  key(album_id,picture_id)
-) default charset=utf8;
-
 drop table if exists mail_queue;
 create table mail_queue (
   id int unsigned not null auto_increment,
@@ -148,33 +94,4 @@ create table mail_queue (
   `to` text not null,
   headers text not null,
   body text not null
-) default charset=utf8;
-
-drop table if exists user_connections;
-create table user_connections (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  user_id int unsigned not null,
-  external_id varchat(64) not null default '',
-  service varchar(32) not null,
-  ctime datetime not null,
-  mtime datetime not null,
-  token text default null,
-  secret text default null,
-  email varchar(255) default null,
-  name varchar(255) default null,
-  screen_name varchar(255) default null,
-  picture varchar(255) default null,
-  key(external_id),
-  key(user_id)
-) default charset=utf8;
-
-drop table if exists objects;
-create table objects (
-  object_id bigint unsigned not null auto_increment,
-  primary key(object_id),
-  type varchar(32) not null,
-  ctime datetime not null,
-  mtime datetime not null,
-  user_id int unsigned not null default 0,
 ) default charset=utf8;
