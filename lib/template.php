@@ -320,6 +320,9 @@ class Template
 
   public function cleanup()
   {
+    if ( !$this->cleanup )
+      return;
+
     $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
@@ -385,18 +388,16 @@ class Template
 
     // Log::debug( "content: ". $this->content );
 
-		$this->data['kiki']['flashBag'] = array(
-			'notice' => \Kiki\Core::getFlashBag()->get('notice', false),
-			'warning' => \Kiki\Core::getFlashBag()->get('warning', false),
-			'error' => \Kiki\Core::getFlashBag()->get('error', false)
-		);
+    $this->data['kiki']['flashBag'] = array(
+      'notice' => \Kiki\Core::getFlashBag()->get('notice', false),
+      'warning' => \Kiki\Core::getFlashBag()->get('warning', false),
+      'error' => \Kiki\Core::getFlashBag()->get('error', false)
+    );
 
     $this->normalise( $this->data );
-		$this->preparse();
+    $this->preparse();
     $this->parse();
-
-    if ( $this->cleanup )
-      $this->cleanup();
+    $this->cleanup();
 
     // Log::debug( "done parsing, content: ". $this->content );
 
