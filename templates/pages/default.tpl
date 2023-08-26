@@ -1,11 +1,11 @@
 <body>
-{include 'parts/header'}
-{include 'parts/nav'}
-{include 'parts/aside'}
+{{include 'parts/header'}}
+{{include 'parts/nav'}}
+{{include 'parts/aside'}}
 
 <div id="cw"><div id="content">
 
-{include 'parts/flashbag'}
+{{include 'parts/flashbag'}}
 
 {$content}
 
@@ -18,6 +18,6 @@ Default value from <q>templates/pages/default.tpl</q>. To replace this,
 extend this template.</p>
 {{/block}}
 
-{include 'parts/footer'}
+{{include 'parts/footer'}}
 
 </body>

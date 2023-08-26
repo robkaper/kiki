@@ -28,6 +28,6 @@
 			</ul>
 		{/if}
 
-		{include 'forms/user-create'}
+		{{include 'forms/user-create'}}
 	{/if}
 {/if}

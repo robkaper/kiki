@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="{$description}">
 
-{include 'parts/google/meta-site-verification'}
+{{include 'parts/google/meta-site-verification'}}
 
 {foreach $stylesheets as $url}
 <link rel="stylesheet" type="text/css" href="{$url}">
@@ -14,5 +14,5 @@
 {/foreach}
 
 <title>{$title|strip}</title>
-{include 'parts/google/analytics'}
+{{include 'parts/google/analytics'}}
 </head>

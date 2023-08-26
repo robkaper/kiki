@@ -2,11 +2,11 @@
 
 {if $user.id}
   {foreach $activeConnections as $connection}
-    {include 'parts/user-account'}
+    {{include 'parts/user-account'}}
   {/foreach}
 
   {foreach $inactiveConnections as $connection}
-    {include 'buttons/user-connect'}
+    {{include 'buttons/user-connect'}}
   {/foreach}
   <div class="box">
   <a class="button" href="{$kiki.accountService.url}/">{"Your Account"|i18n}</a>
@@ -16,10 +16,10 @@
 {if !$user.id}
   <div id="login" class="box">
   {foreach $inactiveConnections as $connection}
-    {include 'buttons/user-login'}
+    {{include 'buttons/user-login'}}
   {/foreach}
- 	{include 'buttons/user-login'}
-  {include 'buttons/user-newaccount'}
+  {{include 'buttons/user-login'}}
+  {{include 'buttons/user-newaccount'}}
   </div>
 {/if}
 
@@ -35,9 +35,9 @@
 {/if}
 
 <div class="box">
-{include 'parts/google/adsense'}
+{{include 'parts/google/adsense'}}
 </div>
 
-{include 'customparts/aside'}
+{{include 'customparts/aside'}}
 
 </aside></div>

@@ -168,7 +168,8 @@ class Template
     // Log::beginTimer( 'Template::preparse '. $this->template );
 
     $reExtend = '~\{\{extends \'([^\']+)\'\}\}~';
-    $reIncludes = '~\{include \'([^\']+)\'\}~';
+    $reDebug = '~\{\{debug\}\}~';
+    $reIncludes = '~\{\{include \'([^\']+)\'\}\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
     $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
 
@@ -202,6 +203,9 @@ class Template
       }
     }
     while( preg_match( $reExtend, $this->content, $matches) );
+
+      // {{debug}}
+    $this->content = preg_replace( $reDebug, "<pre>". print_r($this->data, true). "</pre>", $this->content );
 
     // echo "<h2>post captureBlocks/extends:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
