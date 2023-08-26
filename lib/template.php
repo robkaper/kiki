@@ -83,30 +83,6 @@ class Template
 
     $this->template = $template;
     $this->noDefault = $noDefault;
-
-    $coreClassName = ClassHelper::bareToNamespace('Core');
-    $data = $coreClassName::getTemplateData();
-
-    // @deprecated Assign into global namespace. For backwards compatibility
-    // with <= 0.0.32, when the namespace kiki was introduced and populated
-    // but not yet ported and used.  Compatibility will be removed in future
-    // 0.1.0 (the this is getting somewhere update, which seems to be
-    // approaching).
-
-    foreach( $data as $key => $value )
-    {
-      switch($key)
-      {
-        case 'config':
-	  break;
-
-        default:
-          $this->data[$key] = $value;
-      }
-    }
-
-    // Assign to {$kiki} namespace.
-    $this->data['kiki'] = $data;
   }
 
   public static function getInstance()
