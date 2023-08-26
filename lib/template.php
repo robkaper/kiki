@@ -209,7 +209,6 @@ class Template
 
     // echo "<h2>post captureBlocks/extends:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
-    $this->fillBlocks();
 
     // echo "<h2>post fullBlocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
     // print_r( $this->blocks );
@@ -222,9 +221,12 @@ class Template
     }
     // echo "<h2>post preparse includes:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
-    $this->content = preg_replace_callback( $reIfs, array($this, 'preIfs'), $this->content );
-    // echo "<h2>post preparse ifs:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    $this->fillBlocks();
 
+    // echo "<h2>post fillBlocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+
+    $this->content = preg_replace_callback( $reIfs, array($this, 'preIfs'), $this->content );
+    // echo "<h2>post preparse ifs:</h2><pre>". htmlspecialchars($this->content). "</pre>"
     $this->content = preg_replace_callback( $reLoops, array($this, 'preLoops'), $this->content );
     // echo "<h2>post preparse loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
