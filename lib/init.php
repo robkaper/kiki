@@ -118,6 +118,7 @@
   if ( Config::$defaultTimezone )
     date_default_timezone_set( Config::$defaultTimezone );
 
+  Log::beginTimer( 'kiki' );
   Log::beginTimer( $requestPath );
 
   // Optimisation: pre-recognise built-in static files (skips i18n, database
