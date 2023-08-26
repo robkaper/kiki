@@ -20,6 +20,17 @@ namespace Kiki;
 
 class ClassHelper
 {
+	public static function namespace( $className = null )
+	{
+		if ( $className && class_exists($className) )
+		{
+			$reflectionClass = new \ReflectionClass($className);
+			return $reflectionClass->getNamespaceName();
+		}
+
+		return Config::$namespace ?? 'Kiki';
+	}
+
 	public static function isInKikiNamespace( $className )
 	{
 		return preg_match( '#^Kiki\\\#', $className );
@@ -27,14 +38,13 @@ class ClassHelper
 
 	public static function isInCustomNamespace( $className )
 	{
-		return preg_match( '#^'. \Kiki\Config::$namespace. '\\\#', $className );
+		return preg_match( '#^'. Config::$namespace. '\\\#', $className );
 	}
 
 	public static function classToType( $className )
 	{
 		return str_replace("\\", "/", strtolower($className));
 	}
-
 
 	public static function classToFile( $className )
 	{
