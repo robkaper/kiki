@@ -58,9 +58,6 @@ class Config
 	public static $kikiPrefix = "/kiki";
 	public static $staticPrefix = "/static";
 
-	public static $siteLogo = null;
-	public static $customCss = null;
-
 	public static $i18n = true;
 
 	public static $googleSiteVerification = null;
@@ -113,6 +110,7 @@ class Config
 		// (which is noted on the /kiki/ status page, but such a
 		// fatal error that we should probably handle it more
 		// prominently.
+
 		// if ( self::$dbName && self::$dbUser )
 		self::$db = array( 'host' => self::$dbHost, 'port' => self::$dbPort, 'name' => self::$dbName, 'user' => self::$dbUser, 'pass' => self::$dbPass );
 	}
@@ -131,7 +129,6 @@ class Config
 
 		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
 
-		self::$siteLogo = self::$kikiPrefix. "/img/kiki-inverse-74x50.png";
 	}
 
 	public static function loadConnectionServices()
