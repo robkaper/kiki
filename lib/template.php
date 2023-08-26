@@ -709,7 +709,7 @@ class Template
           $input = date($fmt, $input);
           break;
 
-        // Insert formatting contents between base part and extension in an image URL. 
+        // Insert formatting contents between base part and extension in an image URL.
         case 'thumb':
           list ($base, $ext) = Storage::splitExtension($input);
           $input = "${base}.${fmt}.${ext}";
@@ -799,7 +799,10 @@ class Template
       }
 
       if ( !array_key_exists( $var, $this->data ) )
+      {
+        // Log::debug( "setting $var" );
         $this->data[$var] = $value;
+      }
     }
 
     if ( is_array($this->data[$var]) )
