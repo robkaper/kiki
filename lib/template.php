@@ -418,6 +418,19 @@ class Template
 
   private function parseCondition( $condition )
   {
+    // Log::debug( "parsing $condition" );
+    $matches = [];
+    if ( preg_match( "/\s?([^!=]+)\s?(!?)=\s?(.*)\s?/", $condition, $matches ) )
+    {
+      Log::debug( print_r($matches, true) );
+      $left = $this->getVariable( trim($matches[1]) );
+      $not = !empty($matches[2]);
+      $right = $this->getVariable( trim($matches[3]) );
+
+      // Log::debug( "left: $left, right: $right, not: $not" );
+      return $not ? ($left!=$right) : ($left==$right);
+    }
+
     $condition = trim($condition);
     if ( $condition[0] == '!' )
       return !$this->getVariable( substr($condition, 1) );
@@ -433,13 +446,13 @@ class Template
     if ( $input[2]=='/' )
       $this->ifDepth--;
 
-		if ( $this->ifDepth < 0 )
-		{
-			$error = "fatal error: unexpected {/if}";
-			Log::error($error);
-			echo $error;
-			exit;
-		}
+    if ( $this->ifDepth < 0 )
+    {
+      $error = "fatal error: unexpected {/if}";
+      Log::error($error);
+      echo $error;
+      exit;
+    }
 
     $output = "{". $input[1]. $this->ifDepth. $input[3]. "}". PHP_EOL;
 
