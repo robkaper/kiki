@@ -19,12 +19,14 @@ namespace Kiki;
 class Article extends BaseObject
 {
   private $ipAddr = null;
-  // private $title = null;
+  private $title = null;
   private $cname = null;
   private $body = null;
   private $featured = false;
   private $hashtags = null;
   private $albumId = 0;
+  private $visible = true;
+  private $sectionId = 0;
 
   public function reset()
   {
@@ -47,7 +49,7 @@ class Article extends BaseObject
       $this->object_id = 0;
     }
 
-    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, o.section_id, o.user_id, title, cname, body, featured, o.visible, hashtags, album_id";
+    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, a.section_id, o.user_id, title, cname, body, featured, a.visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->object_id, $this->object_id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
@@ -207,14 +209,14 @@ class Article extends BaseObject
   private function getNext()
   {
 		$user = Core::getUser();
-    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime>'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
+    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND o.ctime>'%s' AND ( (a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
   
   private function getPrev()
   {
 		$user = Core::getUser();
-    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND o.ctime<'%s' AND ( (o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
+    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND o.ctime<'%s' AND ( (a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
     return new Article( $this->db->getSingleValue($q) );
   }
 

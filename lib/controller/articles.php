@@ -4,6 +4,7 @@ namespace Kiki\Controller;
 
 use Kiki\Core;
 use Kiki\Template;
+use Kiki\Config;
 
 use Kiki\Article;
 use Kiki\Section;
@@ -15,6 +16,11 @@ class Articles extends \Kiki\Controller
     if ( !$this->context )
       return false;
 
+    ob_start();
+    echo "<pre>";
+    print_r( $this );
+    echo "</pre>";
+
     $this->objectId = $this->action ?? null;
 
     $db = Core::getDb();
@@ -24,7 +30,7 @@ class Articles extends \Kiki\Controller
     
     $this->instanceId = Section::getIdFromBaseUri($this->context);
 
-    $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE o.section_id=%d AND ((o.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
+    $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND ((a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
 
     $articleIds = $db->getObjectIds($q);
     $articles = array();
@@ -83,24 +89,27 @@ class Articles extends \Kiki\Controller
       $article = new Article();
 
       $q = $db->buildQuery( "SELECT count(*)
-        FROM objects
-        WHERE type IN ('%s', '%s')
-          AND section_id=%d AND ((visible=1 AND ctime<=now()) OR user_id=%d)",
+        FROM articles a, objects o
+        WHERE o.object_id=a.object_id
+        AND type IN ('%s', '%s')
+          AND a.section_id=%d AND ((a.visible=1 AND ctime<=now()) OR user_id=%d)",
         'Article', 'Kiki\Article',
         $this->instanceId,
         $user->id()
       );
+      echo $q;
       $totalPosts = $db->getSingleValue($q);
-
+      print_r( $totalPosts );
       $paging = new \Kiki\Paging();
       $paging->setCurrentPage( $currentPage );
       $paging->setItemsPerPage( $itemsPerPage );
       $paging->setTotalItems( $totalPosts );
 
-      $q = $db->buildQuery( "SELECT object_id, ctime, type
-        FROM objects
-        WHERE type IN ('%s', '%s')
-        AND section_id=%d AND ( (visible=1 AND ctime<=now()) OR user_id=%d)
+      $q = $db->buildQuery( "SELECT o.object_id, ctime, type
+        FROM articles a, objects o
+        WHERE o.object_id=a.object_id
+        AND type IN ('%s', '%s')
+        AND section_id=%d AND ( (a.visible=1 AND ctime<=now()) OR user_id=%d)
         ORDER BY ctime DESC
         LIMIT %d,%d",
         'Article',
@@ -138,6 +147,10 @@ class Articles extends \Kiki\Controller
       $this->content .= $paging->html();
     }
 
+    $content = ob_get_contents();
+    ob_end_clean();
+
+    $this->content .= $content;
   }
 
 }
