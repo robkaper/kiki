@@ -260,7 +260,7 @@ class Template
 
   public function parse()
   {
-		// Log::beginTimer( 'Template::parse '. $this->template );
+    // Log::beginTimer( 'Template::parse '. $this->template );
 
     $reLegacy = '~<\?=?([^>]+)\?>~';
     $reConditions = '~\n?\{if ([^\}]+)\}\n??(.*)\n?\{\/if\}\n?~sU';
@@ -276,6 +276,7 @@ class Template
     for( $i=0; $i<=$this->maxLoopDepth; $i++ )
     {
       $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
+      $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)(?: => (\$[\w]+))?\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
       // echo "<hr>reLoops: ". print_r($reLoops,true);
       $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
     }
@@ -333,7 +334,6 @@ class Template
   public function content( $fullHTML = true )
   {
     // Log::debug( "begin template engine" );
-
     if ( !$this->template && !$this->noDefault )
       $this->template = 'pages/default';
 
@@ -516,84 +516,107 @@ class Template
 
   private function loops( $input )
   {
-    // Log::debug( print_r( $input, true ) );
+    // Log::debug( "loops: ". print_r( $input, true ) );
 
-		// echo "<hr>loops, input: ". print_r($input,true);
+    //echo "<hr>loops, input: ". print_r($input,true);
 
-		$array = substr( $input[1], 1 );
-    $named = substr( $input[2], 1 );
+    $array = substr( $input[1], 1 );
+    if ( empty($input[3]) )
+    {
+      $namedKey = null;
+      $named = substr( $input[2], 1 );
+    }
+    else
+    {
+      $namedKey = substr( $input[2], 1 );
+      $named = substr( $input[3], 1 );
+    }
 
-		// echo "<hr>array: $array, named: $named";
+    // Log::debug( "array: $array, namedKey: $namedKey, named: $named" );
+    //echo "<hr>array: $array, named: $named";
     $content = null;
 
     if ( isset($this->data[$array]) && is_array($this->data[$array]) )
-		{
+    {
       $data = $this->data[$array];
-			// echo 1;
-		}
+      // echo 1;
+    }
     else
     {
-			// echo 2;
+      // echo 2;
       $parts = explode(".", $array);
       $data = $this->data;
       foreach( $parts as $part )
       {
-			// echo 3;
-				//echo "<br>part: [$part]";
-				// Make data array unassociative if part is numeric
-				$data = is_numeric($part) ? array_values($data) : $data;
+        // echo 3;
+	//echo "<br>part: [$part]";
+	//echo "<br>data: [". print_r($data, true). "]";
+	// Make data array unassociative if part is numeric
+	if ( !isset($data) )
+	  continue;
+
+	$data = is_numeric($part) ? array_values($data) : $data;
         if ( isset($data[$part]) && is_array($data[$part]) )
-				{
-			// echo 4;
-					// echo "<br>data[$part] is array: ". print_r($data[$part],true);
+        {
+          // echo 4;
+          // echo "<br>data[$part] is array: ". print_r($data[$part],true);
           $data = $data[$part];
-				}
+        }
         else
-				{
-					// echo "<br>part [$part] not set in array: ". print_r($data,true);
-					unset($data);
-			// echo 5;
-				}
+        {
+          // echo "<br>part [$part] not set in array: ". print_r($data,true);
+          unset($data);
+          // echo 5;
+        }
       }
 
-			// echo 6;
+      // echo 6;
 
       if ( !isset($data) )
         return $content;
     }
 
-		// echo "<hr>data: ". print_r($data,true);
-		// echo 7;
+    // Log::debug( "data: ". print_r($data,true) );
+    // echo 7;
 
-		$i=0;
+    $i=0;
 
-		foreach( $data as $key => $$named )
+    foreach( $data as $key => $$named )
     {
-			// echo 8;
-			if (!ctype_alpha($key)) $key = $i;
+      // echo 8;
+      if (!ctype_alpha($key)) $key = $i;
 
-			// echo "<hr>value of key $key, named $named: ". print_r($$named,true);
-			// echo "<hr>input[3]". $input[3];
-			$tmp = $input[3];	
-		
+      // Log::debug( "value of key $key, named $named: ". print_r($$named,true) );
+      // echo "<hr>input[4]". $input[4];
+      $tmp = $input[4];
+      // Log::debug( "tmp: $tmp" );
+
       // Substitute the full key path for the local alias in variables, conditions and loops
+
+      if ( $namedKey )
+      {
+        $pattern = "~\{\{((if|foreach)\d\s\!?)?\\\$${namedKey}((\||\.)[^\}]+)?\}\}~";
+        $replace = "{\\1\$". $array. ".$key". "\\3". ".__key}";
+        $replace = $key;
+        // Log::debug( "pattern: $pattern, replace: $replace" );
+
+        $tmp = preg_replace( $pattern, $replace, $tmp );
+        // Log::debug( "tmp: $tmp" );
+      }
 
       $pattern = "~\{((if|foreach)\d\s\!?)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
-			//echo "<hr>pattern: $pattern";
-			//echo "<hr>replace". $replace;
+      // Log::debug( "pattern: $pattern, replace: $replace" );
 
       $tmp = preg_replace( $pattern, $replace, $tmp );
-			//echo "<hr>tmp: ". $tmp;
+      // Log::debug( "tmp: $tmp" );
 
       $pattern = "~\{((if|foreach)\d\s)?\\\$${array}\.${key}\.i\}~";
       $replace = "{\${1}\"". $key. "\"\\3}";
-			// Log::debug( "pattern $i: $pattern" );
-			// Log::debug( "replace $i: $replace" );
-			//echo "<hr>pattern: $pattern";
-			//echo "<hr>replace". $replace;
+      // Log::debug( "pattern $i: $pattern, replace $i: $replace" );
 
       $tmp = preg_replace( $pattern, $replace, $tmp );
+      // Log::debug( "tmp: $tmp" );
 
       $replace = "{{\${1}}\"". $key. "\"\\3}";
       // Log::debug( "pattern $i: $pattern" );
@@ -603,11 +626,9 @@ class Template
       $tmp = preg_replace( $pattern, $replace, $tmp );
       //echo "<hr>tmp: ". $tmp;
 
-
-			$content .= $tmp;
-
-			// echo "<hr>content: ". $content;
-			$i++;
+      $content .= $tmp;
+      // Log::debug( "content: $content" );
+      $i++;
     }
 
     return $content;
