@@ -6,15 +6,49 @@
  * Constructs supported:
  *
  * --> Substitution:
- * {$variable}
- * {$variable|modifiers}
+ * {{$variable}}
+ * {{$variable|modifiers}}
  * {"text"}
  * {"text"|modifiers}
- * {$variable.key}
- * {$variable.key.key}
+ * {{$variable.key}}
+ * {{$variable.key.key}}
  *
- * Will be substituted for assigned variables. Supported modifiers:
- * - escape, trim, i18n, strip, lower
+ * Variables are substituted by data assigned to the template. Arrays and objects are flattened where necessary.
+ * Be careful when assigning objects, private properties are exposed. For example, is an object has a private member with the database class/connection in it for convenience,
+ * this could expose the database password.
+ *
+ * Modifiers can be chained. Supported modifiers:
+ *
+ * - parse
+ * Parse as template data. Useful when assiging data from a database which itself needs to be parsed.
+ * - break
+ * Replaces newlines with <br>. Could be used for assisting in formatting things like UGC.
+ * - date:fmt
+ * Formats timestamps using PHP date(), with fmt as the format date() assumes.
+ * - thumb:fmt
+ * Takes an image URL (hash.jpg) and inserts the fmt.
+ * E.g. {{'hash.jpg|thumb:200x100}} transforms into hash.200x100.jpg, this
+ * is useful for items in Kiki's storage engine in combination with its
+ * Thumbnail Controller.
+ * - escape
+ * Converts HTML entities. Should be used for pretty much all UGC.
+ * - i18n
+ * Calls gettext _() on the input for multi-language websites.
+ * - trim
+ * Trims a string using... trim()
+ * - left:fmt
+ * Returns the leftmost fmt characters of the input.
+ * - strip
+ * Calls strip_tags() on a variable.
+ * - lower
+ * Lowercases the input.
+ * - upper
+ * Uppercases the input.
+ * - count
+ * Returns the item counts in the input, if it is an array.
+ * - dump
+ * - printr
+ * Calls print_r on the input (and puts it in between <pre></pre> elements. Should only be used for debugging.
  *
  * Internationalisation will probably fail in combination with other
  * modifiers.
@@ -22,35 +56,51 @@
  * --> Conditions:
  * {if $var} ... {/if}
  * {if !$var} ... {/if}
+ * {if $var = $var2} ... {/if}
+ * {if $var != $var2} ... {/if}
  * {if $var} ... {else} ... {/if}
  *
- * Nesting supported, but no conditions other than variable values: no
- * comparisons, ands, or, buts or maybes.
+ * Nesting supported and instead of variables literal strings can be used.
+ * Variable modifiers are supported, for example:
+ *
+ * {if $author.name|left:2 = 'fo'} will match foo.
+ *
+ * A single comparison can be used but not ANDs, ORs, buts or maybes.
  *
  * --> Iteration:
- * {foreach $arrayname as $variable} ... {/foreach}
+ * {foreach $array as $variable} ... {/foreach}
+ * {foreach $array as $key => $variable} ... {/foreach}
  *
  * Iterations are parsed prior to substitution, resulting into variables
  * such as {$comments.0.author} which will later be replaced.
  *
- * --> Debug notes:
+ * The key format is supported, but currently the key is not accessible.
+ *
+ * --> Comments:
  * {* I won't be shown}
  *
  * --> Includes:
- * {include 'other/template/file'}
+ * {{include 'other/template/file'}}
  *
  * --> Extends:
  * {{extends 'other/template/file'}}
  *
- * Both include and extends check .tpl and .php files in the templates/
+ * Both include and extends check .tpl files in the templates/
  * directory with first Core::getRootPath() and then Core::getInstallPath().
  *
- * @todo Add a {debug} statement showing the entire available variable scope to templaters.
+ * Although the template engine allows for PHP files,
+ * combining those extend isn't recommended (and
+ * likely to fail) as once the template rendering is started, PHP is no
+ * longer executed.
+ *
+ * --> Debugging:
+ * {{debug}}
+ * Prints all available template data (print_r within <pre></pre>)
  *
  * @class Template
  * @package Kiki
- * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011-2012 Rob Kaper <http://robkaper.nl/>
+ * @author Rob Kaper <https://robkaper.nl/>
+ * @copyright 2011-2023 Rob Kaper <https://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 
