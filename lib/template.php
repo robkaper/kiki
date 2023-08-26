@@ -472,7 +472,7 @@ class Template
     $matches = [];
     if ( preg_match( "/\s?([^!=]+)\s?(!?)=\s?(.*)\s?/", $condition, $matches ) )
     {
-      Log::debug( print_r($matches, true) );
+      // Log::debug( print_r($matches, true) );
       $left = $this->getVariable( trim($matches[1]) );
       $not = !empty($matches[2]);
       $right = $this->getVariable( trim($matches[3]) );
