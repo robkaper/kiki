@@ -4,7 +4,7 @@ namespace Kiki\Controller;
 
 class Redirect extends \Kiki\Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     $this->status = 301;
     $this->content = $this->action;

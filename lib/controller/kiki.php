@@ -11,13 +11,13 @@ use Kiki\Storage;
 
 class Kiki extends Controller
 {
-  public function exec()
+  public function actionHandler()
   {
-		if ( $this->actionHandler() )
-			return;
+    // if ( $this->actionHandler() )
+    //   return;
 
-		$this->fallback();
-	}
+    $this->fallback();
+  }
 
 	public function fallback()
 	{
@@ -97,7 +97,7 @@ class Kiki extends Controller
 		$this->subController = new Account();
 		$this->subController->setObjectId( $objectId );
 
-		$result = $this->subController->exec();
+		$result = $this->subController->actionHandler();
 		if ( !$result )
 			unset($this->subController);
 

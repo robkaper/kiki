@@ -27,7 +27,7 @@ class Controller
   protected $altContentType = null;
   protected $title = '404 Not found';
   protected $template = 'pages/404';
-  protected $data = null;
+  protected $data = [];
   protected $content = null;
 
   // FIXME: refactor to template data, or Core class

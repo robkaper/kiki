@@ -7,7 +7,7 @@ use Kiki\Template;
 
 class Page extends \Kiki\Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     $db = Core::getDb();
     $user = Core::getUser();

@@ -8,7 +8,7 @@ use Kiki\StorageItem;
 
 class Thumbnails extends \Kiki\Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     list( $dummy, $id, $w, $h, $dummy, $crop ) = $this->objectId;
 

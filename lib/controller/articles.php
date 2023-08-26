@@ -11,7 +11,7 @@ use Kiki\Section;
 
 class Articles extends \Kiki\Controller
 {
-  public function exec()
+  public function indexAction()
   {
     if ( !$this->context )
       return false;

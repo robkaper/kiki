@@ -8,7 +8,7 @@ use Kiki\Core;
 
 class Album extends Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     $db = Core::getDb();
     $user = Core::getUser();

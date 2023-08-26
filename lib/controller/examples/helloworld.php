@@ -6,7 +6,7 @@ use Kiki\Controller;
 
 class HelloWorld extends Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     $this->title = "Hello world!";
     $this->status = 200;

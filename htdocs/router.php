@@ -182,6 +182,7 @@ else // if ( !($controller = Router::findPage($requestPath)) && !($controller = 
 if ( !$phpFile && $controller )
 {
   $controller->exec();
+  $controller->postExec();
   $controller->output();
 }
 

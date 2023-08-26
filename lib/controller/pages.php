@@ -4,7 +4,7 @@ namespace Kiki\Controller;
 
 class Pages extends \Kiki\Controller
 {
-  public function exec()
+  public function actionHandler()
   {
     $db = \Kiki\Core::getDb();
     $user = \Kiki\Core::getUser();
