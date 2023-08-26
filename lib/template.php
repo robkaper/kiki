@@ -776,28 +776,29 @@ class Template
     else
       list( $var, $mods ) = array( $var, null );
 
-    // Log::debug( "replace $var" );
-		// echo "<hr>replace var $var";
+    // Log::debug( "getVariable $var" );
 
     // Loop through the array and store a flattened value. Could possibly be
     // done in normalise.
     if ( !array_key_exists( $var, $this->data ) )
     {
-			// echo "not exist in flat structure";
+      // Log::debug( "doesn't exist in flattened structure" );
+
       $parts = explode( ".", $var );
       $container = $this->data;
       $value = null;
       while( ( $part = array_shift($parts) ) !== null )
       {
-				if(is_numeric($part))
-					$container = array_values($container);
-				if (is_object($container))
-					$container = (array)$container;
-				// echo "handling part $part type ". gettype($container). ":". print_r($container,true);
+        if(is_numeric($part))
+          $container = array_values($container);
+        if (is_object($container))
+          $container = (array)$container;
+
+        // Log::debug( "handling part $part type ". gettype($container). ":". print_r($container,true) );
 
         if ( !is_array($container) || !isset($container[$part]) )
         {
-					// echo "return null";
+          // echo "return null";
           // Log::debug( "return null" );
           return null;
         }
