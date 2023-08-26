@@ -454,7 +454,7 @@ class Template
       exit;
     }
 
-    $output = "{". $input[1]. $this->ifDepth. $input[3]. "}"; // . PHP_EOL;
+    $output = "{". $input[1]. $this->ifDepth. $input[3]. "}";
 
     if ( $input[2]!='/' )
     {
