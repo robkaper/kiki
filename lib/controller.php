@@ -48,11 +48,36 @@ class Controller
     $this->extraScripts = array();
     $this->extraStyles = array();
 
-    $this->data = array();
-
     $this->notices = array();
     $this->warnings = array();
     $this->errors = array();
+  }
+
+  protected function initTemplateData()
+  {
+    $user = Core::getUser();
+
+    $parsedUri = parse_url( $_SERVER['REQUEST_URI'] );
+    $path = $parsedUri['path'] ?? null;
+
+    // Assign core data to Kiki namespace.
+    $this->data[strtolower(__NAMESPACE__)] = [
+      'server' => [
+        'name' => $_SERVER['SERVER_NAME'] ?? null,
+      ],
+      'http' => [
+        'get' => $_GET ?? null,
+        'post' => $_POST ?? null,
+        'host' => $_SERVER['HTTP_HOST'] ?? null,
+        'requestUri' => $_SERVER['REQUEST_URI'] ?? null,
+        'path' => $path,
+      ],
+      'date' => [
+        'year' => date('Y'),
+      ],
+      'user' => $user ? $user->templateData() : null,
+    ];
+    $this->data['legacy'] = Core::getTemplateData();
   }
 
   public static function factory($type)
@@ -122,6 +147,8 @@ class Controller
 
   protected function actionHandler()
   {
+    $this->initTemplateData();
+
     $remainder = null;
 
     $urlParts = parse_url($this->action ?? $this->objectId);
@@ -142,7 +169,7 @@ class Controller
 
     if ( $this->subController = $this->getActionController($action) )
     {
-      $this->subController->setcontext($this->context);
+      $this->subController->setContext($this->context);
       $this->action = $remainder;
 
       return $this->subController->actionHandler();
@@ -185,12 +212,21 @@ class Controller
     return $this->actionHandler();
   }
 
+  // Called in succession to exec.  One use-case would be to add timers to
+  // the template after execution.
+  public function postExec()
+  {
+  }
+
   public function output()
   {
     if ( PHP_SAPI == 'cli' )
     {
       $template = Template::getInstance();
       $template->load( $this->template() );
+
+      foreach( $this->data() as $key => $data )
+        $template->assign( $key, $data );
       $template->assign( 'title', $this->title() );
       $template->assign( 'content', $this->content() );
 
@@ -241,6 +277,8 @@ class Controller
       case 'tpl2':
         $template->load( $this->template() );
 
+        foreach( $this->data() as $key => $data )
+          $template->assign( $key, $data );
         $template->assign( 'title', $this->title() );
         $template->assign( 'content', $this->content() );
 
@@ -251,6 +289,14 @@ class Controller
         include_once $templateFile;
         break;
     }
+  }
+
+  public function data()
+  {
+    if ( isset($this->subController) )
+      $this->data = array_merge( $this->data, $this->subController->data() );
+
+    return $this->data;
   }
 
   public function status()

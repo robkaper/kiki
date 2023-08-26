@@ -4,157 +4,136 @@ namespace Kiki;
 
 class Core
 {
-	private static $path = null;
-	private static $rootPath = null;
+  private static $path = null;
+  private static $rootPath = null;
 
-	private static $baseUrl = null;
+  private static $baseUrl = null;
 
-	private static $db = null;
+  private static $db = null;
 
-	private static $memcache = null;
-	private static $cacheAvailable = false;
+  private static $memcache = null;
+  private static $cacheAvailable = false;
 
-	private static $user = null;
+  private static $user = null;
 
-	protected static $templateData = null;
-	private static $flashBag = null;
+  protected static $templateData = array();
+  private static $flashBag = null;
 
-	public static function getInstallPath()
-	{
-		return self::$path;
-	}
+  public static function getInstallPath()
+  {
+    return self::$path;
+  }
 
-	public static function setInstallPath( $path )
-	{
-		self::$path = $path;
-	}
+  public static function setInstallPath( $path )
+  {
+    self::$path = $path;
+  }
 
-	public static function getRootPath()
-	{
-		return self::$rootPath;
-	}
+  public static function getRootPath()
+  {
+    return self::$rootPath;
+  }
 
-	public static function setRootPath( $path )
-	{
-		self::$rootPath = $path;
-	}
+  public static function setRootPath( $path )
+  {
+    self::$rootPath = $path;
+  }
 
-	public static function getBaseUrl()
-	{
-		return self::$baseUrl;
-	}
+  public static function getBaseUrl()
+  {
+    return self::$baseUrl;
+  }
 
-	public static function setBaseUrl( $baseUrl )
-	{
-		self::$baseUrl = $baseUrl;
-	}
+  public static function setBaseUrl( $baseUrl )
+  {
+    self::$baseUrl = $baseUrl;
+  }
 
-	public static function getDb( $forceNew = false )
-	{
-		if ( !isset(self::$db) || $forceNew )
-		{
-			self::$db = new Database( Config::$db );
-		}
+  public static function getDb( $forceNew = false )
+  {
+    if ( !isset(self::$db) || $forceNew )
+    {
+      self::$db = new Database( Config::$db );
+    }
 
-		return self::$db;
-	}
+    return self::$db;
+  }
 
-	public static function setDb( &$db )
-	{
-		self::$db = $db;
-	}
+  public static function setDb( &$db )
+  {
+    self::$db = $db;
+  }
 
-	public static function getMemcache()
-	{
-		if ( !isset(Config::$memcachedHost) ) 
-			return null;
+  public static function getMemcache()
+  {
+    if ( !isset(Config::$memcachedHost) ) 
+      return null;
 
-		if ( !isset(self::$memcache) )
-		{
-			Log::beginTimer( "initMemcache" );
-			self::$memcache = new \Memcache();
+    if ( !isset(self::$memcache) )
+    {
+      Log::beginTimer( "initMemcache" );
+      self::$memcache = new \Memcache();
 
-			self::$cacheAvailable = self::$memcache->connect( Config::$memcachedHost, Config::$memcachedPort );
-			Log::endTimer( "initMemcache" );
-		}
+      self::$cacheAvailable = self::$memcache->connect( Config::$memcachedHost, Config::$memcachedPort );
+      Log::endTimer( "initMemcache" );
+    }
 
-		return self::$memcache;
-	}
+    return self::$memcache;
+  }
 
-	public static function cacheAvailable()
-	{
-		return self::$cacheAvailable;
-	}
+  public static function cacheAvailable()
+  {
+    return self::$cacheAvailable;
+  }
 
-	public static function getUser()
-	{
-		if ( !isset(self::$user) )
-		{
-			$className = ClassHelper::bareToNamespace( 'User' );
-			self::$user = new $className();
-		}
+  public static function getUser()
+  {
+    if ( !isset(self::$user) )
+    {
+      $className = ClassHelper::bareToNamespace( 'User' );
+      self::$user = new $className();
+    }
 
-		return self::$user;
-	}
+    return self::$user;
+  }
 
-	public static function setUser( &$user )
-	{
-		self::$user = $user;
-	}
+  public static function setUser( &$user )
+  {
+    self::$user = $user;
+  }
 
-	public static function getTemplateData()
-	{
-		if ( !isset(self::$templateData) )
-			static::setTemplateData();
+  public static function getTemplateData()
+  {
+    self::setTemplateData();
+    return self::$templateData;
+  }
 
-		return self::$templateData;
-	}
-
-	public static function setTemplateData()
-	{
-		// Basic and fundamental variables that should always be available in templates.
-		self::$templateData = array();
-
-		// Request values
-		self::$templateData['get'] = $_GET;
-		self::$templateData['post'] = $_POST;
-
-		// Config values
-		self::$templateData['config'] = array();
+  public static function setTemplateData()
+  {
+    self::$templateData['config'] = array();
 
     foreach( get_class_vars( 'Kiki\Config' ) as $configKey => $configValue )
     {
-			// Lame security check, but better safe than sorry until a proper
-			// audit has been done that in no way unauthorised user content get
-			// parsed as template itself, through parsing recursion or otherwise. 
-			// Should mostly be careful about direct assignment of any of it to
-			// 'content'.
+      // Lame security check, but better safe than sorry until a proper
+      // audit has been done that in no way unauthorised user content get
+     // parsed as template itself, through parsing recursion or otherwise. 
+     // Should mostly be careful about direct assignment of any of it to
+     // 'content'.
+
       if ( !preg_match( '~(^db|pass|secret|pepper)~i', $configKey ) )
         self::$templateData['config'][$configKey] = $configValue;
     }
 
-    if ( Config::$customCss )
-      self::$templateData['stylesheets'] = array( Config::$customCss );
-
-		// Is that all we want?
-    self::$templateData['server'] = array(
-      'host' => $_SERVER['HTTP_HOST'] ?? null,
-      'name' => $_SERVER['SERVER_NAME'] ?? null,
-      'requestUri' => $_SERVER['REQUEST_URI'] ?? null,
-    );
-
-    self::$templateData['user'] = self::$user ? self::$user->templateData() : null;
-
-		// Account service(s). Although multiple routing entries are technically
-		// possible, templateData currently only populates one: the first found or else
-		// the internal fallback in the Kiki controller.
-		// FIXME: disabled for now, this shouldn't be db-populated anyway
-		// $accountServices = array_values( Router::getBaseUris('account') );
-		$baseUri = isset($accountServices[0]) ? $accountServices[0]->base_uri : Config::$kikiPrefix. "/account";
-		$title = isset($accountServices[0]) ? $accountServices[0]->title : _("Account");
-		self::$templateData['accountService'] = array( 'url' => $baseUri, 'title' => $title );
-		
-		// Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
+    // Account service(s). Although multiple routing entries are technically
+    // possible, templateData currently only populates one: the first found or else
+    // the internal fallback in the Kiki controller.
+    // FIXME: disabled for now, this shouldn't be db-populated anyway
+    // $accountServices = array_values( Router::getBaseUris('account') );
+    $baseUri = isset($accountServices[0]) ? $accountServices[0]->base_uri : Config::$kikiPrefix. "/account";
+    $title = isset($accountServices[0]) ? $accountServices[0]->title : _("Account");
+    self::$templateData['accountService'] = array( 'url' => $baseUri, 'title' => $title );
+    
+    // Active connections. Only typing laziness explains why this isn't simply in {$user.connections}.
     self::$templateData['activeConnections'] = array();
 
     $connectedServices = array();
