@@ -727,6 +727,10 @@ class Template
           $input = trim($input);
           break;
 
+        case 'left':
+          $input = substr( $input, 0, $fmt );
+          break;
+
         case 'strip':
           $input = strip_tags($input);
           break;
@@ -744,10 +748,14 @@ class Template
           break;
           
         case 'dump':
+        case 'printr':
           $input = "<pre>". print_r($input,true). "</pre>";
           break;
 
-        default:;
+        default:
+          if ( is_array($input) )
+            $input = '[Array]';
+          break;
       }
     }
     return $input;
@@ -756,10 +764,10 @@ class Template
   private function getVariable( $var )
   {
     if ( $var[0] != "\$" )
-		{
-			$text = trim($var, '"');
-			return $text!=$var ? $text : null;
-		}
+    {
+      $text = trim($var, '"\'');
+      return $text!=$var ? $text : null;
+    }
 
     $var = substr( $var, 1 );
 
