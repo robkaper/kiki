@@ -376,6 +376,11 @@ class Template
     $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
 
+  // Different from just calling include_once outside in case data is assigned.
+  public function include()
+  {
+    include_once $this->file($this->template);
+  }
 
   public function fetch()
   {
