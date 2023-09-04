@@ -787,7 +787,7 @@ class Template
           break;
 
         case 'count':
-          $input = count($input);
+          $input = is_array($input) ? count($input) : 0;
           break;
           
         case 'dump':
