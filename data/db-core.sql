@@ -101,7 +101,7 @@ CREATE TABLE `pictures` (
   height INT UNSIGNED NOT NULL default 0,
   title varchar(255) not null,
   description TEXT NOT NULL,
-  storage_id INT UNSIGNED NOT NULL REFERENCES `storage`(`id`)
+  storage_id BIGINT UNSIGNED NOT NULL REFERENCES `storage`(`id`)
 ) default charset='utf8mb4';
 
 CREATE TABLE `albums` (
