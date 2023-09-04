@@ -420,7 +420,7 @@ class Template
       if ( file_exists($file) )
         $content .= file_get_contents($file);
       else
-        \Kiki\Log::fatal( "could not load template file $file" );
+        \Kiki\Log::fatal( "could not load template file [$file][$this->template]" );
     }
 
     if ( $fullHTML )
@@ -441,7 +441,6 @@ class Template
     $this->normalise( $this->data );
     $this->preparse();
     $this->parse();
-    $this->cleanup();
 
     // Log::debug( "done parsing, content: ". $this->content );
 
