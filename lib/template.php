@@ -123,8 +123,6 @@ class Template
   private $loopDepth = 0;
   private $maxLoopDepth = 0;
 
-  private $cleanup = true;
-
   private $db;
 
   public function __construct( $template = null, $noDefault=false )
@@ -364,17 +362,8 @@ class Template
 
     // Remove block closing tags
     $this->content = preg_replace( "/\{\{\/block\}\}/", '', $this->content );
-}
-
-  public function setCleanup( $cleanup ) { $this->cleanup = $cleanup; }
-
-  public function cleanup()
-  {
-    if ( !$this->cleanup )
-      return;
-
-    $this->content = preg_replace( '~([\r\n]{2,})~', "", $this->content );
   }
+
 
   // Different from just calling include_once outside in case data is assigned.
   public function include()
