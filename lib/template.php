@@ -111,6 +111,8 @@ class Template
   private static $instance;
 
   private $template = null;
+  private $extendChain = array();
+
   private $noDefault = false;
 
   private $blocks = array();
@@ -224,7 +226,6 @@ class Template
     // Template engine 2.0:
     // TODO: ensure all captures are {{}} instead of {}
 
-    $extendChain = array();
     $matches = array();
 
     do
@@ -240,9 +241,9 @@ class Template
         $extendedTemplateName = $matches[1];
 
         // Store extended file in array to avoid race condition
-        if ( in_array( $extendedTemplateName, $extendChain ) )
+        if ( in_array( $extendedTemplateName, $this->extendChain ) )
           break;
-        $extendChain[] = $extendedTemplateName;
+        $this->extendChain[] = $extendedTemplateName;
 
         $fileName = self::file( $matches[1] );
         $this->content = file_get_contents( $fileName );
@@ -299,7 +300,11 @@ class Template
       $blockContent = $match[2];
 
       // Store the block content in the $this->blocks array
-      $this->blocks[$blockName] = $blockContent;
+      if ( !isset( $this->blocks[$blockName] ) )
+      {
+        Log::debug( "storing content for block $blockName for chain ". implode( " → ", $this->extendChain ) );
+        $this->blocks[$blockName] = $blockContent;
+      }
 
       // Remove the matched block tag and its content
       $this->content = preg_replace($reBlocks, '', $this->content, 1);
