@@ -47,7 +47,7 @@ abstract class Daemon
     // Prior to forking children, otherwise they end up as orphans.
     $this->toBackground();
     $this->detach();
-    
+
     Log::info( "started" );
 
     for( $i=0 ; $i<$numChildren ; $i++ )
