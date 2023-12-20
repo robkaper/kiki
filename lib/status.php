@@ -21,20 +21,16 @@ class Status
   public static function failedRequirements()
   {
     $requirements = array();
-    $requirements[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php5-curl' );
-    $requirements[] = array( 'name' => 'GD', 'function' => 'imagecreatefromjpeg', 'remedy' => 'apt-get install php5-gd' );
-    $requirements[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php5-mysql' );
+    $requirements[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php-curl' );
+    $requirements[] = array( 'name' => 'GD', 'function' => 'imagecreatefromjpeg', 'remedy' => 'apt-get install php-gd' );
+    $requirements[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php-mysql' );
     $requirements[] = array( 'name' => 'PEAR', 'include' => 'PEAR.php', 'remedy' => 'apt-get install php-pear' );
-    $requirements[] = array( 'name' => 'Mail_RFC822 (PEAR)', 'include' => 'Mail/RFC822.php', 'remedy' => 'pear install -a Mail' );
-    $requirements[] = array( 'name' => 'Net_SMTP (PEAR)', 'include' => 'Net/SMTP.php', 'remedy' => 'pear install -a Net_SMTP' );
-    $requirements[] = array( 'name' => 'Fileinfo (PECL', 'function' => 'finfo_open', 'remedy' => 'pecl install Fileinfo' );
-    $requirements[] = array( 'name' => 'Mailparse (PECL)', 'function' => 'mailparse_msg_create', 'remedy' => 'pecl install Mailparse' );
 
-		if ( Config::$i18n )
-		{
-			$requirements[] = array( 'name' => 'gettext', 'function' => 'bindtextdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::\$i18n</strong> to <em>false</em>" );
-			$requirements[] = array( 'name' => 'gettext', 'function' => 'textdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::\$i18n</strong> to <em>false</em>" );
-		}
+    if ( Config::$i18n )
+    {
+      $requirements[] = array( 'name' => 'gettext', 'function' => 'bindtextdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::\$i18n</strong> to <em>false</em>" );
+      $requirements[] = array( 'name' => 'gettext', 'function' => 'textdomain', 'remedy' => "apt-get install php-gettext, or set <strong>Config::\$i18n</strong> to <em>false</em>" );
+    }
 
     $failures = array();
 
