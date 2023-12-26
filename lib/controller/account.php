@@ -137,7 +137,7 @@ class Account extends \Kiki\Controller
     $template = new \Kiki\Template( 'email/request-password-reset', true );
 
     $template->assign( 'url', $url );
-    $html = $template->content( false );
+    $html = $template->content();
 
     if ( $html )
       $mail->setHtml( $html );
@@ -265,7 +265,7 @@ class Account extends \Kiki\Controller
             $template = new \Kiki\Template( 'email/signup', true );
 
             $template->assign( 'url', $url );
-            $html = $template->content( false );
+            $html = $template->content();
 
             if ( $html )
               $mail->setHtml( $html );

@@ -378,12 +378,12 @@ class Template
 
   public function fetch()
   {
-    return $this->content( false );
+    return $this->content();
   }
 
   public function setContent( $content ) { $this->content = $content; }
 
-  public function content( $fullHTML = true )
+  public function content()
   {
     // Log::debug( "begin template engine" );
     if ( !$this->template && !$this->noDefault )
@@ -402,36 +402,18 @@ class Template
       return $this->content;
     }
 
-    // TODO: don't always auto-include html framework, desired template
-    // output could just as well be another format (json, xml, ...)
     $content = null;
-    if ( $fullHTML )
-    {
-      $content = "{include 'html'}". PHP_EOL;
-      $content .= "{include 'head'}". PHP_EOL;
-    }
 
     if ( !$this->template && !$this->noDefault )
       $this->template = 'pages/default';
 
     // Log::beginTimer( "Template::content ". $this->template );
 
-    // Don't load a template when setContent has been used.
-    if ( $this->content )
-      $content .= $content;
+    $file = $this->file($this->template);
+    if ( file_exists($file) )
+      $content .= file_get_contents($file);
     else
-    {
-      $file = $this->file($this->template);
-      if ( file_exists($file) )
-        $content .= file_get_contents($file);
-      else
-        \Kiki\Log::fatal( "could not load template file [$file][$this->template]" );
-    }
-
-    if ( $fullHTML )
-    {
-      $content .= "{include 'html-end'}";
-    }
+      \Kiki\Log::fatal( "could not load template file [$file][". $this->template. "]" );
 
     $this->content = $content;
 
@@ -449,10 +431,7 @@ class Template
 
     // Log::debug( "done parsing, content: ". $this->content );
 
-		if ( $fullHTML )
-		{
-			\Kiki\Core::getFlashBag()->reset();
-		}
+    \Kiki\Core::getFlashBag()->reset();
 
     return $this->content;
   }
