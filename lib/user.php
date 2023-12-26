@@ -114,8 +114,6 @@ class User extends BaseObject
     
     $this->setFromObject( $o );
 
-    // TODO: make sure this doesn't load remote data
-    // TODO: add Cache support for connections, although no longer really urgent as User class itself can be stored in Cache
     $this->getStoredConnections();
   }
 
