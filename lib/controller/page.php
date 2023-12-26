@@ -13,13 +13,11 @@ class Page extends \Kiki\Controller
     $user = Core::getUser();
 
     $template = Template::getInstance();
-    $template->load( 'kiki/index' );
+    $this->template = 'kiki/index';
 
     $this->title = 'Kiki';
     $this->template = 'kiki/index';
     $this->status = 200;
-
-    $this->content = '<p>Welcome to Kiki.</p>';
 
     return true;
 

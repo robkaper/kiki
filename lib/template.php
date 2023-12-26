@@ -872,5 +872,3 @@ class Template
     return $this->modify( $this->data[$var], $mods );
   }
 }
-
-?>
