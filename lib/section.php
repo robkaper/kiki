@@ -126,6 +126,9 @@ class Section
 
 		$class = null;
 
+    return null;
+    // TODO: make template based, Form class is deprecated
+
     $content = Form::open( "sectionForm_". $this->id, Config::$kikiPrefix. "/json/section.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "sectionId", $this->id );
     $content .= Form::text( "baseURI", $this->baseURI, "URL name" );

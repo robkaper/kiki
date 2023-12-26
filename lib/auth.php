@@ -64,7 +64,6 @@ class Auth
    */
   public static function setCookie( $id, $beyondSession = false, $expireTime = null )
   {
-    // TODO: make cookie length configurable by end user using Config::authCookieExpireTimeOptions array
     if ( !$expireTime )
       $expireTime = Config::$authCookieExpireTime;
 

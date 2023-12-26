@@ -165,6 +165,9 @@ class Article extends BaseObject
       while( $oSection = $db->fetchObject($rs) )
         $sections[$oSection->id] = $oSection->title;
 
+    return null;
+    // TODO: make template based, Form class is deprecated
+
     $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
     $content .= Form::hidden( "articleId", $this->id );
     $content .= Form::hidden( "albumId", $this->albumId );
