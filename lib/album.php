@@ -343,6 +343,9 @@ class Album extends BaseObject
 
   public static function findByLinkedObjectId( $linkedObjectId, $create = false, $title = null )
   {
+    if ( !$linkedObjectId )
+      Log::error( "called with zero/null linkedObjectId... (create: $create, title: $title)" );
+
     $db = Core::getDb();
 
     $albumClassName = get_called_class();
