@@ -302,7 +302,7 @@ class Template
       // Store the block content in the $this->blocks array
       if ( !isset( $this->blocks[$blockName] ) )
       {
-        Log::debug( "storing content for block $blockName for chain ". implode( " → ", $this->extendChain ) );
+        // Log::debug( "storing content for block $blockName for chain ". implode( " → ", $this->extendChain ) );
         $this->blocks[$blockName] = $blockContent;
       }
 
