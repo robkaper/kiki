@@ -62,7 +62,7 @@ class Storage
   {
     $dirName = dirname( $fileName );
     if ( !file_exists($dirName) )
-      mkdir($dirName, 0777, true);
+      mkdir($dirName, 0770, true);
     return $dirName;
   }
 
@@ -253,7 +253,7 @@ class Storage
     imageinterlace( $scaled, 1 );
 
     if ( file_exists($scaledFile) )
-      chmod( $scaledFile, 0666 );
+      chmod( $scaledFile, 0660 );
     else
       self::makeDirectory($scaledFile);
 
@@ -274,7 +274,7 @@ class Storage
       default:;
     }
 
-    chmod( $scaledFile, 0666 );
+    chmod( $scaledFile, 0660 );
     return $scaledFile;
   }
 
