@@ -74,12 +74,12 @@ class ObjectQueue
 
     public function markFailed( $id, $tries )
     {
-        // This is sufficient to for up to 35 retries, with the last try being ~6m after the penultimate.
+        // This is sufficient to for up to 35 retries, with the last try being ~6 months after the penultimate.
         $fibonacci = [ 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377,
             610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025,
             121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578,
             5702887, 9227465, 14930352 ];
-        $queueTime = date( 'Y-m-d H:i:s', time() + $fibonacci($tries) );
+        $queueTime = date( 'Y-m-d H:i:s', time() + $fibonacci[$tries] );
 
         $q = $this->db->buildQuery( "UPDATE `object_queue` SET `tries`=%d, `qtime`='%s' WHERE `id`=%d", $tries, $queueTime, $id );
         $this->db->query($q);
