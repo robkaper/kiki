@@ -19,7 +19,6 @@ declare( ticks = 1 );
 
 abstract class Daemon
 {
-  private $name = null;
   protected $pid = 0;
 
   protected $db = null;
@@ -29,11 +28,10 @@ abstract class Daemon
   private $shutdown = false;
   private $killTime = 0;
 
-  public function __construct( $name )
+  public function __construct()
   {
     $this->db = Core::getDb();
     
-    $this->name = $name;
     $this->pid = getmypid();
   }
 
