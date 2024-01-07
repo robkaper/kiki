@@ -329,6 +329,8 @@ class Account extends \Kiki\Controller
           Auth::setCookie(0);
 
           $this->warnings[] = array( 'msg' => sprintf( "Because you verified account <strong>%s</strong> (%d), you are no longer logged in as <strong>%s</strong> (%d).", $verifyUser->email(), $verifyUser->id(), $user->email(), $user->id() ) );
+
+          $user->reset();
         }
         else
         {
