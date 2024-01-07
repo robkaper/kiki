@@ -30,7 +30,7 @@ class Controller
   protected $data = [];
   protected $content = null;
 
-  // FIXME: refactor to template data, or Core class
+  // Controller specific notices, warnings and errors. Merged with template data in data()
   protected $notices = null;
   protected $warnings = null;
   protected $errors = null;
@@ -279,6 +279,7 @@ class Controller
 
         foreach( $this->data() as $key => $data )
           $template->assign( $key, $data );
+
         $template->assign( 'title', $this->title() );
         $template->assign( 'content', $this->content() );
 
@@ -295,6 +296,10 @@ class Controller
   {
     if ( isset($this->subController) )
       $this->data = array_merge( $this->data, $this->subController->data() );
+
+    $this->data['notices'] = array_merge( $this->notices, $this->data['notices'] ?? array() );
+    $this->data['warnings'] = array_merge( $this->warnings, $this->data['warnings'] ?? array() );
+    $this->data['errors'] = array_merge( $this->errors, $this->data['errors'] ?? array() );
 
     return $this->data;
   }

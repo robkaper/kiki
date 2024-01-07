@@ -209,9 +209,18 @@ class Account extends \Kiki\Controller
 
       $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
       if ( !$validEmail )
-        $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+        $this->errors['email'] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+
+      if ( !count($this->errors) )
+      {
+        $userId = $user->getIdByEmail( $email );
+        // Disable to send email despite existing account
+        if ( $userId )
+          $this->errors[] = array( 'msg' => 'An account with that e-mail address already exists. <a href="/request-password-reset" class="bk">Request password reset</a>.' );
+      }
+
       if ( !$password )
-        $this->errors[] = array( 'msg' => _("Your password cannot be empty.") );
+        $this->errors['password'] = array( 'msg' => _("Your password cannot be empty.") );
 
       $createAdmin = false;
       if ( isset($adminPassword) )
@@ -226,14 +235,6 @@ class Account extends \Kiki\Controller
         }
       }
 
-      if ( !count($this->errors) )
-      {
-        $userId = $user->getIdByEmail( $email );
-        // Disable to send email despite existing account
-        if ( $userId )
-          $this->errors[] = array( 'msg' => "An account with that e-mail address already exists. [Forgot your password?]" );
-      }
-    
       if ( !count($this->errors) )
       {
         $user->storeNew( $email, $password, $createAdmin );
