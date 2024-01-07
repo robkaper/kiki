@@ -5,11 +5,12 @@ DROP TABLE IF EXISTS `pictures`;
 
 DROP TABLE IF EXISTS `storage`;
 
+DROP TABLE IF EXISTS `object_likes`;
+DROP TABLE IF EXISTS `object_comments`;
+
 DROP TABLE IF EXISTS `user_connections`;
 DROP TABLE IF EXISTS `users`;
 
-DROP TABLE IF EXISTS `object_likes`;
-DROP TABLE IF EXISTS `object_comments`;
 DROP TABLE IF EXISTS `object_metadata`;
 DROP TABLE IF EXISTS `objects`;
 
@@ -33,6 +34,23 @@ CREATE TABLE `objects` (
   INDEX(`object_name`),
   `user_id` BIGINT UNSIGNED DEFAULT 0,
   `type` VARCHAR(64) not null
+) default charset='utf8mb4';
+
+CREATE TABLE IF NOT EXISTS `object_queue` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY( `id` ),
+    `object_id` BIGINT UNSIGNED NOT NULL REFERENCES `objects`(`object_id`),
+    UNIQUE KEY( `object_id` ),
+    `ctime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `mtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `lock_id` VARCHAR(255) DEFAULT NULL,
+    INDEX( `lock_id` ),
+    `ltime` DATETIME DEFAULT NULL,
+    `priority` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `tries` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `processed` BOOLEAN NOT NULL DEFAULT false,
+    INDEX(`lock_id`, `processed`, `priority`, `ctime`, `tries`)
+
 ) default charset='utf8mb4';
 
 CREATE TABLE `object_metadata` (

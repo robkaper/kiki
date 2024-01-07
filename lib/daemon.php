@@ -19,9 +19,11 @@ declare( ticks = 1 );
 
 abstract class Daemon
 {
-  protected $db = null;
-  private $name;
+  private $name = null;
   protected $pid = 0;
+
+  protected $db = null;
+
   private $childPids = array();
   private $killPids = array();
   private $shutdown = false;
@@ -35,7 +37,12 @@ abstract class Daemon
     $this->pid = getmypid();
   }
 
-  abstract protected function childInit();
+  protected function childInit()
+  {
+    // Reinit database connection... seems to avoid 'gone away' errors after forking...
+    $this->db = Core::getDb(true);
+  }
+
   abstract protected function main();
   abstract protected function cleanup( $pid );
     
@@ -266,5 +273,3 @@ abstract class Daemon
     return $pid;
   }
 }
-
-?>
