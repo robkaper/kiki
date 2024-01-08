@@ -142,6 +142,7 @@ class Config
 	*/
 	public static function configFile()
 	{
+		// TODO: return an array, so config loading can cascade in order: /etc default /etc/site root/default root/site
 		if ( isset($_SERVER['SERVER_NAME']) )
 		{
 			$file = Core::getRootPath(). "/config-". $_SERVER['SERVER_NAME']. ".php";
