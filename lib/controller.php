@@ -167,13 +167,19 @@ class Controller
       $remainder = $this->objectId;
     }
 
+    // Log::debug( sprintf( "class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+
     if ( $this->subController = $this->getActionController($action) )
     {
       $this->subController->setContext($this->context);
-      $this->action = $remainder;
+      $this->subController->setAction($remainder);
+
+      // Log::debug( sprintf( "CALLING SUB class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
       return $this->subController->actionHandler();
     }
+
+   // Log::debug( sprintf( "NO SUB, CALLING METHOD class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     if ( !method_exists($this, $this->actionMethod) )
       return false;
@@ -192,6 +198,8 @@ class Controller
       if ( $this->template == 'pages/404' )
         $this->template = 'pages/default';
     }
+
+   Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     return $ret;
   }
