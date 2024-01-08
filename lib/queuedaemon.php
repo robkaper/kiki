@@ -6,8 +6,10 @@ class QueueDaemon extends Daemon
 {
     private $queue = null;
 
-    public functon __construct()
+    public function childInit()
     {
+        parent::childInit();
+
         $this->queue = new ObjectQueue($this->db);
     }
 
