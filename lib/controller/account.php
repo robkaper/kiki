@@ -43,7 +43,7 @@ class Account extends \Kiki\Controller
   {
     $this->template = 'pages/login';
     $this->status = 200;
-    $this->title = _("Login");
+    $this->title = _("Log in");
 
     $user = \Kiki\Core::getUser();
     if ( !count($this->errors) )
@@ -80,7 +80,7 @@ class Account extends \Kiki\Controller
     }
     else if ( $_POST )
     {
-      $this->errors[] = array( 'msg' => "Invalid email/password combination" );
+      $this->errors[] = array( 'msg' => "Invalid email/password combination." );
     }
 
     return true;
