@@ -197,10 +197,7 @@ class Account extends \Kiki\Controller
     $this->title = _("Create account");
     $this->status = 200;
 
-    $template = new \Kiki\Template('content/account-create');
-    $template->assign('postUrl', $this->getBaseUri('create') );
-
-    $user = \Kiki\Core::getUser();
+    $user = Core::getUser();
 
     if ( $user->id() )
     {
@@ -209,9 +206,7 @@ class Account extends \Kiki\Controller
     }
     else if ( $_POST )
     {
-
       $email = $_POST['email'] ?? null;
-      $template->assign('email', $email );
       $password = $_POST['password'] ?? null; 
 
       $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
@@ -289,16 +284,6 @@ class Account extends \Kiki\Controller
         }
       }
     }
-
-    if ( count($this->errors) )
-    {
-      $template->assign('errors', $this->errors);
-    }
-
-    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
-    return true;
-
-    $this->content = $template->fetch();
 
     return true;
   }
