@@ -27,9 +27,6 @@ class Config
 
 	public static $routing = null;
 
-	public static $siteName = null;
-	public static $address = null;
-
 	public static $language = "en";
 	public static $defaultTimezone = null;
 
@@ -125,10 +122,7 @@ class Config
 			'/' => array( 'Page', '_kiki/index' ),
 		);
 
-		self::$siteName = $_SERVER['SERVER_NAME'];
-
 		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
-
 	}
 
 	public static function loadConnectionServices()
