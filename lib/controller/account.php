@@ -23,6 +23,7 @@ namespace Kiki\Controller;
 use Kiki\Core;
 use Kiki\Auth;
 use Kiki\Router;
+use Kiki\Log;
 
 class Account extends \Kiki\Controller
 {
@@ -107,12 +108,11 @@ class Account extends \Kiki\Controller
     $user = Core::getUser();
 
     $email = $_POST['email'] ?? null;
+    $this->data['email'] = $email;
 
     $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
     if ( !$validEmail )
-      $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
-
-    $this->data['emailSent'] = true;
+      $this->errors['email'] = array( 'msg' => _("You did not enter a valid e-mail address.") );
 
     if ( count($this->errors) )
       return true;
@@ -158,11 +158,18 @@ class Account extends \Kiki\Controller
     $userId = $user->getIdByToken($token);
 
     if ( !$userId )
-      $this->errors[] = array( 'msg' => 'Invalid or expired token.' );
+    {
+      $this->errors['unavailable'] = array( 'msg' => 'Invalid or expired token.' );
+    }
 
     $user->load($userId);
-
     $this->data['email'] = $user->email();
+
+    $password = $_POST['password'] ?? null;
+    if ( $_POST && !$password )
+      $this->errors['password'] = array( 'msg' => _("Your password cannot be empty.") );
+
+    $this->data['password'] = $password;
 
     if ( $_POST && !count($this->errors) )
     {
