@@ -39,6 +39,9 @@ abstract class Daemon
   {
     // Reinit database connection... seems to avoid 'gone away' errors after forking...
     $this->db = Core::getDb(true);
+
+    // Re-init log to create a unique ID.
+    Log::init();
   }
 
   abstract protected function main();
