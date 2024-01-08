@@ -6,16 +6,15 @@ class QueueDaemon extends Daemon
 {
     private $queue = null;
 
-    protected function childInit()
+    public functon __construct()
     {
-        parent::childInit();
-
         $this->queue = new ObjectQueue($this->db);
     }
 
     protected function cleanup($pid)
     {
-        $this->queue->cleanupPid($pid);
+        if ( $this->queue )
+            $this->queue->cleanupPid($pid);
     }
 
     protected function main()

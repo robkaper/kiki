@@ -105,7 +105,7 @@ class ObjectQueue
         $db->query($q);
     }
 
-    public function cleanup( $pid )
+    public function cleanupPid( $pid )
     {
         Log::debug( "cleaning up pid $pid" );
 
