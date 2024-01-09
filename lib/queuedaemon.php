@@ -37,7 +37,6 @@ class QueueDaemon extends Daemon
 
         if ( method_exists( $this, $actionHandler ) )
         {
-            Log::debug( "actionHandler: $actionHandler" );
             $retVal = $this->$actionHandler($o);
             if ( $retVal === true )
                 $this->queue->markDone( $o->id );
@@ -51,7 +50,7 @@ class QueueDaemon extends Daemon
             return 0;
         }
 
-        Log::error( "actionHandler $actionHandler not found" );
+        Log::debug( "actionHandler $actionHandler not found, marking failed" );
         $this->queue->markFailed( $o->id, $o->tries+1 );
         return 1000000;
     }
