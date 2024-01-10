@@ -30,7 +30,7 @@ class Controller
   protected $data = [];
   protected $content = null;
 
-  // FIXME: refactor to template data, or Core class
+  // Controller specific notices, warnings and errors. Merged with template data in data()
   protected $notices = null;
   protected $warnings = null;
   protected $errors = null;
@@ -167,13 +167,19 @@ class Controller
       $remainder = $this->objectId;
     }
 
+    // Log::debug( sprintf( "class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+
     if ( $this->subController = $this->getActionController($action) )
     {
       $this->subController->setContext($this->context);
-      $this->action = $remainder;
+      $this->subController->setAction($remainder);
+
+      // Log::debug( sprintf( "CALLING SUB class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
       return $this->subController->actionHandler();
     }
+
+   // Log::debug( sprintf( "NO SUB, CALLING METHOD class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     if ( !method_exists($this, $this->actionMethod) )
       return false;
@@ -192,6 +198,8 @@ class Controller
       if ( $this->template == 'pages/404' )
         $this->template = 'pages/default';
     }
+
+   Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     return $ret;
   }
@@ -279,6 +287,7 @@ class Controller
 
         foreach( $this->data() as $key => $data )
           $template->assign( $key, $data );
+
         $template->assign( 'title', $this->title() );
         $template->assign( 'content', $this->content() );
 
@@ -295,6 +304,14 @@ class Controller
   {
     if ( isset($this->subController) )
       $this->data = array_merge( $this->data, $this->subController->data() );
+
+    $this->data['notices'] = array_merge( $this->notices, $this->data['notices'] ?? array() );
+    $this->data['warnings'] = array_merge( $this->warnings, $this->data['warnings'] ?? array() );
+    $this->data['errors'] = array_merge( $this->errors, $this->data['errors'] ?? array() );
+
+    $this->data['extraMeta'] = array_merge( $this->extraMeta, $this->data['extraMeta'] ?? array() );
+    $this->data['extraScripts'] = array_merge( $this->extraScripts, $this->data['extraScripts'] ?? array() );
+    $this->data['extraStyles'] = array_merge( $this->extraStyles, $this->data['extraStyles'] ?? array() );
 
     return $this->data;
   }

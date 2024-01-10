@@ -23,6 +23,7 @@ namespace Kiki\Controller;
 use Kiki\Core;
 use Kiki\Auth;
 use Kiki\Router;
+use Kiki\Log;
 
 class Account extends \Kiki\Controller
 {
@@ -43,7 +44,7 @@ class Account extends \Kiki\Controller
   {
     $this->template = 'pages/login';
     $this->status = 200;
-    $this->title = _("Login");
+    $this->title = _("Log in");
 
     $user = \Kiki\Core::getUser();
     if ( !count($this->errors) )
@@ -80,7 +81,7 @@ class Account extends \Kiki\Controller
     }
     else if ( $_POST )
     {
-      $this->errors[] = array( 'msg' => "Invalid email/password combination" );
+      $this->errors[] = array( 'msg' => "Invalid email/password combination." );
     }
 
     return true;
@@ -107,12 +108,11 @@ class Account extends \Kiki\Controller
     $user = Core::getUser();
 
     $email = $_POST['email'] ?? null;
+    $this->data['email'] = $email;
 
     $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
     if ( !$validEmail )
-      $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
-
-    $this->data['emailSent'] = true;
+      $this->errors['email'] = array( 'msg' => _("You did not enter a valid e-mail address.") );
 
     if ( count($this->errors) )
       return true;
@@ -158,11 +158,18 @@ class Account extends \Kiki\Controller
     $userId = $user->getIdByToken($token);
 
     if ( !$userId )
-      $this->errors[] = array( 'msg' => 'Invalid or expired token.' );
+    {
+      $this->errors['unavailable'] = array( 'msg' => 'Invalid or expired token.' );
+    }
 
     $user->load($userId);
-
     $this->data['email'] = $user->email();
+
+    $password = $_POST['password'] ?? null;
+    if ( $_POST && !$password )
+      $this->errors['password'] = array( 'msg' => _("Your password cannot be empty.") );
+
+    $this->data['password'] = $password;
 
     if ( $_POST && !count($this->errors) )
     {
@@ -190,10 +197,7 @@ class Account extends \Kiki\Controller
     $this->title = _("Create account");
     $this->status = 200;
 
-    $template = new \Kiki\Template('content/account-create');
-    $template->assign('postUrl', $this->getBaseUri('create') );
-
-    $user = \Kiki\Core::getUser();
+    $user = Core::getUser();
 
     if ( $user->id() )
     {
@@ -202,16 +206,23 @@ class Account extends \Kiki\Controller
     }
     else if ( $_POST )
     {
-
       $email = $_POST['email'] ?? null;
-      $template->assign('email', $email );
       $password = $_POST['password'] ?? null; 
 
       $validEmail = preg_match( '/^[A-Z0-9+._%-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', trim($email) );
       if ( !$validEmail )
-        $this->errors[] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+        $this->errors['email'] = array( 'msg' => _("You did not enter a valid e-mail address.") );
+
+      if ( !count($this->errors) )
+      {
+        $userId = $user->getIdByEmail( $email );
+        // Disable to send email despite existing account
+        if ( $userId )
+          $this->errors[] = array( 'msg' => 'An account with that e-mail address already exists. <a href="/request-password-reset" class="bk">Request password reset</a>.' );
+      }
+
       if ( !$password )
-        $this->errors[] = array( 'msg' => _("Your password cannot be empty.") );
+        $this->errors['password'] = array( 'msg' => _("Your password cannot be empty.") );
 
       $createAdmin = false;
       if ( isset($adminPassword) )
@@ -226,14 +237,6 @@ class Account extends \Kiki\Controller
         }
       }
 
-      if ( !count($this->errors) )
-      {
-        $userId = $user->getIdByEmail( $email );
-        // Disable to send email despite existing account
-        if ( $userId )
-          $this->errors[] = array( 'msg' => "An account with that e-mail address already exists. [Forgot your password?]" );
-      }
-    
       if ( !count($this->errors) )
       {
         $user->storeNew( $email, $password, $createAdmin );
@@ -282,16 +285,6 @@ class Account extends \Kiki\Controller
       }
     }
 
-    if ( count($this->errors) )
-    {
-      $template->assign('errors', $this->errors);
-    }
-
-    // TODO: don't really need local template anymore now that notices, warnings and errors are handled from main template
-    return true;
-
-    $this->content = $template->fetch();
-
     return true;
   }
 
@@ -328,6 +321,8 @@ class Account extends \Kiki\Controller
           Auth::setCookie(0);
 
           $this->warnings[] = array( 'msg' => sprintf( "Because you verified account <strong>%s</strong> (%d), you are no longer logged in as <strong>%s</strong> (%d).", $verifyUser->email(), $verifyUser->id(), $user->email(), $user->id() ) );
+
+          $user->reset();
         }
         else
         {

@@ -2,8 +2,6 @@
 
 namespace Kiki;
 
-use Kiki\MailerQueue;
-
 use \PHPMailer\PHPMailer\SMTP as SMTP;
 use \PHPMailer\PHPMailer\PHPMailer as PHPMailer;
 use \PHPMailer\PHPMailer\Exception as Exception;
@@ -31,10 +29,13 @@ class Mailer
    * @param int $priority
    * @return void
    */
-  public static function send( &$email, $priority = 10 )
+  public static function send( &$email, $priority = 100 )
   {
-    if ( Config::$mailerQueue )
-      MailerQueue::store( $email, $priority );
+    // TODO: re-implement mailerQueue using generic ObjectQueue, depends on being stored in db and extending BaseObject.
+    if ( false && Config::$mailerQueue )
+    {
+      ObjectQueue::store( $email, 'send_email', $priority );
+    }
     else
       self::smtp( $email );
   }

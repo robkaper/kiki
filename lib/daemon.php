@@ -19,23 +19,31 @@ declare( ticks = 1 );
 
 abstract class Daemon
 {
-  protected $db = null;
-  private $name;
   protected $pid = 0;
+
+  protected $db = null;
+
   private $childPids = array();
   private $killPids = array();
   private $shutdown = false;
   private $killTime = 0;
 
-  public function __construct( $name )
+  public function __construct()
   {
     $this->db = Core::getDb();
     
-    $this->name = $name;
     $this->pid = getmypid();
   }
 
-  abstract protected function childInit();
+  protected function childInit()
+  {
+    // Reinit database connection... seems to avoid 'gone away' errors after forking...
+    $this->db = Core::getDb(true);
+
+    // Re-init log to create a unique ID.
+    Log::init();
+  }
+
   abstract protected function main();
   abstract protected function cleanup( $pid );
     
@@ -48,7 +56,7 @@ abstract class Daemon
     $this->toBackground();
     $this->detach();
 
-    Log::info( "started" );
+    Log::info( "started, pid $this->pid" );
 
     for( $i=0 ; $i<$numChildren ; $i++ )
     {
@@ -58,6 +66,9 @@ abstract class Daemon
     }
 
     $this->run();
+
+    Log::debug( "exiting" );
+    exit(0);
   }
 
   private function closeFileHandles()
@@ -111,17 +122,18 @@ abstract class Daemon
 
   private function reapChildren( $kill = false )
   {
+    $signalStr = $kill ? "SIGKILL" : "SIGTERM";
     for( $i=0 ; $i<count($this->childPids) ; ++$i )
     {
       $pid = $this->childPids[$i];
+
+      Log::info( "sending $signalStr to child $pid" );
       $rv = posix_kill($pid, ($kill ? SIGKILL : SIGTERM) );
+
       if ( $kill )
         $this->killPids[] = $pid;
       if ( !$rv )
-      {
-        $signal = $kill ? "SIGKILL" : "SIGTERM";
-        Log::error( "signal $signal to child $pid failed" );
-      }
+        Log::error( "signal $signalStr to child $pid failed" );
     }
   }
 
@@ -168,18 +180,18 @@ abstract class Daemon
           {
             // Normal exit
             Log::info( "child $pid exited" );
-            $this->cleanup($pid);
           }
           else
           {
             // Unforeseen exit
             Log::error( "error with child $pid" );
-            $this->cleanup($pid);
+            // $this->cleanup($pid);
           }
 
           array_splice( $this->childPids, $i, 1 );
           if ( !$this->shutdown )
           {
+            Log::debug( "creating a new child" );
             // Start a new child to keep the desired number intact
             $pid = $this->createChild();
             if ( $pid > 0 )
@@ -204,9 +216,7 @@ abstract class Daemon
             Log::info( "waiting $timeToKill seconds for $count children to exit" );
           }
           else if ( $newTimeToKill == 0 )
-          {
             $this->reapChildren(true);
-          }
         }
         sleep(1);
       }
@@ -215,9 +225,10 @@ abstract class Daemon
         for( $i=0 ; $i<count($this->killPids) ; ++$i )
         {
           $pid = $this->killPids[$i];
-          Log::info( "cleaning up for pid=[$pid]" );
-          $this->cleanup( $pid );
+          // Log::info( "cleaning up for pid=[$pid]" );
+          // $this->cleanup( $pid );
         }
+        Log::info( "shutdown: no more children" );
         return;
       }
     }
@@ -231,7 +242,7 @@ abstract class Daemon
       Log::error( "fork failed" );
     else if ( $pid )
     {
-      Log::info( "forked a child, pid=$pid" );
+      Log::info( "forked a child, pid $pid" );
       // pcntl_wait($status); // Protect against Zombie children
     }
     else
@@ -254,7 +265,8 @@ abstract class Daemon
 
         if ( $this->shutdown )
         {
-          Log::info( "shutting down" );
+          $this->cleanup($this->pid);
+          Log::info( "child shutting down, pid $this->pid" );
           exit(0);
         }
 
@@ -266,5 +278,3 @@ abstract class Daemon
     return $pid;
   }
 }
-
-?>

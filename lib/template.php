@@ -125,12 +125,8 @@ class Template
   private $loopDepth = 0;
   private $maxLoopDepth = 0;
 
-  private $db;
-
   public function __construct( $template = null, $noDefault=false )
   {
-    $this->db = Core::getDb();
-
     $this->template = $template;
     $this->noDefault = $noDefault;
   }

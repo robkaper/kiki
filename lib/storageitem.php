@@ -94,7 +94,7 @@ class StorageItem
         $localFile = self::localFile($this->id);
 
         file_put_contents( $localFile, $this->data );
-        chmod( $localFile, 0666 );
+        chmod( $localFile, 0660 );
 
         $mimeType = self::getMimeType( $localFile );
         switch( $mimeType )

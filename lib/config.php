@@ -27,9 +27,6 @@ class Config
 
 	public static $routing = null;
 
-	public static $siteName = null;
-	public static $address = null;
-
 	public static $language = "en";
 	public static $defaultTimezone = null;
 
@@ -125,10 +122,7 @@ class Config
 			'/' => array( 'Page', '_kiki/index' ),
 		);
 
-		self::$siteName = $_SERVER['SERVER_NAME'];
-
 		self::$mailSender = isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : null;
-
 	}
 
 	public static function loadConnectionServices()
@@ -148,6 +142,7 @@ class Config
 	*/
 	public static function configFile()
 	{
+		// TODO: return an array, so config loading can cascade in order: /etc default /etc/site root/default root/site
 		if ( isset($_SERVER['SERVER_NAME']) )
 		{
 			$file = Core::getRootPath(). "/config-". $_SERVER['SERVER_NAME']. ".php";

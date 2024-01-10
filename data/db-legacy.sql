@@ -16,15 +16,6 @@ create table config (
 
 insert into config (`key`, value) values( 'dbVersion', '0.1.33' );
 
-drop table if exists runtime;
-create table runtime (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  `key` varchar(255) default null,
-  unique key(`key`),
-  value varchar(255) default null
-) default charset=utf8;
-
 drop table if exists comments;
 create table comments (
   id bigint unsigned not null auto_increment,
@@ -76,22 +67,4 @@ create table menu_items (
   icon varchar(255) default null,
   sortorder tinyint unsigned not null,
   key level_context_sortorder(level,context,sortorder)
-) default charset=utf8;
-
-drop table if exists mail_queue;
-create table mail_queue (
-  id int unsigned not null auto_increment,
-  primary key(id),
-  msg_id varchar(255) not null,
-  unique key(msg_id),
-  ctime datetime not null,
-  mtime datetime not null,
-  lock_id varchar(255) default null,
-  priority smallint unsigned not null default 0,
-  sent boolean not null default false,
-  subject text not null,
-  `from` text not null,
-  `to` text not null,
-  headers text not null,
-  body text not null
 ) default charset=utf8;

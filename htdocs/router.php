@@ -176,7 +176,7 @@ else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $request
 else // if ( !($controller = Router::findPage($requestPath)) && !($controller = Router::findSection($requestPath)) )
 {
   // Nothing? 404.
-  $controller = new Controller\NotFound404();
+  $controller = Controller::factory("NotFound404");
 }
 
 if ( !$phpFile && $controller )
