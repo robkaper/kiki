@@ -39,6 +39,9 @@ class Database
 	*/
 	function connect()
 	{
+		if ( !$this->host || !$this->port || !$this->name )
+			return false;
+
 		$this->mysqli = new \mysqli( $this->host, $this->user, $this->pass, $this->name, $this->port );
 		
 		if ( isset($this->mysqli->connect_errno) && !empty($this->mysqli->connect_error) )
