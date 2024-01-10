@@ -78,13 +78,13 @@
         include_once "$includeFile";
 
         // if ( class_exists($className, false) || class_exists('Kiki\\'. $className, false) )
-        if ( class_exists($className) )
+        if ( class_exists($className) || trait_exists($className) )
         {
           // echo "<br>5$className";
           return;
         }
 
-        trigger_error( sprintf( "file %s should but does not define class %s", $includeFile, $className ), E_USER_ERROR );
+        trigger_error( sprintf( "file %s should but does not define class/trait %s", $includeFile, $className ), E_USER_ERROR );
         exit;
       }
       // echo "<br>6$className, $trueClassName";
