@@ -52,6 +52,6 @@ class QueueDaemon extends Daemon
 
         Log::debug( "actionHandler $actionHandler not found, marking failed" );
         $this->queue->markFailed( $o->id, $o->tries+1 );
-        return 1000000;
+        return 0;
     }
 }
