@@ -74,14 +74,27 @@ class ObjectQueue
 
     public function markFailed( $id, $tries )
     {
-        // This is sufficient to for up to 35 retries, with the last try being ~6 months after the penultimate.
-        $fibonacci = [ 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377,
+        // Failures are requeued with increasing delay following a Fibonacci sequence, times 10s.
+        // This is sufficient to for up to 40 retries.
+        $fibonacci = [ 0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377,
             610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025,
             121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578,
-            5702887, 9227465, 14930352 ];
-        $queueTime = date( 'Y-m-d H:i:s', time() + $fibonacci[$tries] );
+            5702887, 9227465, 14930352, 24157817, 39088169, 63245986, 102334155 ];
+        // The first retry is immediately.
+        // The second after 10s, the third after 30s (10+20), the fourth after 60s (10+20+30), and so on.
+        // Try  5 is after a total of ~2 minutes.
+        // Try 10 is after a total of ~23 minutes.
+        // Try 15 is after a total of ~4,5 hours.
+        // Try 20 is after a total of ~2 days, almost two hours after the former.
+        // Try 25 is after a total of ~23 days, almost a day after the former.
+        // Try 30 is after a total of ~252 days, almost eight months, over a week after the former.
+        // Try 35 is after a total of ~2796 days, that's seven-and-a-half years, about three months after the former.
+        // Try 40 is after a total of almost 85 years (!).
+        // If think you'll approach this limit and want to file a bug report: take your time.
 
-        $q = $this->db->buildQuery( "UPDATE `object_queue` SET `tries`=%d, `qtime`='%s' WHERE `id`=%d", $tries, $queueTime, $id );
+        $queueTime = date( 'Y-m-d H:i:s', time() + ( 10 * $fibonacci[$tries] ) );
+
+        $q = $this->db->buildQuery( "UPDATE `object_queue` SET `tries`=%d, `qtime`='%s' WHERE `id`=%d", ++$tries, $queueTime, $id );
         $this->db->query($q);
 
         self::unlock($id);

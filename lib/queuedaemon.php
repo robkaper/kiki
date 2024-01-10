@@ -41,7 +41,7 @@ class QueueDaemon extends Daemon
             if ( $retVal === true )
                 $this->queue->markDone( $o->id );
             else if ( $retVal === false )
-                $this->queue->markFailed( $o->id, $o->tries+1 );
+                $this->queue->markFailed( $o->id, $o->tries );
             else
             {
                 // TODO: neither marked done or failed, verify that queue time was set manually, otherwise mark as failed anyway
@@ -51,7 +51,7 @@ class QueueDaemon extends Daemon
         }
 
         Log::debug( "actionHandler $actionHandler not found, marking failed" );
-        $this->queue->markFailed( $o->id, $o->tries+1 );
+        $this->queue->markFailed( $o->id, $o->tries );
         return 0;
     }
 }
