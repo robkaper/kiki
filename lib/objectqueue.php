@@ -95,6 +95,9 @@ class ObjectQueue
         $queueTime = date( 'Y-m-d H:i:s', time() + ( 10 * $fibonacci[$tries] ) );
 
         $q = $this->db->buildQuery( "UPDATE `object_queue` SET `tries`=%d, `qtime`='%s' WHERE `id`=%d", ++$tries, $queueTime, $id );
+
+        Log::debug( sprintf( "lock %d: requeue try %d, delaying until %s", $id, $tries, $queueTime" ) );
+
         $this->db->query($q);
 
         self::unlock($id);
