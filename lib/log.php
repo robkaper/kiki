@@ -85,6 +85,9 @@ class Log
 	*/
 	public static function debug( $msg, $queue = false )
 	{
+		if ( isset($_SERVER['nginx_log_ip']) && $_SERVER['nginx_log_ip'] == false )
+			return;
+
 		if ( !Config::$debug )
 			return;
 
