@@ -89,12 +89,12 @@ class User extends BaseObject
   public function setDisabled( $disabled ) { $this->disabled = $disabled; }
   public function disabled() { return $this->disabled; }
 
-  public function load( $id = 0 )
+  public function load( $id = 0, $object_id = 0 )
   {
-    if ( $id )
+    if ( $id || $object_id )
     {
       $this->id = $id;
-      $this->object_id = 0;
+      $this->object_id = $object_id;
     }
     else if ( !$this->id && !$this->object_id )
       return;
