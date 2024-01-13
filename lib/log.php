@@ -83,7 +83,7 @@ class Log
 	* URI and execution times since init() and previous log entry.
 	* @param string $msg message to log
 	*/
-	public static function debug( $msg, $queue = false )
+	public static function debug( $msg, $queue = false, $includeBacktrace = false )
 	{
 		if ( isset($_SERVER['nginx_log_ip']) && $_SERVER['nginx_log_ip'] == false )
 			return;
@@ -113,7 +113,14 @@ class Log
 		else
 			$callerStr = '';
 		
-		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$location] [$callerStr] $msg\n";
+		$logStr = date( "Y-m-d H:i:s" ). " [". self::$uniqId. "] [+$step] [$total] [$location] [$callerStr] $msg". PHP_EOL;
+
+		if ( $includeBacktrace )
+		{
+			foreach( $trace as $traceItem )
+				$logStr .= ( "\t[$traceItem[file]][$traceItem[line]][$traceItem[class]][$traceItem[function]]". PHP_EOL );
+		}
+
 		self::$queue[] = $logStr;
 
 		if ( !$queue )
