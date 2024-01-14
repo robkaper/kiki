@@ -49,8 +49,6 @@ $( function() {
       json[this.name] = val;
     } );
 
-    // console.log($(this).serialize());
-
     $.post( kikiPrefix + '/json/article.php', json, function(data) {
 
       if ( data.articleId )
@@ -197,7 +195,6 @@ $( function() {
   );
 
 	$('a.dialog').click( function() {
-		console.log( $(this) );
 		var url = $(this).attr('href');
 
 
@@ -207,7 +204,6 @@ $( function() {
 			$('#kikiDialog').attr('title', $('#kikiDialog #dialogTitle').html() );
 //			$('#kikiDialog').title( "kiki Dialog" );
 //			$('#kikiDialog').show();
-			console.log(data);
 
 
     $('#kikiDialog').dialog( {
