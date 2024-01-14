@@ -243,17 +243,17 @@ class Account extends \Kiki\Controller
       {
         $user->storeNew( $email, $password, $createAdmin );
 
-        // Disable to send email despite existing account
-        // if ( !$user->id() )
-         //  $user->setId( $userId );
-  
         if ( !$user->id() )
         {
-          $this->errors[] = array( 'msg' => "Account created failed." );
+          $this->errors[] = array( 'msg' => "Account creation failed." );
         }
         else
         {
           $authToken = $user->getAuthToken();
+
+          $this->data['createdUserId'] = $user->id();
+          $this->data['createdUserObjectId'] = $user->objectId();
+
           $user->reset();
 
           if ( !isset(\Kiki\Config::$smtpHost) )
