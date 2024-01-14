@@ -136,7 +136,9 @@ class Account extends \Kiki\Controller
 
     $template = new \Kiki\Template( 'email/request-password-reset', true );
 
+    $template->assign( 'serverName', $_SERVER['SERVER_NAME'] );
     $template->assign( 'url', $url );
+
     $html = $template->content();
 
     if ( $html )
@@ -267,7 +269,9 @@ class Account extends \Kiki\Controller
 
             $template = new \Kiki\Template( 'email/signup', true );
 
+            $template->assign( 'serverName', $_SERVER['SERVER_NAME'] );
             $template->assign( 'url', $url );
+
             $html = $template->content();
 
             if ( $html )
