@@ -29,10 +29,10 @@ class ObjectQueue
 
     public function getNext( $lockId )
     {
-        $maxTries = 20;
+        $maxTries = 40;
 
         $q = $this->db->buildQuery(
-            "UPDATE `object_queue` SET `lock_id`='$lockId', `ltime` = NOW() WHERE `lock_id` IS NULL AND `processed`=false AND (`qtime` IS NULL OR `qtime`<=NOW()) AND `tries`<=%d ORDER BY `priority` DESC, `ctime` ASC LIMIT 1",
+            "UPDATE `object_queue` SET `lock_id`='$lockId', `ltime` = NOW() WHERE `lock_id` IS NULL AND `processed`=false AND (`qtime` IS NULL OR `qtime`<=NOW()) AND `tries`<%d ORDER BY `priority` DESC, `ctime` ASC LIMIT 1",
             $maxTries
         );
 	$rs = $this->db->query($q);
