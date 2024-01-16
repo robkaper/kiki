@@ -17,9 +17,6 @@ class Articles extends \Kiki\Controller
       return false;
 
     ob_start();
-    echo "<pre>";
-    print_r( $this );
-    echo "</pre>";
 
     $this->objectId = $this->action ?? null;
 
@@ -27,7 +24,7 @@ class Articles extends \Kiki\Controller
     $user = Core::getUser();
 
     $template = Template::getInstance();
-    
+
     $this->instanceId = Section::getIdFromBaseUri($this->context);
 
     $q = $db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND ((a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 10", $this->instanceId, $user->id() );
@@ -82,7 +79,7 @@ class Articles extends \Kiki\Controller
 
       $this->status = 200;
       $this->title = $section->title();
-      $this->template = 'pages/default';
+      $this->template = 'pages/articles/index';
 
       $this->content = null; // MultiBanner::articles( $section->id() );
 
@@ -97,9 +94,8 @@ class Articles extends \Kiki\Controller
         $this->instanceId,
         $user->id()
       );
-      echo $q;
       $totalPosts = $db->getSingleValue($q);
-      print_r( $totalPosts );
+
       $paging = new \Kiki\Paging();
       $paging->setCurrentPage( $currentPage );
       $paging->setItemsPerPage( $itemsPerPage );
@@ -119,22 +115,20 @@ class Articles extends \Kiki\Controller
         $paging->firstItem()-1,
         $itemsPerPage
       );
-      $rs = $db->query($q);
-      if ( !$rs )
-        return false;
+      $articles = $db->getObjects($q);
 
-      while( $o = $db->fetchObject($rs) )
+      foreach( $articles as $dbArticle )
       {
-        switch( $o->type )
+        switch( $dbArticle->type )
         {
           case 'Article':
           case 'Kiki\Article':
             $article->reset();
-            $article->setObjectId( $o->object_id );
+            $article->setObjectId( $dbArticle->object_id );
             $article->load();
-            $article->setSectionId( $this->context );
+//            $article->setSectionId( $this->context );
 
-            $template = new Template( 'content/articles-summary' );
+            $template = new Template( 'content/articles-summary', true );
             $template->assign( 'article', $article->templateData() );
 
             $this->content .= $template->fetch();
@@ -151,6 +145,8 @@ class Articles extends \Kiki\Controller
     ob_end_clean();
 
     $this->content .= $content;
+
+    return true;
   }
 
 }

@@ -28,6 +28,7 @@ create table comments (
   body text not null
 ) default charset=utf8;
 
+drop table if exists articles;
 drop table if exists sections;
 create table sections (
   id bigint unsigned not null auto_increment,
@@ -39,19 +40,19 @@ create table sections (
   key type_title(type, title)
 ) default charset=utf8;
 
-drop table if exists articles;
 create table articles (
   id bigint unsigned not null auto_increment,
   primary key(id),
   object_id bigint unsigned default null,
   unique key(object_id),
+  section_id bigint unsigned not null references `sections`(`id`),
+  cname varchar(255) not null,
   ip_addr varchar(15),
   title text not null,
-  cname varchar(255) not null,
   body text not null,
   featured boolean not null default false,
   hashtags varchar(255) not null,
-  album_id int unsigned not null
+  album_id int unsigned default null references `albums`(`id`)
 ) default charset=utf8;
 
 drop table if exists menu_items;
