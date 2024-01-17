@@ -734,7 +734,7 @@ class Template
 
         // Insert formatting contents between base part and extension in an image URL.
         case 'thumb':
-          list ($base, $ext) = Storage::splitExtension($input);
+          list ($base, $ext) = StorageItem::splitExtension($input);
           $input = "${base}.${fmt}.${ext}";
           break;
 
