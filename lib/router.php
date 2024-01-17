@@ -82,12 +82,12 @@ class Router
         return $route;
     }
 
-    // FIXME: remove if we go back to db-based routing
-    return null;
+    // Database fallback
 
     $db = Core::getDb();
 
     $q = $db->buildQuery( "select base_uri from sections where type='%s' and id=%d", $type, $id );
+
     return $db->getSingleValue($q);
   }
 
