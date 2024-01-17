@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `articles`;
+
 DROP TABLE IF EXISTS `album_pictures`;
 
 DROP TABLE IF EXISTS `albums`;
@@ -11,7 +13,11 @@ DROP TABLE IF EXISTS `object_comments`;
 DROP TABLE IF EXISTS `user_connections`;
 DROP TABLE IF EXISTS `users`;
 
+DROP TABLE IF EXISTS `sections`;
+
 DROP TABLE IF EXISTS `object_metadata`;
+DROP TABLE IF EXISTS `object_queue`;
+
 DROP TABLE IF EXISTS `objects`;
 
 DROP TABLE IF EXISTS `runtime`;
@@ -37,31 +43,40 @@ CREATE TABLE `objects` (
 ) default charset='utf8mb4';
 
 CREATE TABLE IF NOT EXISTS `object_queue` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY( `id` ),
-    `object_id` BIGINT UNSIGNED NOT NULL REFERENCES `objects`(`object_id`),
-    INDEX( `object_id` ),
-    `action` VARCHAR(255) NOT NULL DEFAULT 'default',
-    UNIQUE KEY( `object_id`, `action` ),
-    `ctime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `mtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `lock_id` VARCHAR(255) DEFAULT NULL,
-    INDEX( `lock_id` ),
-    `ltime` DATETIME DEFAULT NULL,
-    `qtime` DATETIME DEFAULT NULL,
-    `priority` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `tries` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `processed` BOOLEAN NOT NULL DEFAULT false,
-    INDEX(`lock_id`, `processed`, `priority`, `ctime`, `tries`)
-
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY( `id` ),
+  `object_id` BIGINT UNSIGNED NOT NULL REFERENCES `objects`(`object_id`),
+  INDEX( `object_id` ),
+  `action` VARCHAR(255) NOT NULL DEFAULT 'default',
+  UNIQUE KEY( `object_id`, `action` ),
+  `ctime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `mtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `lock_id` VARCHAR(255) DEFAULT NULL,
+  INDEX( `lock_id` ),
+  `ltime` DATETIME DEFAULT NULL,
+  `qtime` DATETIME DEFAULT NULL,
+  `priority` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `tries` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `processed` BOOLEAN NOT NULL DEFAULT false,
+  INDEX(`lock_id`, `processed`, `priority`, `ctime`, `tries`)
 ) default charset='utf8mb4';
 
 CREATE TABLE `object_metadata` (
   `object_id` BIGINT UNSIGNED default null REFERENCES objects(`object_id`),
-    `key` VARCHAR(64) NOT NULL DEFAULT '',
-    UNIQUE KEY(`object_id`, `key`),
-    INDEX(`object_id`),
-    `value` TEXT NOT NULL DEFAULT ''
+  `key` VARCHAR(64) NOT NULL DEFAULT '',
+  UNIQUE KEY(`object_id`, `key`),
+  INDEX(`object_id`),
+  `value` TEXT NOT NULL DEFAULT ''
+) default charset='utf8mb4';
+
+CREATE TABLE `sections` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY(`id`),
+  `base_uri` VARCHAR(255) NOT NULL,
+  UNIQUE KEY(`base_uri`),
+  `title` VARCHAR(255) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  KEY `type_title`(`type`, `title`)
 ) default charset='utf8mb4';
 
 CREATE TABLE `users` (
@@ -129,11 +144,11 @@ CREATE TABLE `pictures` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(`id`),
   `object_id` BIGINT UNSIGNED NOT NULL REFERENCES `objects`(`object_id`),
-  width INT UNSIGNED NOT NULL default 0,
-  height INT UNSIGNED NOT NULL default 0,
-  title varchar(255) not null,
-  description TEXT NOT NULL,
-  storage_id BIGINT UNSIGNED NOT NULL REFERENCES `storage`(`id`)
+  `width` INT UNSIGNED NOT NULL default 0,
+  `height` INT UNSIGNED NOT NULL default 0,
+  `title` varchar(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `storage_id` BIGINT UNSIGNED NOT NULL REFERENCES `storage`(`id`)
 ) default charset='utf8mb4';
 
 CREATE TABLE `albums` (
@@ -154,4 +169,16 @@ CREATE TABLE `album_pictures` (
   INDEX(`album_id`),
   INDEX(`picture_id`),
   INDEX(`album_id`, `picture_id`)
-) default charset=utf8;
+);
+
+CREATE TABLE `articles` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY(`id`),
+  `object_id` BIGINT UNSIGNED NOT NULL REFERENCES `objects`(`object_id`),
+  `ptime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `section_id` BIGINT UNSIGNED NOT NULL REFERENCES `sections`(`id`),
+  `cname` VARCHAR(255) NOT NULL,
+  `summary` TEXT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `body` TEXT NOT NULL
+) default charset='utf8mb4';

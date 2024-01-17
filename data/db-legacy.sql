@@ -28,34 +28,6 @@ create table comments (
   body text not null
 ) default charset=utf8;
 
-drop table if exists articles;
-drop table if exists sections;
-create table sections (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  base_uri varchar(255) not null,
-  unique key(base_uri),
-  title varchar(255) not null,
-  type varchar(32) not null,
-  key type_title(type, title)
-) default charset=utf8;
-
-create table articles (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned default null,
-  unique key(object_id),
-  section_id bigint unsigned not null references `sections`(`id`),
-  cname varchar(255) not null,
-  ip_addr varchar(15),
-  summary text not null,
-  title text not null,
-  body text not null,
-  featured boolean not null default false,
-  hashtags varchar(255) not null,
-  album_id int unsigned default null references `albums`(`id`)
-) default charset=utf8;
-
 drop table if exists menu_items;
 create table menu_items (
   id bigint unsigned not null auto_increment,

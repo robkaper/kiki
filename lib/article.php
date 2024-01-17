@@ -10,7 +10,7 @@
  *
  * @package Kiki
  * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @copyright 2011-2024 Rob Kaper <http://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 
@@ -18,30 +18,25 @@ namespace Kiki;
 
 class Article extends BaseObject
 {
-  private $ipAddr = null;
-  private $title = null;
+  private $ptime = null;
+
+  private $sectionId = 0;
   private $cname = null;
+
+  private $title = null;
   private $summary = null;
   private $body = null;
-  private $featured = false;
-  private $hashtags = null;
-  private $albumId = 0;
-  private $visible = true;
-  private $sectionId = 0;
 
   public function reset()
   {
     parent::reset();
 
     $this->sectionId = null;
-    $this->ipAddr = null;
-    $this->title = null;
-    $this->hashtags = null;
     $this->cname = null;
+
+    $this->title = null;
     $this->summary = null;
     $this->body = null;
-    $this->featured = false;
-    $this->albumId = 0;
   }
 
   public function load( $id = 0 )
@@ -52,8 +47,8 @@ class Article extends BaseObject
       $this->object_id = 0;
     }
 
-    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, a.section_id, o.user_id, a.section_id, title, cname, summary, body, featured, a.visible, hashtags, album_id";
-    $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->object_id, $this->object_id );
+    $qFields = "id, o.object_id, o.user_id, o.ctime, o.mtime, a.ptime, a.section_id, a.cname, a.title, a.summary, a.body";
+    $q = $this->db->buildQuery( "SELECT %s FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d", $qFields, $this->id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
@@ -64,15 +59,14 @@ class Article extends BaseObject
     if ( !$o )
       return;
 
+    $this->ptime = $o->ptime;
+
     $this->sectionId = $o->section_id;
-    $this->ipAddr = $o->ip_addr;
-    $this->title = $o->title;
     $this->cname = $o->cname;
+
+    $this->title = $o->title;
     $this->summary = $o->summary;
     $this->body = $o->body;
-    $this->featured = $o->featured;
-    $this->hashtags = $o->hashtags;
-    $this->albumId = $o->album_id;
   }
 
   public function dbUpdate()
@@ -82,29 +76,32 @@ class Article extends BaseObject
     if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
 
-    $qAlbumId = Database::nullable( $this->albumId );
+    if ( !$this->ptime )
+      $this->ptime = time();
+    if ( is_int($this->ptime) )
+      $this->time = date( 'Y-m-d H:i:s', $this->ptime );
 
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, section_id='%s', ip_addr='%s', title='%s', cname='%s', summary='%s', body='%s', featured=%d, hashtags='%s', album_id=%s where id=%d",
-      $this->object_id, $this->sectionId, $this->ipAddr, $this->title, $this->cname, $this->summary, $this->body, $this->featured, $this->hashtags, $qAlbumId, $this->id
+      "UPDATE articles SET object_id=%d, ptime='%s', section_id=%d, cname='%s', title='%s', summary='%s', body='%s' WHERE id=%d",
+      $this->object_id, $this->ptime, $this->sectionId, $this->cname, $this->title, $this->summary, $this->body, $this->id
     );
-    Log::debug($q);
 
     $this->db->query($q);
   }
-  
+
   public function dbInsert()
   {
     if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
-    if ( !$this->ctime )
-      $this->ctime = date("Y-m-d H:i:s");
 
-    $qAlbumId = Database::nullable( $this->albumId );
+    if ( !$this->ptime )
+      $this->ptime = time();
+    if ( is_int($this->ptime) )
+      $this->time = date( 'Y-m-d H:i:s', $this->ptime );
 
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, section_id, ip_addr, title, cname, summary, body, featured, hashtags, album_id) VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', %d, '%s', %s)",
-      $this->object_id, $this->sectionId, $this->ipAddr, $this->title, $this->cname, $this->summary, $this->body, $this->featured, $this->hashtags, $qAlbumId
+      "INSERT INTO articles (object_id, ptime, section_id, cname, title, summary, body) VALUES (%d, '%s', %d, '%s', '%s', '%s', '%s')",
+      $this->object_id, $this->ptime, $this->sectionId, $this->cname, $this->title, $this->summary, $this->body
     );
 
     $rs = $this->db->query($q);
@@ -114,33 +111,26 @@ class Article extends BaseObject
     return $this->id;
   }
 
+  public function setPublishTime( $ptime ) { $this->ptime = $ptime; }
+  public function publishTime() { return $this->ptime; }
   public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
   public function sectionId() { return $this->sectionId; }
-  public function setIpAddr( $ipAddr ) { $this->ipAddr = $ipAddr; }
-  public function ipAddr() { return $this->ipAddr; }
-  public function setTitle( $title ) { $this->title = $title; }
-  public function title() { return $this->title; }
   public function setCname( $cname ) { $this->cname = $cname; }
   public function cname() { return $this->cname; }
+  public function setTitle( $title ) { $this->title = $title; }
+  public function title() { return $this->title; }
   public function setSummary( $summary ) { $this->summary = $summary; }
   public function summary() { return $this->summary; }
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
-  public function setFeatured( $featured ) { $this->featured = $featured; }
-  public function featured() { return $this->featured; }
-  public function setHashtags( $hashtags ) { $this->hashtags = $hashtags; }
-  public function hashtags() { return $this->hashtags; }
-  public function setAlbumId( $albumId ) { $this->albumId = $albumId; }
-  public function albumId() { return $this->albumId; }
 
   public function url( $addSchema = false )
   {
-    // FIXME: sectionId is numerical, Router only knows cname...
     $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( 'Articles', $this->sectionId ) : null;
+
     $urlPrefix = ($addSchema ? "https" : null). "//". $_SERVER['SERVER_NAME'];
 
-    // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page
-    $url = $urlPrefix. '/'. $sectionBaseUri. '/'. ($this->cname!='index' ? $this->cname : null);
+    $url = $urlPrefix. '/'. $sectionBaseUri. '/'. $this->cname;
 
     return $url;
   }
@@ -167,119 +157,52 @@ class Article extends BaseObject
     return new $articleClassName($id);
   }
 
-  /**
-   * Creates an article edit form.
-   *
-   * @fixme Should be integrated into a template.
-   * @todo Traditional Page class is deprecated so we can now remove the $type argument hack and have a Page/Article class both deriving from Post.
-   *
-   * @param boolean $hidden Hide the form initially.
-   * @param string $type Defaults to 'articles'. When set to 'page', form treats this article as a page.
-   *
-   * @return string The form HTML.
-   *
-   */
-  public function form( $hidden=false, $type='articles' )
+  // TODO: removed Form:: based edit form, create template for it
+  // TODO: rewrite getNext() getPrev()
+  private function getNext()
   {
     $user = Core::getUser();
 
-    $date = date( "d-m-Y H:i", $this->ctime ? strtotime($this->ctime) : time() );
-    $class = $hidden ? "hidden" : "";
+    $q = $this->db->buildQuery(
+      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime>'%s' AND p.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
+      $this->sectionId, $this->ptime
+    );
 
-    $sections = array();
-    if ( $type=='pages' )
-      $sections[0] = 'top-level page';
-
-    $db = Core::getDb();
-    $q = $db->buildQuery( "select id,title from sections where type='%s' order by title asc", $type );
-    $rs = $db->query($q);
-    if ( $rs && $db->numRows($rs) )
-      while( $oSection = $db->fetchObject($rs) )
-        $sections[$oSection->id] = $oSection->title;
-
-    return null;
-    // TODO: make template based, Form class is deprecated
-
-    $content = Form::open( "articleForm_". $this->id, Config::$kikiPrefix. "/json/article.php", 'POST', $class, "multipart/form-data" );
-    $content .= Form::hidden( "articleId", $this->id );
-    $content .= Form::hidden( "albumId", $this->albumId );
-    $content .= Form::select( "sectionId", $sections, "Section", $this->sectionId );
-    
-    $content .= Form::text( "title", $this->title, "Title" );
-
-    $content .= Form::text( "cname", $this->cname, "URL name" );
-
-    if ( $type!='pages' )
-      $content .= Form::datetime( "ctime", $date, "Date" );
-
-    $content .= Form::textarea( "body", preg_replace( '~\r?\n~', '&#010;', htmlspecialchars($this->body) ), "Body", null, 0, $class );
-
-    if ( $type!='pages' )
-      $content .= Form::checkbox( "featured", $this->featured, "Featured" );
-
-    $content .= Form::checkbox( "visible", $this->visible, "Visible" );
-
-    $content .= Form::button( "submit", "submit", "Opslaan" );
-    $content .= Form::close();
-
-    return $content;
+    $articleClassName = get_called_class();
+    return new $articleClassName( $this->db->getSingleValue($q) );
   }
 
-  public function topImage()
-  {
-    // Provided for backwards compatibility.
-    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC LIMIT 1", $this->albumId );
-    return $this->db->getSingleValue( $q );
-  }
-
-  public function images()
-  {
-    // TODO: query album, do not do this here.
-    $q = $this->db->buildQuery( "SELECT storage_id AS id FROM album_pictures LEFT JOIN pictures ON pictures.id=album_pictures.picture_id WHERE album_id=%d ORDER BY album_pictures.sortorder ASC", $this->albumId );
-		// echo $q;
-    // print_r( $this->db->getObjectIds( $q ) );
-    return $this->db->getObjectIds( $q );
-  }
-
-  private function getNext()
-  {
-		$user = Core::getUser();
-    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND o.ctime>'%s' AND ( (a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime ASC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
-    return new Article( $this->db->getSingleValue($q) );
-  }
-  
   private function getPrev()
   {
-		$user = Core::getUser();
-    $q = $this->db->buildQuery( "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND o.ctime<'%s' AND ( (a.visible=1 AND o.ctime<=now()) OR o.user_id=%d) ORDER BY o.ctime DESC LIMIT 1", $this->sectionId, $this->ctime, $user->id() );
-    return new Article( $this->db->getSingleValue($q) );
+    $user = Core::getUser();
+
+    $q = $this->db->buildQuery(
+      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime<'%s' AND p.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
+      $this->sectionId, $this->ptime
+    );
+
+    $articleClassName = get_called_class();
+    return new $articleClassName( $this->db->getSingleValue($q) );
   }
 
   public function templateData()
   {
-    $uAuthor = new User( $this->user_id ); // ObjectCache::getByType( 'Futunk\User', $this->user_id );
+    $uAuthor = new User( $this->user_id ); // ObjectCache::getByType( 'User', $this->user_id );
 
-    $prevArticle = $this->getPrev();
-    $nextArticle = $this->getNext();
-
-    $data = array(
+    $data = [
       'id' => $this->id,
       'url' => $this->url(),
       'ctime' => strtotime($this->ctime),
-      'relTime' => Misc::relativeTime($this->ctime),
+      'mtime' => strtotime($this->mtime),
+      'ptime' => strtotime($this->ptime),
+      'relTime' => Misc::relativeTime($this->ptime),
       'title' => $this->title,
       'summary' => $this->summary,
       'body' => $this->body,
       'author' => $uAuthor->name(),
-      'images' => array(),
       'likes' => $this->likes(),
-      'comments' => Comments::count( $this->object_id ),
-      'html' => array(
-        'comments' => Comments::show( $this->object_id ),
-        'editform' => $this->form( true, 'articles' )
-      )
-    );
-    
+    ];
+
     if ( $nextArticle = $this->getNext() )
     {
       $data['next'] =array(
@@ -298,11 +221,6 @@ class Article extends BaseObject
       );
     }
 
-    $images = $this->images();
-    foreach( $images as $image )
-      $data['images'][] = Storage::url($image);
-
     return $data;
   }
-
 }

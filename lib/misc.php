@@ -29,6 +29,7 @@ class Misc
     $delta = $now - $time;
     $absDelta = abs($delta);
 
+    // TODO: add a max absDelta, after which a date is returned
     if ( $absDelta < 60 )
       return "less than a minute";
     else if ( $absDelta < 120 )

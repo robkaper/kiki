@@ -68,16 +68,11 @@ class Articles extends \Kiki\Controller
 
     $this->content = null; // MultiBanner::articles( $section->id() );
 
-    $article = new Article();
-
-    $q = $db->buildQuery( "SELECT count(*)
-      FROM articles a, objects o
-      WHERE o.object_id=a.object_id
-      AND type IN ('%s', '%s')
-        AND a.section_id=%d AND ((a.visible=1 AND ctime<=now()) OR user_id=%d)",
-      'Article', 'Kiki\Article',
+    $q = $db->buildQuery(
+      "SELECT COUNT(*)
+      FROM articles a
+      WHERE a.section_id=%d AND ptime<=NOW()",
       $this->instanceId,
-      $user->id()
     );
     $totalPosts = $db->getSingleValue($q);
 
@@ -86,46 +81,34 @@ class Articles extends \Kiki\Controller
     $paging->setItemsPerPage( $itemsPerPage );
     $paging->setTotalItems( $totalPosts );
 
-    $q = $db->buildQuery( "SELECT o.object_id, ctime, type
-      FROM articles a, objects o
-      WHERE o.object_id=a.object_id
-      AND type IN ('%s', '%s')
-      AND section_id=%d AND ( (a.visible=1 AND ctime<=now()) OR user_id=%d)
-      ORDER BY ctime DESC
+    $q = $db->buildQuery(
+      "SELECT id
+      FROM articles a
+      WHERE section_id=%d AND a.ptime<=NOW()
+      ORDER BY ptime DESC
       LIMIT %d,%d",
-      'Article',
-      'Kiki\Article',
       $this->instanceId,
-      $user->id(),
       $paging->firstItem()-1,
       $itemsPerPage
     );
     $articles = $db->getObjects($q);
 
+    $article = new Article();
+
     foreach( $articles as $dbArticle )
     {
-      switch( $dbArticle->type )
-      {
-        case 'Article':
-        case 'Kiki\Article':
-          $article->reset();
-          $article->setObjectId( $dbArticle->object_id );
-          $article->load();
-          // $article->setSectionId( $this->context );
+      $article->reset();
+      $article->load( $dbArticle->id );
 
-          $template = new Template( 'content/articles-summary', true );
-          $template->assign( 'article', $article->templateData() );
+      $template = new Template( 'content/articles-summary', true );
+      $template->assign( 'article', $article->templateData() );
 
-          $album = Album::findByLinkedObjectId( $article->objectId() );
-          $picture = new Picture( $album->getHighlightId() );
-          $storageItem = new StorageItem( $picture->storageId() );
-          $template->assign( 'image', $storageItem->url() );
+      $album = Album::findByLinkedObjectId( $article->objectId() );
+      $picture = new Picture( $album->getHighlightId() );
+      $storageItem = new StorageItem( $picture->storageId() );
+      $template->assign( 'image', $storageItem->url() );
 
-          $this->content .= $template->fetch();
-          break;
-
-        default:;
-      }
+      $this->content .= $template->fetch();
     }
 
     $this->content .= $paging->html();
