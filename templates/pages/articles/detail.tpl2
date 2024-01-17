@@ -1,0 +1,5 @@
+{{extends 'pages/default'}}
+
+{{block 'main'}}
+{{$content}}
+{{/block}}

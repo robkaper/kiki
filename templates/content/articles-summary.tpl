@@ -1,25 +1,18 @@
 <article id="article_{$article.id}" class="summary">
+<div class="grid grid-2 grid-2-onetwo grid-persist">
+  <div class="column-center">
+{if $image}
+    <a href="{{$article.url}}"><img src="{{$image|thumb:200x200.c}}" alt="{{$article.title|escape}}" class="thumb rounded"></a>
+{/if}
+  </div>
 
-	<header>
-  	{if $article.images.0}
-    	<img src="{$article.images.0|thumb:160x90.c}" alt="[{$article.title|escape}]" class="thumb">
-	  {/if}
-  	<h2><span><a href="{$article.url}">{$article.title|escape}</a></span></h2>
-
-	</header>
-  
-  <div class="body"><p>{$article.body|summary:2}</p></div>
-
-  <footer>
-
-    <ul>
-      <li><a class="xbutton" href="{$article.url}">{"Read more"|i18n}</a></li>
-    </ul>
-
-	  <span class="author">{$article.author}</span>
-		<time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} ago</time>
-
-		<a href="{$article.url}">{$article.comments} comments, {$article.likes|count} likes</a>
-  </footer>
-
+  <div>
+    <header>
+      <h2><a href="{{$article.url}}">{{$article.title|escape}}</a></h2>
+      <time class="relTime" datetime="{$article.ctime|date:c}" pubdate>{$article.relTime} ago</time>
+      &mdash; <span class="author">{$article.author}</span>
+    </header>
+    <div class="body"><a href="{$article.url}" class="wh"><p>{{$article.summary}}</a></div>
+  </div>
+</div>
 </article>

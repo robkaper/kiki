@@ -48,6 +48,7 @@ create table articles (
   section_id bigint unsigned not null references `sections`(`id`),
   cname varchar(255) not null,
   ip_addr varchar(15),
+  summary text not null,
   title text not null,
   body text not null,
   featured boolean not null default false,

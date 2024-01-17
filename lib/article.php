@@ -21,6 +21,7 @@ class Article extends BaseObject
   private $ipAddr = null;
   private $title = null;
   private $cname = null;
+  private $summary = null;
   private $body = null;
   private $featured = false;
   private $hashtags = null;
@@ -32,10 +33,12 @@ class Article extends BaseObject
   {
     parent::reset();
 
+    $this->sectionId = null;
     $this->ipAddr = null;
     $this->title = null;
     $this->hashtags = null;
     $this->cname = null;
+    $this->summary = null;
     $this->body = null;
     $this->featured = false;
     $this->albumId = 0;
@@ -49,7 +52,7 @@ class Article extends BaseObject
       $this->object_id = 0;
     }
 
-    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, a.section_id, o.user_id, title, cname, body, featured, a.visible, hashtags, album_id";
+    $qFields = "id, o.object_id, o.ctime, o.mtime, ip_addr, a.section_id, o.user_id, a.section_id, title, cname, summary, body, featured, a.visible, hashtags, album_id";
     $q = $this->db->buildQuery( "SELECT $qFields FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR o.object_id=%d OR a.cname='%s'", $this->id, $this->object_id, $this->object_id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
@@ -61,9 +64,11 @@ class Article extends BaseObject
     if ( !$o )
       return;
 
+    $this->sectionId = $o->section_id;
     $this->ipAddr = $o->ip_addr;
     $this->title = $o->title;
     $this->cname = $o->cname;
+    $this->summary = $o->summary;
     $this->body = $o->body;
     $this->featured = $o->featured;
     $this->hashtags = $o->hashtags;
@@ -77,9 +82,11 @@ class Article extends BaseObject
     if ( !$this->cname )
       $this->cname = Misc::uriSafe($this->title);
 
+    $qAlbumId = Database::nullable( $this->albumId );
+
     $q = $this->db->buildQuery(
-      "UPDATE articles SET object_id=%d, ip_addr='%s', title='%s', cname='%s', body='%s', featured=%d, hashtags='%s', album_id=%d where id=%d",
-      $this->object_id, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId, $this->id
+      "UPDATE articles SET object_id=%d, section_id='%s', ip_addr='%s', title='%s', cname='%s', summary='%s', body='%s', featured=%d, hashtags='%s', album_id=%s where id=%d",
+      $this->object_id, $this->sectionId, $this->ipAddr, $this->title, $this->cname, $this->summary, $this->body, $this->featured, $this->hashtags, $qAlbumId, $this->id
     );
     Log::debug($q);
 
@@ -93,9 +100,11 @@ class Article extends BaseObject
     if ( !$this->ctime )
       $this->ctime = date("Y-m-d H:i:s");
 
+    $qAlbumId = Database::nullable( $this->albumId );
+
     $q = $this->db->buildQuery(
-      "INSERT INTO articles (object_id, ip_addr, title, cname, body, featured, hashtags, album_id) VALUES (%d, '%s', '%s', '%s', '%s', %d, '%s', %d)",
-      $this->object_id, $this->ipAddr, $this->title, $this->cname, $this->body, $this->featured, $this->hashtags, $this->albumId
+      "INSERT INTO articles (object_id, section_id, ip_addr, title, cname, summary, body, featured, hashtags, album_id) VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', %d, '%s', %s)",
+      $this->object_id, $this->sectionId, $this->ipAddr, $this->title, $this->cname, $this->summary, $this->body, $this->featured, $this->hashtags, $qAlbumId
     );
 
     $rs = $this->db->query($q);
@@ -105,12 +114,16 @@ class Article extends BaseObject
     return $this->id;
   }
 
+  public function setSectionId( $sectionId ) { $this->sectionId = $sectionId; }
+  public function sectionId() { return $this->sectionId; }
   public function setIpAddr( $ipAddr ) { $this->ipAddr = $ipAddr; }
   public function ipAddr() { return $this->ipAddr; }
   public function setTitle( $title ) { $this->title = $title; }
   public function title() { return $this->title; }
   public function setCname( $cname ) { $this->cname = $cname; }
   public function cname() { return $this->cname; }
+  public function setSummary( $summary ) { $this->summary = $summary; }
+  public function summary() { return $this->summary; }
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
   public function setFeatured( $featured ) { $this->featured = $featured; }
@@ -124,15 +137,34 @@ class Article extends BaseObject
   {
     // FIXME: sectionId is numerical, Router only knows cname...
     $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( 'Articles', $this->sectionId ) : null;
-    if ( !$sectionBaseUri )
-      $sectionBaseUri = "/";
-
     $urlPrefix = ($addSchema ? "https" : null). "//". $_SERVER['SERVER_NAME'];
 
     // TODO: what if - unlikely, but possible, we have an Article (not Page) with cname index? Really time to go Post/Article/Page
-    $url = $urlPrefix. $sectionBaseUri. ($this->cname!='index' ? $this->cname : null);
+    $url = $urlPrefix. '/'. $sectionBaseUri. '/'. ($this->cname!='index' ? $this->cname : null);
 
     return $url;
+  }
+
+  public static function findbyCname( $cname, $sectionId = null )
+  {
+    $db = Core::getDb();
+
+    if ( $sectionId )
+    {
+      $q = "SELECT `id` FROM `articles` WHERE `cname`='%s' AND section_id=%d";
+      $q = $db->buildQuery( $q, $cname, $sectionId );
+    }
+    else
+    {
+      $q = "SELECT `id` FROM `articles` WHERE `cname`='%s'";
+      $q = $db->buildQuery( $q, $cname );
+    }
+
+    $id = $db->getSingleValue($q);
+
+    $articleClassName = get_called_class();
+
+    return new $articleClassName($id);
   }
 
   /**
@@ -225,7 +257,7 @@ class Article extends BaseObject
 
   public function templateData()
   {
-    $uAuthor = ObjectCache::getByType( '\Kiki\User', $this->user_id );
+    $uAuthor = new User( $this->user_id ); // ObjectCache::getByType( 'Futunk\User', $this->user_id );
 
     $prevArticle = $this->getPrev();
     $nextArticle = $this->getNext();
@@ -236,6 +268,7 @@ class Article extends BaseObject
       'ctime' => strtotime($this->ctime),
       'relTime' => Misc::relativeTime($this->ctime),
       'title' => $this->title,
+      'summary' => $this->summary,
       'body' => $this->body,
       'author' => $uAuthor->name(),
       'images' => array(),
