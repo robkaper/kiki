@@ -2,7 +2,6 @@
 
 namespace Kiki\Controller;
 
-use Kiki\Log;
 use Kiki\Storage;
 use Kiki\StorageItem;
 
@@ -10,7 +9,7 @@ class Thumbnails extends \Kiki\Controller
 {
   public function actionHandler()
   {
-    list( $dummy, $id, $w, $h, $dummy, $crop ) = $this->objectId;
+    list( $full, $id, $w, $h, $dummy, $crop, $ext ) = $this->objectId;
 
     $this->objectId = $id;
 
@@ -25,7 +24,7 @@ class Thumbnails extends \Kiki\Controller
     if ( !file_exists($fileName) )
       return false;
 
-    $scaleFile = Storage::getThumbnail( $fileName, $w, $h, $crop );
+    $scaleFile = Storage::getThumbnail( $fileName, $w, $h, $crop, $ext );
     if ( !file_exists($scaleFile) )
       return false;
 

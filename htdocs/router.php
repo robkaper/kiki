@@ -160,7 +160,7 @@ else if ( preg_match('#^/kiki/(.*)#', $requestPath, $matches) )
 // any newly requested format instantly works and the cache can be safely
 // cleared at any time.
 
-else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)\.((c?))?#', $requestPath, $matches) )
+else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)(\.(c))?\.(.*)#', $requestPath, $matches) )
 //else if ( preg_match('#^/storage/#', $requestPath, $matches) )
 {
   $controller = Controller::factory('Thumbnails');

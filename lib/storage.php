@@ -157,21 +157,31 @@ class Storage
       $storageItem->delete();
   }
 
-  private static function getThumbnailFileName( $fileName, $w, $h, $crop )
+  private static function getThumbnailFileName( $fileName, $w, $h, $crop, $convertTo = null )
   {
     list( $base, $ext ) = StorageItem::splitExtension($fileName);
+
+    switch( $convertTo )
+    {
+      case 'webp':
+        $ext = $convertTo;
+        break;
+
+      default:;
+    }
+
     $base = preg_replace( "#/storage/#", "/storage/thumbnails/", $base );
     $c = $crop ? "c." : null;
 
     return "${base}.${w}x${h}.${c}${ext}";
   }
 
-  public static function getThumbnail( $fileName, $w, $h, $crop=false )
+  public static function getThumbnail( $fileName, $w, $h, $crop=false, $convertTo = null )
   {
-    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
+    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop, $convertTo );
 
     if ( !file_exists($scaledFile) )
-      $scaledFile = self::generateThumbnail( $fileName, $w, $h, $crop );
+      $scaledFile = self::generateThumbnail( $fileName, $w, $h, $crop, $convertTo );
 
     if ( !file_exists($scaledFile) )
       return null;
@@ -179,9 +189,11 @@ class Storage
     return $scaledFile;
   }
 
-  public static function generateThumbnail( $fileName, $w, $h, $crop )
+  public static function generateThumbnail( $fileName, $w, $h, $crop, $convertTo = null )
   {
     $image = null;
+
+    Log::debug( "fileName: $fileName, convertTo: $convertTo" );
 
     list( $base, $ext ) = StorageItem::splitExtension($fileName);
     $mimeType = mime_content_type($fileName);
@@ -214,6 +226,9 @@ class Storage
     if ( !$image )
       return false;
 
+    // if ( !imageistruecolor($image) )
+    //   imagepalettetotruecolor( $image );
+
     $srcW = imagesx( $image );
     $srcH = imagesy( $image );
     $srcX = $srcY = $dstX = $dstY = 0;
@@ -225,7 +240,7 @@ class Storage
     if ( $h == 'auto' )
       $h = $dstH;
 
-    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop );
+    $scaledFile = self::getThumbnailFileName( $fileName, $w, $h, $crop, $convertTo );
     if ( file_exists($scaledFile) )
       return $scaledFile;
 
@@ -249,6 +264,9 @@ class Storage
     Log::debug( "resampling $fileName: w: $w, h: $h, dstX: $dstX, dstY: $dstY, srcX: $srcY, srcY: $srcY, dstW: $dstW, dstH: $dstH, srcW: $srcW, srcH: $srcH" );
 
     $scaled = imagecreatetruecolor( $w, $h );
+    // imagealphablending( $scaled, true );
+    // imagesavealpha( $scaled, true );
+
     imagecopyresampled( $scaled, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH );
     imageinterlace( $scaled, 1 );
 
@@ -256,6 +274,15 @@ class Storage
       chmod( $scaledFile, 0660 );
     else
       self::makeDirectory($scaledFile);
+
+    switch( $convertTo )
+    {
+      case 'webp':
+        $mimeType = 'image/webp';
+        break;
+
+      default:;
+    }
 
     switch($mimeType)
     {
@@ -269,7 +296,7 @@ class Storage
         \imagepng( $scaled, $scaledFile, 1 );
         break;
       case "image/webp":
-        \imagewebp( $scaled, $scaledFile, 1 );
+        \imagewebp( $scaled, $scaledFile, 95 );
         break;
       default:;
     }

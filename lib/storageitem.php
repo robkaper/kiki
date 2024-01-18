@@ -230,14 +230,14 @@ class StorageItem
         return $fileName;
     }
 
-    public function uri( $w=0, $h=0, $crop=false )
+    public function uri( $w=0, $h=0, $crop=false, $convertTo=null )
     {
         $extra = ($w && $h) ? ( ".${w}x${h}". ($crop ? ".c" : null) ) : null;
-        return sprintf( "%s%s.%s", $this->hash, $extra, $this->extension );
+        return sprintf( "%s%s.%s", $this->hash, $extra, $convertTo ?? $this->extension );
     }
 
-    public function url( $w=0, $h=0, $crop=false, $secure = true )
+    public function url( $w=0, $h=0, $crop=false, $extension = null )
     {
-        return "http". ($secure ? "s" : null). "://". $_SERVER['SERVER_NAME']. "/storage/". $this->uri($w,$h,$crop);
+        return "https://". $_SERVER['SERVER_NAME']. "/storage/". $this->uri($w,$h,$crop,$extension);
     }
 }
