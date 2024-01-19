@@ -44,7 +44,11 @@ class QueueDaemon extends Daemon
                 $this->queue->markFailed( $o->id, $o->tries );
             else
             {
-                // TODO: neither marked done or failed, verify that queue time was set manually, otherwise mark as failed anyway
+                // Neither marked done or failed, verify that queue time was set manually, otherwise mark as failed anyway
+                $q = "SELECT qtime FROM object_queue WHERE id=%d";
+                $queueTime = $this->db->getSingleValue( $this->db->buildQuery( $q, $o->id ) );
+                if ( !$queueTime )
+                    $this->queue->markFailed( $o->id, $o->tries );
             }
 
             return 0;
