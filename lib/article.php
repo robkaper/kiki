@@ -124,11 +124,11 @@ class Article extends BaseObject
   public function setBody( $body ) { $this->body = $body; }
   public function body() { return $this->body; }
 
-  public function url( $addSchema = false )
+  public function url( $addHost = false, $addSchema = false )
   {
     $sectionBaseUri = $this->sectionId ? \Kiki\Router::getBaseUri( 'Articles', $this->sectionId ) : null;
 
-    $urlPrefix = ($addSchema ? "https" : null). "//". $_SERVER['SERVER_NAME'];
+    $urlPrefix = ($addSchema ? "https:" : null). ($addHost ? "//". $_SERVER['SERVER_NAME'] : null);
 
     $url = $urlPrefix. '/'. $sectionBaseUri. '/'. $this->cname;
 

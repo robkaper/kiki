@@ -12,7 +12,7 @@
       <time class="relTime" datetime="{$article.ptime|date:c}" pubdate>{$article.relTime} ago</time>
       &mdash; <span class="author">{$article.author}</span>
     </header>
-    <div class="body"><a href="{$article.url}" class="wh"><p>{{$article.summary}}</a></div>
+    <div class="body"><a href="{$article.url}" class="wh">{{$article.summary}}</a></div>
   </div>
 </div>
 </article>

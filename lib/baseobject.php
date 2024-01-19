@@ -114,6 +114,7 @@ abstract class BaseObject
   final public function objectId() { return $this->object_id; }
   final public function setCtime( $ctime ) { $this->ctime = $ctime; }
   final public function ctime() { return $this->ctime; }
+  final public function mtime() { return $this->mtime; }
 
   final public function setObjectName( $object_name ) { $this->object_name = $object_name; }
   public function objectName() { return $this->object_name; }

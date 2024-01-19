@@ -193,8 +193,6 @@ class Storage
   {
     $image = null;
 
-    Log::debug( "fileName: $fileName, convertTo: $convertTo" );
-
     list( $base, $ext ) = StorageItem::splitExtension($fileName);
     $mimeType = mime_content_type($fileName);
 
