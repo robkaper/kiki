@@ -35,4 +35,14 @@ class Runtime
     $q = $db->buildQuery( $q, $key, $key2, $value, $value );
     $db->query($q);
   }
+
+  static public function delete( $key, $key2 = null )
+  {
+    $db = Core::getDb();
+
+    $qKey2 = Database::nullable($key2);
+    $q = "DELETE FROM `runtime` WHERE `key`='%s' AND `key2` = '%s'";
+    $q = $db->buildQuery( $q, $key, $key2);
+    $db->query($q);
+  }
 }
