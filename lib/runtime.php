@@ -11,8 +11,6 @@
  * @license Released under the terms of the MIT license.
  */
 
-// FIXME: move cname here, and add unique key sectionId/cname to db scheme
-
 namespace Kiki;
 
 class Runtime
