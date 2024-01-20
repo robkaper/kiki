@@ -195,6 +195,7 @@ class Article extends BaseObject
       'ctime' => strtotime($this->ctime),
       'mtime' => strtotime($this->mtime),
       'ptime' => strtotime($this->ptime),
+      'useRelTime' => ( time() - strtotime($this->ptime) < 10 * 86400 ),
       'relTime' => Misc::relativeTime($this->ptime),
       'title' => $this->title,
       'summary' => $this->summary,
