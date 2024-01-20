@@ -337,7 +337,21 @@ class User extends BaseObject
     // Save to get an ID to generate a temporary name
     $this->save();
     $this->name = 'User '. $this->id;
-    $this->setObjectName( 'u'. $this->id );
+
+    $userObjectName = null;
+    $matches = [];
+    if ( preg_match( '/^(.*)@/', $email, $matches ) )
+    {
+      $localPart = $matches[1];
+
+      $q = "SELECT u.id FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_name='%s'";
+      $q = $this->db->buildQuery( $q, $localPart );
+      $userId = $this->db->getSingleValue($q);
+
+      if ( !$userId )
+        $userObjectName = $localPart;
+    }
+    $this->setObjectName( $userObjectName ?? ('u'. $this->id) );
 
     $this->email = $email;
     $this->password = $password;
