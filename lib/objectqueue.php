@@ -37,7 +37,7 @@ class ObjectQueue
         );
 	$rs = $this->db->query($q);
 
-	$q = "SELECT `id`, `object_id`, `action`, `tries` FROM `object_queue` WHERE `lock_id`='$lockId' ORDER BY `priority` DESC, `ctime` ASC LIMIT 1";
+	$q = "SELECT `id`, `object_id`, `action`, `priority`, `tries` FROM `object_queue` WHERE `lock_id`='$lockId' ORDER BY `priority` DESC, `ctime` ASC LIMIT 1";
 	$o = $this->db->getSingleObject($q);
 
 	if ( $o )
