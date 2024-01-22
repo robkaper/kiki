@@ -8,6 +8,7 @@ use Kiki\Config;
 use Kiki\Core;
 use Kiki\Log;
 use Kiki\Storage;
+use Kiki\StorageItem;
 
 class Kiki extends Controller
 {
@@ -19,16 +20,16 @@ class Kiki extends Controller
     $this->fallback();
   }
 
-	public function fallback()
-	{
-	  $parts = parse_url($this->objectId);
-	  if ( !isset($parts['path']) )
-	    return false;
+  public function fallback()
+  {
+    $parts = parse_url($this->objectId);
+    if ( !isset($parts['path']) )
+      return false;
 
-		$kikiFile = Core::getInstallPath(). "/htdocs/". $parts['path'];
-   	if ( file_exists($kikiFile) )
-	  {
-      $ext = Storage::getExtension($kikiFile);
+    $kikiFile = Core::getInstallPath(). "/htdocs/". $parts['path'];
+    if ( file_exists($kikiFile) )
+    {
+      $ext = StorageItem::getExtension($kikiFile);
       switch($ext)
       {
         case 'css':
@@ -43,65 +44,64 @@ class Kiki extends Controller
           $this->status = 200;
           $this->content = file_get_contents($kikiFile);
 
- 	        return true;
- 	        break;
+           return true;
+           break;
 
- 	      case 'php':
+         case 'php':
 
- 	        Log::debug( "PHP file $kikiFile" );
+           Log::debug( "PHP file $kikiFile" );
 
- 	        $this->status = 200;
- 	        $this->template = 'pages/default';
+           $this->status = 200;
+           $this->template = 'pages/default';
 
-   	      $user = Core::getUser();
-   	      $db = Core::getDb();
+           $user = Core::getUser();
+           $db = Core::getDb();
 
-     	    include_once($kikiFile);
+           include_once($kikiFile);
 
-     	    return true;
-     	    break;
+           return true;
+           break;
 
- 	      case '':
+         case '':
 
- 	        if ( file_exists($kikiFile. "index.php") )
- 	        {
- 	          Log::debug( "PHP index file $kikiFile". "index.php" );
+           if ( file_exists($kikiFile. "index.php") )
+           {
+             Log::debug( "PHP index file $kikiFile". "index.php" );
 
-   	        $this->status = 200;
-   	        $this->template = 'pages/default';
+             $this->status = 200;
+             $this->template = 'pages/default';
 
-   	        $user = Core::getUser();
-   	        $db = Core::getDb();
+             $user = Core::getUser();
+             $db = Core::getDb();
 
-   	        include_once($kikiFile. "index.php");
+             include_once($kikiFile. "index.php");
 
-   	        return true;
-   	      }
-     	    break;
+             return true;
+           }
+           break;
 
-   	   default:;
+        default:;
 
-   	 }
-   	 Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
-   	}
-   	else
-		{
-   	  Log::debug( "non-existing kikiFile $kikiFile" );
-	 	}
+      }
+      Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
+     }
+     else
+    {
+       Log::debug( "non-existing kikiFile $kikiFile" );
+     }
 
-		return false;
-	}
+    return false;
+  }
 
-	public function accountAction( $objectId )
-	{
-		$this->subController = new Account();
-		$this->subController->setObjectId( $objectId );
+  public function accountAction( $objectId )
+  {
+    $this->subController = new Account();
+    $this->subController->setObjectId( $objectId );
 
-		$result = $this->subController->actionHandler();
-		if ( !$result )
-			unset($this->subController);
+    $result = $this->subController->actionHandler();
+    if ( !$result )
+      unset($this->subController);
 
-		return $result;
-	}
-
+    return $result;
+  }
 }

@@ -1,0 +1,175 @@
+body {
+  font-family: 'sans-serif', sans-serif;
+  background: white;
+  padding: 0;
+  margin: 0;
+}
+
+header {
+  max-width: 1100px;
+  margin: 1rem auto;
+  padding: 1rem;
+
+  color: #344a29;
+  background: black;
+
+  border: 1px solid #344a29;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+main {
+  max-width: 1100px;
+  margin: 1rem auto;
+  padding: 1rem;
+
+  color: black;
+  background: white;
+
+  border: 1px solid #344a29;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin: 1rem 0;
+}
+
+a {
+  font-weight: bold;
+  color: #344a29;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 992px) {
+  
+  .card {
+    width: 47%;
+  }
+
+  .card:nth-child(3n+1) {
+    clear: none;
+  }
+
+  .card:nth-child(2n+1) {
+    clear: both;
+  }
+  
+  table {
+    max-width: 99%;
+  }
+}
+
+.centerbox-detail .card {
+  width: 47%;
+}
+
+.centerbox-detail .card:nth-child(3n+1) {
+  clear: none;
+}
+
+.centerbox-detail .card:nth-child(2n+1) {
+  clear: both;
+}
+
+.ol-attribution {
+  font-size: small;
+}
+
+@media print {
+  main {
+    width: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0.25em;
+
+    box-shadow: none;
+  }
+
+  h1, h2, h3, h4, table, .card {
+    box-shadow: none;
+  }
+  
+  .noprint {
+    display: none;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: x-dark) {
+
+  body, body main {
+    background: black;
+    color: white;
+  }
+
+  body header, body main, body table, body h1,body h2,body h3,body h4 {
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+    box-shadow: none;
+  }
+
+  body header, body h1 {
+    color: black;
+    background: white;
+    color: white;
+    background: #020;
+  }
+
+  body h2 {
+    color: black;
+    background: white;
+    color: white;
+    background: #020;
+  }
+
+  body a {
+    color: #efc;
+  }
+
+  body header a, body h1 a {
+    color: #7d0;
+  }
+
+  body td {
+    background: #000;
+    margin: 0.5em;
+    padding: 0.25em;
+  }
+
+  body tr:nth-child(odd) td
+  {
+    background: #020;
+  }
+  
+  ul.tag-ul {
+  }
+
+  ul.tag-ul li {
+    background: #020;
+  }
+  
+  ul.tag-ul li a {
+  }
+  
+  ul.tag-ul li.active {
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  main {
+    width: auto;
+    margin: 0;
+    border: 0;
+  }
+  
+  header, main {
+    max-width: auto;
+  }
+}
