@@ -9,7 +9,7 @@
 <body>
 
 <header>
-  <a href="/"><img src="/kiki/images/kiki-inverse-74x50.png" alt="Kiki" title="Kiki" style="width: 74px; height: 50px;"></a>
+  <a href="/"><img src="/kiki/images/kiki-inverse-74x50.png" alt="Kiki" title="Kiki" width="74" height="50"/></a>
 </header>
 
 {{include 'parts/flashbag'}}
