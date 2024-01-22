@@ -17,7 +17,11 @@
 
 {{block 'content'}}
 <p>
-Default content block from <q>templates/pages/default.tpl</q>. To replace this, extend this template.</p>
+Welcome to <strong>Kiki framework</strong>!</p>
+
+<p>
+This is the default content block from <q>templates/pages/default.tpl</q>. To replace this, extend
+<strong>Kiki\Controller</strong> using your own template.</p>
 {{/block}}
 
 </main>
