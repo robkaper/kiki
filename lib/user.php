@@ -342,7 +342,7 @@ class User extends BaseObject
     $matches = [];
     if ( preg_match( '/^(.*)@/', $email, $matches ) )
     {
-      $localPart = preg_replace( '/[^a-z0-9]+/', '', strotolower($matches[1]) );
+      $localPart = preg_replace( '/[^a-z0-9]+/', '', strtolower($matches[1]) );
 
       $q = "SELECT u.id FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_name='%s'";
       $q = $this->db->buildQuery( $q, $localPart );
