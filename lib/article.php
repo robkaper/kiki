@@ -164,7 +164,7 @@ class Article extends BaseObject
     $user = Core::getUser();
 
     $q = $this->db->buildQuery(
-      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime>'%s' AND p.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
+      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime>'%s' AND a.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
       $this->sectionId, $this->ptime
     );
 
@@ -177,7 +177,7 @@ class Article extends BaseObject
     $user = Core::getUser();
 
     $q = $this->db->buildQuery(
-      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime<'%s' AND p.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
+      "SELECT id FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.section_id=%d AND a.ptime<'%s' AND a.ptime<=NOW() ORDER BY a.ptime ASC LIMIT 1",
       $this->sectionId, $this->ptime
     );
 
