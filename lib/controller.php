@@ -61,7 +61,8 @@ class Controller
     $path = $parsedUri['path'] ?? null;
 
     // Assign core data to Kiki namespace.
-    $this->data[strtolower(__NAMESPACE__)] = [
+    $data = [];
+    $data[strtolower(__NAMESPACE__)] = [
       'server' => [
         'name' => $_SERVER['SERVER_NAME'] ?? null,
       ],
@@ -77,7 +78,9 @@ class Controller
       ],
       'user' => $user ? $user->templateData() : null,
     ];
-    $this->data['legacy'] = Core::getTemplateData();
+    $data['legacy'] = Core::getTemplateData();
+
+    $this->data = array_merge( $this->data, $data );
   }
 
   public static function factory($type)
