@@ -177,10 +177,7 @@ class Log
 	public static function endTimer( $timer )
 	{
 		if ( !isset(self::$timerMtimes[$timer]) )
-		{
-			Log::error( "timer $timer not initialised" );
 			return;
-		}
 
 		$add = microtime(true) - self::$timerMtimes[$timer];
 
