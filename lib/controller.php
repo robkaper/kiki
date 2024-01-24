@@ -38,16 +38,8 @@ class Controller
   protected $subController = null;
   protected $actionMethod = null;
 
-  protected $extraMeta = null;
-  protected $extraScripts = null;
-  protected $extraStyles = null;
-
   public function __construct()
   {
-    $this->extraMeta = array();
-    $this->extraScripts = array();
-    $this->extraStyles = array();
-
     $this->notices = array();
     $this->warnings = array();
     $this->errors = array();
@@ -311,10 +303,6 @@ class Controller
     $this->data['notices'] = array_merge( $this->notices, $this->data['notices'] ?? array() );
     $this->data['warnings'] = array_merge( $this->warnings, $this->data['warnings'] ?? array() );
     $this->data['errors'] = array_merge( $this->errors, $this->data['errors'] ?? array() );
-
-    $this->data['extraMeta'] = array_merge( $this->extraMeta, $this->data['extraMeta'] ?? array() );
-    $this->data['extraScripts'] = array_merge( $this->extraScripts, $this->data['extraScripts'] ?? array() );
-    $this->data['extraStyles'] = array_merge( $this->extraStyles, $this->data['extraStyles'] ?? array() );
 
     return $this->data;
   }
