@@ -202,7 +202,7 @@ class Controller
         $this->template = 'pages/default';
     }
 
-   Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+    Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     return $ret;
   }
