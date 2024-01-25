@@ -14,13 +14,16 @@ class Kiki extends Controller
 {
   public function actionHandler()
   {
-    // if ( $this->actionHandler() )
-    //   return;
+    // If a file exists in htdocs/ in Kiki's install path, it takes precedence
+    $ret = $this->kikiFile();
+    if ( $ret )
+      return $ret;
 
-    $this->fallback();
+    // But if it doesn't we want the default actionHandler() which also checks subControllers and their members
+    return parent::actionHandler();
   }
 
-  public function fallback()
+  public function kikiFile()
   {
     $parts = parse_url($this->objectId);
     if ( !isset($parts['path']) )
@@ -44,30 +47,24 @@ class Kiki extends Controller
           $this->status = 200;
           $this->content = file_get_contents($kikiFile);
 
-           return true;
-           break;
+          return true;
+          break;
 
-         case 'php':
+        case 'php':
+          $this->status = 200;
+          $this->template = 'pages/default';
 
-           Log::debug( "PHP file $kikiFile" );
+          $user = Core::getUser();
+          $db = Core::getDb();
 
-           $this->status = 200;
-           $this->template = 'pages/default';
+          include_once($kikiFile);
 
-           $user = Core::getUser();
-           $db = Core::getDb();
-
-           include_once($kikiFile);
-
-           return true;
-           break;
+          return true;
+          break;
 
          case '':
-
            if ( file_exists($kikiFile. "index.php") )
            {
-             Log::debug( "PHP index file $kikiFile". "index.php" );
-
              $this->status = 200;
              $this->template = 'pages/default';
 
@@ -81,14 +78,13 @@ class Kiki extends Controller
            break;
 
         default:;
-
       }
       Log::debug( "unsupported extension $ext for kiki htdocs file $kikiFile" );
-     }
-     else
+    }
+    else
     {
-       Log::debug( "non-existing kikiFile $kikiFile" );
-     }
+      Log::debug( "non-existing kikiFile $kikiFile" );
+    }
 
     return false;
   }
