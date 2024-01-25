@@ -36,7 +36,8 @@
   $dbVersion = Status::dbVersion();
   $checkStatus = $user->isAdmin();
 
-  if ( !$checkStatus )
+  // For database-driven sites, check admin user.
+  if ( $dbVersion && !$checkStatus )
   {
     $this->status = 401;
     $this->content = "Access forbidden.";
