@@ -22,8 +22,6 @@ function showArticleForm( articleId )
 }
 
 $( function() { 
-  $('input[placeholder], textarea[placeholder]').placeholder();
-
   $('label a.toggleWysiwyg').live('click', function() {
     var id = $(this).parent().attr('for');
     return false;
@@ -162,7 +160,6 @@ $( function() {
       } );
     }
     , items: '>div'
-    , placeholder: 'ui-state-highlight'
     , tolerance: 'pointer'
   } );
 

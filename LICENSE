@@ -1,4 +1,4 @@
-Copyright (c) 2010-2011 Rob Kaper (http://robkaper.nl/)
+Copyright (c) 2010-2024 Rob Kaper (https://robkaper.nl/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -17,21 +17,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-
-----------------------------------------------------------------------------
-
-htdocs/scripts/jquery.placeholder.js: jQuery Placeholder plugin
-
-Copyright (c) 2010 Daniel Stock (http://webcloud.se/)
-
-Included under the terms of the MIT license.
-(http://www.opensource.org/licenses/mit-license.php)
-
------------------------------------------------------------------------------
-
-htdocs/scripts/jquery-ui-timepicker-addon.min.js: jQuery Timepicker plugin
-
-Copyright (c) 2010 Trent Richardson (http://trentrichardson.com/)
-
-Included under the terms of the MIT license.
-(http://www.opensource.org/licenses/mit-license.php)
