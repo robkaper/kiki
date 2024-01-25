@@ -81,6 +81,7 @@
  *
  * --> Includes:
  * {{include 'other/template/file'}}
+ * {{include_once 'other/template/file'}}
  *
  * --> Extends:
  * {{extends 'other/template/file'}}
@@ -111,7 +112,8 @@ class Template
   private static $instance;
 
   private $template = null;
-  private $extendChain = array();
+  private $extendChain = [];
+  private static $includeChain = [];
 
   private $noDefault = false;
 
@@ -215,7 +217,7 @@ class Template
 
     $reExtend = '~\{\{extends \'([^\']+)\'\}\}~';
     $reDebug = '~\{\{debug\}\}~';
-    $reIncludes = '~\{\{include \'([^\']+)\'\}\}~';
+    $reIncludes = '~\{\{include(_once)? \'([^\']+)\'\}\}~';
     $reIfs = '~\{((\/)?if)([^}]+)?\}~';
     $reLoops = '~\{((\/)?foreach)([^}]+)?\}~';
 
@@ -530,9 +532,15 @@ class Template
 
   private function includes( $input )
   {
-    $templateFile = $this->file($input[1]);
+    $includeOnce = $input[1];
+    $templateFile = $this->file($input[2]);
+
     if ( !file_exists($templateFile) )
       return sprintf( '<span class="red">template file <q>%s</q>: file not found</span>', $input[1] );
+
+    if ( $includeOnce && in_array( $templateFile, self::$includeChain ) )
+      return null;
+    self::$includeChain[] = $templateFile;
 
     $extension = StorageItem::getExtension($templateFile);
     switch( $extension )

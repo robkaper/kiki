@@ -10,6 +10,10 @@
 
   <div class="body">{$article.body}</div>
 
-  <footer></footer>
+  <footer>
+{if $kiki.user.id}
+{{include 'parts/object-likes-comments'}}
+{/if}
+  </footer>
 
 </article>

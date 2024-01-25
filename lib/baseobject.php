@@ -139,6 +139,27 @@ abstract class BaseObject
     return $this->db->getSingleObject( $qLikes );
   }
 
+  final public function comments( $userId = 0 )
+  {
+    $comments = [];
+
+    $qComments = "SELECT ctime, user_id, comment FROM object_comments WHERE object_id = %d ORDER BY ctime ASC";
+    $qComments = $this->db->buildQuery( $qComments, $this->object_id );
+    $dbComments = $this->db->getObjects( $qComments );
+
+    $userClassName = ClassHelper::bareToNamespace('User');
+    $commentClassName = ClassHelper::bareToNamespace('Comment');
+
+    $cUser = new $userClassName();
+    foreach( $dbComments as $dbComment )
+    {
+      $cUser->load( $dbComment->user_id );
+      $comments[] = $commentClassName::html( $cUser, $dbComment->ctime, $dbComment->comment );
+    }
+
+    return $comments;
+  }
+
   abstract public function url();
   abstract public function templateData();
 }

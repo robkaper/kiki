@@ -162,6 +162,17 @@ class Articles extends \Kiki\Controller
     $storageItem = new StorageItem( $picture->storageId() );
     $template->assign( 'image', $storageItem->url() );
 
+    $likes = $article->likes( $user->id() );
+    $comments = $article->comments( $user->id() );
+
+    // FIXME: add to Kiki\TemplateData trait (and make sure it's still extensible)
+    $template->assign( 'cspNonce', Config::$cspNonce );
+    $template->assign( 'kiki', [ 'user' => [ 'id' => $user->id() ] ] );
+
+    $template->assign( 'object_id', $article->objectId() );
+    $template->assign( 'likes', $likes );
+    $template->assign( 'comments', $comments );
+
     $this->content = $template->fetch();
 
     return true;
