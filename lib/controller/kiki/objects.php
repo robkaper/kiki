@@ -43,7 +43,13 @@ class Objects extends KikiController
       return false;
     }
 
-    // FIXME: check privacyLevel if applicable, to avoid spam. 
+    if ( method_exists( $object, 'privacyLevel' ) )
+    {
+      $privacyLevel = $object->privacyLevel();
+
+      // FIXME: check privacyLevel if applicable, to avoid spam.
+    }
+
     $action = $_POST['action'] ?? false;
     $validAction = false;
 
