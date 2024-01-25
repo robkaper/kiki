@@ -10,9 +10,6 @@ Old notes:
 
 - Make all remaining customisations in the code configurable
 
-- Don't include third-party scripts (scripts/, other than default.js) but
-  reference them through configuration
-
 - Provide a status htdocs file and alias checking third-party availability
   and requirements
 
