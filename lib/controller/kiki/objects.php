@@ -90,14 +90,13 @@ class Objects extends KikiController
         // TODO: what if Notification(Type) class does not exist? Must provide something in Kiki
         $notificationClass = ClassHelper::bareToNamespace( 'Notifications' );
         $notificationTypeClass = ClassHelper::bareToNamespace( 'NotificationType' );
-        Log::debug( "notificationClass: $notificationClass, notificationTypeClass: $notificationTypeClass" );
         if ( $notificationClass && class_exists($notificationClass) && $notificationTypeClass && class_exists($notificationTypeClass) )
         {
           $notifications = $notificationClass::getFiltered( $object->userId(), $object->objectId(), $notificationTypeClass::Comments_New );
           $notification = $notifications[0] ?? null;
 
           if ( $notification )
-            $notificationClass::update(  $notification->id, $user->objectId(), $msg );
+            $notificationClass::update( $notification->id, $user->objectId(), $msg );
           else
             $notificationClass::insert( $object->userId(), $notificationTypeClass::Comments_New, $object->objectId(), $user->objectId(), $msg );
         }

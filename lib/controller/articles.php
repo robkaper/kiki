@@ -154,7 +154,7 @@ class Articles extends \Kiki\Controller
     $this->title = $article->title();
     $this->template = 'pages/articles/detail';
 
-    $template = new Template( 'content/articles-single' );
+    $template = new Template( 'content/articles-single', $this->data() );
     $template->assign( 'article', $article->templateData() );
 
     $album = Album::findByLinkedObjectId( $article->objectId() );
@@ -164,10 +164,6 @@ class Articles extends \Kiki\Controller
 
     $likes = $article->likes( $user->id() );
     $comments = $article->comments( $user->id() );
-
-    // FIXME: add to Kiki\TemplateData trait (and make sure it's still extensible)
-    $template->assign( 'cspNonce', Config::$cspNonce );
-    $template->assign( 'kiki', [ 'user' => [ 'id' => $user->id() ] ] );
 
     $template->assign( 'object_id', $article->objectId() );
     $template->assign( 'likes', $likes );
