@@ -104,7 +104,8 @@ class User extends BaseObject
     if ( $this->id )
       $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND u.id=%d", implode( ', ', $fields), $this->id );
     else
-      $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_id=%d", implode( ', ', $fields), $this->object_id );
+      $q = $this->db->buildQuery( "SELECT %s FROM users u, objects o WHERE o.object_id=u.object_id AND u.object_id=%d", implode( ', ', $fields), $this->object_id );
+
     $o = $this->db->getSingleObject($q);
     if ( !$o )
     {
