@@ -23,7 +23,7 @@ class Status
     $requirements = array();
     $requirements[] = array( 'name' => 'curl', 'remedy' => 'apt-get install php-curl' );
     $requirements[] = array( 'name' => 'GD', 'function' => 'imagecreatefromjpeg', 'remedy' => 'apt-get install php-gd' );
-    $requirements[] = array( 'name' => 'mysql', 'remedy' => 'apt-get install php-mysql' );
+    $requirements[] = array( 'name' => 'mysqli', 'remedy' => 'apt-get install php-mysql' );
     $requirements[] = array( 'name' => 'PEAR', 'include' => 'PEAR.php', 'remedy' => 'apt-get install php-pear' );
 
     if ( Config::$i18n )
