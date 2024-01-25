@@ -142,10 +142,7 @@ abstract class BaseObject
   final public function comments( $userId = 0 )
   {
     $comments = [];
-
-    $qComments = "SELECT ctime, user_id, comment FROM object_comments WHERE object_id = %d ORDER BY ctime ASC";
-    $qComments = $this->db->buildQuery( $qComments, $this->object_id );
-    $dbComments = $this->db->getObjects( $qComments );
+    $dbComments = Comment::get( $this->object_id );
 
     $userClassName = ClassHelper::bareToNamespace('User');
     $commentClassName = ClassHelper::bareToNamespace('Comment');

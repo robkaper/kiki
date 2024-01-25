@@ -58,18 +58,14 @@ class Objects extends KikiController
 
 	$comment = $_POST['comment'] ?? null;
 
-        $q = "INSERT INTO object_comments (object_id, user_id, comment) VALUES (%d, %d, '%s')";
-        $q = $db->buildQuery( $q, $object->objectId(), $user->id(), $comment );
-        $db->query($q);
+        $commentClass = ClassHelper::bareToNamespace( 'Comment' );
+
+	$commentClass::insert( $object->objectId(), $user->id(), $comment );
+        $commentCount = $commentClass::count( $object->objectId() );
 
         $status = true;
 
-        // TODO: what if Comment class does not exist? Must provide something in Kiki
-        $commentClass = ClassHelper::bareToNamespace( 'Comment' );
         $comment = $commentClass::html( $user, time(), $comment );
-
-        $q = "SELECT COUNT(*) FROM object_comments WHERE object_id=%d";
-        $commentCount = $db->getSingleValue( $db->buildQuery( $q, $object->objectId() ) );
 
         if ( $commentCount == 1 )
         {
