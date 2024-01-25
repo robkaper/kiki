@@ -1,18 +1,5 @@
-<body>
-{{include 'parts/header'}}
-{{include 'parts/nav'}}
-{{include 'parts/aside-admin'}}
-{{include 'parts/aside'}}
+{{extends 'pages/default'}}
 
-<div id="cw" class="twosides"><div id="content">
-
-{{include 'parts/flashbag'}}
-
+{{block 'content'}}
 {$content}
-
-<br class="spacer">
-</div></div>
-
-{{include 'parts/footer'}}
-
-</body>
+{{/block}}
