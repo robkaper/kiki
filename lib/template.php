@@ -115,8 +115,6 @@ class Template
   private $extendChain = [];
   private static $includeChain = [];
 
-  private $noDefault = false;
-
   private $blocks = array();
 
   private $data = array();
@@ -127,10 +125,10 @@ class Template
   private $loopDepth = 0;
   private $maxLoopDepth = 0;
 
-  public function __construct( $template = null, $noDefault=false )
+  public function __construct( $template = null, $data = null )
   {
     $this->template = $template;
-    $this->noDefault = $noDefault;
+    $this->data = is_array($data) ? $data : [];
   }
 
   public static function getInstance()
@@ -384,7 +382,7 @@ class Template
   public function content()
   {
     // Log::debug( "begin template engine" );
-    if ( !$this->template && !$this->noDefault )
+    if ( !$this->template )
       $this->template = 'pages/default';
 
     $ext = pathinfo( $this->file($this->template), PATHINFO_EXTENSION );
@@ -402,7 +400,7 @@ class Template
 
     $content = null;
 
-    if ( !$this->template && !$this->noDefault )
+    if ( !$this->template )
       $this->template = 'pages/default';
 
     // Log::beginTimer( "Template::content ". $this->template );

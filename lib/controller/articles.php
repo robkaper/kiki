@@ -100,7 +100,7 @@ class Articles extends \Kiki\Controller
       $article->reset();
       $article->load( $dbArticle->id );
 
-      $template = new Template( 'content/articles-summary', true );
+      $template = new Template( 'content/articles-summary' );
       $template->assign( 'article', $article->templateData() );
 
       $album = Album::findByLinkedObjectId( $article->objectId() );
