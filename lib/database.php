@@ -294,7 +294,7 @@ class Database
 	function getSingleValue( $q )
 	{
 		$rs = $this->query($q);
-		if ( $this->mysqli->field_count == 1 )
+		if ( $rs && $this->mysqli->field_count == 1 )
 		{
 			$row = $rs->fetch_row();
 			if ( $row )
