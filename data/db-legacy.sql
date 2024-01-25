@@ -1,9 +1,4 @@
-# Full (MySQL/MariaDB) database scheme for Kiki.
-#
-# Although a new installation can easily be updated from the status page
-# (just reload it after installation), it is desired that this file is kept
-# up-to-date with the latest scheme changes so that the latest revision can
-# be installed right away.
+# Legacy tables no longer supported.
 
 drop table if exists config;
 create table config (
@@ -15,18 +10,6 @@ create table config (
 ) default charset=utf8;
 
 insert into config (`key`, value) values( 'dbVersion', '0.1.33' );
-
-drop table if exists comments;
-create table comments (
-  id bigint unsigned not null auto_increment,
-  primary key(id),
-  object_id bigint unsigned not null,
-  ip_addr varchar(15),
-  in_reply_to_id bigint unsigned not null,
-  user_connection_id int unsigned not null,
-  external_id varchar(255) not null,
-  body text not null
-) default charset=utf8;
 
 drop table if exists menu_items;
 create table menu_items (

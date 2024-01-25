@@ -191,7 +191,6 @@ class Album extends BaseObject
     $template->assign( 'album', $album );
     $template->assign( 'picture', $picture );
     $template->assign( 'object_id', 0 );
-    $template->assign( 'comments', array() );
 
     return $template->fetch();
   }

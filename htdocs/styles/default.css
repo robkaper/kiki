@@ -260,31 +260,6 @@ hr {
 	opacity: 1;
 }
 
-div.comment {
-	min-height: 50px;
-	margin-bottom: 1px;
-	background: #deb;
-	padding: 5px;
-	clear: left;
-}
-
-div.comment:first-child {
-	border-radius: 5px 5px 0 0;
-}
-
-.comments > .comment:first-child img {
-	border-radius: 5px 0 0 0;
-}
-
-div.comment:last-child {
-	border-radius: 0 0 5px 5px;
-}
-
-div.commentTxt {
-	margin-left: 55px;
-	-moz-margin-left: 50px+0.25em;
-}
-
 .dummy p {
 	margin: 0;
 	padding: 5px;
@@ -770,10 +745,6 @@ aside img.social {
 
 .relTime {
 	color: #666;
-	font-size: 0.875em;
-}
-
-.comments {
 	font-size: 0.875em;
 }
 

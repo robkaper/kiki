@@ -121,7 +121,7 @@ use Kiki\Core;
   echo "<li>Delete orphaned objects... ";
   echo "<ul>";
   $totalDeleted = 0;
-  $objectTables = array( 'users' => 'User', 'articles' => 'Article', 'comments' => 'Comment' );
+  $objectTables = array( 'users' => 'User', 'articles' => 'Article' );
   foreach( $objectTables as $table => $objectType )
   {
     echo "<li>$objectType... ";
