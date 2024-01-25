@@ -128,6 +128,7 @@ class Picture extends BaseObject
   }
 
   public function url() { return null; }
+  public function templateData() { return []; }
 
   public function setWidth( $width ) { $this->width = $width; }
   public function width() { return $this->width; }

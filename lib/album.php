@@ -132,6 +132,8 @@ class Album extends BaseObject
     return "https://". $_SERVER['SERVER_NAME']. $this->uri($pictureId);
   }
 
+  public function templateData() { return []; }
+
   /**
    * Provides the local URI part of the album.
    *

@@ -99,10 +99,8 @@ class Comment extends BaseObject
     return $this->id;
   }
 
-  public function url()
-  {
-    return null;
-  }
+  public function url() { return null; }
+  public function templateData() { return []; }
 
   public function setIpAddr( $ipAddr ) { $this->ipAddr = $ipAddr; }
   public function ipAddr() { return $this->ipAddr; }

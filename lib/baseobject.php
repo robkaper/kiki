@@ -140,4 +140,5 @@ abstract class BaseObject
   }
 
   abstract public function url();
+  abstract public function templateData();
 }
