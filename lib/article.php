@@ -47,8 +47,8 @@ class Article extends BaseObject
       $this->object_id = 0;
     }
 
-    $qFields = "id, o.object_id, o.user_id, o.ctime, o.mtime, a.ptime, a.section_id, a.cname, a.title, a.summary, a.body";
-    $q = $this->db->buildQuery( "SELECT %s FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d", $qFields, $this->id );
+    $qFields = "id, o.object_id, o.object_name, o.user_id, o.ctime, o.mtime, a.ptime, a.section_id, a.cname, a.title, a.summary, a.body";
+    $q = $this->db->buildQuery( "SELECT %s FROM articles a LEFT JOIN objects o ON o.object_id=a.object_id WHERE a.id=%d OR a.object_id=%d", $qFields, $this->id, $this->object_id );
     $this->setFromObject( $this->db->getSingleObject($q) );
   }
 
@@ -65,6 +65,7 @@ class Article extends BaseObject
     $this->cname = $o->cname;
 
     $this->title = $o->title;
+
     $this->summary = $o->summary;
     $this->body = $o->body;
   }
@@ -117,7 +118,7 @@ class Article extends BaseObject
   public function sectionId() { return $this->sectionId; }
   public function setCname( $cname ) { $this->cname = $cname; }
   public function cname() { return $this->cname; }
-  public function setTitle( $title ) { $this->title = $title; }
+  public function setTitle( $title ) { $this->title = $title; $this->objectName = $title; }
   public function title() { return $this->title; }
   public function setSummary( $summary ) { $this->summary = $summary; }
   public function summary() { return $this->summary; }
