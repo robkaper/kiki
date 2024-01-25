@@ -103,12 +103,6 @@ class Config
 			Log::fatal( "Config::\$authCookiePepper is empty: cookie hashes are susceptible to rainbow table lookups." );
 		}
 
-		// TODO: error-handling, a database might not be configured
-		// (which is noted on the /kiki/ status page, but such a
-		// fatal error that we should probably handle it more
-		// prominently.
-
-		// if ( self::$dbName && self::$dbUser )
 		self::$db = array( 'host' => self::$dbHost, 'port' => self::$dbPort, 'name' => self::$dbName, 'user' => self::$dbUser, 'pass' => self::$dbPass );
 	}
 
