@@ -60,6 +60,8 @@ document.addEventListener( 'DOMContentLoaded', function() {
       return;
     }
 
+    $(this).find('i').removeClass('fa-award').addClass('fa-spinner fa-spin');
+
     $.ajax( {
       url: '/kiki/objects/action',
         type: 'post',
@@ -75,10 +77,13 @@ document.addEventListener( 'DOMContentLoaded', function() {
           if (response) {
             switch( response.action ) {
               case 'likes':
+                $button = $('button#object-' + response.object_id + '-likes-button');
+                $button.find('i').removeClass('fa-spinner fa-spin').addClass('fa-award');
+
                 if ( response.status )
-                  $('button#object-' + response.object_id + '-likes-button').addClass('active');
+                  $button.addClass('active');
                 else
-                  $('button#object-' + response.object_id + '-likes-button').removeClass('active');
+                  $button.removeClass('active');
 
                 $('span#object-' + response.object_id + '-likes').html( response.likes>0 ? response.likes : null );
                 break;

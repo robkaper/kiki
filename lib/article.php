@@ -125,7 +125,7 @@ class Article extends BaseObject
   public function sectionId() { return $this->sectionId; }
   public function setCname( $cname ) { $this->cname = $cname; }
   public function cname() { return $this->cname; }
-  public function setTitle( $title ) { $this->title = $title; $this->objectName = $title; }
+  public function setTitle( $title ) { $this->title = $title; $this->object_name = $title; }
   public function title() { return $this->title; }
   public function setSummary( $summary ) { $this->summary = $summary; }
   public function summary() { return $this->summary; }
