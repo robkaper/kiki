@@ -94,8 +94,7 @@ class Objects extends KikiController
         $notificationTypeClass = ClassHelper::bareToNamespace( 'NotificationType' );
         if ( $notificationClass && class_exists($notificationClass) && $notificationTypeClass && class_exists($notificationTypeClass) )
         {
-          $notifications = $notificationClass::getFiltered( $object->userId(), $object->objectId(), $notificationTypeClass::Comments_New );
-          $notification = $notifications[0] ?? null;
+          $notification = $notificationClass::exists( $object->userId(), $object->objectId(), $notificationTypeClass::Comments_New );
 
           if ( $notification )
             $notificationClass::update( $notification->id, $user->objectId(), $msg );
@@ -152,8 +151,7 @@ class Objects extends KikiController
           $notificationTypeClass = ClassHelper::bareToNamespace( 'NotificationType' );
           if ( $notificationClass && class_exists($notificationClass) && $notificationTypeClass && class_exists($notificationTypeClass) )
           {
-            $notifications = $notificationClass::getFiltered( $object->userId(), $object->objectId(), $notificationTypeClass::Props_New );
-            $notification = $notifications[0] ?? null;
+            $notification = $notificationClass::exists( $object->userId(), $object->objectId(), $notificationTypeClass::Props_New );
 
             if ( $notification )
               $notificationClass::update(  $notification->id, $user->objectId(), $msg );
