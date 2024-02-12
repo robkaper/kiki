@@ -319,6 +319,7 @@ class Account extends \Kiki\Controller
         $verifyUser = new \Kiki\User($verifyUserId);
         $verifyUser->setIsVerified(true);
         $verifyUser->save();
+        $this->data['verifiedUserId'] = $verifyUserId;
 
         if ( $user->id() && $user->id() != $verifyUser->id() )
         {
