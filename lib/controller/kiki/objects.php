@@ -89,7 +89,7 @@ class Objects extends KikiController
           );
         }
 
-        // TODO: what if Notification(Type) class does not exist? Must provide something in Kiki
+        // TODO: custom extensions, must provide something in Kiki
         $notificationClass = ClassHelper::bareToNamespace( 'Notifications' );
         $notificationTypeClass = ClassHelper::bareToNamespace( 'NotificationType' );
         if ( $notificationClass && class_exists($notificationClass) && $notificationTypeClass && class_exists($notificationTypeClass) )
@@ -101,6 +101,10 @@ class Objects extends KikiController
           else
             $notificationClass::insert( $object->userId(), $notificationTypeClass::Comments_New, $object->objectId(), $user->objectId(), $msg );
         }
+
+        $badgeClass = ClassHelper::bareToNamespace( 'Badges' );
+        if ( $badgeClass && class_exists($badgeClass) )
+          $badgeClass::checkAccountSocial( $user->id() );
 
         break;
 
@@ -146,7 +150,7 @@ class Objects extends KikiController
             );
           }
 
-          // TODO: what if Notification(Type) class does not exist? Must provide something in Kiki
+          // TODO: custom extensions, must provide something in Kiki
           $notificationClass = ClassHelper::bareToNamespace( 'Notifications' );
           $notificationTypeClass = ClassHelper::bareToNamespace( 'NotificationType' );
           if ( $notificationClass && class_exists($notificationClass) && $notificationTypeClass && class_exists($notificationTypeClass) )
@@ -158,6 +162,11 @@ class Objects extends KikiController
             else
               $notificationClass::insert( $object->userId(), $notificationTypeClass::Props_New, $object->objectId(), $user->objectId(), $msg );
           }
+
+          $badgeClass = ClassHelper::bareToNamespace( 'Badges' );
+          if ( $badgeClass && class_exists($badgeClass) )
+            $badgeClass::checkAccountSocial( $user->id() );
+
         }
 
         $likeCount = $likes->count;
