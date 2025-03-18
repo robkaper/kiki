@@ -20,6 +20,8 @@ namespace Kiki;
 
 class Config
 {
+	private static $ini = [];
+
 	public static $namespace = null;
 	public static $debug = false;
 
@@ -165,5 +167,16 @@ class Config
 			return;
 		}
 		include_once "$file";
+
+		$iniFile = str_replace( '.php', '.ini', $file );
+		if ( file_exists($iniFile) )
+		{
+			self::$ini = (object) parse_ini_file( $iniFile, true, INI_SCANNER_TYPED );
+		}
+	}
+
+	public static function ini( $key )
+	{
+		return self::$ini[$key] ?? null;
 	}
 }
