@@ -86,4 +86,14 @@ class ObjectMetaData
     {
         return $this->data[$key] ?? null;
     }
+
+    public static function getObjectId( $key, $value )
+    {
+        $db = Core::getDb();
+
+        $q = "SELECT `object_id` FROM `object_metadata` WHERE `key` = '%s' AND `value`='%s'";
+        $q = $db->buildQuery( $q, $key, $value );
+
+        return $db->getSingleValue($q);
+    }
 }
