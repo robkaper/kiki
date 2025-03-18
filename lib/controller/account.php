@@ -60,24 +60,70 @@ class Account extends \Kiki\Controller
     }
 
     $userId = $user->getIdByLogin( $email, $password );
+
+    // Kiki does not offer a full MFA implementation itself, but provides
+    // the necessary flow for class extensions to do so:
+
+    // For users with MFA enabled the object metadata key 'mfa_enabled'
+    // should be set to a value considered TRUE
+
+    // After providing their login credentials, Kiki sets the key 'mfaForm'
+    // to true in the data storage of this Controller, as well as a session
+    // variable mfaUserId with the User id, instead of relaying the User to
+    // the Kiki Core class and setting the authentication cookie.
+
+    // Implementations should call parent::loginAction() in their
+    // loginAction. If afterwards the session variable mfaUserId is set,
+    // implementations should display their MFA form and/or handle its POST
+    // data to verify the entered token.
+
+    // Upon success, implementations should clear the session variable and
+    // manually assign the User instance to Kiki's Core and store the
+    // authentication cookie:
+
+    // \Kiki\Core::setUser($user);
+    // \Kiki\Auth::setCookie($user->id(), $cookieConsent );
+
+    // Upon failure, implementation should reset the User class:
+
+    // $user->reset();
+
+    $mfaUserId = $_SESSION['mfaUserId'] ?? null;
+
     if ( $userId )
     {
       $user->load($userId);
+
+      $uMeta = $user->getMetaData();
+      $mfaEnabled = $uMeta->getValue( 'mfa_enabled' );
 
       if ( !$user->isVerified() )
       {
         $this->errors[] = array( 'msg' => "Your e-mail address has not been verified yet." );
       }
+      else if ( $mfaEnabled )
+      {
+        $this->data['mfaForm'] = true;
+
+        if ( !isset($_SESSION) )
+          @session_start();
+
+        $_SESSION['mfaUserId'] = $user->id();
+      }
       else
       {
         \Kiki\Core::setUser($user);
-        \Kiki\Auth::setCookie($userId, $cookieConsent );
+        \Kiki\Auth::setCookie($user->id(), $cookieConsent );
 
-        // FIXME: this is rather specific. But local namespaced class can override it...
+        // Redirect to home page (local namespaced class can override this behaviour if necessary)
         $this->status = 303;
-        $this->content = '/'; // $this->getBaseUri();
+        $this->content = '/';
+
         return true;
       }
+    }
+    else if ( $mfaUserId )
+    {
     }
     else if ( $_POST )
     {
