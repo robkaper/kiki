@@ -156,6 +156,11 @@
     I18n::setLocale( Kiki\Config::$language );
   }
 
+//  if ( !isset($_SESSION) )
+//    @session_start();
+
+  // Log::debug( "init: ". print_r( $_SESSION ?? null, true ) );
+
   // Database
   $db = Core::getDb();
 
