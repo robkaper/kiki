@@ -42,7 +42,13 @@ class Database
 		if ( !$this->host || !$this->port || !$this->name )
 			return false;
 
-		$this->mysqli = new \mysqli( $this->host, $this->user, $this->pass, $this->name, $this->port );
+		try {
+			$this->mysqli = new \mysqli( $this->host, $this->user, $this->pass, $this->name, $this->port );
+		} catch (mysqli_sql_exception $e) {
+			Log::fatal( "connection to database failed: [". $this->mysqli->connect_errno. "] ". $this->mysqli->connect_error );
+			$this->mysqli = null;
+			return false;
+		}
 		
 		if ( isset($this->mysqli->connect_errno) && !empty($this->mysqli->connect_error) )
 		{
