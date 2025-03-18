@@ -102,7 +102,7 @@ class Log
 
 		$trace = debug_backtrace();
 
-		$location = str_replace( Core::getInstallPath(). "/", null, $trace[0]['file'] ). ':'. $trace[0]['line'];
+		$location = str_replace( Core::getInstallPath(). "/", '', $trace[0]['file'] ). ':'. $trace[0]['line'];
 
 		$caller = array_shift($trace);
 		while( isset($caller['class']) && $caller['class'] == 'Kiki\Log' )
