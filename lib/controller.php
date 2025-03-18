@@ -266,8 +266,8 @@ class Controller
     $templateFile = $template->file( $this->template() );
     if ( !file_exists($templateFile) )
     {
-      Log::error( "cannot render template file '$templateFile': file not found" );
-      echo "ERROR: cannot render template file '$templateFile': file not found";
+      Log::error( sprintf( 'ERROR: cannot render template "%s", file not found', $this->template() ) );
+      printf( 'ERROR: cannot render template "%s", file not found', $this->template() );
       return;
     }
 
