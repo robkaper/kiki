@@ -20,7 +20,7 @@ class ObjectQueue
 
         $q = "INSERT INTO `object_queue` (`object_id`, `action`, `priority`)
             VALUES (%d, '%s', %d)
-            ON DUPLICATE KEY UPDATE `lock_id`=null, `ltime`=null, `processed`=false, `priority`=%d";
+            ON DUPLICATE KEY UPDATE `lock_id`=null, `ltime`=null, `qtime`=NULL, `tries`=0, `processed`=false, `priority`=%d";
         $q = $db->buildQuery( $q, $object->objectId(), $action, $priority, $priority );
 
         $rs = $db->query($q);
