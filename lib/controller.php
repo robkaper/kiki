@@ -162,19 +162,19 @@ class Controller
       $remainder = $this->objectId;
     }
 
-    // Log::debug( sprintf( "class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+    Log::debug( sprintf( "class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     if ( $this->subController = $this->getActionController($action) )
     {
       $this->subController->setContext($this->context);
       $this->subController->setAction($remainder);
 
-      // Log::debug( sprintf( "CALLING SUB class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+//      Log::debug( sprintf( "CALLING SUB class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
       return $this->subController->actionHandler();
     }
 
-   // Log::debug( sprintf( "NO SUB, CALLING METHOD class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+//   Log::debug( sprintf( "NO SUB, CALLING METHOD class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     if ( !method_exists($this, $this->actionMethod) )
       return false;
@@ -194,7 +194,7 @@ class Controller
         $this->template = 'pages/default';
     }
 
-    Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
+//    Log::debug( sprintf( "RETURNING class: %s, action: %s, this->action: %s, context: %s, remainder: %s, actionMethod: %s", get_called_class(), $action, $this->action, $this->context, $remainder, $this->actionMethod) );
 
     return $ret;
   }
@@ -202,6 +202,8 @@ class Controller
   public function getActionController($action)
   {
     $actionController = get_class($this). "\\". ucfirst($action);
+
+//    Log::debug( "looking for controller: $actionController" );
 
     if ( class_exists($actionController) )
       return new $actionController();
