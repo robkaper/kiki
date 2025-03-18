@@ -49,14 +49,21 @@ abstract class Daemon
     
   public function start( $numChildren=3 )
   {
-    $this->closeFileHandles();
+    $daemonMode = ( isset($_SERVER['SYSTEMD_EXEC_PID']) && !isset($_SERVER['STY']) );
+
+    if ( $daemonMode )
+      $this->closeFileHandles();
+
     $this->setHandlers();
 
     // Prior to forking children, otherwise they end up as orphans.
-    $this->toBackground();
-    $this->detach();
+    if ( $daemonMode )
+    {
+      $this->toBackground();
+      $this->detach();
+    }
 
-    Log::info( "started, pid $this->pid" );
+    Log::info( sprintf( "started, pid:%d, daemon-mode:%d", $this->pid, $daemonMode ) );
 
     for( $i=0 ; $i<$numChildren ; $i++ )
     {
@@ -75,7 +82,7 @@ abstract class Daemon
   {
     fclose(STDIN);
     fclose(STDOUT);
-    fclose(STDERR);
+//    fclose(STDERR);
   }
 
   private function detach()
