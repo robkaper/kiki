@@ -710,7 +710,7 @@ class Template
 
   private function modify( $input, $mods )
   {
-    if ( ! ($mods = trim($mods)) )
+    if ( !$mods || !($mods = trim($mods)) )
       return $input;
 
     $mods = explode( ',', $mods );
