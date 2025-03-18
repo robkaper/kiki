@@ -42,6 +42,8 @@ class User extends BaseObject
     $this->isAdmin = false;
     $this->disabled = false;
 
+    $this->name = null;
+
     $this->connections = array();
     $this->identifiedConnections = null;
   }
