@@ -20,7 +20,7 @@ namespace Kiki;
 
 class Config
 {
-	private static $ini = [];
+	private static $ini = null;
 
 	public static $namespace = null;
 	public static $debug = false;
@@ -114,6 +114,8 @@ class Config
 	*/
 	private static function setDefaults()
 	{
+		self::$ini = (object) [];
+
 		self::$routing = array(
 			'/' => array( 'Page', '_kiki/index' ),
 		);
@@ -181,7 +183,10 @@ class Config
     $val = null;
     foreach( $args as $arg )
     {
-      $val = ($val ? $val[$arg] : self::$ini->$arg) ?? null;
+      if ( $val )
+        $val = $val[$arg] ?? null;
+      else
+        $val = self::$ini->$arg ?? null;
     }
     return $val;
   }
