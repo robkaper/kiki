@@ -118,7 +118,7 @@ class Log
 		if ( $includeBacktrace )
 		{
 			foreach( $trace as $traceItem )
-				$logStr .= ( "\t[$traceItem[file]][$traceItem[line]][$traceItem[class]][$traceItem[function]]". PHP_EOL );
+				$logStr .= sprintf( "\t[%s][%s][%s][%s]". PHP_EOL, $traceItem['file'] ?? null, $traceItem['line'] ?? null, $traceItem['class'] ?? null, $traceItem['function'] );
 		}
 
 		self::$queue[] = $logStr;
