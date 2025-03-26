@@ -26,15 +26,21 @@ namespace Kiki;
 
 require_once preg_replace('~/htdocs/(.*)\.php~', '/lib/init.php', __FILE__ );
 
-Log::debug( sprintf( 'START router [path:%s][staticFile:%d]',
+Router::detectAltRoute();
+$altRoute = Router::altRoute();
+
+Log::debug( sprintf( 'START router [alt:%s][path:%s][staticFile:%d]',
+  $altRoute,
   $requestPath,
   (int) $staticFile
 ) );
 
 $controller = null;
+$matches = [];
 
-$matches = array();
-foreach( Config::$routing as $route => $routeController )
+$routeConfig = $altRoute ? ( Config::$routing[$altRoute] ?? Config::$routing ) : Config::$routing;
+if ( is_array($routeConfig) )
+foreach( $routeConfig as $route => $routeController )
 {
   // echo "<br>parsing routing [$route][$requestPath]";
   if ( preg_match( "#^$route(/(.*))?$#", $requestPath, $matches ) )

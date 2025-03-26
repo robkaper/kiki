@@ -127,8 +127,7 @@
   // Init has to be called though, for semi-static files such as Thumbnails
   // which require the class autoloader, for example.
   //
-  // TODO: remove?  static files can be excluded from web server
-  // configuration and needn't be served by framework
+  // REMOVE: static files can be excluded from web server configuration and needn't be served by framework
   $staticFile = preg_match( '#^/kiki/(.*)\.(css|gif|jpg|jpeg|js|png|webp)#', $requestPath );
   if ( isset($staticFile) && $staticFile )
   {
@@ -139,15 +138,13 @@
   I18n::init();
 
   // Set locale when URI starts with a two-letter country code.
-  // TODO: support locale setting by TLD or subdomain.
+  // TODO: move setLocale to router.php
   // TODO: adjust element lang attributes based on chosen locale.
   if ( preg_match('#^/([a-zA-Z]{2})/#', $requestPath, $matches) )
   {
     if ( I18n::setLocale($matches[1]) )
     {
-      // TODO: finish the Kiki controller and/or let the rewrite rule take
-      // locale URIs into account.  Also, rewrite Kiki\Config::kikiPrefix based on
-      // locale.
+      // TODO: finish the Kiki controller and/or let the rewrite rule take locale URIs into account. Also, rewrite Kiki\Config::kikiPrefix based on locale.
       $requestPath = substr( $requestPath, 3 );
     }
   }

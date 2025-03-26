@@ -43,7 +43,7 @@ class I18n
    */
   public static function init()
   {
-		// Supporting charsets other than UTF-8 is not high on the list of priorities.
+    // Supporting charsets other than UTF-8 is not high on the list of priorities.
     mb_internal_encoding('utf8');
 
     if ( !function_exists('bindtextdomain') || !function_exists('textdomain') )
@@ -76,9 +76,9 @@ class I18n
   {
     switch( $locale )
     {
-			case "hu":
-				setlocale( LC_ALL, "hu", "hu_HU", "hu_HU.utf8", "hu_HU.UTF-8" );
-				break;
+      case "hu":
+        setlocale( LC_ALL, "hu", "hu_HU", "hu_HU.utf8", "hu_HU.UTF-8" );
+        break;
 
       case "nl":
         setlocale( LC_ALL, "nl", "nl_NL", "nl_NL.utf8", "nl_NL.UTF-8" );

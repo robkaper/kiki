@@ -13,6 +13,31 @@ namespace Kiki;
 
 class Router
 {
+  private static $altRoute = null;
+
+  public static function altRoute() { return self::$altRoute; }
+
+  public static function detectAltRoute()
+  {
+    $altRoutes = Config::ini('I18n:i18n');
+    if ( !is_array($altRoutes) )
+      return;
+
+    if ( $key = array_search( $_SERVER['SERVER_NAME'], $altRoutes ) )
+    {
+      self::$altRoute = $key;
+      return;
+    }
+
+    $pathParts = explode( '/', $_SERVER['REQUEST_URI'] );
+    array_shift($pathParts);
+    if ( !count($pathParts) )
+      return;
+
+    if ( $key = array_search( $_SERVER['SERVER_NAME']. "/". $pathParts[0], $altRoutes ) )
+      self::$altRoute = $key;
+  }
+
   /**
    * Sends a redirect header
    *

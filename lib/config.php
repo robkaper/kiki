@@ -175,8 +175,14 @@ class Config
 		}
 	}
 
-	public static function ini( $key )
-	{
-		return self::$ini[$key] ?? null;
-	}
+  public static function ini( $key )
+  {
+    $args = explode( ':', $key );
+    $val = null;
+    foreach( $args as $arg )
+    {
+      $val = ($val ? $val[$arg] : self::$ini->$arg) ?? null;
+    }
+    return $val;
+  }
 }

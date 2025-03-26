@@ -164,13 +164,24 @@ class Template
     $supportedExtensions = [ '.tpl2', '.tpl', '.php' ];
     $searchPaths = [ Core::getRootPath(). '/templates/', Core::getInstallPath(). '/templates/' ];
 
+    $altRoute = Router::altRoute();
+
+    if ( $altRoute )
+    {
+      foreach( $searchPaths as $searchPath )
+        array_unshift( $searchPaths, $searchPath. $altRoute. "/" );
+    }
     foreach( $searchPaths as $searchPath )
     {
       foreach( $supportedExtensions as $extension )
       {
         $file = $searchPath. $template. $extension;
         if ( file_exists($file) )
+        {
+          // TODO: check why output/content sometimes call file() repeatedly
+          // Log::debug( $file, false, true );
           return $file;
+        }
       }
     }
 
