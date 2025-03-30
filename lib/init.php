@@ -101,6 +101,7 @@
   use Kiki\Config;
   use Kiki\Log;
 
+  use Kiki\Router;
   use Kiki\I18n;
 
   // SCRIPT_URL, not REQUEST_URI. Query parameters should be handled from $_GET explicitely.
@@ -140,12 +141,17 @@
   // Set locale when URI starts with a two-letter country code.
   // TODO: move setLocale to router.php
   // TODO: adjust element lang attributes based on chosen locale.
-  if ( preg_match('#^/([a-zA-Z]{2})/#', $requestPath, $matches) )
+  if ( preg_match('#^/([a-zA-Z]{2})(/(.*)|$)#', $requestPath, $matches) )
   {
     if ( I18n::setLocale($matches[1]) )
     {
       // TODO: finish the Kiki controller and/or let the rewrite rule take locale URIs into account. Also, rewrite Kiki\Config::kikiPrefix based on locale.
-      $requestPath = substr( $requestPath, 3 );
+      $requestPath = preg_replace('#^(/)([a-zA-Z]{2})(/(.*)|$)#', '\\1\\4', $requestPath );
+      if ( empty($matches[2]) )
+      {
+        Router::redirect( "$matches[0]/", 301 );
+        exit;
+      }
     }
   }
   else
