@@ -78,15 +78,15 @@ class Controller
   public static function factory($type)
   {
     $className = ClassHelper::typeToClass($type);
-    // echo "<br>a$className";
+//    Log::debug( "0: $className" );
 
     if ( !class_exists($className) )
       $className = \Kiki\Config::$namespace. "\\". ClassHelper::typeToClass($type);
-    // echo "<br>b$className";
+//    Log::debug( "1: $className" );
 
     if ( !class_exists($className, false) )
       $className = __NAMESPACE__. "\\". ClassHelper::typeToClass($type);
-    // echo "<br>c$className";
+//    Log::debug( "2: $className" );
 
     if ( !class_exists($className) )
     {
