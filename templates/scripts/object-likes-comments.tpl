@@ -1,5 +1,6 @@
 <script nonce="{{$cspNonce}}">
 document.addEventListener( 'DOMContentLoaded', function() {
+{if $kiki.user.id}
   $('main').on( 'click', 'button.commentButton', function( clickEvent ) {
     clickEvent.preventDefault();
 
@@ -42,6 +43,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
        },
       } );
   } );
+{/if}
 
   $('main').on( 'click', '.actions button.objectButton', function( clickEvent ) {
     clickEvent.preventDefault();
@@ -60,6 +62,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
       return;
     }
 
+{if $kiki.user.id}
     $(this).find('i').removeClass('fa-award').addClass('fa-spinner fa-spin');
 
     $.ajax( {
@@ -95,6 +98,7 @@ document.addEventListener( 'DOMContentLoaded', function() {
         error: function( response ) {
        },
       } );
+{/if}
   } );
 } );
 </script>
