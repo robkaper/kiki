@@ -345,6 +345,13 @@ class Account extends \Kiki\Controller
     $this->title = _("Verify account");
 
     $user = \Kiki\Core::getUser();
+    if ( $user->isVerified() )
+    {
+      $this->template = null;
+      $this->status = 303;
+      $this->content = '/login';
+      return true;
+    }
 
     $token = isset($_GET['token']) ? $_GET['token'] : null;
     if ( empty($token) )
