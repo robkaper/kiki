@@ -138,7 +138,8 @@ class StorageItem
         $db = Core::getDb();
 
         $localFile = $this->localFile();
-        unlink($localFile);
+        if ( file_exists($localFile) )
+            unlink($localFile);
 
         $q = "DELETE FROM storage WHERE id=%d";
         $q = $db->buildQuery( $q, $this->id );
@@ -206,7 +207,7 @@ class StorageItem
 
         // Creates a unique hash.  It's somewhat predictable but that's okay
         // for the purpose of storage items.
-        $this->hash = sha1( $this->size. Config::$namespace. $data );
+        $this->hash = sha1( Config::$namespace. $this->userId. $this->size. $data );
     }
 
     public function localFile()
