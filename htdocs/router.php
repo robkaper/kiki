@@ -172,19 +172,7 @@ else if ( preg_match('#^/storage/([^\.]+)\.([^x]+)x([^\.]+)(\.(c))?\.(.*)#', $re
   $controller = Controller::factory('Thumbnails');
   $controller->setObjectId($matches);
 }
-
-// Check if URI contains a base handled by a dynamic controller.
-//
-// The findPage and findSection separation is mainly due to giving page
-// URLs preference over sections when both exist and quite possibly
-// unnecessary legacy for when the Page controller didn't use the same
-// routing table as the Sections (and actually all modules, now that
-// sections are truly dynamic in loading any Controller type.
-
-// FIXME: disabled for now.  Would be nice if users can create routed items
-// from the database, but need to rethink all of that now that main routing
-// has been moved to Config array
-else // if ( !($controller = Router::findPage($requestPath)) && !($controller = Router::findSection($requestPath)) )
+else
 {
   // Nothing? 404.
   $controller = Controller::factory("NotFound404");

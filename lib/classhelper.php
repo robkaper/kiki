@@ -6,7 +6,6 @@
  * paths.
  *
  * Example mappings:
- * type: pages <=> class: Controller\Pages <=> file: controller/pages.php
  * type: examples/helloworld <=> class: Controller\Examples\Helloworld <=> file: controller/examples/helloworld.php
  *
  * @class ClassHelper
