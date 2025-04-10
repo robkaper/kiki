@@ -21,6 +21,8 @@ class Email
   private $subject;
   private $from;
   private $to;
+  private $cc;
+  private $bcc;
   private $headers;
   private $body;
 
@@ -41,8 +43,6 @@ class Email
    * required (for an empty message), but obviously it is advised to add a
    * body text.
    *
-   * @todo No Cc: or Bcc: support, untested multiple To: support (addRecipient).
-   *
    * @param string $from e-mail address of the sender
    * @param string $to e-mail address of the (primary) recipient
    * @param string $subject subject of the e-mail
@@ -52,7 +52,14 @@ class Email
     $this->reset();
 
     $this->setSender( $from );
-    $this->addRecipient( $to );
+
+    if ( is_array($to) ) {
+      foreach( $to as $recipient ) {
+        $this->addRecipient( $recipient );
+      }
+    }
+    else
+      $this->addRecipient( $to );
 
     $this->subject = $subject;
 
@@ -135,6 +142,38 @@ class Email
   public function addRecipient( $to )
   {
     $this->recipients[] = $to;
+  }
+
+  private function resetCc()
+  {
+    $this->cc = array();
+  }
+
+  public function setCc( $to )
+  {
+    $this->resetCcs();
+    $this->addCc($to);
+  }
+
+  public function addCc( $to )
+  {
+    $this->cc[] = $to;
+  }
+
+  private function resetBcc()
+  {
+    $this->bcc = array();
+  }
+
+  public function setBcc( $to )
+  {
+    $this->resetBccs();
+    $this->addBcc($to);
+  }
+
+  public function addBcc( $to )
+  {
+    $this->bcc[] = $to;
   }
 
   public function setPlain( $plain )
@@ -279,7 +318,7 @@ class Email
         $data = $attachment['data'];
         if ( !$data )
           continue;
-          
+
         $dataStr = chunk_split( base64_encode($data) );
         $cid = basename($attachment['name']). "@". $_SERVER['SERVER_NAME'];
         $attachmentPart .= $this->mimePart( $this->mimeBoundary, "Content-Type: ". $attachment['type']. "; name=". basename($attachment['name']). "\nContent-disposition: attachment\nContent-Transfer-Encoding: base64\nContent-ID: <$cid>", $dataStr );
@@ -314,6 +353,16 @@ class Email
     return $this->recipients;
   }
 
+  public function cc()
+  {
+    return $this->cc;
+  }
+
+  public function bcc()
+  {
+    return $this->bcc;
+  }
+
   public function data()
   {
     return $this->headers(). $this->body();
@@ -330,5 +379,3 @@ class Email
     Mailer::send( $this, $priority );
   }
 }
-
-?>

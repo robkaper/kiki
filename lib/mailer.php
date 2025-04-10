@@ -68,13 +68,15 @@ class Mailer
     $mail->XMailer = 'Kiki/1.0';
 
     $mail->setFrom( Config::$mailSender, Config::$mailSenderName );
-    // $mail->addCC('cc1@example.com', 'Elena');
-    // $mail->addBCC('bcc1@example.com', 'Alex');
 
     foreach( $email->recipients() as $toAddress )
-    {
       $mail->addAddress( $toAddress );
-    }
+
+    foreach( $email->cc() as $ccAddress )
+      $mail->addCC( $ccAddress );
+
+    foreach( $email->bcc() as $bccAddress )
+      $mail->addBCC( $bccAddress );
 
     $mail->Subject = $email->subject();
 
