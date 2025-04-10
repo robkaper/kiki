@@ -1,104 +1,135 @@
 <script nonce="{{$cspNonce}}">
 document.addEventListener( 'DOMContentLoaded', function() {
 {if $kiki.user.id}
-  $('main').on( 'click', 'button.commentButton', function( clickEvent ) {
-    clickEvent.preventDefault();
+  const elMain = document.getElementsByTagName('main').item(0);
 
-    if ( $(this).hasClass('disabled') )
+  addEventListenerLive( elMain, 'click', async function( event ) {
+    event.preventDefault();
+
+    var el = event ? event.target : null;
+    while( el && ! (el instanceof HTMLButtonElement) )
+       el = el.parentNode;
+
+    if ( !el )
+      return false;
+
+    if ( el.classList.contains('disabled') )
       return;
+    el.classList.add('disabled');
 
-    $(this).addClass('disabled');
+    const objectId = el.getAttribute('data-object-id');
+    const elTextarea = elMain.querySelector( 'textarea#object-' + objectId + '-text' );
+    const comment = elTextarea.value;
 
-    var objectId = $(this).attr('data-object-id');
-    var comment = $('textarea#object-' + objectId + '-text').val();
+    const url = '/kiki/objects/action';
 
-    $.ajax( {
-      url: '/kiki/objects/action',
-        type: 'post',
-        data: {
-          json: true,
-          objectId: objectId,
-          action: 'comment',
-          comment: comment
-        },
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function( response ) {
-          if (response) {
-            switch( response.action ) {
-              case 'comment':
-                $('div#object-' + response.object_id + '-comments button').removeClass('disabled');
-                $('div#object-' + response.object_id + '-comments textarea').val( '' ).before( response.comment );
-                var count = parseInt( $('span#object-' + response.object_id + '-commentCount').html() );
-                count = count ? count+=1 : 1;
-                $('span#object-' + response.object_id + '-commentCount').html( count );
-                break;
+    const data = {
+      'json': true,
+      'objectId': objectId,
+      'action': 'comment',
+      'comment': comment
+    };
 
-              default:;
-            }
-          }
-        },
-        error: function( response ) {
-       },
-      } );
-  } );
+    const response = await fetch( url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    } );
+
+    if( response.status != 200 )
+      return false;
+
+    const rdata = await response.json();
+
+    switch( rdata.action ) {
+      case 'comment':
+        el.classList.remove('disabled');
+
+        const template = document.createElement( "template" );
+        template.innerHTML = '<div>' + rdata.comment + '</div>';
+        const elComment = template.content.children;
+
+        elTextarea.before( elComment[0] );
+
+        const elCount = elMain.querySelector( 'span#object-' + objectId + '-commentCount');
+        let count = parseInt( elCount.innerHTML );
+        count = count ? count+=1 : 1;
+        elCount.innerHTML = count;
+        break;
+
+      default:;
+    }
+  }, 'button.commentButton' );
 {/if}
 
-  $('main').on( 'click', '.actions button.objectButton', function( clickEvent ) {
-    clickEvent.preventDefault();
+  addEventListenerLive( elMain, 'click', async function( event ) {
+    event.preventDefault();
 
-    var objectId = $(this).attr('data-object-id');
-    var action = $(this).attr('data-action');
+    var el = event ? event.target : null;
+    while( el && ! (el instanceof HTMLButtonElement) )
+       el = el.parentNode;
+
+    if ( !el )
+      return false;
+
+    const objectId = el.getAttribute('data-object-id');
+    const action = el.getAttribute('data-action');
 
     if ( action == 'comment' )
     {
-      var form = $('#object-' + objectId + '-comments');
-      if ( form.hasClass('hidden') )
-        form.hide().removeClass('hidden');
-
-      form.slideToggle();
-
+      const elForm = document.getElementById( 'object-' + objectId + '-comments' );
+      if ( isVisible(elForm) ) {
+        elForm.style.display = 'none';
+      } else {
+        elForm.classList.remove('hidden');
+        elForm.style.display = '';
+      }
       return;
     }
 
 {if $kiki.user.id}
-    $(this).find('i').removeClass('fa-award').addClass('fa-spinner fa-spin');
+    const elIcon = el.querySelector('i');
+    elIcon.className = 'fa-solid fa-spinner fa-spin-pulse';
 
-    $.ajax( {
-      url: '/kiki/objects/action',
-        type: 'post',
-        data: {
-          json: true,
-          objectId: objectId,
-          action: action
-        },
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function( response ) {
-          if (response) {
-            switch( response.action ) {
-              case 'likes':
-                $button = $('button#object-' + response.object_id + '-likes-button');
-                $button.find('i').removeClass('fa-spinner fa-spin').addClass('fa-award');
+    const url = '/kiki/objects/action';
 
-                if ( response.status )
-                  $button.addClass('active');
-                else
-                  $button.removeClass('active');
+    const data = {
+      'json': true,
+      'objectId': objectId,
+      'action': action,
+    };
 
-                $('span#object-' + response.object_id + '-likes').html( response.likes>0 ? response.likes : null );
-                break;
+    const response = await fetch( url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    } );
 
-              default:;
-            }
-          }
-        },
-        error: function( response ) {
-       },
-      } );
+    if( response.status != 200 )
+      return false;
+
+    const rdata = await response.json();
+
+    switch( rdata.action ) {
+      case 'likes':
+        elIcon.className = 'fa-solid fa-medal fa-thumb';
+
+        if ( rdata.status )
+          el.classList.add('active');
+        else
+          el.classList.remove('active');
+
+        const elLikes = document.getElementById( 'object-' + objectId + '-likes');
+        elLikes.innerHTML = ( rdata.likes>0 ? rdata.likes : null );
+        break;
+
+      default:;
+    }
 {/if}
-  } );
+  }, '.actions button.objectButton' );
 } );
 </script>

@@ -7,6 +7,7 @@ use Kiki\Controller\Kiki as KikiController;
 use Kiki\Core;
 use Kiki\Log;
 use Kiki\ClassHelper;
+use Kiki\User;
 
 class Objects extends KikiController
 {
@@ -14,18 +15,27 @@ class Objects extends KikiController
   {
     $db = Core::getDb();
     $user = Core::getUser();
-    
+
     if ( !$user->id() )
       return false;
 
-    $json = $_POST['json'] ?? false;
+    $json = $objectId = $sction = $comment = null;
+    if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
+    {
+      $json = file_get_contents('php://input');
+      $data = json_decode($json);
+
+      $json = $data->json ?? false;
+      $objectId = $data->objectId ?? 0;
+      $action = $data->action ?? null;
+      $comment = $data->comment ?? null;
+    }
+
     if ( !$json )
     {
       Log::debug( "not called as json" );
       return false;
     }
-
-    $objectId = $_POST['objectId'] ?? false;
 
     $q = "SELECT `type` FROM `objects` WHERE `object_id`=%d";
     $objectType = $db->getSingleValue( $db->buildQuery( $q, $objectId ) );
@@ -47,22 +57,27 @@ class Objects extends KikiController
     {
       $privacyLevel = $object->privacyLevel();
 
-      // FIXME: check privacyLevel if applicable, to avoid spam.
+      Log::debug( "priv: $privacyLevel" );
+      $objectUser = new User( $object->userId() );
+
+      // TODO: checkPrivacyLevel is not part of Kiki yet. Should/could be part of BaseObject, not PrivacyController
+      // $objectAvailable = $this->checkPrivacyLevel( $privacyLevel, $objectUser, true );
+      $objectAvailable = true;
+
+      Log::debug( "available: $objectAvailable" );
+      if ( !$objectAvailable )
+        return false;
     }
 
-    $action = $_POST['action'] ?? false;
     $validAction = false;
 
     $likeCount = null;
     $commentCount = null;
-    $comment = null;
 
     switch ( $action )
     {
       case 'comment':
         $validAction = true;
-
-	$comment = $_POST['comment'] ?? null;
 
         $commentClass = ClassHelper::bareToNamespace( 'Comment' );
 
@@ -166,7 +181,6 @@ class Objects extends KikiController
           $badgeClass = ClassHelper::bareToNamespace( 'Badges' );
           if ( $badgeClass && class_exists($badgeClass) )
             $badgeClass::checkAccountSocial( $user->id() );
-
         }
 
         $likeCount = $likes->count;
@@ -190,7 +204,7 @@ class Objects extends KikiController
     $this->altContentType = 'application/json';
 
     $this->content = json_encode( [
-      'object_id' => $object->objectId(),
+      'objectId' => $object->objectId(),
       'action' => $action,
       'status' => $status,
       'likes' => $likeCount,
