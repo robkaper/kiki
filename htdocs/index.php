@@ -37,8 +37,9 @@
   $checkStatus = $user->isAdmin();
 
   // For database-driven sites, check admin user.
-  if ( $dbVersion && !$checkStatus )
+  if ( true || ( $dbVersion && !$checkStatus ) )
   {
+    $this->template = 'pages/default';
     $this->status = 401;
     $this->content = "Access forbidden.";
     return;
