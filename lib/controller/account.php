@@ -249,10 +249,14 @@ class Account extends \Kiki\Controller
 
     if ( $user->id() )
     {
-      $this->warnings[] = array( 'msg' => "You are already logged in." );
-      \Kiki\Core::getFlashBag()->add( 'warning', _("You are already logged in.") );
+      $user->reset();
+      Auth::setCookie(0);
+
+      $this->warnings[] = array( 'msg' => "You have been logged out from the account you were signed in to." );
+      \Kiki\Core::getFlashBag()->add( 'warning', _("You have been logged out from the account you were signed in to.") );
     }
-    else if ( $_POST )
+
+    if ( $_POST )
     {
       $email = $_POST['email'] ?? null;
       $password = $_POST['password'] ?? null; 
