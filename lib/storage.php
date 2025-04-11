@@ -138,7 +138,8 @@ class Storage
     $storageItem = new StorageItem();
 
     $fileName = strtolower($fileName);
-    $fileName = preg_replace( '#(/)#', '', $fileName );
+    // TODO: document why this is here... it's just the original name, should not be used anywhere (except for getExtension maybe?)
+    $fileName = preg_replace( '#(/)#', '_', $fileName );
 
     $storageItem->setUserId( $userId );
 
