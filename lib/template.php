@@ -282,9 +282,9 @@ class Template
     // echo "<h2>post fillBlocks:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
     $this->content = preg_replace_callback( $reIfs, array($this, 'preIfs'), $this->content );
-    // echo "<h2>post preparse ifs:</h2><pre>". htmlspecialchars($this->content). "</pre>"
+    // Log::debug( "<h2>post preparse ifs:</h2><pre>". $this->content. "</pre>" );
     $this->content = preg_replace_callback( $reLoops, array($this, 'preLoops'), $this->content );
-    // echo "<h2>post preparse loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // Log::debug( "<h2>post preparse loops:</h2><pre>". $this->content. "</pre>" );
 
     for( $i=$this->maxIfDepth; $i>=0; $i-- )
     {
@@ -340,14 +340,14 @@ class Template
       // echo "<hr>reLoops: ". print_r($reLoops,true);
       $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
     }
-    // echo "<h2>post parse/loops:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // Log::debug( "<h2>post parse/loops:</h2><pre>". $this->content. "</pre>" );
 
     for( $i=0; $i<=$this->maxIfDepth; $i++ )
     {
       $reConditions = '~[\s\r\n]?\{if('. $i. ')([^\}]+)\}\n??(.*)\n?\{\/if'. $i. '\}[\s\r\n]?~sU';
       $this->content = preg_replace_callback( $reConditions, array($this, 'conditions'), $this->content );
     }
-    // echo "<h2>post parse/conditions:</h2><pre>". htmlspecialchars($this->content). "</pre>";
+    // Log::debug( "<h2>post parse/conditions:</h2><pre>". $this->content. "</pre>" );
 
     $this->content = preg_replace_callback( $re, array($this, 'replace'), $this->content );
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
@@ -572,8 +572,6 @@ class Template
   {
     // Log::debug( "loops: ". print_r( $input, true ) );
 
-    //echo "<hr>loops, input: ". print_r($input,true);
-
     $array = substr( $input[1], 1 );
     if ( empty($input[3]) )
     {
@@ -586,23 +584,23 @@ class Template
       $named = substr( $input[3], 1 );
     }
 
-    // Log::debug( "array: $array, namedKey: $namedKey, named: $named" );
+    Log::debug( "array: $array, namedKey: $namedKey, named: $named" );
     //echo "<hr>array: $array, named: $named";
     $content = null;
 
     if ( isset($this->data[$array]) && is_array($this->data[$array]) )
     {
       $data = $this->data[$array];
-      // echo 1;
+      // Log::debug( "1" );
     }
     else
     {
-      // echo 2;
+      // Log::debug( "2" );
       $parts = explode(".", $array);
       $data = $this->data;
       foreach( $parts as $part )
       {
-        // echo 3;
+        // Log::debug( "3" );
 	//echo "<br>part: [$part]";
 	//echo "<br>data: [". print_r($data, true). "]";
 	// Make data array unassociative if part is numeric
@@ -612,7 +610,7 @@ class Template
 	$data = is_numeric($part) ? array_values($data) : $data;
         if ( isset($data[$part]) && is_array($data[$part]) )
         {
-          // echo 4;
+          // Log::debug( "4" );
           // echo "<br>data[$part] is array: ". print_r($data[$part],true);
           $data = $data[$part];
         }
@@ -620,24 +618,24 @@ class Template
         {
           // echo "<br>part [$part] not set in array: ". print_r($data,true);
           unset($data);
-          // echo 5;
+          // Log::debug( "5" );
         }
       }
 
-      // echo 6;
+      // Log::debug( "6" );
 
       if ( !isset($data) )
         return $content;
     }
 
-    // Log::debug( "data: ". print_r($data,true) );
-    // echo 7;
+    // Log::debug( "7, data: ". print_r($data,true) );
 
     $i=0;
 
     foreach( $data as $key => $$named )
     {
-      // echo 8;
+      // Log::debug( "8" );
+
       if (!ctype_alpha($key)) $key = $i;
 
       // Log::debug( "value of key $key, named $named: ". print_r($$named,true) );
@@ -646,32 +644,51 @@ class Template
       // Log::debug( "tmp: $tmp" );
 
       // Substitute the full key path for the local alias in variables, conditions and loops
-
       if ( $namedKey )
       {
+        // TODO: Comparison if|foreach named key
         $pattern = "~\{\{((if|foreach)\d\s\!?)?\\\$${namedKey}((\||\.)[^\}]+)?\}\}~";
         $replace = "{\\1\$". $array. ".$key". "\\3". ".__key}";
         $replace = $key;
-        // Log::debug( "pattern: $pattern, replace: $replace" );
+        // Log::debug( "namedkey ifforeach pattern: $pattern, replace: $replace" );
 
         $tmp = preg_replace( $pattern, $replace, $tmp );
-        // Log::debug( "tmp: $tmp" );
+        // Log::debug( "namedkey ifforaeach tmp: $tmp" );
       }
 
+      // Simple if|foreach
       $pattern = "~\{((if|foreach)\d\s\!?)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
-      // Log::debug( "pattern: $pattern, replace: $replace" );
+      // Log::debug( "ifforeach pattern: $pattern, replace: $replace" );
 
       $tmp = preg_replace( $pattern, $replace, $tmp );
-      // Log::debug( "tmp: $tmp" );
+      // Log::debug( "ifforeach tmp: $tmp" );
 
+      // Comparison if|foreach
+      $pattern = "~\{((if|foreach)\d\s\!?)?((.*) = )?\\\$${named}((\||\.)[^\}]+)?( = (.*))?\}~";
+      $replace = "{\\1\\3\$". $array. ".$key". "\\5}";
+      // Log::debug( "ifforeach = pattern: $pattern, replace: $replace" );
+
+      $tmp = preg_replace( $pattern, $replace, $tmp );
+      // Log::debug( "ifforeach = tmp: $tmp" );
+
+      // Simple keyed if|foreach
       $pattern = "~\{((if|foreach)\d\s)?\\\$${array}\.${key}\.i\}~";
       $replace = "{\${1}\"". $key. "\"\\3}";
-      // Log::debug( "pattern $i: $pattern, replace $i: $replace" );
+      // Log::debug( "ifforeach keyed pattern $i: $pattern, replace $i: $replace" );
 
       $tmp = preg_replace( $pattern, $replace, $tmp );
-      // Log::debug( "tmp: $tmp" );
+      // Log::debug( "ifforeach keyed tmp: $tmp" );
 
+      // Comparison keyed if|foreach
+      $pattern = "~\{((if|foreach)\d\s)?((.*) = )?\\\$${array}\.${key}\.i( = (.*))?\}~";
+      $replace = "{\${1}\"". $key. "\"\\3}";
+      // Log::debug( "ifforeach = keyed pattern $i: $pattern, replace $i: $replace" );
+
+      $tmp = preg_replace( $pattern, $replace, $tmp );
+      // Log::debug( "ifforeach = keyed tmp: $tmp" );
+
+      $pattern = "~\{((if|foreach)\d\s)?\\\$${array}\.${key}\.i\}~";
       $replace = "{{\${1}}\"". $key. "\"\\3}";
       // Log::debug( "pattern $i: $pattern" );
       // Log::debug( "replace $i: $replace" );
@@ -803,7 +820,7 @@ class Template
 
   private function getVariable( $var )
   {
-    if ( $var[0] != "\$" )
+    if ( isset($var[0]) && $var[0] != "\$" )
     {
       $text = trim($var, '"\'');
       return $text!=$var ? $text : null;
