@@ -18,7 +18,7 @@ class User extends BaseObject
   private $connections = array();
   private $identifiedConnections = null;
 
-  protected static $reservedUserObjectNames = [
+  public static $reservedUserObjectNames = [
       'admin', 'info', 'sales', 'about', 'support'
     ];
 
