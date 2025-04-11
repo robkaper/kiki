@@ -584,7 +584,7 @@ class Template
       $named = substr( $input[3], 1 );
     }
 
-    Log::debug( "array: $array, namedKey: $namedKey, named: $named" );
+    // Log::debug( "array: $array, namedKey: $namedKey, named: $named" );
     //echo "<hr>array: $array, named: $named";
     $content = null;
 
