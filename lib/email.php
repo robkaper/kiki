@@ -20,9 +20,9 @@ class Email
 {
   private $subject;
   private $from;
-  private $to;
-  private $cc;
-  private $bcc;
+  private $to = [];
+  private $cc = [];
+  private $bcc = [];
   private $headers;
   private $body;
 
@@ -130,7 +130,7 @@ class Email
 
   private function resetRecipients()
   {
-    $this->recipients = array();
+    $this->recipients = [];
   }
 
   public function setRecipient( $to )
@@ -146,7 +146,7 @@ class Email
 
   private function resetCc()
   {
-    $this->cc = array();
+    $this->cc = [];
   }
 
   public function setCc( $to )
@@ -162,7 +162,7 @@ class Email
 
   private function resetBcc()
   {
-    $this->bcc = array();
+    $this->bcc = [];
   }
 
   public function setBcc( $to )
