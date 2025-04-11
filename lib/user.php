@@ -18,6 +18,10 @@ class User extends BaseObject
   private $connections = array();
   private $identifiedConnections = null;
 
+  protected static $reservedUserObjectNames = [
+      'admin', 'info', 'sales', 'about', 'support'
+    ];
+
 /*
   public function __construct( $id = 0, $object_id = 0 )
   {
@@ -338,6 +342,7 @@ class User extends BaseObject
   public function storeNew( $email, $password, $admin = false, $verified = false, $passwordIsHash = false )
   {
     // Save to get an ID to generate a temporary name
+    $this->email = $email;
     $this->save();
     $this->name = 'User '. $this->id;
 
@@ -346,17 +351,30 @@ class User extends BaseObject
     if ( preg_match( '/^(.*)@/', $email, $matches ) )
     {
       $localPart = preg_replace( '/[^a-z0-9]+/', '', strtolower($matches[1]) );
-
-      $q = "SELECT u.id FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_name='%s'";
-      $q = $this->db->buildQuery( $q, $localPart );
-      $userId = $this->db->getSingleValue($q);
-
-      if ( !$userId )
-        $userObjectName = $localPart;
+      $userObjectName = $localPart;
     }
-    $this->setObjectName( $userObjectName ?? ('u'. $this->id) );
 
-    $this->email = $email;
+    $namespacedUserClass = ClassHelper::bareToNamespace('User');
+    $namespacedUser = new $namespacedUserClass();
+
+    if ( in_array( $userObjectName, $namespacedUser::$reservedUserObjectNames ) )
+      $userObjectName = null;
+
+    if ( !$userObjectName )
+      $userObjectName = sprintf( 'u%d', $this->id-50 );
+
+    $nameExists = true;
+    do {
+      $q = "SELECT u.id FROM users u, objects o WHERE o.object_id=u.object_id AND o.object_name='%s'";
+      $q = $this->db->buildQuery( $q, $userObjectName );
+      $nameExists = $this->db->getSingleValue($q);
+
+      if ( $nameExists )
+        $userObjectName = sprintf( 'u%010d', rand() );
+    } while( $nameExists );
+
+    $this->setObjectName( $userObjectName );
+
     $this->password = $password;
     $this->authToken = $passwordIsHash ? $password : Auth::hashPassword( $password );
     $this->isAdmin = (int) $admin;
