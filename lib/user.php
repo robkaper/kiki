@@ -361,7 +361,7 @@ class User extends BaseObject
       $userObjectName = null;
 
     if ( !$userObjectName )
-      $userObjectName = sprintf( 'u%d', $this->id-50 );
+      $userObjectName = sprintf( 'u%010d', $this->id );
 
     $nameExists = true;
     do {
