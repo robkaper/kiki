@@ -726,14 +726,16 @@ class Template
         default:;
       }
     }
-
     if ( $key[0] != "\$" )
-		{
+    {
       return $input[0];
-		}
+    }
+    $value = $this->getVariable( $key );
 
-		$value = $this->getVariable( $key );
-		return ($value !== null) ?  $value : null; // $input[0];
+    if ( gettype( $value ) == 'array' )
+      return null;
+
+    return ($value !== null) ?  $value : null; // $input[0];
   }
 
   private function modify( $input, $mods )
