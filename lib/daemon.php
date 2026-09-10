@@ -81,7 +81,7 @@ abstract class Daemon
   private function closeFileHandles()
   {
     fclose(STDIN);
-    fclose(STDOUT);
+//   fclose(STDOUT);
 //    fclose(STDERR);
   }
 
