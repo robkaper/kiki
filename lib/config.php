@@ -134,48 +134,82 @@ class Config
 		}
 	}
 
-	/**
-	* Provides the full path of the configuration file.
-	* @return string full path of the configuration file
-	*/
-	public static function configFile()
-	{
-		// TODO: return an array, so config loading can cascade in order: /etc default /etc/site root/default root/site
-		if ( isset($_SERVER['SERVER_NAME']) )
-		{
-			$file = Core::getRootPath(). "/config-". $_SERVER['SERVER_NAME']. ".php";
-			if ( file_exists($file) )
-				return $file;
+  /**
+  * Provides an ordered list of configuration files to load in cascade order:
+  * 1. /etc/kiki/config.php (System defaults)
+  * 2. /etc/kiki/config-{SERVER_NAME}.php (System domain overrides)
+  * 3. {rootPath}/config.php (Tenant defaults)
+  * 4. {rootPath}/config-{SERVER_NAME}.php (Tenant domain overrides)
+  *
+  * @return array List of candidate config file paths
+  */
+  public static function configFiles(): array
+  {
+    $files = [];
+    $serverName = $_SERVER['SERVER_NAME'] ?? null;
 
-			$file = "/etc/kiki/config-". $_SERVER['SERVER_NAME']. ".php";
-			if ( file_exists($file) )
-				return $file;
-		}
-		return Core::getRootPath(). "/config.php";
-	}
+    // 1. System defaults
+    $files[] = "/etc/kiki/config.php";
+    if ( $serverName )
+    {
+      $files[] = "/etc/kiki/config-{$serverName}.php";
+    }
 
-	/**
-	* Loads the configuration file, if it exists.
-	*/
-	private static function load()
-	{
-		$file = self::configFile();
-		if ( !file_exists($file) )
-		{
-			// This should probably be an error, no configuration means no database means no functional website.
-			// On the other hand, the framework itself should run just fine without any data available.
-			Log::fatal( "configuration file not found: $file" );
-			Log::debug( "configuration file not found: $file" );
-			return;
-		}
-		include_once "$file";
+    // 2. Tenant site roots
+    $rootPath = Core::getRootPath();
+    $files[] = "{$rootPath}/config.php";
+    if ( $serverName )
+    {
+      $files[] = "{$rootPath}/config-{$serverName}.php";
+    }
 
-		$iniFile = str_replace( '.php', '.ini', $file );
-		if ( file_exists($iniFile) )
-		{
-			self::$ini = (object) parse_ini_file( $iniFile, true, INI_SCANNER_TYPED );
-		}
-	}
+    return array_unique( $files );
+  }
+
+  /**
+  * Loads configuration files sequentially, merging INI settings across the cascade chain.
+  */
+  private static function load()
+  {
+    $loadedCount = 0;
+    $iniData = [];
+
+    foreach ( self::configFiles() as $file )
+    {
+      // Load PHP configuration if available
+      if ( file_exists($file) )
+      {
+        include_once $file;
+        Log::debug( "loaded config from $file" );
+        $loadedCount++;
+      }
+
+      // Check and merge corresponding .ini configuration
+      $iniFile = str_replace( '.php', '.ini', $file );
+      if ( file_exists($iniFile) )
+      {
+        Log::debug( "loaded config from $iniFile" );
+        $parsed = parse_ini_file( $iniFile, true, INI_SCANNER_TYPED );
+        if ( is_array($parsed) )
+        {
+          // Recursively merge INI sections so later files override specific keys
+          $iniData = array_replace_recursive( $iniData, $parsed );
+          $loadedCount++;
+        }
+      }
+    }
+
+    if ( $loadedCount === 0 )
+    {
+      Log::fatal( "No configuration files found in cascade chain." );
+      return;
+    }
+
+    if ( !empty($iniData) )
+    {
+      self::$ini = (object) $iniData;
+    }
+  }
 
   public static function ini( $key )
   {
