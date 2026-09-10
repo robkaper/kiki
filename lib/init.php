@@ -62,7 +62,18 @@
 
     Kiki\Core::setRootPath( $rootPath );
 
-    printf( "Kiki CLI [installPath:%s][rootPath:%s][SERVER_NAME:%s]". PHP_EOL, $installPath, $rootPath, $_SERVER['SERVER_NAME'] );
+    // Check if running interactively in a real terminal session
+    $isInteractive = posix_isatty(STDOUT) && !empty($_SERVER['TERM']);
+
+    if ($isInteractive)
+    {
+      printf(
+        "Kiki CLI [installPath:%s][rootPath:%s][SERVER_NAME:%s]" . PHP_EOL,
+        $installPath,
+        $rootPath,
+        $_SERVER['SERVER_NAME'] ?? 'none'
+      );
+    }
   }
   else
   {
