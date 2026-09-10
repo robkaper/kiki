@@ -333,11 +333,13 @@ class Template
 
     // echo "<hr>loop depth: ". print_r($this->maxLoopDepth,true);
 
+    // Log::debug( "<h2>pre parse/loops:</h2><pre>". $this->content. "</pre>" );
+
     for( $i=0; $i<=$this->maxLoopDepth; $i++ )
     {
       $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
       $reLoops = '~\n?\{foreach'. $i. ' (\$[\w\.]+) as (\$[\w]+)(?: => (\$[\w]+))?\}\n?(.*)\n?\{\/foreach'. $i. '\}\n?~sU';
-      // echo "<hr>reLoops: ". print_r($reLoops,true);
+      // Log::Debug( "reLoops: ". print_r($reLoops,true) );
       $this->content = preg_replace_callback( $reLoops, array($this, 'loops'), $this->content );
     }
     // Log::debug( "<h2>post parse/loops:</h2><pre>". $this->content. "</pre>" );
@@ -355,7 +357,7 @@ class Template
     $this->content = preg_replace_callback( $reDouble, array($this, 'replace'), $this->content );
     // echo "<h2>post parse/replace:</h2><pre>". htmlspecialchars($this->content). "</pre>";
 
-		// Log::endTimer( 'Template::parse '. $this->template );
+    // Log::endTimer( 'Template::parse '. $this->template );
   }
 
   public function fillBlocks()
@@ -660,15 +662,13 @@ class Template
       $pattern = "~\{((if|foreach)\d\s\!?)?\\\$${named}((\||\.)[^\}]+)?\}~";
       $replace = "{\\1\$". $array. ".$key". "\\3}";
       // Log::debug( "ifforeach pattern: $pattern, replace: $replace" );
-
       $tmp = preg_replace( $pattern, $replace, $tmp );
       // Log::debug( "ifforeach tmp: $tmp" );
 
       // Comparison if|foreach
       $pattern = "~\{((if|foreach)\d\s\!?)?((.*) = )?\\\$${named}((\||\.)[^\}]+)?( = (.*))?\}~";
-      $replace = "{\\1\\3\$". $array. ".$key". "\\5}";
+      $replace = "{\\1\\3\$". $array. ".$key". "\\5\\7}";
       // Log::debug( "ifforeach = pattern: $pattern, replace: $replace" );
-
       $tmp = preg_replace( $pattern, $replace, $tmp );
       // Log::debug( "ifforeach = tmp: $tmp" );
 
