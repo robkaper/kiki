@@ -80,11 +80,20 @@ document.addEventListener( 'DOMContentLoaded', function() {
     if ( action == 'comment' )
     {
       const elForm = document.getElementById( 'object-' + objectId + '-comments' );
+
       if ( isVisible(elForm) ) {
         elForm.style.display = 'none';
+
+        const elChevron = el.querySelector( 'i.fa-solid.fa-chevron-down' );
+        elChevron.classList.remove('fa-chevron-down');
+        elChevron.classList.add('fa-chevron-up');
       } else {
         elForm.classList.remove('hidden');
         elForm.style.display = '';
+
+        const elChevron = el.querySelector( 'i.fa-solid.fa-chevron-up' );
+        elChevron.classList.remove('fa-chevron-up');
+        elChevron.classList.add('fa-chevron-down');
       }
       return;
     }
