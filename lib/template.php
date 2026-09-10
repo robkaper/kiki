@@ -325,7 +325,7 @@ class Template
     $reLegacy = '~<\?=?([^>]+)\?>~';
     $reConditions = '~\n?\{if ([^\}]+)\}\n??(.*)\n?\{\/if\}\n?~sU';
     $re = '~\{([^}]+)\}~';
-    $reDouble = '~\{{([^}]+)\}}~';
+    $reDouble = '~\{\{([^}]+)\}\}~';
 
     $this->content = preg_replace_callback( $reLegacy, array($this, 'legacy'), $this->content );
 
@@ -696,7 +696,6 @@ class Template
       //echo "<hr>replace". $replace;
       $tmp = preg_replace( $pattern, $replace, $tmp );
       //echo "<hr>tmp: ". $tmp;
-
       $content .= $tmp;
       // Log::debug( "content: $content" );
       $i++;
