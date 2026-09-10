@@ -40,11 +40,12 @@
       }
 
       // Get the directory containing the script (e.g. /var/www/example.com/bin)
-      $scriptDir = dirname( $invokedScript );
+      $realScriptPath = realpath( $invokedScript ) ?: $invokedScript;
+      $scriptDir      = dirname( $realScriptPath );
 
       // If script lives in /bin or /htdocs, step up one folder to get tenant root
       $parentDir = basename( $scriptDir );
-      if ( in_array( $parentDir, ['bin', 'htdocs', 'cli'] ) )
+      if ( in_array( $parentDir, ['bin', 'htdocs', 'cli'], true ) )
       {
         $rootPath = dirname( $scriptDir ); // /var/www/example.com
       }
