@@ -131,15 +131,14 @@ class Storage
    *
    * @param string $fileName original filename
    * @param string $data file data
-   * @return int ID of the database entry created
+   * @param int|null $userId optional owner user ID
+   * @return StorageItem
    */
   public static function save( $fileName, $data, $size=0, $userId=null  )
   {
     $storageItem = new StorageItem();
 
     $fileName = strtolower($fileName);
-    // TODO: document why this is here... it's just the original name, should not be used anywhere (except for getExtension maybe?)
-    $fileName = preg_replace( '#(/)#', '_', $fileName );
 
     $storageItem->setUserId( $userId );
 
