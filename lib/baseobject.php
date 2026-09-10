@@ -124,9 +124,9 @@ abstract class BaseObject
   final public function setUserId( $user_id ) { $this->user_id = $user_id; }
   final public function userId() { return $this->user_id; }
 
-  final public function getMetaData()
+  final public function getMetaData( $force = false )
   {
-    if ( !isset($this->metaData) )
+    if ( !isset($this->metaData) || $force )
       $this->metaData = new ObjectMetaData( $this->object_id );
 
     return $this->metaData;
