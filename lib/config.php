@@ -180,7 +180,6 @@ class Config
       if ( file_exists($file) )
       {
         include_once $file;
-        Log::debug( "loaded config from $file" );
         $loadedCount++;
       }
 
@@ -188,7 +187,6 @@ class Config
       $iniFile = str_replace( '.php', '.ini', $file );
       if ( file_exists($iniFile) )
       {
-        Log::debug( "loaded config from $iniFile" );
         $parsed = parse_ini_file( $iniFile, true, INI_SCANNER_TYPED );
         if ( is_array($parsed) )
         {
