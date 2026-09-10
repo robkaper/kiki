@@ -28,15 +28,46 @@
 
   if ( php_sapi_name() == "cli" )
   {
-    // FIXME: we shouldn't assume /var/www/server_name/ as site root.
-    Kiki\Core::setRootPath( "/var/www/". $_SERVER['SERVER_NAME'] );
+    // $argv[0] contains the actual path used to invoke the script (e.g. /var/www/example.com/bin/example-script.php)
+    $invokedScript = $_SERVER['SCRIPT_FILENAME'] ?? $argv[0] ?? '';
+
+    if ( $invokedScript )
+    {
+      // Resolve relative calls (e.g. ./bin/parse-import.php) against current working directory if needed
+      if ( substr( $invokedScript, 0, 1 ) !== '/' )
+      {
+        $invokedScript = getcwd() . '/' . $invokedScript;
+      }
+
+      // Get the directory containing the script (e.g. /var/www/example.com/bin)
+      $scriptDir = dirname( $invokedScript );
+
+      // If script lives in /bin or /htdocs, step up one folder to get tenant root
+      $parentDir = basename( $scriptDir );
+      if ( in_array( $parentDir, ['bin', 'htdocs', 'cli'] ) )
+      {
+        $rootPath = dirname( $scriptDir ); // /var/www/example.com
+      }
+      else
+      {
+        $rootPath = $scriptDir;
+      }
+    }
+    else
+    {
+      // Fallback default
+      $rootPath = getcwd();
+    }
+
+    Kiki\Core::setRootPath( $rootPath );
+
+    printf( "Kiki CLI [installPath:%s][rootPath:%s][SERVER_NAME:%s]". PHP_EOL, $installPath, $rootPath, $_SERVER['SERVER_NAME'] );
   }
   else
   {
     $rootPath = str_replace( "/htdocs", "", $_SERVER['DOCUMENT_ROOT'] );
     Kiki\Core::setRootPath( $rootPath );
   }
-  $installPath = str_replace( "/lib/init.php", "", __FILE__ );
 
   // Classhelper already needs this
   include_once $installPath. "/lib/config.php";
