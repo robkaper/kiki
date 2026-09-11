@@ -112,7 +112,7 @@ class Objects extends KikiController
           $notification = $notificationClass::exists( $object->userId(), $object->objectId(), $notificationTypeClass::Comments_New );
 
           if ( $notification )
-            $notificationClass::update( $notification->id, $user->objectId(), $msg );
+            $notificationClass::update( $notification->id, $user->objectId(), $msg, true );
           else
             $notificationClass::insert( $object->userId(), $notificationTypeClass::Comments_New, $object->objectId(), $user->objectId(), $msg );
         }
