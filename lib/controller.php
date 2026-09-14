@@ -25,6 +25,7 @@ class Controller
 
   protected $status = 404;
   protected $altContentType = null;
+  protected $extraHeaders = [];
   protected $title = '404 Not found';
   protected $template = 'pages/404';
   protected $data = [];
@@ -242,7 +243,7 @@ class Controller
       return;
     }
 
-    Http::sendHeaders( $this->status(), $this->altContentType() );
+    Http::sendHeaders( $this->status(), $this->altContentType(), $this->extraHeaders() );
 
     // Log::debug( sprintf( "status: %s, title: %s, template: %s", $this->status(), $this->title(), $this->template() ) );
 
@@ -317,6 +318,11 @@ class Controller
   public function altContentType()
   {
     return isset($this->subController) ? $this->subController->altContentType() : $this->altContentType;
+  }
+
+  public function extraHeaders()
+  {
+    return isset($this->subController) ? $this->subController->extraHeaders() : $this->extraHeaders;
   }
 
   public function title()

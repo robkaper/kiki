@@ -21,7 +21,7 @@ class Http
    *
    * Note that the fallback controller in the router actually defaults to 404.
    */
-  public static function sendHeaders( $status = 200, $altContentType = null )
+  public static function sendHeaders( $status = 200, $altContentType = null, $extraHeaders = [] )
   {
     switch( $status )
     {
@@ -206,6 +206,9 @@ class Http
 
     header( $_SERVER['SERVER_PROTOCOL']. ' '. $status. ' '. $msg, true, $status );
     header( 'Content-Type: '. ($altContentType ? $altContentType : 'text/html; charset=utf-8') );
+    foreach( $extraHeaders as $extraHeader ) {
+      header( $extraHeader );
+    }
   }
 
   public static function redirect( $url, $statusCode = 302 )
