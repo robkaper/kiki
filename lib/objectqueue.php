@@ -16,22 +16,26 @@ class ObjectQueue
 
     static public function store( $object, $action = 'default', $priority = 10 )
     {
+        $db = Core::getDb();
+
         $q = "INSERT INTO `object_queue` (`object_id`, `action`, `priority`)
             VALUES (%d, '%s', %d)
             ON DUPLICATE KEY UPDATE `lock_id`=null, `ltime`=null, `qtime`=NULL, `tries`=0, `processed`=false, `priority`=%d";
-        $q = $this->db->buildQuery( $q, $object->objectId(), $action, $priority, $priority );
+        $q = $db->buildQuery( $q, $object->objectId(), $action, $priority, $priority );
 
-        $rs = $this->db->query($q);
-        return $this->db->lastInsertId($rs);
+        $rs = $db->query($q);
+        return $db->lastInsertId($rs);
     }
 
     static public function reprocess( $object, $action='default' )
     {
-        $q = "UPDATE `object_queue` SET processed=false WHERE action='%s' AND object_ID = %d";
-        $q = $this->db->buildQuery( $q, $action, $object->objectId() );
+        $db = Core::getDb();
 
-        $rs = $this->db->query($q);
-        return $this->db->affectedRows($rs);
+        $q = "UPDATE `object_queue` SET processed=false WHERE action='%s' AND object_ID = %d";
+        $q = $db->buildQuery( $q, $action, $object->objectId() );
+
+        $rs = $db->query($q);
+        return $db->affectedRows($rs);
     }
 
     public function getNext( $lockId )
