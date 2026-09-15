@@ -4,8 +4,8 @@
  * class Http
  *
  * @package Kiki
- * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2010-2011 Rob Kaper <http://robkaper.nl/>
+ * @author Rob Kaper <https://robkaper.nl/>
+ * @copyright 2010-2026 Rob Kaper <https://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 

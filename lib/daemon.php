@@ -12,8 +12,8 @@ declare( ticks = 1 );
  *
  * @class Daemon
  * @package Kiki
- * @author Rob Kaper <http://robkaper.nl/>
- * @copyright 2011 Rob Kaper <http://robkaper.nl/>
+ * @author Rob Kaper <http:s//robkaper.nl/>
+ * @copyright 2011-2026 Rob Kaper <https://robkaper.nl/>
  * @license Released under the terms of the MIT license.
  */
 
